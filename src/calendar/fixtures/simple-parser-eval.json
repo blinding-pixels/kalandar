@@ -1,0 +1,93 @@
+{
+  "meta": {
+    "now": "2026-03-27T10:00:00-04:00",
+    "timezone": "America/New_York"
+  },
+  "cases": [
+    {
+      "name": "monthly_nth_weekday_with_exception_and_unsupported_anchor_time",
+      "text": "recurring catch-up every second Tuesday of the month starting next month, except for the one after the first Monday in June, from half past the hour of our usual Monday sync until three-quarters of an hour later.",
+      "expect": {
+        "title": "Recurring Catch-up",
+        "recurrence": "FREQ=MONTHLY;INTERVAL=1;BYDAY=2TU",
+        "recurrence_start": "2026-04-01",
+        "recurrence_exception": [
+          {
+            "raw": "except for the one after the first Monday in June",
+            "condition": null,
+            "action": null
+          }
+        ],
+        "time": null,
+        "end_time": null,
+        "duration_minutes": null
+      },
+      "notes": "Recurrence should parse cleanly; anchor-relative time stays intentionally unsupported."
+    },
+    {
+      "name": "weekly_every_other_with_free_text_exceptions",
+      "text": "Lunch with Sara every other Tuesday unless it's a holiday then the following Thursday starting next month but skip the first one",
+      "expect": {
+        "title": "Lunch with Sara",
+        "recurrence": "FREQ=WEEKLY;INTERVAL=2;BYDAY=TU",
+        "recurrence_start": "2026-04-01",
+        "recurrence_exception": [
+          {
+            "raw": "unless it's a holiday then the following Thursday",
+            "condition": {
+              "type": "holiday"
+            },
+            "action": {
+              "type": "shift",
+              "to": "thursday",
+              "direction": "following"
+            }
+          },
+          {
+            "raw": "but skip the first one",
+            "condition": {
+              "type": "ordinal",
+              "which": "first"
+            },
+            "action": {
+              "type": "skip"
+            }
+          }
+        ],
+        "contact_suggestions": [
+          {
+            "text": "Sara",
+            "source": "title_with_phrase"
+          }
+        ],
+        "date": null
+      },
+      "notes": "Exceptions are structured while the title keeps the with-phrase."
+    },
+    {
+      "name": "weekly_with_end_date_and_default_end_time",
+      "text": "Meeting with venue every Tuesday at 3 PM till July 1st",
+      "expect": {
+        "title": "Meeting with Venue",
+        "recurrence": "FREQ=WEEKLY;INTERVAL=1;BYDAY=TU",
+        "recurrence_end": "2026-07-01",
+        "time": "15:00",
+        "end_time": "16:00",
+        "duration_minutes": 60
+      },
+      "notes": "Simple recurrence end dates and default one-hour duration should work out of the box."
+    },
+    {
+      "name": "unsupported_speculative_time_window_is_masked_cleanly",
+      "text": "Book something next Friday night from 7ish to before 10, maybe 2 hours but not longer than 3, unless that runs too late then start earlier",
+      "expect": {
+        "title": "Book Something",
+        "date": "2026-04-03",
+        "time": null,
+        "end_time": null,
+        "duration_minutes": null
+      },
+      "notes": "Approximate time windows and speculative rescheduling stay intentionally unsupported, but they should not hallucinate a clock time or pollute the title."
+    }
+  ]
+}

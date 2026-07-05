@@ -1,0 +1,157 @@
+{
+  "meta": {
+    "now": "2026-03-22T12:00:00-04:00",
+    "timezone": "America/New_York"
+  },
+  "cases": [
+    {
+      "name": "simple_weekly_recurrence",
+      "text": "water plants every monday",
+      "expect": {
+        "title": "Water Plants",
+        "remind_at": "2026-03-23T09:00:00",
+        "recurrence": {
+          "frequency": "weekly",
+          "interval": 1,
+          "days": ["monday"]
+        },
+        "recurrence_start": null,
+        "recurrence_end": null,
+        "recurrence_window": null,
+        "recurrence_exception": [],
+        "context_hint": null
+      },
+      "notes": "Baseline recurring reminder should stay crisp and deterministic."
+    },
+    {
+      "name": "window_end_and_night_hint",
+      "text": "Attach mailers to phil every wednesday night for 3 months till 9th august",
+      "expect": {
+        "title": "Attach Mailers to Phil",
+        "remind_at": "2026-03-25T20:00:00",
+        "recurrence": {
+          "frequency": "weekly",
+          "interval": 1,
+          "days": ["wednesday"]
+        },
+        "recurrence_window": "for 3 months",
+        "recurrence_end": "till 9th august",
+        "recurrence_exception": [],
+        "context_hint": "night"
+      },
+      "notes": "Supported recurring windows, end clauses, and simple time-of-day hints."
+    },
+    {
+      "name": "start_clause_moves_first_occurrence",
+      "text": "Lunch with Sara every other Tuesday starting next month",
+      "expect": {
+        "title": "Lunch with Sara",
+        "remind_at": "2026-04-07T09:00:00",
+        "recurrence": {
+          "frequency": "weekly",
+          "interval": 2,
+          "days": ["tuesday"]
+        },
+        "recurrence_start": "starting next month",
+        "recurrence_end": null,
+        "recurrence_window": null,
+        "recurrence_exception": [],
+        "context_hint": null
+      },
+      "notes": "The rule parser should shift the first recurring remind_at when a start boundary is present."
+    },
+    {
+      "name": "chained_exceptions_with_start_boundary",
+      "text": "Lunch with Sara every other Tuesday unless it's a holiday then the following Thursday starting next month but skip the first one",
+      "expect": {
+        "title": "Lunch with Sara",
+        "remind_at": "2026-04-07T09:00:00",
+        "recurrence": {
+          "frequency": "weekly",
+          "interval": 2,
+          "days": ["tuesday"]
+        },
+        "recurrence_start": "starting next month",
+        "recurrence_exception": [
+          {
+            "raw": "unless it's a holiday then the following Thursday",
+            "condition": {
+              "type": "holiday"
+            },
+            "action": {
+              "type": "shift",
+              "to": "thursday",
+              "direction": "following"
+            }
+          },
+          {
+            "raw": "but skip the first one",
+            "condition": {
+              "type": "ordinal",
+              "which": "first"
+            },
+            "action": {
+              "type": "skip"
+            }
+          }
+        ],
+        "context_hint": null
+      },
+      "notes": "One-level chained recurrence exceptions are in scope when each clause is explicit."
+    },
+    {
+      "name": "exception_tail_preserves_action_title",
+      "text": "Water Plants every other saturday except the week of the 21st and add soil",
+      "expect": {
+        "title": "Water Plants and Add Soil",
+        "remind_at": "2026-03-28T09:00:00",
+        "recurrence": {
+          "frequency": "weekly",
+          "interval": 2,
+          "days": ["saturday"]
+        },
+        "recurrence_exception": [
+          {
+            "raw": "except the week of the 21st",
+            "condition": null,
+            "action": null
+          }
+        ],
+        "context_hint": null
+      },
+      "notes": "Exception parsing should not swallow the trailing reminder action."
+    },
+    {
+      "name": "at_night_context_keeps_title_clean",
+      "text": "call mom every tuesday at night",
+      "expect": {
+        "title": "Call Mom",
+        "remind_at": "2026-03-24T20:00:00",
+        "recurrence": {
+          "frequency": "weekly",
+          "interval": 1,
+          "days": ["tuesday"]
+        },
+        "recurrence_exception": [],
+        "context_hint": "night"
+      },
+      "notes": "Context hints like at night should be captured without leaving stray title tokens."
+    },
+    {
+      "name": "title_word_night_stays_in_title",
+      "text": "movie night every friday",
+      "expect": {
+        "title": "Movie Night",
+        "remind_at": "2026-03-27T09:00:00",
+        "recurrence": {
+          "frequency": "weekly",
+          "interval": 1,
+          "days": ["friday"]
+        },
+        "recurrence_exception": [],
+        "context_hint": null
+      },
+      "notes": "Trailing title words should not be reclassified as a recurrence context hint when the raw recurrence tail lacks that cue."
+    }
+  ]
+}

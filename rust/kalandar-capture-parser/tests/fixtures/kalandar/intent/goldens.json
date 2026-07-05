@@ -1,0 +1,58 @@
+[
+  {
+    "id": "intent-task-dated",
+    "input": "finish report tomorrow",
+    "oracle": {
+      "kind": "task"
+    }
+  },
+  {
+    "id": "intent-reminder-explicit",
+    "input": "remind me to water plants every other saturday at 9am",
+    "oracle": {
+      "kind": "reminder"
+    }
+  },
+  {
+    "id": "intent-calendar-meeting",
+    "input": "meeting with Sara tomorrow 3pm to 4pm at office",
+    "oracle": {
+      "kind": "calendar-event"
+    }
+  },
+  {
+    "id": "intent-thought-soft-note",
+    "input": "idea about better shell notifications",
+    "oracle": {
+      "kind": "thought"
+    }
+  },
+  {
+    "id": "intent-calendar-recurring-lunch",
+    "input": "Lunch with Sara every other Tuesday starting next month",
+    "oracle": {
+      "kind": "calendar-event"
+    }
+  },
+  {
+    "id": "intent-calendar-read-digest",
+    "input": "read daily digest tomorrow",
+    "oracle": {
+      "kind": "calendar-event"
+    }
+  },
+  {
+    "id": "intent-task-bus-pass",
+    "input": "buy monthly bus pass end of month",
+    "oracle": {
+      "kind": "task"
+    }
+  },
+  {
+    "id": "intent-calendar-night-reminder-shape",
+    "input": "call mom every tuesday at night",
+    "oracle": {
+      "kind": "calendar-event"
+    }
+  }
+]

@@ -1,0 +1,112 @@
+{
+  "meta": {
+    "now": "2026-03-22T12:00:00-04:00",
+    "timezone": "America/New_York",
+    "boundary": {
+      "supported": [
+        "single-task imperative inputs with explicit metadata clauses",
+        "priority/status/duration/tag extraction from short deterministic patterns",
+        "project clauses like \"for Project Atlas\" or \"in project Helios\"",
+        "assignee clauses like \"to Sara\", \"with Nina and Omar\", and @mentions",
+        "one-off due_date and due_time spans for common phrases",
+        "recurrence plus basic recurrence_start, recurrence_end, and recurrence_exception spans"
+      ],
+      "unsupported": [
+        "large fuzzy planning prompts",
+        "deeply nested recurrence exception logic",
+        "automatic date resolution or rescheduling from free text",
+        "broad person-vs-project disambiguation without strong clause cues"
+      ]
+    }
+  },
+  "cases": [
+    {
+      "name": "reference_recurring_exception",
+      "text": "Submit report to Sara every tuesday except the second tuesday of every month starting today till 24th August with Highpriorty by 10 AM",
+      "expect": {
+        "title": "Submit report",
+        "assignee": ["Sara"],
+        "priority": "high",
+        "due_time": "by 10 AM",
+        "recurrence": "every tuesday",
+        "recurrence_start": "starting today",
+        "recurrence_end": "till 24th August",
+        "recurrence_exception": [
+          {
+            "raw": "except the second tuesday of every month",
+            "condition": { "type": "ordinal", "which": "second" },
+            "action": { "type": "skip" }
+          }
+        ]
+      },
+      "notes": "This is the main recurring-task target: recurrence stays as surface spans and clock time stays in due_time."
+    },
+    {
+      "name": "reference_imperative_project_assignees",
+      "text": "finally finish the Q2 board deck draft for Project Atlas with Nina and Omar by the first business day next month, high priority, 90 minutes, in progress, tags #finance #board",
+      "expect": {
+        "title": "finally finish the Q2 board deck draft",
+        "project": "Project Atlas",
+        "assignee": ["Nina", "Omar"],
+        "due_date": "by the first business day next month",
+        "priority": "high",
+        "duration": "90 minutes",
+        "status": "in progress",
+        "tags": ["#finance", "#board"]
+      },
+      "notes": "Imperative prefix stays in the title; project, assignees, status, duration, and tags stay clean."
+    },
+    {
+      "name": "reference_every_other_series",
+      "text": "Review backlog every other Tuesday starting next month by noon",
+      "expect": {
+        "title": "Review backlog",
+        "due_time": "by noon",
+        "recurrence": "every other Tuesday",
+        "recurrence_start": "starting next month"
+      },
+      "notes": "Recurring tasks should not collapse into due_date."
+    },
+    {
+      "name": "one_off_date_time_split",
+      "text": "call dentist at 3pm on tuesday",
+      "expect": {
+        "title": "call dentist",
+        "due_date": "on tuesday",
+        "due_time": "at 3pm"
+      },
+      "notes": "One-off tasks keep the date and clock time in separate fields."
+    },
+    {
+      "name": "contextual_with_phrase_kept_in_title",
+      "text": "meeting with sarah next monday at noon",
+      "expect": {
+        "title": "meeting with sarah",
+        "assignee": [],
+        "due_date": "next monday",
+        "due_time": "at noon"
+      },
+      "notes": "The rule parser should not greedily convert every with-clause into assignees."
+    },
+    {
+      "name": "reminder_prefix_and_recurrence_cleanup",
+      "text": "remind me every other day to stretch",
+      "expect": {
+        "title": "stretch",
+        "recurrence": "every other day"
+      },
+      "notes": "Reminder lead-in should strip from the title while recurrence is retained."
+    },
+    {
+      "name": "simple_project_status_tags",
+      "text": "fix login bug in project Helios, blocked, tags: auth, frontend",
+      "expect": {
+        "title": "fix login bug",
+        "project": "Project Helios",
+        "status": "blocked",
+        "tags": ["auth", "frontend"]
+      },
+      "notes": "Explicit project keyword plus plain tag lists should stay deterministic."
+    }
+  ]
+}

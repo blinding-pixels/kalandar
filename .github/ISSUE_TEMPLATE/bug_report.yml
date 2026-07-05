@@ -1,0 +1,50 @@
+name: Bug report
+description: Report behavior that appears incorrect.
+title: "Bug: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting a bug. Please include enough detail to reproduce the behavior.
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: What happened?
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: What did you expect instead?
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Kalandar version
+      placeholder: "0.1.0"
+    validations:
+      required: false
+  - type: dropdown
+    id: implementation
+    attributes:
+      label: Implementation path
+      options:
+        - JavaScript
+        - Rust
+        - Swift/Core AI
+        - Not sure
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction
+      description: Include the input string, command, or minimal code needed to reproduce the issue.
+      render: text
+    validations:
+      required: true

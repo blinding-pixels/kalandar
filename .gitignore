@@ -1,0 +1,8 @@
+node_modules/
+dist/
+.build/
+rust/target/
+*.tgz
+.DS_Store
+CONTEXT.md
+PLAN.md

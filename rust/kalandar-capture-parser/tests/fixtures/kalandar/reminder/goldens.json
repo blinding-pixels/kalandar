@@ -1,0 +1,219 @@
+[
+  {
+    "id": "reminder-recurring-weekly",
+    "input": "remind me to water plants every other saturday at 9am",
+    "timezone": "America/New_York",
+    "oracle": {
+      "kind": "reminder",
+      "title": "water plants",
+      "remindAtText": "9am",
+      "recurrenceStartText": null,
+      "recurrenceEndText": null,
+      "recurrenceWindowText": null,
+      "contextHint": null,
+      "recurrenceExceptions": [],
+      "recurrence": {
+        "frequency": "weekly",
+        "interval": 2,
+        "days": [
+          "saturday"
+        ]
+      }
+    }
+  },
+  {
+    "id": "reminder-daily-adjective-oneoff",
+    "input": "reminder: read daily digest tomorrow",
+    "timezone": "America/New_York",
+    "oracle": {
+      "kind": "reminder",
+      "title": "read daily digest",
+      "remindAtText": "tomorrow",
+      "recurrenceStartText": null,
+      "recurrenceEndText": null,
+      "recurrenceWindowText": null,
+      "contextHint": null,
+      "recurrenceExceptions": [],
+      "recurrence": null
+    }
+  },
+  {
+    "id": "reminder-monthly-adjective-oneoff",
+    "input": "reminder: buy monthly bus pass end of month",
+    "timezone": "America/New_York",
+    "oracle": {
+      "kind": "reminder",
+      "title": "buy monthly bus pass",
+      "remindAtText": "end of month",
+      "recurrenceStartText": null,
+      "recurrenceEndText": null,
+      "recurrenceWindowText": null,
+      "contextHint": "end of month",
+      "recurrenceExceptions": [],
+      "recurrence": null
+    }
+  },
+  {
+    "id": "reminder-window-end-night-hint",
+    "input": "reminder: attach mailers to phil every wednesday night for 3 months till 9th august",
+    "timezone": "America/New_York",
+    "oracle": {
+      "kind": "reminder",
+      "title": "attach mailers to phil",
+      "remindAtText": null,
+      "recurrenceStartText": null,
+      "recurrenceEndText": "till 9th august",
+      "recurrenceWindowText": "for 3 months",
+      "contextHint": "night",
+      "recurrenceExceptions": [],
+      "recurrence": {
+        "frequency": "weekly",
+        "interval": 1,
+        "days": [
+          "wednesday"
+        ]
+      }
+    }
+  },
+  {
+    "id": "reminder-start-boundary",
+    "input": "reminder: Lunch with Sara every other Tuesday starting next month",
+    "timezone": "America/New_York",
+    "oracle": {
+      "kind": "reminder",
+      "title": "lunch with sara",
+      "remindAtText": null,
+      "recurrenceStartText": "starting next month",
+      "recurrenceEndText": null,
+      "recurrenceWindowText": null,
+      "contextHint": null,
+      "recurrenceExceptions": [],
+      "recurrence": {
+        "frequency": "weekly",
+        "interval": 2,
+        "days": [
+          "tuesday"
+        ]
+      }
+    }
+  },
+  {
+    "id": "reminder-chained-exceptions",
+    "input": "reminder: Lunch with Sara every other Tuesday unless it's a holiday then the following Thursday starting next month but skip the first one",
+    "timezone": "America/New_York",
+    "oracle": {
+      "kind": "reminder",
+      "title": "lunch with sara",
+      "remindAtText": null,
+      "recurrenceStartText": "starting next month",
+      "recurrenceEndText": null,
+      "recurrenceWindowText": null,
+      "contextHint": null,
+      "recurrenceExceptions": [
+        {
+          "raw": "unless it's a holiday then the following thursday"
+        },
+        {
+          "raw": "but skip the first one"
+        }
+      ],
+      "recurrence": {
+        "frequency": "weekly",
+        "interval": 2,
+        "days": [
+          "tuesday"
+        ]
+      }
+    }
+  },
+  {
+    "id": "reminder-exception-action-tail",
+    "input": "reminder: Water Plants every other saturday except the week of the 21st and add soil",
+    "timezone": "America/New_York",
+    "oracle": {
+      "kind": "reminder",
+      "title": "water plants and add soil",
+      "remindAtText": null,
+      "recurrenceStartText": null,
+      "recurrenceEndText": null,
+      "recurrenceWindowText": null,
+      "contextHint": null,
+      "recurrenceExceptions": [
+        {
+          "raw": "except the week of the 21st"
+        }
+      ],
+      "recurrence": {
+        "frequency": "weekly",
+        "interval": 2,
+        "days": [
+          "saturday"
+        ]
+      }
+    }
+  },
+  {
+    "id": "reminder-context-night",
+    "input": "reminder: call mom every tuesday at night",
+    "timezone": "America/New_York",
+    "oracle": {
+      "kind": "reminder",
+      "title": "call mom",
+      "remindAtText": null,
+      "recurrenceStartText": null,
+      "recurrenceEndText": null,
+      "recurrenceWindowText": null,
+      "contextHint": "night",
+      "recurrenceExceptions": [],
+      "recurrence": {
+        "frequency": "weekly",
+        "interval": 1,
+        "days": [
+          "tuesday"
+        ]
+      }
+    }
+  },
+  {
+    "id": "reminder-title-night",
+    "input": "reminder: movie night every friday",
+    "timezone": "America/New_York",
+    "oracle": {
+      "kind": "reminder",
+      "title": "movie night",
+      "remindAtText": null,
+      "recurrenceStartText": null,
+      "recurrenceEndText": null,
+      "recurrenceWindowText": null,
+      "contextHint": null,
+      "recurrenceExceptions": [],
+      "recurrence": {
+        "frequency": "weekly",
+        "interval": 1,
+        "days": [
+          "friday"
+        ]
+      }
+    }
+  },
+  {
+    "id": "reminder-recurring-stretch-title",
+    "input": "remind me every other day to stretch",
+    "timezone": "America/New_York",
+    "oracle": {
+      "kind": "reminder",
+      "title": "stretch",
+      "remindAtText": null,
+      "recurrenceStartText": null,
+      "recurrenceEndText": null,
+      "recurrenceWindowText": null,
+      "contextHint": null,
+      "recurrenceExceptions": [],
+      "recurrence": {
+        "frequency": "daily",
+        "interval": 2,
+        "days": null
+      }
+    }
+  }
+]

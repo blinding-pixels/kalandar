@@ -1,0 +1,170 @@
+{
+  "name": "kalandar",
+  "version": "0.1.0",
+  "description": "Natural-language capture parsing for tasks, reminders, and calendar events across JavaScript, Rust, and Apple-native runtimes.",
+  "type": "module",
+  "main": "./dist/capture/index.js",
+  "types": "./dist/capture/index.d.ts",
+  "sideEffects": false,
+  "license": "MIT",
+  "author": "Eshaan Sood",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/blinding-pixels/kalandar.git"
+  },
+  "bugs": {
+    "url": "https://github.com/blinding-pixels/kalandar/issues"
+  },
+  "homepage": "https://github.com/blinding-pixels/kalandar#readme",
+  "keywords": [
+    "calendar",
+    "tasks",
+    "reminders",
+    "natural-language",
+    "parser",
+    "nlp",
+    "chrono",
+    "onnx",
+    "core-ai",
+    "rust",
+    "swift"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "dist/",
+    "README.md",
+    "LICENSE",
+    "ARCHITECTURE.md",
+    "src/calendar/README.md",
+    "src/calendar/RUNTIME_INTEGRATION.md",
+    "src/runtime/TENSOR_CONTRACT.md",
+    "src/task/RULE_PARSER_BOUNDARY.md",
+    "docs/",
+    "coreai/README.md",
+    "coreai/app-parity-lock.json",
+    "coreai/model-parity-cases.json",
+    "Package.swift",
+    "rust/Cargo.lock",
+    "rust/Cargo.toml",
+    "rust/README.md",
+    "rust/kalandar-capture-parser/Cargo.toml",
+    "rust/kalandar-capture-parser/README.md",
+    "rust/kalandar-capture-parser/src/",
+    "swift/Package.swift",
+    "swift/Sources/",
+    "swift/Tests/"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/capture/index.d.ts",
+      "import": "./dist/capture/index.js"
+    },
+    "./capture": {
+      "types": "./dist/capture/index.d.ts",
+      "import": "./dist/capture/index.js"
+    },
+    "./capture/*": {
+      "types": "./dist/capture/*.d.ts",
+      "import": "./dist/capture/*.js"
+    },
+    "./calendar": {
+      "types": "./dist/calendar/index.d.ts",
+      "import": "./dist/calendar/index.js"
+    },
+    "./calendar/*": {
+      "types": "./dist/calendar/*.d.ts",
+      "import": "./dist/calendar/*.js"
+    },
+    "./core/*": {
+      "types": "./dist/core/*.d.ts",
+      "import": "./dist/core/*.js"
+    },
+    "./intent": {
+      "types": "./dist/intent/index.d.ts",
+      "import": "./dist/intent/index.js"
+    },
+    "./intent/*": {
+      "types": "./dist/intent/*.d.ts",
+      "import": "./dist/intent/*.js"
+    },
+    "./reminder": {
+      "types": "./dist/reminder/index.d.ts",
+      "import": "./dist/reminder/index.js"
+    },
+    "./reminder/*": {
+      "types": "./dist/reminder/*.d.ts",
+      "import": "./dist/reminder/*.js"
+    },
+    "./runtime": {
+      "types": "./dist/runtime/index.d.ts",
+      "import": "./dist/runtime/index.js"
+    },
+    "./runtime/coreai": {
+      "types": "./dist/runtime/coreai/index.d.ts",
+      "import": "./dist/runtime/coreai/index.js"
+    },
+    "./runtime/onnx": {
+      "types": "./dist/runtime/onnx/index.d.ts",
+      "import": "./dist/runtime/onnx/index.js"
+    },
+    "./runtime/*": {
+      "types": "./dist/runtime/*.d.ts",
+      "import": "./dist/runtime/*.js"
+    },
+    "./planning": {
+      "types": "./dist/core/planning.d.ts",
+      "import": "./dist/core/planning.js"
+    },
+    "./shared/*": {
+      "types": "./dist/shared/*.d.ts",
+      "import": "./dist/shared/*.js"
+    },
+    "./task": {
+      "types": "./dist/task/index.d.ts",
+      "import": "./dist/task/index.js"
+    },
+    "./task/*": {
+      "types": "./dist/task/*.d.ts",
+      "import": "./dist/task/*.js"
+    },
+    "./task-decomposition": {
+      "types": "./dist/task-decomposition/index.d.ts",
+      "import": "./dist/task-decomposition/index.js"
+    },
+    "./task-decomposition/*": {
+      "types": "./dist/task-decomposition/*.d.ts",
+      "import": "./dist/task-decomposition/*.js"
+    },
+    "./task-plan": {
+      "types": "./dist/task-plan/index.d.ts",
+      "import": "./dist/task-plan/index.js"
+    },
+    "./task-plan/*": {
+      "types": "./dist/task-plan/*.d.ts",
+      "import": "./dist/task-plan/*.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "build": "node ./scripts/tsc.mjs -p tsconfig.build.json",
+    "typecheck": "node ./scripts/typecheck.mjs",
+    "lint": "node ./scripts/lint.mjs",
+    "coreai:parity": "node --experimental-strip-types ./scripts/coreai-parity.mjs",
+    "swift:build": "swift build --package-path swift",
+    "swift:test": "swift test --package-path swift",
+    "swift:coreai:app-parity": "swift build --package-path swift && node --experimental-strip-types ./scripts/coreai-parity.mjs --coreai-app-command ./swift/.build/debug/kalandar-coreai-capture-preview --require-coreai-app",
+    "release:check": "npm run typecheck && npm run build && npm run swift:test && cargo test --manifest-path rust/Cargo.toml && npm run swift:coreai:app-parity && npm pack --dry-run"
+  },
+  "dependencies": {
+    "chrono-node": "^2.9.0"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "devDependencies": {
+    "@types/node": "26.1.0",
+    "typescript": "6.0.3"
+  }
+}

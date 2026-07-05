@@ -1,0 +1,140 @@
+{
+  "version": 1,
+  "intent": [
+    {
+      "id": "intent-task-dated",
+      "input": "finish report tomorrow"
+    },
+    {
+      "id": "intent-reminder-explicit",
+      "input": "remind me to water plants every other saturday at 9am"
+    },
+    {
+      "id": "intent-calendar-meeting",
+      "input": "meeting with Sara tomorrow 3pm to 4pm at office"
+    },
+    {
+      "id": "intent-thought-soft-note",
+      "input": "idea about better shell notifications"
+    },
+    {
+      "id": "intent-calendar-recurring-lunch",
+      "input": "Lunch with Sara every other Tuesday starting next month"
+    },
+    {
+      "id": "intent-calendar-read-digest",
+      "input": "read daily digest tomorrow"
+    },
+    {
+      "id": "intent-task-bus-pass",
+      "input": "buy monthly bus pass end of month"
+    },
+    {
+      "id": "intent-calendar-night-reminder-shape",
+      "input": "call mom every tuesday at night"
+    }
+  ],
+  "task": [
+    {
+      "id": "task-basic-structured",
+      "input": "finish report tomorrow at 3pm with Sara #finance high priority",
+      "timezone": "America/New_York",
+      "knownAssignees": ["Sara"]
+    },
+    {
+      "id": "task-project-assignees-metadata",
+      "input": "finally finish the Q2 board deck draft for Project Atlas with Nina and Omar by the first business day next month, high priority, 90 minutes, in progress, tags #finance #board",
+      "timezone": "America/New_York",
+      "knownAssignees": ["Nina", "Omar"]
+    },
+    {
+      "id": "task-project-status-tags",
+      "input": "fix login bug in project Helios, blocked, tags: auth, frontend",
+      "timezone": "America/New_York"
+    }
+  ],
+  "reminder": [
+    {
+      "id": "reminder-recurring-weekly",
+      "input": "remind me to water plants every other saturday at 9am",
+      "timezone": "America/New_York"
+    },
+    {
+      "id": "reminder-daily-adjective-oneoff",
+      "input": "reminder: read daily digest tomorrow",
+      "timezone": "America/New_York"
+    },
+    {
+      "id": "reminder-monthly-adjective-oneoff",
+      "input": "reminder: buy monthly bus pass end of month",
+      "timezone": "America/New_York"
+    },
+    {
+      "id": "reminder-window-end-night-hint",
+      "input": "reminder: attach mailers to phil every wednesday night for 3 months till 9th august",
+      "timezone": "America/New_York"
+    },
+    {
+      "id": "reminder-start-boundary",
+      "input": "reminder: Lunch with Sara every other Tuesday starting next month",
+      "timezone": "America/New_York"
+    },
+    {
+      "id": "reminder-chained-exceptions",
+      "input": "reminder: Lunch with Sara every other Tuesday unless it's a holiday then the following Thursday starting next month but skip the first one",
+      "timezone": "America/New_York"
+    },
+    {
+      "id": "reminder-exception-action-tail",
+      "input": "reminder: Water Plants every other saturday except the week of the 21st and add soil",
+      "timezone": "America/New_York"
+    },
+    {
+      "id": "reminder-context-night",
+      "input": "reminder: call mom every tuesday at night",
+      "timezone": "America/New_York"
+    },
+    {
+      "id": "reminder-title-night",
+      "input": "reminder: movie night every friday",
+      "timezone": "America/New_York"
+    },
+    {
+      "id": "reminder-recurring-stretch-title",
+      "input": "remind me every other day to stretch",
+      "timezone": "America/New_York"
+    }
+  ],
+  "calendar": [
+    {
+      "id": "calendar-meeting-range",
+      "input": "meeting with Sara tomorrow 3pm to 4pm at office",
+      "timezone": "America/New_York",
+      "locale": "en-US"
+    },
+    {
+      "id": "calendar-default-end-hour",
+      "input": "Design review tomorrow at 3 PM",
+      "timezone": "America/New_York",
+      "locale": "en-US"
+    },
+    {
+      "id": "calendar-recurring-lunch-start",
+      "input": "Lunch with Sara every other Tuesday starting next month",
+      "timezone": "America/New_York",
+      "locale": "en-US"
+    },
+    {
+      "id": "calendar-recurring-lunch-exceptions",
+      "input": "Lunch with Sara every other Tuesday unless it's a holiday then the following Thursday starting next month but skip the first one",
+      "timezone": "America/New_York",
+      "locale": "en-US"
+    },
+    {
+      "id": "calendar-weekly-end-default-hour",
+      "input": "Meeting with venue every Tuesday at 3 PM till July 1st",
+      "timezone": "America/New_York",
+      "locale": "en-US"
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "cases": [
+    {
+      "id": "embedding-task-basic",
+      "text": "finish report tomorrow at 3 pm"
+    },
+    {
+      "id": "embedding-calendar-recurring",
+      "text": "Lunch with Sara every other Tuesday starting next month"
+    },
+    {
+      "id": "embedding-reminder-recurring",
+      "text": "remind me to water plants every other saturday at 9am"
+    }
+  ]
+}

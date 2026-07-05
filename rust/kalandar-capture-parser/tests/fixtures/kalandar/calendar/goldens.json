@@ -1,0 +1,117 @@
+[
+  {
+    "id": "calendar-meeting-range",
+    "input": "meeting with Sara tomorrow 3pm to 4pm at office",
+    "timezone": "America/New_York",
+    "locale": "en-US",
+    "oracle": {
+      "kind": "calendar-event",
+      "title": "meeting with sara",
+      "dateText": "tomorrow",
+      "timeText": "3pm",
+      "endTimeText": "4pm",
+      "durationMinutes": 60,
+      "location": "office",
+      "recurrenceText": null,
+      "recurrenceStartText": null,
+      "recurrenceEndText": null,
+      "recurrenceExceptions": [],
+      "attendees": [
+        "sara"
+      ]
+    }
+  },
+  {
+    "id": "calendar-default-end-hour",
+    "input": "Design review tomorrow at 3 PM",
+    "timezone": "America/New_York",
+    "locale": "en-US",
+    "oracle": {
+      "kind": "calendar-event",
+      "title": "design review",
+      "dateText": "tomorrow",
+      "timeText": "3 pm",
+      "endTimeText": null,
+      "durationMinutes": 60,
+      "location": null,
+      "recurrenceText": null,
+      "recurrenceStartText": null,
+      "recurrenceEndText": null,
+      "recurrenceExceptions": [],
+      "attendees": []
+    }
+  },
+  {
+    "id": "calendar-recurring-lunch-start",
+    "input": "Lunch with Sara every other Tuesday starting next month",
+    "timezone": "America/New_York",
+    "locale": "en-US",
+    "oracle": {
+      "kind": "calendar-event",
+      "title": "lunch with sara",
+      "dateText": null,
+      "timeText": null,
+      "endTimeText": null,
+      "durationMinutes": null,
+      "location": null,
+      "recurrenceText": "every other tuesday",
+      "recurrenceStartText": "starting next month",
+      "recurrenceEndText": null,
+      "recurrenceExceptions": [],
+      "attendees": [
+        "sara"
+      ]
+    }
+  },
+  {
+    "id": "calendar-recurring-lunch-exceptions",
+    "input": "Lunch with Sara every other Tuesday unless it's a holiday then the following Thursday starting next month but skip the first one",
+    "timezone": "America/New_York",
+    "locale": "en-US",
+    "oracle": {
+      "kind": "calendar-event",
+      "title": "lunch with sara",
+      "dateText": null,
+      "timeText": null,
+      "endTimeText": null,
+      "durationMinutes": null,
+      "location": null,
+      "recurrenceText": "every other tuesday",
+      "recurrenceStartText": "starting next month",
+      "recurrenceEndText": null,
+      "recurrenceExceptions": [
+        {
+          "raw": "unless it's a holiday then the following thursday"
+        },
+        {
+          "raw": "but skip the first one"
+        }
+      ],
+      "attendees": [
+        "sara"
+      ]
+    }
+  },
+  {
+    "id": "calendar-weekly-end-default-hour",
+    "input": "Meeting with venue every Tuesday at 3 PM till July 1st",
+    "timezone": "America/New_York",
+    "locale": "en-US",
+    "oracle": {
+      "kind": "calendar-event",
+      "title": "meeting with venue",
+      "dateText": null,
+      "timeText": "3 pm",
+      "endTimeText": null,
+      "durationMinutes": 60,
+      "location": null,
+      "recurrenceText": "every tuesday",
+      "recurrenceStartText": null,
+      "recurrenceEndText": "till july 1st",
+      "recurrenceExceptions": [],
+      "attendees": [
+        "venue"
+      ]
+    }
+  }
+]

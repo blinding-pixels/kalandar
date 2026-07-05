@@ -1,0 +1,71 @@
+[
+  {
+    "id": "task-basic-structured",
+    "input": "finish report tomorrow at 3pm with Sara #finance high priority",
+    "timezone": "America/New_York",
+    "knownAssignees": [
+      "Sara"
+    ],
+    "oracle": {
+      "kind": "task",
+      "title": "finish report",
+      "assignees": [
+        "sara"
+      ],
+      "projectHint": null,
+      "tags": [
+        "finance"
+      ],
+      "priority": "high",
+      "status": null,
+      "dueDateText": "tomorrow",
+      "dueTimeText": "3pm"
+    }
+  },
+  {
+    "id": "task-project-assignees-metadata",
+    "input": "finally finish the Q2 board deck draft for Project Atlas with Nina and Omar by the first business day next month, high priority, 90 minutes, in progress, tags #finance #board",
+    "timezone": "America/New_York",
+    "knownAssignees": [
+      "Nina",
+      "Omar"
+    ],
+    "oracle": {
+      "kind": "task",
+      "title": "finally finish the q2 board deck draft",
+      "assignees": [
+        "nina",
+        "omar"
+      ],
+      "projectHint": "project atlas",
+      "tags": [
+        "board",
+        "finance"
+      ],
+      "priority": "high",
+      "status": "in progress",
+      "dueDateText": "by the first business day next month",
+      "dueTimeText": null
+    }
+  },
+  {
+    "id": "task-project-status-tags",
+    "input": "fix login bug in project Helios, blocked, tags: auth, frontend",
+    "timezone": "America/New_York",
+    "knownAssignees": null,
+    "oracle": {
+      "kind": "task",
+      "title": "fix login bug",
+      "assignees": [],
+      "projectHint": "project helios",
+      "tags": [
+        "auth",
+        "frontend"
+      ],
+      "priority": null,
+      "status": "blocked",
+      "dueDateText": null,
+      "dueTimeText": null
+    }
+  }
+]

@@ -1,0 +1,32 @@
+{
+  "version": 1,
+  "generatedAt": "2026-05-16T12:00:00.000Z",
+  "source": "frozen-kalandar-oracle-output",
+  "notes": [
+    "The TypeScript oracle source has been removed from this repository after Rust parser validation.",
+    "These goldens are retained as frozen validation fixtures from the previous lightweight parser surface.",
+    "Rust parity tests should compare normalized semantic output rather than incidental formatting."
+  ],
+  "families": [
+    {
+      "family": "intent",
+      "outputDir": "crates/kalandar-capture-parser/tests/fixtures/kalandar/intent",
+      "caseCount": 8
+    },
+    {
+      "family": "task",
+      "outputDir": "crates/kalandar-capture-parser/tests/fixtures/kalandar/task",
+      "caseCount": 3
+    },
+    {
+      "family": "reminder",
+      "outputDir": "crates/kalandar-capture-parser/tests/fixtures/kalandar/reminder",
+      "caseCount": 10
+    },
+    {
+      "family": "calendar",
+      "outputDir": "crates/kalandar-capture-parser/tests/fixtures/kalandar/calendar",
+      "caseCount": 5
+    }
+  ]
+}

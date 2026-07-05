@@ -1,0 +1,36 @@
+name: Feature request
+description: Request a new behavior, API, parser case, or integration path.
+title: "Feature: "
+labels:
+  - enhancement
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This project accepts feature requests through issues only. Pull requests are not accepted.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What are you trying to do?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed behavior
+      description: What should Kalandar do?
+    validations:
+      required: true
+  - type: dropdown
+    id: implementation
+    attributes:
+      label: Relevant implementation path
+      options:
+        - JavaScript
+        - Rust
+        - Swift/Core AI
+        - All implementations
+        - Not sure
+    validations:
+      required: true

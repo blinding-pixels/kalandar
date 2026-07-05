@@ -1,0 +1,156 @@
+{
+  "version": 1,
+  "nowIso": "2026-05-16T12:00:00.000Z",
+  "cases": [
+    {
+      "id": "intent-task-dated",
+      "family": "intent",
+      "input": "finish report tomorrow",
+      "timezone": "America/New_York",
+      "locale": "en-US",
+      "knownAssignees": null,
+      "expected": {
+        "kind": "task"
+      }
+    },
+    {
+      "id": "intent-calendar-meeting",
+      "family": "intent",
+      "input": "meeting with Sara tomorrow 3pm to 4pm at office",
+      "timezone": "America/New_York",
+      "locale": "en-US",
+      "knownAssignees": null,
+      "expected": {
+        "kind": "calendar-event"
+      }
+    },
+    {
+      "id": "task-basic-structured",
+      "family": "task",
+      "input": "finish report tomorrow at 3pm with Sara #finance high priority",
+      "timezone": "America/New_York",
+      "locale": "en-US",
+      "knownAssignees": ["Sara"],
+      "expected": {
+        "kind": "task",
+        "title": "finish report",
+        "assignees": ["sara"],
+        "projectHint": null,
+        "tags": ["#finance"],
+        "priority": "high",
+        "status": null,
+        "dueDateText": "tomorrow",
+        "dueTimeText": "at 3pm"
+      }
+    },
+    {
+      "id": "task-project-status-tags",
+      "family": "task",
+      "input": "fix login bug in project Helios, blocked, tags: auth, frontend",
+      "timezone": "America/New_York",
+      "locale": "en-US",
+      "knownAssignees": null,
+      "expected": {
+        "kind": "task",
+        "title": "fix login bug",
+        "assignees": [],
+        "projectHint": "project helios",
+        "tags": ["auth", "frontend"],
+        "priority": null,
+        "status": "blocked",
+        "dueDateText": null,
+        "dueTimeText": null
+      }
+    },
+    {
+      "id": "reminder-recurring-weekly",
+      "family": "reminder",
+      "input": "remind me to water plants every other saturday at 9am",
+      "timezone": "America/New_York",
+      "locale": "en-US",
+      "knownAssignees": null,
+      "expected": {
+        "kind": "reminder",
+        "title": "water plants",
+        "remindAtText": "2026-05-16t09:00:00",
+        "recurrenceStartText": null,
+        "recurrenceEndText": null,
+        "recurrenceWindowText": null,
+        "contextHint": null,
+        "recurrenceExceptions": [],
+        "recurrence": {
+          "frequency": "weekly",
+          "interval": 2,
+          "days": ["saturday"]
+        }
+      }
+    },
+    {
+      "id": "reminder-context-night",
+      "family": "reminder",
+      "input": "reminder: call mom every tuesday at night",
+      "timezone": "America/New_York",
+      "locale": "en-US",
+      "knownAssignees": null,
+      "expected": {
+        "kind": "reminder",
+        "title": "call mom",
+        "remindAtText": "2026-05-19t20:00:00",
+        "recurrenceStartText": null,
+        "recurrenceEndText": null,
+        "recurrenceWindowText": null,
+        "contextHint": "night",
+        "recurrenceExceptions": [],
+        "recurrence": {
+          "frequency": "weekly",
+          "interval": 1,
+          "days": ["tuesday"]
+        }
+      }
+    },
+    {
+      "id": "calendar-meeting-range",
+      "family": "calendar",
+      "input": "meeting with Sara tomorrow 3pm to 4pm at office",
+      "timezone": "America/New_York",
+      "locale": "en-US",
+      "knownAssignees": null,
+      "expected": {
+        "kind": "calendar-event",
+        "title": "meeting with sara",
+        "dateText": "2026-05-17",
+        "timeText": "15:00",
+        "endTimeText": "16:00",
+        "durationMinutes": 60,
+        "location": "office",
+        "recurrenceText": null,
+        "recurrenceStartText": null,
+        "recurrenceEndText": null,
+        "recurrenceExceptions": [],
+        "attendees": []
+      }
+    },
+    {
+      "id": "calendar-recurring-lunch-start",
+      "family": "calendar",
+      "input": "Lunch with Sara every other Tuesday starting next month",
+      "timezone": "America/New_York",
+      "locale": "en-US",
+      "knownAssignees": null,
+      "expected": {
+        "kind": "calendar-event",
+        "title": "lunch with sara",
+        "dateText": null,
+        "timeText": null,
+        "endTimeText": null,
+        "durationMinutes": null,
+        "location": null,
+        "recurrenceText": "freq=weekly;interval=2;byday=tu",
+        "recurrenceStartText": "2026-06-01",
+        "recurrenceEndText": null,
+        "recurrenceExceptions": [],
+        "attendees": []
+      }
+    }
+  ]
+}
