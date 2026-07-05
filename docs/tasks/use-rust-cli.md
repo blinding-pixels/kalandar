@@ -17,13 +17,13 @@ The Rust source is included in the npm package under `node_modules/kalandar/rust
 Install the CLI after the crate is published:
 
 ```sh
-cargo install kalandar-capture-parser --bin kalandar-capture-preview
+cargo install kalandar --bin kalandar-capture-preview
 ```
 
 Add the library to a Rust project:
 
 ```sh
-cargo add kalandar-capture-parser
+cargo add kalandar
 ```
 
 ## Build The CLI From npm

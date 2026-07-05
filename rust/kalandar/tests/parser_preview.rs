@@ -1,4 +1,4 @@
-use kalandar_capture_parser::{CaptureParser, CapturePreviewRequest, CapturePreviewResult};
+use kalandar::{CaptureParser, CapturePreviewRequest, CapturePreviewResult};
 use serde::Deserialize;
 use std::{collections::BTreeSet, env, fs, path::PathBuf};
 

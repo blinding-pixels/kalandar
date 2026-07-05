@@ -8,7 +8,7 @@ import { parseCapturePreviewInput } from '../src/capture/index.ts';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const workspaceRoot = path.resolve(root, '..');
-const fixturesRoot = path.join(root, 'rust', 'kalandar-capture-parser', 'tests', 'fixtures', 'kalandar');
+const fixturesRoot = path.join(root, 'rust', 'kalandar', 'tests', 'fixtures', 'kalandar');
 const jsLockPath = path.join(root, 'coreai', 'app-parity-lock.json');
 const args = process.argv.slice(2);
 

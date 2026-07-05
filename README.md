@@ -56,7 +56,7 @@ Start with [the docs index](./docs/README.md).
 | Path | Import or package | Best for |
 | --- | --- | --- |
 | JavaScript | `kalandar` and `kalandar/capture` | Web apps, Node apps, and simple integrations. |
-| Rust | `kalandar-capture-parser` crate and `kalandar-capture-preview` CLI | Native desktop apps and cross-platform hosts. |
+| Rust | `kalandar` crate and `kalandar-capture-preview` CLI | Native desktop apps and cross-platform hosts. |
 | Swift/Core AI | `KalandarCoreAIRuntime` SwiftPM product | Apple-native apps that provide a Core AI host. |
 
 All three paths return the same `capture-preview-v1` result shape.

@@ -39,8 +39,8 @@ TRAINING_SITE_PACKAGES = (
     WORKSPACE_ROOT / "training" / ".venv" / "lib" / "python3.13" / "site-packages"
 )
 
-MANIFEST_VERSION = "kalandar-capture-parser-artifacts-v1"
-SUITE_VERSION = "kalandar-capture-parser-rust-v1"
+MANIFEST_VERSION = "kalandar-artifacts-v1"
+SUITE_VERSION = "kalandar-rust-v1"
 NORMALIZATION_VERSION = "kalandar-rust-parity-normalization-v1"
 POSTPROCESS_VERSION = "kalandar-rust-lightweight-v1"
 TOKENIZER = {
@@ -220,7 +220,7 @@ def load_tiny_intent_model() -> dict[str, Any]:
 
 def fixture_inputs() -> list[str]:
     inputs = list(CAPABILITY_SAMPLES)
-    fixtures_root = PACKAGE_ROOT / "rust" / "kalandar-capture-parser" / "tests" / "fixtures" / "kalandar"
+    fixtures_root = PACKAGE_ROOT / "rust" / "kalandar" / "tests" / "fixtures" / "kalandar"
     for fixture_path in fixtures_root.glob("*/goldens.json"):
         for entry in json.loads(fixture_path.read_text(encoding="utf-8")):
             if "input" in entry:

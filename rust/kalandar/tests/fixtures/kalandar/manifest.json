@@ -10,22 +10,22 @@
   "families": [
     {
       "family": "intent",
-      "outputDir": "crates/kalandar-capture-parser/tests/fixtures/kalandar/intent",
+      "outputDir": "crates/kalandar/tests/fixtures/kalandar/intent",
       "caseCount": 8
     },
     {
       "family": "task",
-      "outputDir": "crates/kalandar-capture-parser/tests/fixtures/kalandar/task",
+      "outputDir": "crates/kalandar/tests/fixtures/kalandar/task",
       "caseCount": 3
     },
     {
       "family": "reminder",
-      "outputDir": "crates/kalandar-capture-parser/tests/fixtures/kalandar/reminder",
+      "outputDir": "crates/kalandar/tests/fixtures/kalandar/reminder",
       "caseCount": 10
     },
     {
       "family": "calendar",
-      "outputDir": "crates/kalandar-capture-parser/tests/fixtures/kalandar/calendar",
+      "outputDir": "crates/kalandar/tests/fixtures/kalandar/calendar",
       "caseCount": 5
     }
   ]

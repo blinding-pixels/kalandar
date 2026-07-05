@@ -146,12 +146,12 @@ test('capture parser factory rejects unknown implementation names', async () => 
 
 test('copied Rust CLI source references the package binary name', () => {
   const root = new URL('../../..', import.meta.url);
-  const manifest = readFileSync(new URL('rust/kalandar-capture-parser/Cargo.toml', root), 'utf8');
+  const manifest = readFileSync(new URL('rust/kalandar/Cargo.toml', root), 'utf8');
   const binarySource = readFileSync(
-    new URL('rust/kalandar-capture-parser/src/bin/kalandar-capture-preview.rs', root),
+    new URL('rust/kalandar/src/bin/kalandar-capture-preview.rs', root),
     'utf8',
   );
 
-  assert.match(manifest, /name = "kalandar-capture-parser"/);
+  assert.match(manifest, /name = "kalandar"/);
   assert.match(binarySource, /CaptureParser::new/);
 });

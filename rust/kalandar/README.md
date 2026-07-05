@@ -1,10 +1,10 @@
 # Kalandar Capture Parser
 
-`kalandar-capture-parser` is the Rust capture-preview parser runtime for Kalandar.
+`kalandar` is the Rust capture-preview parser runtime for Kalandar.
 
 The crate exposes:
 
-- the `kalandar_capture_parser` library
+- the `kalandar` library
 - the `kalandar-capture-preview` JSON CLI
 
 Both surfaces use the same `capture-preview-v1` app-facing contract as the JavaScript and Swift/Core AI implementation paths.
@@ -14,13 +14,13 @@ Both surfaces use the same `capture-preview-v1` app-facing contract as the JavaS
 Install the CLI:
 
 ```sh
-cargo install kalandar-capture-parser --bin kalandar-capture-preview
+cargo install kalandar --bin kalandar-capture-preview
 ```
 
 Add the library to a Rust project:
 
 ```sh
-cargo add kalandar-capture-parser
+cargo add kalandar
 ```
 
 ## Build

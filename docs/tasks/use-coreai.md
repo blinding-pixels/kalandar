@@ -35,7 +35,7 @@ swift build --package-path .
 Add the package dependency to your Swift package:
 
 ```swift
-.package(url: "https://github.com/blinding-pixels/kalandar.git", from: "0.1.0")
+.package(url: "https://github.com/blinding-pixels/kalandar.git", from: "0.1.1")
 ```
 
 Add the library product to your target:

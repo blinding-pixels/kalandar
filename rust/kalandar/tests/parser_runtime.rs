@@ -1,4 +1,4 @@
-use kalandar_capture_parser::{
+use kalandar::{
     build_token_classification_request, load_capture_parser_artifact_manifest_from_root,
     CaptureWordPieceTokenizer, RuntimeTensorData, ATTENTION_MASK_TENSOR_NAME,
     INPUT_IDS_TENSOR_NAME, LOGITS_OUTPUT_TENSOR_NAME,

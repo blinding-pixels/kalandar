@@ -12,7 +12,7 @@ It includes:
 - TypeScript declaration files in `dist/`
 - public documentation in `README.md`, `docs/`, `coreai/README.md`, and selected source docs
 - Swift source in `swift/`
-- Rust source in `rust/kalandar-capture-parser/src/`
+- Rust source in `rust/kalandar/src/`
 - Rust workspace manifests
 - Core AI parity fixtures
 
@@ -26,11 +26,11 @@ It excludes:
 
 ## Rust Crate
 
-The Rust crate name is `kalandar-capture-parser`.
+The Rust crate name is `kalandar`.
 
 It includes:
 
-- `kalandar_capture_parser` library target
+- `kalandar` library target
 - `kalandar-capture-preview` binary target
 - Rust tests
 - crate README

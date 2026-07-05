@@ -1,4 +1,4 @@
-use kalandar_capture_parser::{
+use kalandar::{
     CaptureParser, CaptureParserError, CapturePreviewRequest, CapturePreviewResult,
 };
 use std::{

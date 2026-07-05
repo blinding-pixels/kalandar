@@ -6,7 +6,7 @@ Use this checklist before publishing Kalandar.
 
 - `package.json` has the intended `name`, `version`, `description`, `license`, repository, homepage, and issue URL.
 - `package.json` does not set `private: true`.
-- `rust/kalandar-capture-parser/Cargo.toml` has the intended name, version, description, license, repository, and readme.
+- `rust/kalandar/Cargo.toml` has the intended name, version, description, license, repository, and readme.
 - `Package.swift` builds from the package root.
 - `LICENSE` exists and matches the intended license.
 
@@ -24,7 +24,7 @@ Run:
 ```sh
 npm run lint
 npm run release:check
-cargo publish --dry-run --manifest-path rust/kalandar-capture-parser/Cargo.toml
+cargo publish --dry-run --manifest-path rust/kalandar/Cargo.toml
 npm publish --dry-run --access public
 npm audit --omit=dev
 ```

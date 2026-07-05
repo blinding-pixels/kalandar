@@ -9,7 +9,7 @@ use std::{
 
 pub const CAPTURE_PARSER_RESOURCE_ROOT: &str = "capture-parser";
 pub const CAPTURE_PARSER_MANIFEST_NAME: &str = "manifest.json";
-pub const CAPTURE_PARSER_ARTIFACT_MANIFEST_VERSION: &str = "kalandar-capture-parser-artifacts-v1";
+pub const CAPTURE_PARSER_ARTIFACT_MANIFEST_VERSION: &str = "kalandar-artifacts-v1";
 pub const LEGACY_CAPTURE_PARSER_ARTIFACT_MANIFEST_VERSION: &str =
     "facets-capture-parser-artifacts-v1";
 pub const BERT_TOKEN_CLASSIFIER_RUNTIME_KIND: &str = "bert-token-classifier";

@@ -1,6 +1,6 @@
 [package]
-name = "kalandar-capture-parser"
-version = "0.1.0"
+name = "kalandar"
+version = "0.1.1"
 edition = "2021"
 license = "MIT"
 description = "Native Rust capture-preview parser runtime for Kalandar."

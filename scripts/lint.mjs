@@ -7,8 +7,8 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const targets = [
   'src',
   'coreai',
-  'rust/kalandar-capture-parser/src',
-  'rust/kalandar-capture-parser/tests',
+  'rust/kalandar/src',
+  'rust/kalandar/tests',
   'scripts',
   'package.json',
   'tsconfig.json',
