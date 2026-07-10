@@ -17,6 +17,17 @@ public struct CoreAITensorRunner: CoreAITensorRunning {
     public init() {}
 
     public func runTokenClassifier(artifact: CoreAIParserArtifact, tokenized: TokenizedText) async throws -> CoreAITensorOutput {
+        guard #available(macOS 27.0, iOS 27.0, *) else {
+            throw KalandarCoreAIError.coreAIUnavailable
+        }
+        return try await runAvailableTokenClassifier(artifact: artifact, tokenized: tokenized)
+    }
+
+    @available(macOS 27.0, iOS 27.0, *)
+    private func runAvailableTokenClassifier(
+        artifact: CoreAIParserArtifact,
+        tokenized: TokenizedText
+    ) async throws -> CoreAITensorOutput {
         let model = try await AIModel(contentsOf: artifact.modelURL)
         guard let function = try model.loadFunction(named: "main") else {
             throw KalandarCoreAIError.invalidManifest("model does not expose main function")
@@ -28,13 +39,14 @@ public struct CoreAITensorRunner: CoreAITensorRunning {
 
         var outputs = try await function.run(inputs: inputs)
         let outputName = artifact.manifest.inputContract.outputs.first?.name ?? "logits"
-        guard let array = outputs.removeValue(forKey: outputName)?.ndArray else {
+        guard let array = outputs.remove(outputName)?.ndArray else {
             throw KalandarCoreAIError.modelOutputMissing(outputName)
         }
 
         return CoreAITensorOutput(name: outputName, shape: array.shape, values: readFloats(array))
     }
 
+    @available(macOS 27.0, iOS 27.0, *)
     private func makeInt32Array(function: InferenceFunction, name: String, values: [Int32]) throws -> NDArray {
         guard case .ndArray(let descriptor) = function.descriptor.inputDescriptor(of: name) else {
             throw KalandarCoreAIError.invalidManifest("model input is not an NDArray: \(name)")
@@ -50,6 +62,7 @@ public struct CoreAITensorRunner: CoreAITensorRunning {
         return array
     }
 
+    @available(macOS 27.0, iOS 27.0, *)
     private func readFloats(_ array: NDArray) -> [Float] {
         let total = array.shape.reduce(1, *)
         var result = Array(repeating: Float(0), count: total)

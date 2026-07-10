@@ -10,7 +10,7 @@ You need:
 - A host that can run the model locally or remotely.
 - An adapter that implements `InferenceAdapter`.
 
-The base npm package does not include model artifacts.
+The Git repository includes a validated ONNX suite under `resources/capture-parser`. Core AI artifacts are distributed separately.
 
 ## Choose An Adapter
 
@@ -31,11 +31,13 @@ import { loadMlArtifact } from 'kalandar/runtime';
 
 const artifact = await loadMlArtifact({
   kind: 'directory',
-  path: '/path/to/task-artifact',
+  path: 'node_modules/kalandar/resources/capture-parser/task',
 });
 ```
 
 The runtime validates the manifest, file digests, tensor contract, labels, normalization version, and postprocess version.
+
+For a native Swift app, prefer `CoreAIParserSuite` over the JavaScript adapter. It loads the Core AI artifact root directly and requires an Apple SDK that includes `CoreAI` plus macOS or iOS 27 or later for `.aimodel` execution.
 
 ## Use Local ONNX
 

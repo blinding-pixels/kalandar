@@ -76,7 +76,9 @@ The host provides a bridge with three operations:
 - `runModel`
 - `disposeModel`
 
-The npm package does not load Apple-only Core AI libraries directly.
+The JavaScript package does not load Apple-only Core AI libraries directly. Native
+Swift apps can bypass this bridge and use `CoreAIParserSuite` or
+`CoreAICapturePreviewService` with a Core AI artifact root.
 
 ## Remote Adapter
 
@@ -105,4 +107,5 @@ For full details, see [Tensor contract](../../src/runtime/TENSOR_CONTRACT.md).
 
 - Learn the artifact model in [Artifacts and inference](../concepts/artifacts-and-inference.md).
 - Self-host inference with [Self-host inference](../tasks/self-host-inference.md).
+- Use native models in [Use Swift and Core AI](../tasks/use-coreai.md).
 - Review package contents in [Package layout](./package-layout.md).

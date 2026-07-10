@@ -8,13 +8,15 @@ You need:
 
 - Node.js 18 or newer for Node usage.
 - An ESM-capable project.
-- `kalandar` installed.
+- Git access to `blinding-pixels/kalandar`.
 
 ```sh
-npm install kalandar
+npm install git+ssh://git@github.com/blinding-pixels/kalandar.git#<git-ref>
 # or
-pnpm add kalandar
+pnpm add git+ssh://git@github.com/blinding-pixels/kalandar.git#<git-ref>
 ```
+
+Replace `<git-ref>` with a commit SHA, branch, or release tag. npm installation is also supported once a registry release exists.
 
 ## Create A Parser
 

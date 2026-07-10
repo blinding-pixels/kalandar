@@ -1,0 +1,248 @@
+{
+  "manifestVersion": "kalandar-artifacts-v1",
+  "suiteVersion": "kalandar-capture-parser-onnx-v1",
+  "bundles": [
+    {
+      "parser": "intent",
+      "runtimeKind": "tiny-linear",
+      "artifactId": "sha256:e82f916cdf38995aa01fc8f3b7772bb236369c05ebb0934ca6b1300b6edda8e6",
+      "tensorContractVersion": null,
+      "normalizationVersion": "intent-tiny-linear-v1",
+      "postprocessVersion": "intent-routing-v1",
+      "tokenizer": null,
+      "labels": [
+        "calendar",
+        "none",
+        "task"
+      ],
+      "files": [
+        {
+          "logicalName": "model_json",
+          "path": "intent/tiny-linear.json",
+          "sha256": "02843f2ec575ba912ed1b30ebe8a83ad9b92e72e1d57d157fdc497306b077a29",
+          "sizeBytes": 270659
+        }
+      ]
+    },
+    {
+      "parser": "task",
+      "runtimeKind": "bert-token-classifier",
+      "artifactId": "sha256:79441f02cad7783979fd3f750d699854ae555a09bab06232b65271a99de5ea1d",
+      "tensorContractVersion": "task-bert-token-classification-v1",
+      "normalizationVersion": "task-bert-uncased-v1",
+      "postprocessVersion": "task-postprocess-v1",
+      "tokenizer": {
+        "kind": "bert_wordpiece",
+        "doLowerCase": true,
+        "unkToken": "[UNK]",
+        "clsToken": "[CLS]",
+        "sepToken": "[SEP]",
+        "padToken": "[PAD]",
+        "maxSequenceLength": 128
+      },
+      "labels": [
+        "O",
+        "B-title",
+        "I-title",
+        "B-due_date",
+        "I-due_date",
+        "B-due_time",
+        "I-due_time",
+        "B-priority",
+        "I-priority",
+        "B-assignee",
+        "I-assignee",
+        "B-project",
+        "I-project",
+        "B-tags",
+        "I-tags",
+        "B-duration",
+        "I-duration",
+        "B-status",
+        "I-status",
+        "B-recurrence",
+        "I-recurrence",
+        "B-recurrence_start",
+        "I-recurrence_start",
+        "B-recurrence_end",
+        "I-recurrence_end",
+        "B-recurrence_exception",
+        "I-recurrence_exception"
+      ],
+      "files": [
+        {
+          "logicalName": "model",
+          "path": "task/model.onnx",
+          "sha256": "4627afb3667739cb8ec65808c5d0d83f7cfbfd14772840c1769fd20872e120d2",
+          "sizeBytes": 33762211
+        },
+        {
+          "logicalName": "config",
+          "path": "task/config.json",
+          "sha256": "4699f9f7d1ac744411ceb9e988daf7896e18e3c2bbe80f4ebfc4a9e78013bccd",
+          "sizeBytes": 1910
+        },
+        {
+          "logicalName": "tokenizer_config",
+          "path": "task/tokenizer_config.json",
+          "sha256": "e711904cac23112776b678356ccf702cf934babaa01125f698ac43bf9ad38e73",
+          "sizeBytes": 1300
+        },
+        {
+          "logicalName": "special_tokens_map",
+          "path": "task/special_tokens_map.json",
+          "sha256": "b6d346be366a7d1d48332dbc9fdf3bf8960b5d879522b7799ddba59e76237ee3",
+          "sizeBytes": 125
+        },
+        {
+          "logicalName": "vocab",
+          "path": "task/vocab.txt",
+          "sha256": "07eced375cec144d27c900241f3e339478dec958f92fddbc551f295c992038a3",
+          "sizeBytes": 231508
+        }
+      ]
+    },
+    {
+      "parser": "calendar",
+      "runtimeKind": "bert-token-classifier",
+      "artifactId": "sha256:6a4e69597fe1955246e5eb6213afe311299645712e7897959f630b3473a22ddf",
+      "tensorContractVersion": "calendar-bert-token-classification-v1",
+      "normalizationVersion": "calendar-bert-uncased-v1",
+      "postprocessVersion": "calendar-event-postprocess-v1",
+      "tokenizer": {
+        "kind": "bert_wordpiece",
+        "doLowerCase": true,
+        "unkToken": "[UNK]",
+        "clsToken": "[CLS]",
+        "sepToken": "[SEP]",
+        "padToken": "[PAD]",
+        "maxSequenceLength": 128
+      },
+      "labels": [
+        "O",
+        "B-title",
+        "I-title",
+        "B-start_time",
+        "I-start_time",
+        "B-end_time",
+        "I-end_time",
+        "B-recurrence_start",
+        "I-recurrence_start",
+        "B-recurrence_end",
+        "I-recurrence_end",
+        "B-recurrence_exception",
+        "I-recurrence_exception",
+        "B-duration",
+        "I-duration",
+        "B-location",
+        "I-location",
+        "B-recurrence",
+        "I-recurrence",
+        "B-description",
+        "I-description"
+      ],
+      "files": [
+        {
+          "logicalName": "model",
+          "path": "calendar/model.onnx",
+          "sha256": "9b05cedd7b95535d2df1bbdd25265161c0b83420622bd4ed21994b96e2a171f0",
+          "sizeBytes": 33759851
+        },
+        {
+          "logicalName": "config",
+          "path": "calendar/config.json",
+          "sha256": "b3d98c3d4e98ce404b4f34f6ec86a3f7dcf6996a546e99cc2430671bccb73b65",
+          "sizeBytes": 1682
+        },
+        {
+          "logicalName": "tokenizer_config",
+          "path": "calendar/tokenizer_config.json",
+          "sha256": "e711904cac23112776b678356ccf702cf934babaa01125f698ac43bf9ad38e73",
+          "sizeBytes": 1300
+        },
+        {
+          "logicalName": "special_tokens_map",
+          "path": "calendar/special_tokens_map.json",
+          "sha256": "b6d346be366a7d1d48332dbc9fdf3bf8960b5d879522b7799ddba59e76237ee3",
+          "sizeBytes": 125
+        },
+        {
+          "logicalName": "vocab",
+          "path": "calendar/vocab.txt",
+          "sha256": "07eced375cec144d27c900241f3e339478dec958f92fddbc551f295c992038a3",
+          "sizeBytes": 231508
+        }
+      ]
+    },
+    {
+      "parser": "reminder",
+      "runtimeKind": "bert-token-classifier",
+      "artifactId": "sha256:4a8861068c72120ae3d957332cd60deb024eed9b60811d22ab4ca10cc6563d6d",
+      "tensorContractVersion": "reminder-bert-token-classification-v1",
+      "normalizationVersion": "reminder-bert-uncased-v1",
+      "postprocessVersion": "reminder-postprocess-v1",
+      "tokenizer": {
+        "kind": "bert_wordpiece",
+        "doLowerCase": true,
+        "unkToken": "[UNK]",
+        "clsToken": "[CLS]",
+        "sepToken": "[SEP]",
+        "padToken": "[PAD]",
+        "maxSequenceLength": 128
+      },
+      "labels": [
+        "O",
+        "B-title",
+        "I-title",
+        "B-trigger_time",
+        "I-trigger_time",
+        "B-recurrence",
+        "I-recurrence",
+        "B-recurrence_start",
+        "I-recurrence_start",
+        "B-recurrence_end",
+        "I-recurrence_end",
+        "B-recurrence_exception",
+        "I-recurrence_exception",
+        "B-recurrence_window",
+        "I-recurrence_window",
+        "B-location",
+        "I-location",
+        "B-lead_time",
+        "I-lead_time"
+      ],
+      "files": [
+        {
+          "logicalName": "model",
+          "path": "reminder/model.onnx",
+          "sha256": "7b8a0092df0dcdbd1a262f8b2d2024c049f878bb212e2f1e7bfe18630b46c13c",
+          "sizeBytes": 33759065
+        },
+        {
+          "logicalName": "config",
+          "path": "reminder/config.json",
+          "sha256": "c3c1936ef63e7d5f75af8a8e3821130972c4ff40f510902794f84ad647d358f4",
+          "sizeBytes": 1626
+        },
+        {
+          "logicalName": "tokenizer_config",
+          "path": "reminder/tokenizer_config.json",
+          "sha256": "e711904cac23112776b678356ccf702cf934babaa01125f698ac43bf9ad38e73",
+          "sizeBytes": 1300
+        },
+        {
+          "logicalName": "special_tokens_map",
+          "path": "reminder/special_tokens_map.json",
+          "sha256": "b6d346be366a7d1d48332dbc9fdf3bf8960b5d879522b7799ddba59e76237ee3",
+          "sizeBytes": 125
+        },
+        {
+          "logicalName": "vocab",
+          "path": "reminder/vocab.txt",
+          "sha256": "07eced375cec144d27c900241f3e339478dec958f92fddbc551f295c992038a3",
+          "sizeBytes": 231508
+        }
+      ]
+    }
+  ]
+}

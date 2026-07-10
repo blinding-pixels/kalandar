@@ -1,6 +1,6 @@
 {
   "name": "kalandar",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Natural-language capture parsing for tasks, reminders, and calendar events across JavaScript, Rust, and Apple-native runtimes.",
   "type": "module",
   "main": "./dist/capture/index.js",
@@ -29,9 +29,6 @@
     "rust",
     "swift"
   ],
-  "publishConfig": {
-    "access": "public"
-  },
   "files": [
     "dist/",
     "README.md",
@@ -45,6 +42,7 @@
     "coreai/README.md",
     "coreai/app-parity-lock.json",
     "coreai/model-parity-cases.json",
+    "resources/capture-parser/",
     "Package.swift",
     "rust/Cargo.lock",
     "rust/Cargo.toml",

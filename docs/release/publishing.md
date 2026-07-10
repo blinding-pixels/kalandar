@@ -1,17 +1,14 @@
 # Publishing Kalandar
 
-This page describes how to verify the release surfaces without publishing, then publish when credentials and tags are ready.
+This page describes how to create a Git release for private JavaScript and SwiftPM consumers. npm registry and crates.io publication are disabled for this repository.
 
 ## Before You Begin
 
-You need:
+For a Git release, you need:
 
-- npm account access for the `kalandar` package.
-- crates.io account access for the `kalandar` crate.
-- Git repository access for Swift Package Manager tag publishing.
+- Git repository access to `blinding-pixels/kalandar`.
+- Git credentials for consumers that install the private repository.
 - A clean release decision on the version number.
-
-Do not run the final publish commands until the version, changelog, and account credentials are ready.
 
 ## Verify Everything
 
@@ -21,41 +18,20 @@ Run the release check:
 npm run release:check
 ```
 
-This command runs TypeScript checks, builds the package, runs Swift tests, runs Rust tests, checks Swift app-output parity, and performs an npm pack dry run.
+This command runs TypeScript checks, builds the package, runs Swift tests, runs Rust tests, checks Swift app-output parity, and performs an npm pack dry run. It does not validate separately distributed Core AI artifacts.
 
-## Verify npm Publishing
+Before tagging a model-backed release, validate each Core AI artifact suite with the Python Core AI runtime and compare optimized model outputs against the approved parser baseline.
 
-Run:
+## Publish A Git Release
 
-```sh
-npm publish --dry-run --access public
-```
+1. Commit the reviewed source and documentation changes.
+2. Create a semantic version tag that includes the model-backed Swift implementation.
+3. Push the commit and tag to the private repository.
+4. Configure consumers to use the tag through npm Git dependencies or Swift Package Manager.
 
-This command prints the tarball contents and checks the package metadata. It does not publish.
+SwiftPM consumers can resolve a private tag without a Swift package registry or Swift Package Index entry.
 
-When ready to publish:
-
-```sh
-npm publish --access public
-```
-
-## Verify crates.io Publishing
-
-Run:
-
-```sh
-cargo publish --dry-run --manifest-path rust/kalandar/Cargo.toml
-```
-
-This packages and verifies the Rust crate. It does not upload a real release.
-
-When ready to publish:
-
-```sh
-cargo publish --manifest-path rust/kalandar/Cargo.toml
-```
-
-## Publish Swift
+## Publish Swift With Git Tags
 
 Swift Package Manager commonly consumes packages from Git repositories.
 
@@ -63,11 +39,11 @@ To publish a Swift package release:
 
 1. Ensure the root `Package.swift` builds.
 2. Commit the release.
-3. Create a semantic version tag such as `0.1.1`.
-4. Push the tag to the public repository.
-5. Add the repository to Swift Package Index after the public tag exists.
+3. Create a semantic version tag such as `0.1.2`.
+4. Push the tag to the private repository.
+5. Configure the consuming app's Git credentials for repository access.
 
-Swift package registries are optional. Use `swift package-registry publish` only if you choose to publish to a registry that implements the Swift package registry service.
+Swift package registries and the Swift Package Index are not needed. SwiftPM consumes the private Git tag directly.
 
 ## What's Next
 

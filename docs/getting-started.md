@@ -1,6 +1,6 @@
 # Getting Started
 
-This page shows how to install Kalandar and parse your first capture with the default JavaScript implementation.
+This page shows how to install Kalandar from Git and parse your first capture with the default JavaScript implementation.
 
 ## Before You Begin
 
@@ -9,15 +9,17 @@ You need:
 - Node.js 18 or newer.
 - An ESM-capable project.
 
-## Install Kalandar
+## Install From Git
 
-Install the npm package:
+Install the private repository over SSH. Replace `<git-ref>` with a commit SHA, branch, or release tag. Your local Git credentials must have access to `blinding-pixels/kalandar`.
 
 ```sh
-npm install kalandar
+npm install git+ssh://git@github.com/blinding-pixels/kalandar.git#<git-ref>
 # or
-pnpm add kalandar
+pnpm add git+ssh://git@github.com/blinding-pixels/kalandar.git#<git-ref>
 ```
+
+Imports remain `kalandar` after installation.
 
 ## Parse A Capture
 
@@ -76,7 +78,7 @@ The default parser uses the in-process JavaScript implementation. Native hosts c
 | --- | --- |
 | `typescript` | You need web or Node parsing without native binaries. |
 | `rust-cli` | You want a native process boundary for Windows, Linux, or cross-platform desktop apps. |
-| `coreai` | You have an Apple-native host that can return `capture-preview-v1` results. |
+| `coreai` | You have an Apple-native host that can use the Swift runtime and return `capture-preview-v1` results. |
 
 ## What's Next
 

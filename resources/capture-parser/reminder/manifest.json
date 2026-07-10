@@ -1,0 +1,38 @@
+{
+  "manifest_version": "kalandar-ml-artifact-v1",
+  "parser": "reminder",
+  "suite_version": "kalandar-capture-parser-onnx-v1",
+  "artifact_id": "sha256:7bbfe443a5eebd4e1c88be707d66d09afc8ddcab38f69487457a18d45d7c9fa8",
+  "tensor_contract_version": "reminder-bert-token-classification-v1",
+  "normalization_version": "reminder-bert-uncased-v1",
+  "postprocess_version": "reminder-postprocess-v1",
+  "tokenizer": {
+    "kind": "bert_wordpiece",
+    "do_lower_case": true,
+    "unk_token": "[UNK]",
+    "cls_token": "[CLS]",
+    "sep_token": "[SEP]",
+    "pad_token": "[PAD]",
+    "max_sequence_length": 128
+  },
+  "tensor_contract": {
+    "inputs": [
+      { "name": "input_ids", "dtype": "int64", "rank": 2 },
+      { "name": "attention_mask", "dtype": "int64", "rank": 2 }
+    ],
+    "outputs": [{ "name": "logits", "dtype": "float32", "rank": 3 }],
+    "max_sequence_length": 128,
+    "padding": "none",
+    "truncation": "tail",
+    "empty_input_behavior": "return_empty_result",
+    "whitespace_input_behavior": "return_empty_result",
+    "oversized_input_behavior": "truncate"
+  },
+  "files": {
+    "model": { "path": "model.onnx", "sha256": "7b8a0092df0dcdbd1a262f8b2d2024c049f878bb212e2f1e7bfe18630b46c13c", "size_bytes": 33759065 },
+    "config": { "path": "config.json", "sha256": "c3c1936ef63e7d5f75af8a8e3821130972c4ff40f510902794f84ad647d358f4", "size_bytes": 1626 },
+    "tokenizer_config": { "path": "tokenizer_config.json", "sha256": "e711904cac23112776b678356ccf702cf934babaa01125f698ac43bf9ad38e73", "size_bytes": 1300 },
+    "special_tokens_map": { "path": "special_tokens_map.json", "sha256": "b6d346be366a7d1d48332dbc9fdf3bf8960b5d879522b7799ddba59e76237ee3", "size_bytes": 125 },
+    "vocab": { "path": "vocab.txt", "sha256": "07eced375cec144d27c900241f3e339478dec958f92fddbc551f295c992038a3", "size_bytes": 231508 }
+  }
+}

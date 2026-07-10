@@ -53,6 +53,15 @@ interface CapturePreviewResult {
 
 Exactly one draft field should be populated for `task`, `calendar-event`, `reminder`, or `thought` results.
 
+## Direct Swift Extensions
+
+`CoreAIParserSuite` returns the typed Swift draft together with entity spans and
+model metadata. Its reminder draft can include `leadTimeText`, serialized as
+`lead_time_text`, and its calendar draft can include `descriptionText`, serialized
+as `description_text`. These optional fields are model enrichments for direct
+Swift callers; the portable `capture-preview-v1` contract above does not require
+JavaScript or Rust callers to emit or consume them.
+
 ## Candidate
 
 ```ts
@@ -166,7 +175,7 @@ await createCapturePreviewParser({
   command: '/path/to/kalandar-capture-preview',
   args: [],
   env: {},
-  resourceRoot: '/path/to/capture-parser',
+  resourceRoot: 'node_modules/kalandar/resources/capture-parser',
   timeoutMs: 30_000,
 });
 ```
@@ -199,4 +208,5 @@ await createCapturePreviewParser({
 
 - Use the JavaScript parser in [Use the JavaScript parser](../tasks/use-typescript.md).
 - Use the Rust CLI in [Use the Rust CLI](../tasks/use-rust-cli.md).
+- Use direct model parsing in [Use Swift and Core AI](../tasks/use-coreai.md).
 - Review runtime tensor adapters in [Runtime adapters](./runtime-adapters.md).

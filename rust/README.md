@@ -2,29 +2,25 @@
 
 This workspace contains the Rust capture-preview implementation for Kalandar.
 
-The npm package exposes this implementation through `createCapturePreviewParser({ implementation: "rust-cli", ... })`. The Rust crate also publishes as `kalandar`.
+The Git repository exposes this implementation through `createCapturePreviewParser({ implementation: "rust-cli", ... })` and as source under `rust/`.
 
 ## Before You Begin
 
 You need:
 
 - Rust and Cargo.
-- A capture-parser resource root for resource-backed runtime behavior.
+- A capture-parser resource root for resource-backed runtime behavior. The Git package provides it at `resources/capture-parser`.
 
-The base package does not vendor production model artifacts.
+The Git repository vendors the validated ONNX suite. Core AI artifacts remain separate.
+
+The crates.io package contains the Rust code only. A crates.io consumer downloads the matching `kalandar-onnx-<version>.tar.gz` asset from the GitHub release with the same version, then passes its extracted `capture-parser` directory as the resource root.
 
 ## Install
 
-Install the CLI after the crate is published:
+Build the CLI from a Git checkout:
 
 ```sh
-cargo install kalandar --bin kalandar-capture-preview
-```
-
-Add the library to a Rust project:
-
-```sh
-cargo add kalandar
+cargo build --manifest-path rust/Cargo.toml --bin kalandar-capture-preview
 ```
 
 ## Build
@@ -35,7 +31,7 @@ From a source checkout:
 cargo build --manifest-path rust/Cargo.toml --bin kalandar-capture-preview
 ```
 
-From an installed npm package:
+From an installed npm Git dependency:
 
 ```sh
 cargo build --manifest-path node_modules/kalandar/rust/Cargo.toml --bin kalandar-capture-preview
@@ -47,7 +43,7 @@ Send one request JSON object to standard input:
 
 ```sh
 printf '%s\n' '{"text":"task: finish report tomorrow","timezone":"UTC","locale":"en-US","known_assignees":null}' \
-  | kalandar-capture-preview --resource-root <capture-parser-resource-root>
+  | kalandar-capture-preview --resource-root resources/capture-parser
 ```
 
 The output is one `capture-preview-v1` result JSON object.

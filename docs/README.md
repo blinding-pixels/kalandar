@@ -6,7 +6,7 @@ Use this documentation by goal:
 
 | Goal | Start here |
 | --- | --- |
-| Install Kalandar and parse text in JavaScript. | [Getting started](./getting-started.md) |
+| Install Kalandar from private Git or parse text in JavaScript. | [Getting started](./getting-started.md) |
 | Choose JavaScript, Rust, or Swift/Core AI. | [Implementation paths](./concepts/implementation-paths.md) |
 | Understand model artifacts and inference adapters. | [Artifacts and inference](./concepts/artifacts-and-inference.md) |
 | Use the default JavaScript parser. | [Use the JavaScript parser](./tasks/use-typescript.md) |
@@ -15,7 +15,7 @@ Use this documentation by goal:
 | Self-host model inference. | [Self-host inference](./tasks/self-host-inference.md) |
 | Build a full capture preview flow. | [Build a capture preview flow](./tutorials/build-capture-preview.md) |
 | Look up exact request and response fields. | [Capture preview reference](./reference/capture-preview-v1.md) |
-| Prepare releases without publishing. | [Publishing Kalandar](./release/publishing.md) |
+| Prepare Git tags and optional registry releases. | [Publishing Kalandar](./release/publishing.md) |
 
 ## Documentation Map
 
@@ -63,4 +63,4 @@ Release pages cover verification and publishing readiness.
 
 ## What's Next
 
-Install the package with [Getting started](./getting-started.md), then choose an implementation path.
+Install from Git with [Getting started](./getting-started.md), then choose an implementation path.

@@ -7,26 +7,20 @@ This task shows how to use the Rust capture-preview implementation from a host a
 You need:
 
 - Rust and Cargo.
-- `kalandar` installed through npm or a source checkout.
-- A capture-parser resource root for resource-backed runtime behavior.
+- A Git checkout of `blinding-pixels/kalandar` or an npm Git dependency.
+- A capture-parser resource root for resource-backed runtime behavior. In a checkout, use `resources/capture-parser`; after an npm Git install, use `node_modules/kalandar/resources/capture-parser`.
 
-The Rust source is included in the npm package under `node_modules/kalandar/rust`.
+The Rust source is available under `rust/` in a Git checkout and under `node_modules/kalandar/rust` in an npm Git dependency.
 
-## Install From crates.io
+## Build From Git
 
-Install the CLI after the crate is published:
-
-```sh
-cargo install kalandar --bin kalandar-capture-preview
-```
-
-Add the library to a Rust project:
+Clone the private repository, then build the CLI:
 
 ```sh
-cargo add kalandar
+cargo build --manifest-path rust/Cargo.toml --bin kalandar-capture-preview
 ```
 
-## Build The CLI From npm
+## Build The CLI From An npm Git Dependency
 
 Build the Rust workspace from an installed npm package:
 
@@ -50,7 +44,7 @@ Send one `capture-preview-v1` request on standard input:
 
 ```sh
 printf '%s\n' '{"text":"task: finish report tomorrow","timezone":"UTC","locale":"en-US","known_assignees":null}' \
-  | ./target/debug/kalandar-capture-preview --resource-root <capture-parser-resource-root>
+  | ./target/debug/kalandar-capture-preview --resource-root resources/capture-parser
 ```
 
 The output is one JSON `capture-preview-v1` result.
@@ -65,7 +59,7 @@ import { createCapturePreviewParser } from 'kalandar/capture';
 const parser = await createCapturePreviewParser({
   implementation: 'rust-cli',
   command: '/path/to/kalandar-capture-preview',
-  resourceRoot: '/path/to/capture-parser',
+  resourceRoot: 'node_modules/kalandar/resources/capture-parser',
   timeoutMs: 30_000,
 });
 
@@ -76,7 +70,7 @@ const preview = await parser.parse('remind me to water plants tomorrow at 9am', 
 
 ## Configure The Resource Root
 
-The Rust runtime needs a resource root that contains the capture parser manifest and artifacts.
+The Rust runtime needs a resource root that contains the capture parser manifest and artifacts. The bundled root is `resources/capture-parser`.
 
 You can pass the root in either place:
 

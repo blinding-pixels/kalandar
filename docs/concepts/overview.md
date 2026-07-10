@@ -42,13 +42,13 @@ Kalandar has three capture-preview implementations:
 
 - `typescript`: in-process JavaScript.
 - `rust-cli`: JSON over standard input and standard output.
-- `coreai`: host-provided Apple-native bridge.
+- `coreai`: direct Swift/Core AI parsing, with an optional JavaScript host bridge.
 
-All implementations return the same `capture-preview-v1` result shape. This lets an app change implementation without changing its confirmation UI.
+The JavaScript, Rust CLI, and `CoreAICapturePreviewService` surfaces return the same `capture-preview-v1` result shape. `CoreAIParserSuite` is a Swift-only typed API that additionally returns decoded model entities and model metadata.
 
 ## Model Artifacts
 
-The base package does not bundle large model artifacts. Instead, model-backed paths use artifact bundles that are loaded separately by a host app.
+The Git repository bundles the validated ONNX suite at `resources/capture-parser`. JavaScript loads an individual family directory and Rust loads the suite root. Core AI artifacts are loaded separately by an Apple host.
 
 An artifact bundle includes:
 
@@ -59,7 +59,7 @@ An artifact bundle includes:
 - normalization and postprocess versions
 - content hashes
 
-The runtime validates the bundle before inference.
+The runtime validates the bundle before inference. Core AI model execution also requires an Apple SDK that provides the `CoreAI` framework and macOS or iOS 27 or later at runtime.
 
 ## What Kalandar Is Not
 

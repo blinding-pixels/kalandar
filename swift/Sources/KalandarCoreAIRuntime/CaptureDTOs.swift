@@ -141,6 +141,7 @@ public struct CapturePreviewTaskDraft: Codable, Equatable, Sendable {
 public struct CapturePreviewReminderDraft: Codable, Equatable, Sendable {
     public var title: String
     public var remindAtText: String?
+    public var leadTimeText: String?
     public var recurrence: ReminderRecurrence?
     public var recurrenceStartText: String?
     public var recurrenceEndText: String?
@@ -152,6 +153,7 @@ public struct CapturePreviewReminderDraft: Codable, Equatable, Sendable {
     public init(
         title: String,
         remindAtText: String? = nil,
+        leadTimeText: String? = nil,
         recurrence: ReminderRecurrence? = nil,
         recurrenceStartText: String? = nil,
         recurrenceEndText: String? = nil,
@@ -162,6 +164,7 @@ public struct CapturePreviewReminderDraft: Codable, Equatable, Sendable {
     ) {
         self.title = title
         self.remindAtText = remindAtText
+        self.leadTimeText = leadTimeText
         self.recurrence = recurrence
         self.recurrenceStartText = recurrenceStartText
         self.recurrenceEndText = recurrenceEndText
@@ -174,6 +177,7 @@ public struct CapturePreviewReminderDraft: Codable, Equatable, Sendable {
     enum CodingKeys: String, CodingKey {
         case title
         case remindAtText = "remind_at_text"
+        case leadTimeText = "lead_time_text"
         case recurrence
         case recurrenceStartText = "recurrence_start_text"
         case recurrenceEndText = "recurrence_end_text"
@@ -186,6 +190,7 @@ public struct CapturePreviewReminderDraft: Codable, Equatable, Sendable {
 
 public struct CapturePreviewCalendarEventDraft: Codable, Equatable, Sendable {
     public var title: String?
+    public var descriptionText: String?
     public var dateText: String?
     public var timeText: String?
     public var endTimeText: String?
@@ -200,6 +205,7 @@ public struct CapturePreviewCalendarEventDraft: Codable, Equatable, Sendable {
 
     public init(
         title: String?,
+        descriptionText: String? = nil,
         dateText: String? = nil,
         timeText: String? = nil,
         endTimeText: String? = nil,
@@ -213,6 +219,7 @@ public struct CapturePreviewCalendarEventDraft: Codable, Equatable, Sendable {
         attendees: [String] = []
     ) {
         self.title = title
+        self.descriptionText = descriptionText
         self.dateText = dateText
         self.timeText = timeText
         self.endTimeText = endTimeText
@@ -228,6 +235,7 @@ public struct CapturePreviewCalendarEventDraft: Codable, Equatable, Sendable {
 
     enum CodingKeys: String, CodingKey {
         case title
+        case descriptionText = "description_text"
         case dateText = "date_text"
         case timeText = "time_text"
         case endTimeText = "end_time_text"

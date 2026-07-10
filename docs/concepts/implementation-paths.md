@@ -8,7 +8,7 @@ Kalandar supports JavaScript, Rust, and Swift/Core AI implementation paths behin
 | --- | --- | --- | --- | --- |
 | `typescript` | In process | JavaScript | Ready | Web apps, Node apps, and fast integration. |
 | `rust-cli` | JSON over standard input and standard output | Native | Ready | Desktop apps and cross-platform native hosts. |
-| `coreai` | Native host bridge | Apple native | Host required | iOS, macOS, and Apple-native apps. |
+| `coreai` | In-process Swift or native host bridge | Apple native | Artifact and SDK required for model execution | iOS, macOS, and Apple-native apps. |
 
 ## TypeScript
 
@@ -40,9 +40,12 @@ Use it when:
 
 - your app is Apple-native
 - your host can load Swift code directly
-- your host can provide Core AI execution when the required Apple SDK is available
+- you can provide a Core AI artifact root
+- the deployment SDK provides the `CoreAI` framework and the host runs macOS or iOS 27 or later when you need `.aimodel` execution
 
-The JavaScript `coreai` capture implementation is a bridge contract. The native Apple host owns model loading and returns a `capture-preview-v1` result.
+Use `CoreAIParserSuite` to select the task, reminder, or calendar model directly. It returns a typed Swift draft, decoded entity spans, and model metadata. Use `CoreAICapturePreviewService` to route mixed captures and return the shared `capture-preview-v1` result.
+
+The JavaScript `coreai` implementation remains a bridge contract for JavaScript hosts. The Apple host owns the Swift runtime and returns a `capture-preview-v1` result through that bridge.
 
 ## Choosing An Implementation
 
@@ -50,7 +53,7 @@ Start with `typescript` unless you already know you need a native host boundary.
 
 Move to `rust-cli` when your app needs native packaging or a cross-platform process boundary.
 
-Use `coreai` when your product is Apple-native and wants Apple platform model execution.
+Use `coreai` when your product is Apple-native and can supply compatible artifacts. The Swift package builds without Core AI, but model execution requires an SDK that imports `CoreAI` and macOS or iOS 27 or later at runtime.
 
 ## Parity
 

@@ -2,60 +2,47 @@ import Foundation
 
 public struct CoreAICapturePreviewService: Sendable {
     private let parser: LightweightCaptureParser
-    private let store: CoreAIArtifactStore?
-    private let smokeVerifier: CoreAISmokeVerifier
-    private let requireCoreAISmoke: Bool
+    private let suite: CoreAIParserSuite?
 
     public init(
         artifactRoot: URL? = nil,
         requireCoreAISmoke: Bool = false,
-        smokeVerifier: CoreAISmokeVerifier = CoreAISmokeVerifier()
+        tensorRunner: any CoreAITensorRunning = CoreAITensorRunner(),
+        smokeVerifier: CoreAISmokeVerifier? = nil
     ) throws {
         if let artifactRoot {
-            self.store = try CoreAIArtifactStore(root: artifactRoot)
+            self.suite = try CoreAIParserSuite(
+                artifactRoot: artifactRoot,
+                requireCoreAISmoke: requireCoreAISmoke,
+                tensorRunner: tensorRunner,
+                smokeVerifier: smokeVerifier
+            )
         } else {
-            self.store = nil
+            self.suite = nil
         }
         self.parser = LightweightCaptureParser()
-        self.smokeVerifier = smokeVerifier
-        self.requireCoreAISmoke = requireCoreAISmoke
     }
 
     public func preview(_ request: CapturePreviewRequest) async throws -> CapturePreviewResult {
-        if requireCoreAISmoke {
-            try await verifyAvailableModel(for: request.text)
+        let fallback = parser.parse(request)
+        guard let suite else {
+            return fallback
         }
-        return parser.parse(request)
-    }
-
-    private func verifyAvailableModel(for text: String) async throws {
-        guard let store else {
-            throw KalandarCoreAIError.artifactRootMissing("missing KALANDAR_COREAI_ARTIFACT_ROOT")
-        }
-        let family = familyForSmoke(text)
-        let artifact = try store.artifact(family: family)
-        try await smokeVerifier.verify(artifact: artifact, sample: smokeSample(family))
-    }
-
-    private func familyForSmoke(_ text: String) -> String {
-        let lowered = TextUtilities.shadow(text)
-        if lowered.hasPrefix("reminder:") || lowered.hasPrefix("remind me") {
-            return "reminder"
-        }
-        if lowered.hasPrefix("event:") || lowered.contains("meeting") || lowered.contains("lunch") {
-            return "calendar"
-        }
-        return "task"
-    }
-
-    private func smokeSample(_ family: String) -> String {
-        switch family {
-        case "calendar":
-            return "lunch with sara tomorrow at noon"
+        switch fallback.kind {
+        case "task":
+            var result = fallback
+            result.task = try await suite.parseTask(request).value
+            return result
         case "reminder":
-            return "remind me to water plants tomorrow at 9"
+            var result = fallback
+            result.reminder = try await suite.parseReminder(request).value
+            return result
+        case "calendar-event":
+            var result = fallback
+            result.event = try await suite.parseCalendar(request).value
+            return result
         default:
-            return "finish report tomorrow"
+            return fallback
         }
     }
 }

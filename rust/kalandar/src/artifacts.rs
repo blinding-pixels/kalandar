@@ -16,7 +16,7 @@ pub const BERT_TOKEN_CLASSIFIER_RUNTIME_KIND: &str = "bert-token-classifier";
 pub const TINY_LINEAR_RUNTIME_KIND: &str = "tiny-linear";
 pub const CAPTURE_PARSER_MANIFEST_SHA256_ENV: &str = "KALANDAR_CAPTURE_MANIFEST_SHA256";
 pub const TRUSTED_CAPTURE_PARSER_MANIFEST_SHA256: &str =
-    "5b4ac24510af216de610b4de37b294b1b2390dc668eeced5573161eee7a3d12a";
+    "4e78b1d57985bc61e614372edc436ae8b832d7cef8fbc974ce6d947dace176b3";
 const INTENT_TINY_LINEAR_LABELS: [&str; 3] = ["calendar", "none", "task"];
 
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize)]

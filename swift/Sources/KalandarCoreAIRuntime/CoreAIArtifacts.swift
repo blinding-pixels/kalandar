@@ -4,6 +4,7 @@ public enum KalandarCoreAIError: Error, LocalizedError, Sendable {
     case artifactRootMissing(String)
     case artifactMissing(String)
     case invalidManifest(String)
+    case invalidModelOutput(String)
     case coreAIUnavailable
     case modelOutputMissing(String)
 
@@ -15,8 +16,10 @@ public enum KalandarCoreAIError: Error, LocalizedError, Sendable {
             return "Core AI artifact is missing: \(path)"
         case .invalidManifest(let message):
             return "Invalid Core AI artifact manifest: \(message)"
+        case .invalidModelOutput(let message):
+            return "Invalid Core AI model output: \(message)"
         case .coreAIUnavailable:
-            return "Core AI runtime is unavailable. Build with Xcode 27 / macOS or iOS 27 SDK."
+            return "Core AI runtime is unavailable. Build with an SDK that includes CoreAI and run on macOS or iOS 27 or later."
         case .modelOutputMissing(let name):
             return "Core AI model output is missing: \(name)"
         }
@@ -47,6 +50,14 @@ public struct CoreAIArtifactManifest: Decodable, Sendable {
         public var path: String
     }
 
+    public struct Optimization: Decodable, Sendable {
+        public var weightQuantization: String?
+
+        enum CodingKeys: String, CodingKey {
+            case weightQuantization = "weight_quantization"
+        }
+    }
+
     public var manifestVersion: String
     public var runtimeKind: String
     public var modelKind: String
@@ -54,6 +65,7 @@ public struct CoreAIArtifactManifest: Decodable, Sendable {
     public var inputContract: InputContract
     public var labels: [String: String]?
     public var tokenizer: TokenizerSpec
+    public var optimization: Optimization?
 
     enum CodingKeys: String, CodingKey {
         case manifestVersion = "manifest_version"
@@ -63,6 +75,7 @@ public struct CoreAIArtifactManifest: Decodable, Sendable {
         case inputContract = "input_contract"
         case labels
         case tokenizer
+        case optimization
     }
 }
 

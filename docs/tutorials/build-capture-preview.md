@@ -14,10 +14,10 @@ You will:
 
 ## Before You Begin
 
-Install Kalandar:
+Install Kalandar from the private repository. Replace `<git-ref>` with a commit SHA, branch, or release tag:
 
 ```sh
-npm install kalandar
+npm install git+ssh://git@github.com/blinding-pixels/kalandar.git#<git-ref>
 ```
 
 ## Create The Parser
@@ -107,5 +107,5 @@ No external resources were created by this tutorial.
 ## What's Next
 
 - Use a native implementation with [Use the Rust CLI](../tasks/use-rust-cli.md).
-- Use an Apple-native bridge with [Use Swift and Core AI](../tasks/use-coreai.md).
+- Use Apple-native model parsing with [Use Swift and Core AI](../tasks/use-coreai.md).
 - Look up exact fields in [Capture preview v1](../reference/capture-preview-v1.md).

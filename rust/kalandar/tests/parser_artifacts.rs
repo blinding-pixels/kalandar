@@ -102,8 +102,8 @@ fn capture_parser_manifest_rejects_digest_drift_even_when_json_is_well_formed() 
     let manifest_path = resource_root.join("manifest.json");
     let manifest = fs::read_to_string(&manifest_path).expect("copied manifest should read");
     let tampered = manifest.replace(
-        "\"suiteVersion\": \"kalandar-rust-v1\"",
-        "\"suiteVersion\": \"kalandar-rust-v1-tampered\"",
+        "\"suiteVersion\": \"kalandar-capture-parser-onnx-v1\"",
+        "\"suiteVersion\": \"kalandar-capture-parser-onnx-v1-tampered\"",
     );
     fs::write(&manifest_path, tampered).expect("tampered manifest should write");
 

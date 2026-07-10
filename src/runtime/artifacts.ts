@@ -345,7 +345,12 @@ const loadArtifactFiles = async (
 };
 
 const validateTensorContract = (parser: SupportedMlArtifactParser, manifest: MlArtifactManifest): void => {
-  assert(manifest.tensor_contract.max_sequence_length === 512, `${parser} artifact must declare max_sequence_length 512`);
+  assert(
+    Number.isInteger(manifest.tensor_contract.max_sequence_length) &&
+      manifest.tensor_contract.max_sequence_length >= 2 &&
+      manifest.tensor_contract.max_sequence_length <= 512,
+    `${parser} artifact must declare max_sequence_length from 2 through 512`,
+  );
   assert(
     manifest.tokenizer.max_sequence_length === manifest.tensor_contract.max_sequence_length,
     `${parser} artifact tokenizer and tensor contract max_sequence_length mismatch`,

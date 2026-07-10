@@ -1,8 +1,8 @@
 # Artifacts And Inference
 
-Kalandar separates parser code from large model artifacts.
+Kalandar separates parser code from model artifact formats.
 
-The npm package ships parser code, runtime contracts, and adapter interfaces. A model-backed host provides artifact bundles separately.
+The Git repository ships parser code, runtime contracts, adapter interfaces, and a validated ONNX suite at `resources/capture-parser`. A model-backed Core AI host provides its `.aimodel` artifact bundle separately.
 
 ## Artifact Bundles
 
@@ -33,7 +33,12 @@ Local inference runs the model inside the host process or native runtime.
 Kalandar includes:
 
 - `createLocalOnnxInferenceAdapter` for Node hosts that install `onnxruntime-node`.
-- `createLocalCoreAiInferenceAdapter` for hosts that provide a Core AI bridge.
+- `createLocalCoreAiInferenceAdapter` for JavaScript hosts that provide a Core AI bridge.
+- `CoreAIParserSuite` and `CoreAICapturePreviewService` for native Swift hosts.
+
+For Node, load one bundled family directory, for example `resources/capture-parser/task`. For Rust, pass the parent `resources/capture-parser` directory as the CLI resource root.
+
+Swift Core AI inference requires an artifact root with `task`, `reminder`, and `calendar` bundles, an Apple SDK that includes `CoreAI`, and macOS or iOS 27 or later at runtime. The Swift package itself can still build on SDKs without that framework.
 
 ## Remote Inference
 

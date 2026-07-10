@@ -1,20 +1,21 @@
 # Release Checklist
 
-Use this checklist before publishing Kalandar.
+Use this checklist before creating a Git release of Kalandar.
 
 ## Metadata
 
 - `package.json` has the intended `name`, `version`, `description`, `license`, repository, homepage, and issue URL.
-- `package.json` does not set `private: true`.
-- `rust/kalandar/Cargo.toml` has the intended name, version, description, license, repository, and readme.
+- The Git tag or commit selected for consumers contains the intended version and documentation.
+- `package.json` sets `private: true` and `rust/kalandar/Cargo.toml` sets `publish = false`.
 - `Package.swift` builds from the package root.
 - `LICENSE` exists and matches the intended license.
 
 ## Contents
 
-- npm dry-run tarball includes `dist/`, `docs/`, selected source docs, Rust source, Swift source, and license files.
-- npm dry-run tarball excludes training data, generated build output, checkpoints, local keys, and model artifacts.
-- Rust crate package includes the crate source, tests, and crate README.
+- Git history excludes training data, generated build output, checkpoints, local keys, and Core AI model artifacts.
+- The separately distributed Core AI artifact root includes matching `task`, `reminder`, and `calendar` bundles.
+- `npm pack --dry-run` includes `dist/`, `docs/`, selected source docs, Rust source, Swift source, the ONNX suite in `resources/capture-parser`, and license files, while excluding Core AI model artifacts.
+- The GitHub release attaches `kalandar-onnx-<version>.tar.gz`, extracted with a top-level `capture-parser/` directory, for crates.io Rust consumers.
 - SwiftPM root and nested manifests both build.
 
 ## Tests
@@ -24,28 +25,24 @@ Run:
 ```sh
 npm run lint
 npm run release:check
-cargo publish --dry-run --manifest-path rust/kalandar/Cargo.toml
-npm publish --dry-run --access public
-npm audit --omit=dev
 ```
+
+For every Core AI artifact suite, run the Python Core AI smoke test and compare the optimized model outputs with the approved baseline on the parser development set. Record and approve any label drift before distributing the artifacts.
 
 ## Smoke Test
 
-Install the packed npm tarball in a temporary project and verify:
+Create a temporary consuming project from the private Git dependency and verify:
 
-- `import { parseCapturePreviewInput } from 'kalandar'`
-- `import { createCapturePreviewParser } from 'kalandar/capture'`
-- `import { createLocalOnnxInferenceAdapter } from 'kalandar/runtime/onnx'`
-- `import { createLocalCoreAiInferenceAdapter } from 'kalandar/runtime/coreai'`
-- `swift build --package-path node_modules/kalandar`
-- `swift build --package-path node_modules/kalandar/swift`
-- `cargo build --manifest-path node_modules/kalandar/rust/Cargo.toml`
+- `swift build --package-path .`
+- `swift test --package-path .`
+- a Swift app can resolve `KalandarCoreAIRuntime` from the private Git URL
+- each Core AI artifact family loads from the intended artifact root on macOS or iOS 27 or later with a Core AI-capable SDK
+
+Also verify JavaScript imports and nested Swift and Rust builds from the Git dependency.
 
 ## Credentials
 
-- `npm whoami` succeeds before real npm publish.
-- crates.io token is configured before real Cargo publish.
-- Git remote and tag permissions are available before the SwiftPM tag is pushed.
+- Git remote and tag permissions are available before the private SwiftPM tag is pushed.
 
 ## What's Next
 

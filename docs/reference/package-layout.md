@@ -2,9 +2,11 @@
 
 This page describes what ships in each release surface.
 
-## npm Package
+## Git Repository
 
-The npm package name is `kalandar`.
+The Git repository is the private distribution. Its root `Package.swift` is
+directly consumable by Swift Package Manager, and it can be installed as an npm
+Git dependency. The package name remains `kalandar` after installation.
 
 It includes:
 
@@ -15,18 +17,19 @@ It includes:
 - Rust source in `rust/kalandar/src/`
 - Rust workspace manifests
 - Core AI parity fixtures
+- ONNX task, reminder, calendar, tokenizer, manifest, and routing artifacts in `resources/capture-parser/`
 
 It excludes:
 
 - training data
 - local API keys
 - generated build directories
-- generated model artifacts
+- Core AI model artifacts
 - checkpoints
 
-## Rust Crate
+## Rust Source Package
 
-The Rust crate name is `kalandar`.
+The Rust package identifier is `kalandar`, with publishing disabled.
 
 It includes:
 
@@ -35,20 +38,22 @@ It includes:
 - Rust tests
 - crate README
 
+It does not include the ONNX suite because crates.io has a package-size limit. Crates.io consumers use the version-matched `kalandar-onnx-<version>.tar.gz` asset attached to the GitHub release.
+
 ## Swift Package
 
-The root `Package.swift` exposes Swift Package Manager products for Git tag consumption:
+The root `Package.swift` exposes Swift Package Manager products for Git revision or tag consumption:
 
 - `KalandarCoreAIRuntime`
 - `kalandar-coreai-capture-preview`
 
 The nested `swift/Package.swift` remains available for npm users who build from `node_modules/kalandar/swift`.
 
-## Model Artifacts
+## Core AI Model Artifacts
 
-Model artifacts are not bundled into the npm package or Rust crate.
+Core AI model artifacts are not bundled into the Git repository or Rust source package. The ONNX suite is bundled in `resources/capture-parser`.
 
-Hosts provide model artifacts separately and validate them through runtime manifests.
+Swift hosts provide the `task`, `reminder`, and `calendar` artifacts separately and validate them through runtime manifests. `.aimodel` execution also requires an Apple SDK that includes `CoreAI` and macOS or iOS 27 or later at runtime.
 
 ## What's Next
 
