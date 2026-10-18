@@ -3,7 +3,10 @@ use crate::{
     BERT_TOKEN_CLASSIFIER_RUNTIME_KIND,
 };
 use std::collections::{BTreeSet, HashMap};
-use unicode_normalization::{char::is_combining_mark, UnicodeNormalization};
+use unicode_normalization::UnicodeNormalization;
+use unicode_properties::{GeneralCategory, GeneralCategoryGroup, UnicodeGeneralCategory};
+
+const MAX_INPUT_CHARS_PER_WORD: usize = 100;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct TokenizedCaptureInput {
@@ -76,23 +79,9 @@ impl CaptureWordPieceTokenizer {
             .ok_or(CaptureParserError::ManifestInvalid)?;
         let vocab_text = std::fs::read_to_string(manifest.resolve_file_path(vocab_spec))
             .map_err(|_| CaptureParserError::ArtifactMissing)?;
-        let vocab = parse_vocab(&vocab_text);
-
-        let cls_id = *vocab
-            .get(&tokenizer.cls_token)
-            .ok_or(CaptureParserError::ManifestInvalid)?;
-        let sep_id = *vocab
-            .get(&tokenizer.sep_token)
-            .ok_or(CaptureParserError::ManifestInvalid)?;
-        let pad_id = *vocab
-            .get(&tokenizer.pad_token)
-            .ok_or(CaptureParserError::ManifestInvalid)?;
-        let unk_id = *vocab
-            .get(&tokenizer.unk_token)
-            .ok_or(CaptureParserError::ManifestInvalid)?;
-
-        Ok(Self {
-            config: CaptureTokenizerConfig {
+        Self::from_vocab(
+            &vocab_text,
+            CaptureTokenizerConfig {
                 max_tokens: tokenizer.max_sequence_length,
                 do_lower_case: tokenizer.do_lower_case,
                 unk_token: tokenizer.unk_token.clone(),
@@ -100,6 +89,26 @@ impl CaptureWordPieceTokenizer {
                 sep_token: tokenizer.sep_token.clone(),
                 pad_token: tokenizer.pad_token.clone(),
             },
+        )
+    }
+
+    pub fn from_vocab(
+        vocab_text: &str,
+        config: CaptureTokenizerConfig,
+    ) -> Result<Self, CaptureParserError> {
+        let vocab = parse_vocab(vocab_text);
+        let id_of = |token: &str| {
+            vocab
+                .get(token)
+                .copied()
+                .ok_or(CaptureParserError::ManifestInvalid)
+        };
+        let cls_id = id_of(&config.cls_token)?;
+        let sep_id = id_of(&config.sep_token)?;
+        let pad_id = id_of(&config.pad_token)?;
+        let unk_id = id_of(&config.unk_token)?;
+        Ok(Self {
+            config,
             special_token_ids: BTreeSet::from([cls_id, sep_id, pad_id, unk_id]),
             vocab,
             cls_id,
@@ -155,55 +164,35 @@ fn normalize_input(input: &str, do_lower_case: bool) -> Vec<TokenChar> {
     let mut output = Vec::new();
     for (start, raw_char) in input.char_indices() {
         let end = start + raw_char.len_utf8();
+        let mapped = |value| TokenChar {
+            value,
+            source_start: start,
+            source_end: end,
+        };
 
-        if is_control(raw_char) {
+        if matches!(raw_char, '\0' | '\u{FFFD}') || is_control(raw_char) {
             continue;
         }
 
-        if raw_char.is_whitespace() {
-            output.push(TokenChar {
-                value: ' ',
-                source_start: start,
-                source_end: end,
-            });
+        if is_whitespace(raw_char) {
+            output.push(mapped(' '));
             continue;
         }
 
         if is_chinese_char(raw_char as u32) {
-            output.push(TokenChar {
-                value: ' ',
-                source_start: start,
-                source_end: end,
-            });
-            output.push(TokenChar {
-                value: raw_char,
-                source_start: start,
-                source_end: end,
-            });
-            output.push(TokenChar {
-                value: ' ',
-                source_start: start,
-                source_end: end,
-            });
+            output.extend([mapped(' '), mapped(raw_char), mapped(' ')]);
             continue;
         }
 
-        let lowered: Vec<char> = if do_lower_case {
-            raw_char.to_lowercase().collect()
+        if do_lower_case {
+            std::iter::once(raw_char)
+                .nfd()
+                .filter(|value| value.general_category() != GeneralCategory::NonspacingMark)
+                .flat_map(char::to_lowercase)
+                .for_each(|value| output.push(mapped(value)));
         } else {
-            vec![raw_char]
-        };
-        lowered
-            .into_iter()
-            .flat_map(|value| std::iter::once(value).nfd())
-            .filter(|value| !is_combining_mark(*value))
-            .for_each(|value| {
-                output.push(TokenChar {
-                    value,
-                    source_start: start,
-                    source_end: end,
-                })
-            });
+            output.push(mapped(raw_char));
+        }
     }
 
     output
@@ -230,7 +219,7 @@ fn basic_tokenize(input: &[TokenChar]) -> Vec<BasicToken> {
             continue;
         }
 
-        if is_punctuation_or_symbol(entry.value) {
+        if is_punctuation(entry.value) {
             flush(&mut tokens, &mut current);
             tokens.push(BasicToken {
                 text: entry.value.to_string(),
@@ -251,6 +240,22 @@ fn encode_word_piece(
     vocab: &HashMap<String, u32>,
     unk_id: u32,
 ) -> Vec<EncodedPiece> {
+    if token.chars.len() > MAX_INPUT_CHARS_PER_WORD {
+        return vec![EncodedPiece {
+            id: unk_id,
+            start: token
+                .chars
+                .first()
+                .map(|entry| entry.source_start)
+                .unwrap_or(0),
+            end: token
+                .chars
+                .last()
+                .map(|entry| entry.source_end)
+                .unwrap_or(0),
+        }];
+    }
+
     if let Some(id) = vocab.get(&token.text) {
         return vec![EncodedPiece {
             id: *id,
@@ -267,7 +272,7 @@ fn encode_word_piece(
         }];
     }
 
-    let token_chars = token.text.chars().collect::<Vec<_>>();
+    let token_chars = token.chars.iter().map(|entry| entry.value).collect::<Vec<_>>();
     let mut pieces = Vec::new();
     let mut start = 0;
 
@@ -326,38 +331,17 @@ fn parse_vocab(text: &str) -> HashMap<String, u32> {
 }
 
 fn is_control(value: char) -> bool {
-    !matches!(value, '\n' | '\r' | '\t') && (value.is_control() || is_format(value))
+    !matches!(value, '\n' | '\r' | '\t')
+        && value.general_category_group() == GeneralCategoryGroup::Other
 }
 
-fn is_format(value: char) -> bool {
-    matches!(
-        value as u32,
-        0x00AD
-            | 0x0600..=0x0605
-            | 0x061C
-            | 0x06DD
-            | 0x070F
-            | 0x0890..=0x0891
-            | 0x08E2
-            | 0x180E
-            | 0x200B..=0x200F
-            | 0x202A..=0x202E
-            | 0x2060..=0x2064
-            | 0x2066..=0x206F
-            | 0xFEFF
-            | 0xFFF9..=0xFFFB
-            | 0x110BD
-            | 0x110CD
-            | 0x13430..=0x1343F
-            | 0x1BCA0..=0x1BCA3
-            | 0x1D173..=0x1D17A
-            | 0xE0001
-            | 0xE0020..=0xE007F
-    )
+fn is_whitespace(value: char) -> bool {
+    matches!(value, '\t' | '\n' | '\r') || value.is_whitespace()
 }
 
-fn is_punctuation_or_symbol(value: char) -> bool {
-    !value.is_alphanumeric() && !value.is_whitespace()
+fn is_punctuation(value: char) -> bool {
+    value.is_ascii_punctuation()
+        || value.general_category_group() == GeneralCategoryGroup::Punctuation
 }
 
 fn is_chinese_char(code_point: u32) -> bool {
@@ -368,7 +352,8 @@ fn is_chinese_char(code_point: u32) -> bool {
             | 0x20000..=0x2A6DF
             | 0x2A700..=0x2B73F
             | 0x2B740..=0x2B81F
-            | 0x2B820..=0x2CEAF
+            | 0x2B920..=0x2CEAF
             | 0xF900..=0xFAFF
+            | 0x2F800..=0x2FA1F
     )
 }

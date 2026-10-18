@@ -1,23 +1,32 @@
 use super::calendar_lightweight::parse_calendar_preview;
-use super::intent::{classify_intent, IntentKind, IntentRoute};
+use super::intent::{classify_intent_embedded, CaptureIntent, IntentKind, IntentRoute};
+use super::intent_rules::normalize_js_whitespace;
 use super::reminder_lightweight::parse_reminder_preview;
-use super::shadow_text::normalize_shadow_text;
 use super::task_lightweight::parse_task_preview;
 use super::{
-    build_token_classification_request, load_ort_session, CaptureParserArtifactBundle,
-    CaptureParserArtifactManifest, CaptureParserError, CapturePreviewCandidate,
-    CapturePreviewRequest, CapturePreviewResult, CaptureWordPieceTokenizer,
+    CaptureParserError, CapturePreviewCandidate, CapturePreviewRequest, CapturePreviewResult,
+    CapturePreviewWarning,
 };
+#[cfg(feature = "onnx")]
+use super::{
+    build_token_classification_request, intent_manifest::classify_intent, load_ort_session,
+    CaptureParserArtifactBundle, CaptureParserArtifactManifest, CaptureWordPieceTokenizer,
+};
+#[cfg(feature = "onnx")]
 use std::{
     collections::BTreeSet,
     path::PathBuf,
     sync::{Mutex, OnceLock},
 };
 
+#[cfg(feature = "onnx")]
 const TASK_CAPABILITY_SAMPLE: &str = "finish report tomorrow";
+#[cfg(feature = "onnx")]
 const REMINDER_CAPABILITY_SAMPLE: &str = "remind me to water plants tomorrow at 9";
+#[cfg(feature = "onnx")]
 const CALENDAR_CAPABILITY_SAMPLE: &str = "lunch with sara tomorrow at noon";
 
+#[cfg(feature = "onnx")]
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
 struct ParserCapabilityKey {
     root: PathBuf,
@@ -25,205 +34,128 @@ struct ParserCapabilityKey {
     artifact_id: String,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum Family {
+    Task,
+    Reminder,
+    Calendar,
+}
+
+impl Family {
+    #[cfg(feature = "onnx")]
+    fn parser_family(self) -> &'static str {
+        match self {
+            Family::Task => "task",
+            Family::Reminder => "reminder",
+            Family::Calendar => "calendar",
+        }
+    }
+}
+
+#[cfg(feature = "onnx")]
 pub fn preview_capture(
     manifest: &CaptureParserArtifactManifest,
     request: CapturePreviewRequest,
 ) -> CapturePreviewResult {
-    let shadow = normalize_shadow_text(request.text.trim());
-    let original = request.text.split_whitespace().collect::<Vec<_>>().join(" ");
-    if shadow.is_empty() {
-        return CapturePreviewResult::unsupported(
-            "capture-text-required",
-            "Capture preview requires non-empty text.",
-        );
+    preview_with(
+        request,
+        |text| classify_intent(manifest, text),
+        |family| verify_family_inference(manifest, family.parser_family()),
+    )
+}
+
+pub fn preview_capture_rules(request: CapturePreviewRequest) -> CapturePreviewResult {
+    preview_with(request, |text| Ok(classify_intent_embedded(text)), |_| Ok(()))
+}
+
+fn preview_with(
+    request: CapturePreviewRequest,
+    route: impl Fn(&str) -> Result<IntentRoute, CaptureParserError>,
+    verify: impl Fn(Family) -> Result<(), CaptureParserError>,
+) -> CapturePreviewResult {
+    let text = normalize_js_whitespace(&request.text);
+    if text.is_empty() {
+        return text_required();
     }
 
-    if strip_prefix_case_insensitive(&shadow, "task:").is_some() {
-        let payload = strip_prefix_case_insensitive(&original, "task:").unwrap_or("");
-        if payload.is_empty() {
-            return CapturePreviewResult::unsupported(
-                "capture-text-required",
-                "Capture preview requires non-empty text.",
-            );
+    for (prefix, family) in [
+        ("task:", Family::Task),
+        ("reminder:", Family::Reminder),
+        ("event:", Family::Calendar),
+    ] {
+        if let Some(payload) = strip_prefix_case_insensitive(&text, prefix) {
+            if payload.is_empty() {
+                return text_required();
+            }
+            return family_result(family, payload, &request, 0.99, Vec::new(), Vec::new(), &verify);
         }
-        return build_task_result(manifest, payload, &request, 0.99, Vec::new());
-    }
-    if strip_prefix_case_insensitive(&shadow, "reminder:").is_some() {
-        let payload = strip_prefix_case_insensitive(&original, "reminder:").unwrap_or("");
-        if payload.is_empty() {
-            return CapturePreviewResult::unsupported(
-                "capture-text-required",
-                "Capture preview requires non-empty text.",
-            );
-        }
-        return build_reminder_result(manifest, payload, &request, 0.99, Vec::new());
-    }
-    if strip_prefix_case_insensitive(&shadow, "event:").is_some() {
-        let payload = strip_prefix_case_insensitive(&original, "event:").unwrap_or("");
-        if payload.is_empty() {
-            return CapturePreviewResult::unsupported(
-                "capture-text-required",
-                "Capture preview requires non-empty text.",
-            );
-        }
-        return build_calendar_result(manifest, payload, &request, 0.99, Vec::new());
     }
 
-    let route = match classify_intent(manifest, &shadow) {
+    let route = match route(&text) {
         Ok(route) => route,
         Err(error) => return unsupported_from_error(error),
     };
-    let candidates = build_candidates(&route);
-
-    match route.intent {
-        IntentKind::Task => {
-            build_task_result(
-                manifest,
-                &original,
-                &request,
-                route.primary_score(),
-                candidates,
-            )
-        }
-        .with_ambiguous(route),
-        IntentKind::Calendar => {
-            build_calendar_result(
-                manifest,
-                &original,
-                &request,
-                route.primary_score(),
-                candidates,
-            )
-        }
-        .with_ambiguous(route),
-        IntentKind::Reminder => {
-            build_reminder_result(
-                manifest,
-                &original,
-                &request,
-                route.primary_score(),
-                candidates,
-            )
-        }
-        .with_ambiguous(route),
+    let CaptureIntent {
+        confidence,
+        candidates,
+        warnings,
+        ..
+    } = route.capture_intent();
+    let family = match route.intent {
+        IntentKind::Task => Family::Task,
+        IntentKind::Calendar => Family::Calendar,
+        IntentKind::Reminder => Family::Reminder,
         IntentKind::None => {
-            CapturePreviewResult::thought(shadow, route.none, candidates).with_ambiguous(route)
+            let mut result = CapturePreviewResult::thought(text, confidence, candidates);
+            result.warnings = warnings;
+            return result;
         }
-    }
+    };
+    family_result(family, &text, &request, confidence, candidates, warnings, &verify)
 }
 
-trait CapturePreviewResultExt {
-    fn with_candidates(
-        self,
-        confidence: f64,
-        candidates: Vec<CapturePreviewCandidate>,
-    ) -> CapturePreviewResult;
-
-    fn with_ambiguous(self, route: IntentRoute) -> CapturePreviewResult;
-}
-
-impl CapturePreviewResultExt for CapturePreviewResult {
-    fn with_candidates(
-        mut self,
-        confidence: f64,
-        candidates: Vec<CapturePreviewCandidate>,
-    ) -> CapturePreviewResult {
-        self.confidence = confidence;
-        self.candidates = candidates;
-        self
+fn family_result(
+    family: Family,
+    text: &str,
+    request: &CapturePreviewRequest,
+    confidence: f64,
+    candidates: Vec<CapturePreviewCandidate>,
+    intent_warnings: Vec<CapturePreviewWarning>,
+    verify: &impl Fn(Family) -> Result<(), CaptureParserError>,
+) -> CapturePreviewResult {
+    if let Err(error) = verify(family) {
+        return unsupported_from_error(error);
     }
-
-    fn with_ambiguous(mut self, route: IntentRoute) -> CapturePreviewResult {
-        if route.ambiguous {
-            self.warnings.push(super::CapturePreviewWarning {
-                code: "intent_ambiguous".to_string(),
-                severity: "info".to_string(),
-                message: if route.intent == IntentKind::None {
-                    "Intent is ambiguous and was routed to thought.".to_string()
-                } else {
-                    "Intent is ambiguous between multiple categories.".to_string()
-                },
-            });
+    let mut result = match family {
+        Family::Task => {
+            let parsed = parse_task_preview(text, request);
+            CapturePreviewResult::task(parsed.draft, confidence, candidates, parsed.warnings)
+                .with_schedule(parsed.schedule)
         }
-        self
-    }
+        Family::Reminder => {
+            let parsed = parse_reminder_preview(text, request);
+            CapturePreviewResult::reminder(parsed.draft, confidence, candidates, parsed.warnings)
+                .with_schedule(parsed.schedule)
+        }
+        Family::Calendar => {
+            let mut result = parse_calendar_preview(text, request);
+            result.confidence = confidence;
+            result.candidates = candidates;
+            result
+        }
+    };
+    result.warnings = intent_warnings.into_iter().chain(result.warnings).collect();
+    result
 }
 
-fn build_candidates(route: &IntentRoute) -> Vec<CapturePreviewCandidate> {
-    let mut candidates = vec![
-        CapturePreviewCandidate {
-            kind: "task",
-            score: route.task,
-        },
-        CapturePreviewCandidate {
-            kind: "calendar-event",
-            score: route.calendar,
-        },
-        CapturePreviewCandidate {
-            kind: "reminder",
-            score: route.reminder,
-        },
-    ];
-    candidates.sort_by(|left, right| right.score.total_cmp(&left.score));
-    candidates
-        .into_iter()
-        .filter(|candidate| candidate.score > 0.0)
-        .collect()
-}
-
-fn build_task_result(
-    manifest: &CaptureParserArtifactManifest,
-    text: &str,
-    request: &CapturePreviewRequest,
-    confidence: f64,
-    candidates: Vec<CapturePreviewCandidate>,
-) -> CapturePreviewResult {
-    if let Err(error) = verify_family_inference(manifest, "task") {
-        return unsupported_from_error(error);
-    }
-    let parsed = parse_task_preview(text, request);
-    CapturePreviewResult::task(
-        parsed.draft,
-        confidence.max(parsed.confidence),
-        candidates,
-        parsed.warnings,
+fn text_required() -> CapturePreviewResult {
+    CapturePreviewResult::unsupported(
+        "capture-text-required",
+        "Capture preview requires non-empty text.",
     )
-    .with_schedule(parsed.schedule)
 }
 
-fn build_reminder_result(
-    manifest: &CaptureParserArtifactManifest,
-    text: &str,
-    request: &CapturePreviewRequest,
-    confidence: f64,
-    candidates: Vec<CapturePreviewCandidate>,
-) -> CapturePreviewResult {
-    if let Err(error) = verify_family_inference(manifest, "reminder") {
-        return unsupported_from_error(error);
-    }
-    let parsed = parse_reminder_preview(text, request);
-    CapturePreviewResult::reminder(
-        parsed.draft,
-        confidence.max(parsed.confidence),
-        candidates,
-        parsed.warnings,
-    )
-    .with_schedule(parsed.schedule)
-}
-
-fn build_calendar_result(
-    manifest: &CaptureParserArtifactManifest,
-    text: &str,
-    request: &CapturePreviewRequest,
-    confidence: f64,
-    candidates: Vec<CapturePreviewCandidate>,
-) -> CapturePreviewResult {
-    if let Err(error) = verify_family_inference(manifest, "calendar") {
-        return unsupported_from_error(error);
-    }
-    parse_calendar_preview(text, request).with_candidates(confidence, candidates)
-}
-
+#[cfg(feature = "onnx")]
 fn verify_family_inference(
     manifest: &CaptureParserArtifactManifest,
     parser_family: &str,
@@ -252,6 +184,7 @@ fn verify_family_inference(
     })
 }
 
+#[cfg(feature = "onnx")]
 fn run_inference_smoke(
     manifest: &CaptureParserArtifactManifest,
     bundle: &CaptureParserArtifactBundle,
@@ -288,6 +221,7 @@ fn unsupported_from_error(error: CaptureParserError) -> CapturePreviewResult {
     )
 }
 
+#[cfg(feature = "onnx")]
 fn capability_probe_sample(parser_family: &str) -> &'static str {
     match parser_family {
         "task" => TASK_CAPABILITY_SAMPLE,
@@ -297,6 +231,7 @@ fn capability_probe_sample(parser_family: &str) -> &'static str {
     }
 }
 
+#[cfg(feature = "onnx")]
 fn parser_capability_cache() -> &'static Mutex<BTreeSet<ParserCapabilityKey>> {
     static CACHE: OnceLock<Mutex<BTreeSet<ParserCapabilityKey>>> = OnceLock::new();
     CACHE.get_or_init(|| Mutex::new(BTreeSet::new()))

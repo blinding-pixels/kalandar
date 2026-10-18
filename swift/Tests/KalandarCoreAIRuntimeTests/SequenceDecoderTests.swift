@@ -220,3 +220,42 @@ struct SequenceDecoderTests {
         return root
     }
 }
+
+private struct TokenizerCase: Decodable {
+    var text: String
+    var inputIds: [Int32]
+
+    enum CodingKeys: String, CodingKey {
+        case text
+        case inputIds = "input_ids"
+    }
+}
+
+private struct TokenizerFixture: Decodable {
+    var vocab: String
+    var maxSequenceLength: Int
+    var cases: [TokenizerCase]
+
+    enum CodingKeys: String, CodingKey {
+        case vocab
+        case maxSequenceLength = "max_sequence_length"
+        case cases
+    }
+}
+
+@Test func tokenizerMatchesHuggingFaceIds() throws {
+    let fixture = try JSONDecoder().decode(TokenizerFixture.self, from: fixtureData("tokenizer_hf_parity"))
+    let packageRoot = URL(fileURLWithPath: #filePath)
+        .deletingLastPathComponent()
+        .deletingLastPathComponent()
+        .deletingLastPathComponent()
+        .deletingLastPathComponent()
+    let vocabURL = packageRoot.appendingPathComponent(fixture.vocab)
+    guard FileManager.default.fileExists(atPath: vocabURL.path) else { return }
+    let tokenizer = try BertWordPieceTokenizer(vocabURL: vocabURL, maxSequenceLength: fixture.maxSequenceLength)
+    for testCase in fixture.cases {
+        let encoded = tokenizer.encode(testCase.text)
+        let length = encoded.attentionMask.filter { $0 == 1 }.count
+        #expect(Array(encoded.inputIds.prefix(length)) == testCase.inputIds, "\(testCase.text)")
+    }
+}

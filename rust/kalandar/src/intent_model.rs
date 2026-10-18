@@ -1,11 +1,6 @@
-use super::{CaptureParserArtifactManifest, CaptureParserError, TINY_LINEAR_RUNTIME_KIND};
+use super::CaptureParserError;
 use serde::Deserialize;
-use std::{
-    collections::BTreeMap,
-    fs,
-    path::PathBuf,
-    sync::{Arc, Mutex, OnceLock},
-};
+use std::{collections::BTreeMap, sync::OnceLock};
 
 #[derive(Debug, Clone, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -25,53 +20,19 @@ pub(crate) struct TinyIntentClass {
     pub(crate) values: Vec<f64>,
 }
 
-pub(crate) fn load_tiny_intent_model(
-    manifest: &CaptureParserArtifactManifest,
-) -> Result<Arc<TinyIntentModel>, CaptureParserError> {
-    let bundle = manifest
-        .bundle("intent")
-        .ok_or(CaptureParserError::ManifestInvalid)?;
-    if bundle.runtime_kind != TINY_LINEAR_RUNTIME_KIND {
-        return Err(CaptureParserError::ManifestInvalid);
-    }
 
-    let model_file = bundle
-        .files
-        .iter()
-        .find(|file| file.logical_name == "model_json")
-        .ok_or(CaptureParserError::ManifestInvalid)?;
-    let canonical = manifest
-        .resolve_file_path(model_file)
-        .canonicalize()
-        .map_err(|_| CaptureParserError::ArtifactMissing)?;
-
-    let cache = intent_model_cache()
-        .lock()
-        .expect("intent model cache should lock");
-    if let Some(model) = cache.get(&canonical) {
-        return Ok(Arc::clone(model));
-    }
-    drop(cache);
-
-    let bytes = fs::read(&canonical).map_err(|_| CaptureParserError::ArtifactMissing)?;
-    let parsed: TinyIntentModel =
-        serde_json::from_slice(&bytes).map_err(|_| CaptureParserError::ManifestInvalid)?;
-    validate_model(&parsed)?;
-    if parsed.labels != bundle.labels {
-        return Err(CaptureParserError::ManifestInvalid);
-    }
-    let parsed = Arc::new(parsed);
-
-    let mut cache = intent_model_cache()
-        .lock()
-        .expect("intent model cache should lock");
-    cache.insert(canonical, Arc::clone(&parsed));
-    Ok(parsed)
+pub(crate) fn embedded_tiny_intent_model() -> &'static TinyIntentModel {
+    static MODEL: OnceLock<TinyIntentModel> = OnceLock::new();
+    MODEL.get_or_init(|| {
+        let model: TinyIntentModel =
+            serde_json::from_str(include_str!("../resources/tiny_intent_model.json"))
+                .expect("embedded tiny intent model should parse");
+        validate_model(&model).expect("embedded tiny intent model should be valid");
+        model
+    })
 }
 
-pub(crate) fn classify_probabilities(model: &TinyIntentModel, normalized: &str) -> [f64; 3] {
-    // The current tiny intent model is intentionally 3-way: task, calendar, none.
-    // Reminder routing stays heuristic-owned until a retrained 4-way artifact set lands.
+pub(crate) fn classify_probabilities(model: &TinyIntentModel, normalized: &str) -> [f64; 4] {
     let features = featurize(model, normalized);
     let logits = model
         .classes
@@ -84,22 +45,21 @@ pub(crate) fn classify_probabilities(model: &TinyIntentModel, normalized: &str) 
         .collect::<Vec<_>>();
     let probabilities = softmax(&logits);
 
-    let mut task = 0.0;
-    let mut calendar = 0.0;
-    let mut none = 0.0;
+    let mut scores = [0.0; 4];
     for (index, label) in model.labels.iter().enumerate() {
-        match label.as_str() {
-            "task" => task = probabilities.get(index).copied().unwrap_or(0.0),
-            "calendar" => calendar = probabilities.get(index).copied().unwrap_or(0.0),
-            "none" => none = probabilities.get(index).copied().unwrap_or(0.0),
-            _ => {}
-        }
+        let slot = match label.as_str() {
+            "task" => 0,
+            "calendar" => 1,
+            "reminder" => 2,
+            "none" => 3,
+            _ => continue,
+        };
+        scores[slot] = probabilities.get(index).copied().unwrap_or(0.0);
     }
-
-    [task, calendar, none]
+    scores
 }
 
-fn validate_model(model: &TinyIntentModel) -> Result<(), CaptureParserError> {
+pub(crate) fn validate_model(model: &TinyIntentModel) -> Result<(), CaptureParserError> {
     let feature_bins = model
         .word_bins
         .checked_add(model.char_bins)
@@ -155,10 +115,9 @@ fn featurize(model: &TinyIntentModel, normalized: &str) -> BTreeMap<usize, f64> 
 
     let l2 = counts
         .values()
-        .map(|value| value * value)
-        .sum::<f64>()
+        .fold(0.0_f64, |total, value| total + value * value)
         .sqrt();
-    let norm = if l2 == 0.0 { 1.0 } else { l2 };
+    let norm = if l2 == 0.0 || l2.is_nan() { 1.0 } else { l2 };
     counts
         .into_iter()
         .map(|(index, value)| (index, value / norm))
@@ -168,15 +127,9 @@ fn featurize(model: &TinyIntentModel, normalized: &str) -> BTreeMap<usize, f64> 
 fn collect_char_ngrams(text: &str, minimum: usize, maximum: usize) -> Vec<String> {
     let mut grams = Vec::new();
     for token in text.split(' ').filter(|token| !token.is_empty()) {
-        let padded = format!(" {token} ");
-        let chars = padded.chars().collect::<Vec<_>>();
+        let padded = format!(" {token} ").encode_utf16().collect::<Vec<_>>();
         for size in minimum..=maximum {
-            if chars.len() < size {
-                continue;
-            }
-            for index in 0..=(chars.len() - size) {
-                grams.push(chars[index..index + size].iter().collect());
-            }
+            grams.extend(padded.windows(size).map(String::from_utf16_lossy));
         }
     }
     grams
@@ -195,35 +148,24 @@ fn dot_sparse(features: &BTreeMap<usize, f64>, indices: &[usize], values: &[f64]
     indices
         .iter()
         .zip(values.iter())
-        .filter_map(|(feature_index, weight)| {
+        .fold(0.0, |total, (feature_index, weight)| {
             features
                 .get(feature_index)
-                .map(|feature_value| feature_value * weight)
+                .map_or(total, |feature_value| total + feature_value * weight)
         })
-        .sum()
 }
 
 fn softmax(logits: &[f64]) -> Vec<f64> {
-    let max = logits
-        .iter()
-        .copied()
-        .max_by(|left, right| left.total_cmp(right))
-        .unwrap_or(0.0);
+    let max = logits.iter().copied().fold(f64::NEG_INFINITY, f64::max);
     let exps = logits
         .iter()
         .map(|value| (value - max).exp())
         .collect::<Vec<_>>();
-    let sum = exps.iter().sum::<f64>();
-    if sum == 0.0 {
-        return vec![0.0; logits.len()];
-    }
+    let sum = exps.iter().fold(0.0, |total, value| total + value);
+    let sum = if sum == 0.0 || sum.is_nan() { 1.0 } else { sum };
     exps.into_iter().map(|value| value / sum).collect()
 }
 
-fn intent_model_cache() -> &'static Mutex<BTreeMap<PathBuf, Arc<TinyIntentModel>>> {
-    static CACHE: OnceLock<Mutex<BTreeMap<PathBuf, Arc<TinyIntentModel>>>> = OnceLock::new();
-    CACHE.get_or_init(|| Mutex::new(BTreeMap::new()))
-}
 
 #[cfg(test)]
 mod tests {

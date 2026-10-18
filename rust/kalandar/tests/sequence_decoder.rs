@@ -3,7 +3,7 @@ use kalandar::{
     decode_first_piece_labels, decode_first_piece_spans,
     load_capture_parser_artifact_manifest_from_root, load_ort_session, rebuild_word_spans,
     validate_sequence_decoder_sidecar, whitespace_words, CaptureParserError,
-    CaptureWordPieceTokenizer, DecodedSpan, RuntimeTensorData, SequenceDecoderError,
+    CaptureTokenizerConfig, CaptureWordPieceTokenizer, DecodedSpan, RuntimeTensorData, SequenceDecoderError,
     SequenceDecoding, WhitespaceWord, LOGITS_OUTPUT_TENSOR_NAME,
 };
 use serde::Deserialize;
@@ -39,6 +39,19 @@ struct ParityCase {
     argmax: Vec<String>,
     bio: Vec<String>,
     spans: Vec<ParitySpan>,
+}
+
+#[derive(Debug, Deserialize)]
+struct TokenizerCase {
+    text: String,
+    input_ids: Vec<i64>,
+}
+
+#[derive(Debug, Deserialize)]
+struct TokenizerFixture {
+    vocab: String,
+    max_sequence_length: usize,
+    cases: Vec<TokenizerCase>,
 }
 
 fn fixture_path(name: &str) -> PathBuf {
@@ -496,5 +509,38 @@ fn bundled_models_reproduce_reference_first_piece_decoding() {
                 .collect::<Vec<_>>();
             assert_eq!(spans, expected, "{family} {}", case.text);
         }
+    }
+}
+
+#[test]
+fn tokenizer_matches_hugging_face_ids() {
+    let fixture: TokenizerFixture = load_fixture("tokenizer_hf_parity.json");
+    let vocab_path = Path::new(env!("CARGO_MANIFEST_DIR"))
+        .join("..")
+        .join("..")
+        .join(&fixture.vocab);
+    let Ok(vocab_text) = fs::read_to_string(&vocab_path) else {
+        eprintln!("skipping tokenizer parity test: {} is missing", vocab_path.display());
+        return;
+    };
+    let tokenizer = CaptureWordPieceTokenizer::from_vocab(
+        &vocab_text,
+        CaptureTokenizerConfig {
+            max_tokens: fixture.max_sequence_length,
+            do_lower_case: true,
+            unk_token: "[UNK]".to_string(),
+            cls_token: "[CLS]".to_string(),
+            sep_token: "[SEP]".to_string(),
+            pad_token: "[PAD]".to_string(),
+        },
+    )
+    .expect("tokenizer should build");
+    for case in &fixture.cases {
+        assert_eq!(
+            tokenizer.encode(&case.text).input_ids,
+            case.input_ids,
+            "{:?}",
+            case.text
+        );
     }
 }

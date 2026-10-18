@@ -13,6 +13,8 @@ import {
   splitWhitespaceWords,
   validateSequenceDecoderSidecar,
 } from '../sequence-decoder.ts';
+import { createBertWordPieceTokenizer } from '../tokenizer.ts';
+import type { LoadedArtifactFiles } from '../types.ts';
 
 interface GoldenCase {
   labels: string[];
@@ -243,5 +245,32 @@ describe('sequence_decoder.json sidecar validation', () => {
       fs.readFileSync(new URL('../../../resources/capture-parser/calendar/sequence_decoder.json', import.meta.url), 'utf8'),
     );
     assert.doesNotThrow(() => validateSequenceDecoderSidecar(payload, payload.labels));
+  });
+});
+
+describe('BERT tokenizer parity with the training tokenizer', () => {
+  test('matches Hugging Face input ids on the parity fixture', () => {
+    const fixture = JSON.parse(
+      fs.readFileSync(new URL('./fixtures/tokenizer_hf_parity.json', import.meta.url), 'utf8'),
+    ) as { vocab: string; max_sequence_length: number; cases: Array<{ text: string; input_ids: number[] }> };
+    const vocabBytes = fs.readFileSync(new URL(`../../../${fixture.vocab}`, import.meta.url));
+    const vocabFile = { path: 'vocab.txt', sha256: '', sizeBytes: vocabBytes.byteLength, bytes: new Uint8Array(vocabBytes) };
+    const tokenizer = createBertWordPieceTokenizer(
+      {
+        kind: 'bert_wordpiece',
+        do_lower_case: true,
+        unk_token: '[UNK]',
+        cls_token: '[CLS]',
+        sep_token: '[SEP]',
+        pad_token: '[PAD]',
+        max_sequence_length: fixture.max_sequence_length,
+      },
+      { vocab: vocabFile } as unknown as LoadedArtifactFiles,
+    );
+    for (const { text, input_ids: expected } of fixture.cases) {
+      const encoded = tokenizer.encode(text);
+      const length = encoded.attentionMask.reduce((sum, value) => sum + value, 0);
+      assert.deepEqual(encoded.inputIds.slice(0, length), expected, JSON.stringify(text));
+    }
   });
 });

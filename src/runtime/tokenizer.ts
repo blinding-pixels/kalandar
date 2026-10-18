@@ -16,18 +16,23 @@ interface BasicToken {
   chars: TokenChar[];
 }
 
-const COMBINING_MARK_REGEX = /\p{M}/u;
-const PUNCTUATION_REGEX = /[\p{P}\p{S}]/u;
+const MAX_INPUT_CHARS_PER_WORD = 100;
+const NONSPACING_MARK_REGEX = /\p{Mn}/u;
+const PUNCTUATION_REGEX = /\p{P}/u;
+const ASCII_PUNCTUATION_REGEX = /^[!-/:-@[-`{-~]$/;
+const CONTROL_REGEX = /\p{Cc}|\p{Cf}|\p{Co}|\p{Cn}|\p{Cs}/u;
 const WHITESPACE_REGEX = /\s/u;
 
 const isControl = (char: string): boolean => {
   if (char === '\n' || char === '\r' || char === '\t') {
     return false;
   }
-  return /\p{Cc}|\p{Cf}/u.test(char);
+  return CONTROL_REGEX.test(char);
 };
 
 const isWhitespace = (char: string): boolean => WHITESPACE_REGEX.test(char);
+
+const isPunctuation = (char: string): boolean => ASCII_PUNCTUATION_REGEX.test(char) || PUNCTUATION_REGEX.test(char);
 
 const isChineseChar = (codePoint: number): boolean =>
   (codePoint >= 0x4e00 && codePoint <= 0x9fff) ||
@@ -35,8 +40,9 @@ const isChineseChar = (codePoint: number): boolean =>
   (codePoint >= 0x20000 && codePoint <= 0x2a6df) ||
   (codePoint >= 0x2a700 && codePoint <= 0x2b73f) ||
   (codePoint >= 0x2b740 && codePoint <= 0x2b81f) ||
-  (codePoint >= 0x2b820 && codePoint <= 0x2ceaf) ||
-  (codePoint >= 0xf900 && codePoint <= 0xfaff);
+  (codePoint >= 0x2b920 && codePoint <= 0x2ceaf) ||
+  (codePoint >= 0xf900 && codePoint <= 0xfaff) ||
+  (codePoint >= 0x2f800 && codePoint <= 0x2fa1f);
 
 const pushMappedChar = (target: TokenChar[], char: string, sourceStart: number, sourceEnd: number): void => {
   target.push({
@@ -46,28 +52,27 @@ const pushMappedChar = (target: TokenChar[], char: string, sourceStart: number, 
   });
 };
 
+/**
+ * Mirrors the Hugging Face BertNormalizer the models were trained with: drop NUL, U+FFFD and
+ * control characters, map whitespace to a space, pad CJK ideographs, decompose (NFD) and drop
+ * nonspacing marks, then lowercase. Offsets stay in UTF-16 units of the input.
+ */
 const normalizeInput = (input: string, doLowerCase: boolean): TokenChar[] => {
   const output: TokenChar[] = [];
 
-  for (let index = 0; index < input.length; index += 1) {
-    const rawChar = input[index];
-    const codePoint = rawChar.codePointAt(0) ?? 0;
-    const width = codePoint > 0xffff ? 2 : 1;
+  for (let index = 0; index < input.length; ) {
+    const codePoint = input.codePointAt(index) ?? 0;
+    const rawChar = String.fromCodePoint(codePoint);
     const sourceStart = index;
-    const sourceEnd = index + width;
+    const sourceEnd = index + rawChar.length;
+    index = sourceEnd;
 
-    if (isControl(rawChar)) {
-      if (width === 2) {
-        index += 1;
-      }
+    if (codePoint === 0 || codePoint === 0xfffd || isControl(rawChar)) {
       continue;
     }
 
     if (isWhitespace(rawChar)) {
       pushMappedChar(output, ' ', sourceStart, sourceEnd);
-      if (width === 2) {
-        index += 1;
-      }
       continue;
     }
 
@@ -75,23 +80,16 @@ const normalizeInput = (input: string, doLowerCase: boolean): TokenChar[] => {
       pushMappedChar(output, ' ', sourceStart, sourceEnd);
       pushMappedChar(output, rawChar, sourceStart, sourceEnd);
       pushMappedChar(output, ' ', sourceStart, sourceEnd);
-      if (width === 2) {
-        index += 1;
-      }
       continue;
     }
 
-    const normalized = doLowerCase ? rawChar.toLowerCase() : rawChar;
-    const decomposed = normalized.normalize('NFD');
-    for (const piece of decomposed) {
-      if (COMBINING_MARK_REGEX.test(piece)) {
+    for (const piece of rawChar.normalize('NFD')) {
+      if (doLowerCase && NONSPACING_MARK_REGEX.test(piece)) {
         continue;
       }
-      pushMappedChar(output, piece, sourceStart, sourceEnd);
-    }
-
-    if (width === 2) {
-      index += 1;
+      for (const lowered of doLowerCase ? piece.toLowerCase() : piece) {
+        pushMappedChar(output, lowered, sourceStart, sourceEnd);
+      }
     }
   }
 
@@ -119,7 +117,7 @@ const basicTokenize = (input: TokenChar[]): BasicToken[] => {
       continue;
     }
 
-    if (PUNCTUATION_REGEX.test(entry.char)) {
+    if (isPunctuation(entry.char)) {
       flushCurrent();
       tokens.push({
         text: entry.char,
@@ -140,6 +138,13 @@ const encodeWordPiece = (
   vocab: Map<string, number>,
   unkToken: string,
 ): Array<{ id: number; start: number; end: number }> => {
+  if (token.chars.length > MAX_INPUT_CHARS_PER_WORD) {
+    const unkId = vocab.get(unkToken);
+    if (typeof unkId !== 'number') {
+      throw new Error(`Tokenizer vocabulary is missing ${unkToken}`);
+    }
+    return [{ id: unkId, start: token.chars[0].sourceStart, end: token.chars[token.chars.length - 1].sourceEnd }];
+  }
   if (vocab.has(token.text)) {
     return [
       {
@@ -151,14 +156,15 @@ const encodeWordPiece = (
   }
 
   const pieces: Array<{ id: number; start: number; end: number }> = [];
+  const characters = token.chars.map((entry) => entry.char);
   let start = 0;
-  while (start < token.text.length) {
-    let end = token.text.length;
+  while (start < characters.length) {
+    let end = characters.length;
     let bestPiece: string | null = null;
     let bestEnd = start;
 
     while (end > start) {
-      const fragment = token.text.slice(start, end);
+      const fragment = characters.slice(start, end).join('');
       const candidate = start === 0 ? fragment : `##${fragment}`;
       if (vocab.has(candidate)) {
         bestPiece = candidate;

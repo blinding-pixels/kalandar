@@ -9,26 +9,41 @@ repository = "https://github.com/blinding-pixels/kalandar"
 homepage = "https://github.com/blinding-pixels/kalandar"
 keywords = ["calendar", "tasks", "reminders", "nlp"]
 categories = ["date-and-time", "parser-implementations"]
-include = ["Cargo.toml", "README.md", "src/**", "tests/**"]
+include = ["Cargo.toml", "README.md", "resources/**", "src/**", "tests/**"]
 
 [lib]
 path = "src/lib.rs"
 
+[[bin]]
+name = "kalandar-capture-preview"
+path = "src/bin/kalandar-capture-preview.rs"
+required-features = ["onnx"]
+
+[[example]]
+name = "decode_lines"
+required-features = ["onnx"]
+
+[[example]]
+name = "preview_lines"
+required-features = ["onnx"]
+
 [features]
-default = ["ort-download"]
-ort-download = ["ort/download-binaries", "ort/copy-dylibs", "ort/tls-native"]
+default = ["onnx", "ort-download"]
+onnx = ["dep:ort", "dep:ndarray"]
+ort-download = ["onnx", "ort/download-binaries", "ort/copy-dylibs", "ort/tls-native"]
 
 [dependencies]
 chrono = { version = "0.4", default-features = false, features = ["std", "clock"] }
 kalandar-dates = { path = "../kalandar-dates", version = "0.2.0" }
-ndarray = "0.17.2"
-ort = { version = "2.0.0-rc.12", default-features = false, features = ["std", "ndarray", "api-24"] }
+ndarray = { version = "0.17.2", optional = true }
+ort = { version = "2.0.0-rc.12", optional = true, default-features = false, features = ["std", "ndarray", "api-24"] }
 fancy-regex = "0.14"
 regex = "1"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 sha2 = "0.10"
 unicode-normalization = "0.1"
+unicode-properties = { version = "0.1", default-features = false, features = ["general-category"] }
 
 [dev-dependencies]
 tempfile = "3"

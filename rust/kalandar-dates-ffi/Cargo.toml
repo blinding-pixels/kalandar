@@ -3,7 +3,7 @@ name = "kalandar-dates-ffi"
 version = "0.2.0"
 edition = "2021"
 license = "MIT AND CC-BY-SA-3.0"
-description = "UniFFI bindings that let Swift call kalandar-dates."
+description = "UniFFI bindings that let Swift call kalandar-dates and the kalandar capture rules."
 repository = "https://github.com/blinding-pixels/kalandar"
 publish = false
 
@@ -20,6 +20,7 @@ required-features = ["bindgen"]
 bindgen = ["uniffi/cli"]
 
 [dependencies]
+kalandar = { path = "../kalandar", version = "0.2.0", default-features = false }
 kalandar-dates = { path = "../kalandar-dates", version = "0.2.0", features = ["json"] }
 uniffi = "0.29"
 serde_json = "1"

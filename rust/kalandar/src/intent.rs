@@ -1,11 +1,15 @@
-use super::intent_model::{classify_probabilities, load_tiny_intent_model};
+use super::intent_model::{
+    classify_probabilities, embedded_tiny_intent_model, TinyIntentModel,
+};
 use super::intent_rules::{
     has_date_signal, has_recurrence_signal, has_time_signal, is_explicit_reminder,
     is_short_appointment_ambiguous, looks_like_dated_task, looks_like_reflective_note,
     looks_like_soft_action_idea, looks_like_time_blocked_task, normalize_intent_input,
-    starts_with_task_lead, tokens,
+    normalize_js_whitespace, starts_with_task_lead, tokens,
 };
-use super::{CaptureParserArtifactManifest, CaptureParserError};
+use super::{
+    CapturePreviewCandidate, CapturePreviewWarning,
+};
 
 const DEFAULT_INTENT_THRESHOLD: f64 = 0.55;
 const GAP_THRESHOLD: f64 = 0.15;
@@ -17,6 +21,17 @@ pub enum IntentKind {
     Calendar,
     Reminder,
     None,
+}
+
+impl IntentKind {
+    pub fn capture_kind(self) -> &'static str {
+        match self {
+            Self::Task => "task",
+            Self::Calendar => "calendar-event",
+            Self::Reminder => "reminder",
+            Self::None => "thought",
+        }
+    }
 }
 
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -39,44 +54,89 @@ impl IntentRoute {
             IntentKind::None => self.none,
         }
     }
+
+    pub fn candidates(&self) -> Vec<CapturePreviewCandidate> {
+        let mut candidates = [
+            ("task", self.task),
+            ("calendar-event", self.calendar),
+            ("reminder", self.reminder),
+        ]
+        .into_iter()
+        .filter(|(_, score)| *score > 0.0)
+        .map(|(kind, score)| CapturePreviewCandidate { kind, score })
+        .collect::<Vec<_>>();
+        candidates.sort_by(|left, right| {
+            right
+                .score
+                .partial_cmp(&left.score)
+                .unwrap_or(std::cmp::Ordering::Equal)
+        });
+        candidates
+    }
+
+    pub fn warnings(&self) -> Vec<CapturePreviewWarning> {
+        if !self.ambiguous {
+            return Vec::new();
+        }
+        let message = if self.intent == IntentKind::None {
+            "Intent is ambiguous and was routed to none."
+        } else {
+            "Intent is ambiguous between multiple categories."
+        };
+        vec![CapturePreviewWarning {
+            code: "intent_ambiguous".to_string(),
+            severity: "info".to_string(),
+            message: message.to_string(),
+        }]
+    }
+
+    pub fn capture_intent(&self) -> CaptureIntent {
+        CaptureIntent {
+            kind: self.intent.capture_kind(),
+            confidence: self.primary_score(),
+            candidates: self.candidates(),
+            warnings: self.warnings(),
+            route: *self,
+        }
+    }
 }
 
-#[derive(Debug, Clone, Copy)]
-struct RankedIntent {
-    kind: IntentKind,
-    score: f64,
+#[derive(Debug, Clone, PartialEq)]
+pub struct CaptureIntent {
+    pub kind: &'static str,
+    pub confidence: f64,
+    pub candidates: Vec<CapturePreviewCandidate>,
+    pub warnings: Vec<CapturePreviewWarning>,
+    pub route: IntentRoute,
 }
 
-pub fn classify_intent(
-    manifest: &CaptureParserArtifactManifest,
-    input: &str,
-) -> Result<IntentRoute, CaptureParserError> {
-    let model = load_tiny_intent_model(manifest)?;
+
+pub fn classify_intent_embedded(input: &str) -> IntentRoute {
+    classify_intent_with_model(embedded_tiny_intent_model(), input)
+}
+
+pub fn route_capture_intent(text: &str) -> CaptureIntent {
+    classify_intent_embedded(&normalize_js_whitespace(text)).capture_intent()
+}
+
+pub(crate) fn classify_intent_with_model(model: &TinyIntentModel, input: &str) -> IntentRoute {
     let normalized = normalize_intent_input(input);
     let tokens = tokens(&normalized);
 
     if normalized.is_empty() {
-        return Ok(route(IntentKind::None, 0.0, 0.0, 0.0, 1.0, true, 1.0));
+        return route(IntentKind::None, [0.0, 0.0, 0.0, 1.0], true, 1.0);
     }
 
     if is_explicit_reminder(&normalized) {
-        return Ok(route(
-            IntentKind::Reminder,
-            0.03,
-            0.03,
-            0.92,
-            0.02,
-            false,
-            0.89,
-        ));
+        return route(IntentKind::Reminder, [0.03, 0.03, 0.92, 0.02], false, 0.89);
     }
 
     if looks_like_reflective_note(&normalized, &tokens) {
-        return Ok(route(IntentKind::None, 0.03, 0.03, 0.0, 0.94, false, 0.91));
+        return route(IntentKind::None, [0.03, 0.03, 0.0, 0.94], false, 0.91);
     }
 
     if looks_like_soft_action_idea(&normalized, &tokens) {
-        return Ok(route(IntentKind::None, 0.12, 0.03, 0.0, 0.85, false, 0.73));
+        return route(IntentKind::None, [0.12, 0.03, 0.0, 0.85], false, 0.73);
     }
 
     if starts_with_task_lead(&tokens)
@@ -84,69 +144,53 @@ pub fn classify_intent(
         && !has_date_signal(&normalized)
         && !has_recurrence_signal(&normalized)
     {
-        return Ok(route(IntentKind::Task, 0.86, 0.12, 0.0, 0.02, false, 0.74));
+        return route(IntentKind::Task, [0.86, 0.12, 0.0, 0.02], false, 0.74);
     }
 
     if looks_like_time_blocked_task(&normalized, &tokens) {
-        return Ok(route(IntentKind::Task, 0.78, 0.2, 0.0, 0.02, false, 0.58));
+        return route(IntentKind::Task, [0.78, 0.2, 0.0, 0.02], false, 0.58);
     }
 
     if looks_like_dated_task(&normalized, &tokens) {
-        return Ok(route(IntentKind::Task, 0.72, 0.24, 0.0, 0.04, false, 0.48));
+        return route(IntentKind::Task, [0.72, 0.24, 0.0, 0.04], false, 0.48);
     }
 
     if is_short_appointment_ambiguous(&normalized, &tokens) {
-        return Ok(route(IntentKind::None, 0.18, 0.42, 0.0, 0.4, true, 0.02));
+        return route(IntentKind::None, [0.18, 0.42, 0.0, 0.4], true, 0.02);
     }
 
-    let [task, calendar, none] = classify_probabilities(model.as_ref(), &normalized);
+    let scores = classify_probabilities(model, &normalized);
     let mut ranked = [
-        RankedIntent {
-            kind: IntentKind::Task,
-            score: task,
-        },
-        RankedIntent {
-            kind: IntentKind::Calendar,
-            score: calendar,
-        },
-        RankedIntent {
-            kind: IntentKind::None,
-            score: none,
-        },
-        RankedIntent {
-            kind: IntentKind::Reminder,
-            score: 0.0,
-        },
-    ];
-    ranked.sort_by(|left, right| right.score.total_cmp(&left.score));
+        IntentKind::Task,
+        IntentKind::Calendar,
+        IntentKind::Reminder,
+        IntentKind::None,
+    ]
+    .into_iter()
+    .zip(scores)
+    .collect::<Vec<_>>();
+    ranked.sort_by(|left, right| {
+        right
+            .1
+            .partial_cmp(&left.1)
+            .unwrap_or(std::cmp::Ordering::Equal)
+    });
 
-    let top = ranked[0];
-    let second = ranked[1];
-    let top_two_gap = top.score - second.score;
-    let ambiguous = top_two_gap <= GAP_THRESHOLD || top.score < DEFAULT_INTENT_THRESHOLD;
-    let intent = if top.kind == IntentKind::None || top.score < ROUTE_TO_NONE_THRESHOLD {
+    let (top_kind, top_score) = ranked[0];
+    let top_two_gap = top_score - ranked[1].1;
+    let ambiguous = top_two_gap <= GAP_THRESHOLD || top_score < DEFAULT_INTENT_THRESHOLD;
+    let intent = if top_kind == IntentKind::None || top_score < ROUTE_TO_NONE_THRESHOLD {
         IntentKind::None
     } else {
-        top.kind
+        top_kind
     };
 
-    Ok(route(
-        intent,
-        task,
-        calendar,
-        0.0,
-        none,
-        ambiguous,
-        top_two_gap,
-    ))
+    route(intent, scores, ambiguous, top_two_gap)
 }
 
 fn route(
     intent: IntentKind,
-    task: f64,
-    calendar: f64,
-    reminder: f64,
-    none: f64,
+    [task, calendar, reminder, none]: [f64; 4],
     ambiguous: bool,
     top_two_gap: f64,
 ) -> IntentRoute {

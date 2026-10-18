@@ -74,32 +74,32 @@ public struct BertWordPieceTokenizer: Sendable {
 
     private typealias BasicToken = (String, [(Unicode.Scalar, Int, Int)])
 
-    private static func isMark(_ scalar: Unicode.Scalar) -> Bool {
-        switch scalar.properties.generalCategory {
-        case .nonspacingMark, .spacingMark, .enclosingMark:
-            return true
-        default:
-            return false
-        }
-    }
+    private static let maxInputCharsPerWord = 100
 
     private static func isControl(_ scalar: Unicode.Scalar) -> Bool {
         if scalar == "\t" || scalar == "\n" || scalar == "\r" {
             return false
         }
         switch scalar.properties.generalCategory {
-        case .control, .format:
+        case .control, .format, .privateUse, .unassigned, .surrogate:
             return true
         default:
             return false
         }
     }
 
-    private static func isPunctuationOrSymbol(_ scalar: Unicode.Scalar) -> Bool {
+    private static func isWhitespace(_ scalar: Unicode.Scalar) -> Bool {
+        scalar == "\t" || scalar == "\n" || scalar == "\r" || scalar.properties.isWhitespace
+    }
+
+    private static func isPunctuation(_ scalar: Unicode.Scalar) -> Bool {
+        if scalar.isASCII, (33...47).contains(scalar.value) || (58...64).contains(scalar.value)
+            || (91...96).contains(scalar.value) || (123...126).contains(scalar.value) {
+            return true
+        }
         switch scalar.properties.generalCategory {
         case .connectorPunctuation, .dashPunctuation, .openPunctuation, .closePunctuation,
-             .initialPunctuation, .finalPunctuation, .otherPunctuation,
-             .mathSymbol, .currencySymbol, .modifierSymbol, .otherSymbol:
+             .initialPunctuation, .finalPunctuation, .otherPunctuation:
             return true
         default:
             return false
@@ -109,7 +109,7 @@ public struct BertWordPieceTokenizer: Sendable {
     private static func isChinese(_ scalar: Unicode.Scalar) -> Bool {
         switch scalar.value {
         case 0x4E00...0x9FFF, 0x3400...0x4DBF, 0x20000...0x2A6DF, 0x2A700...0x2B73F,
-             0x2B740...0x2B81F, 0x2B820...0x2CEAF, 0xF900...0xFAFF:
+             0x2B740...0x2B81F, 0x2B920...0x2CEAF, 0xF900...0xFAFF, 0x2F800...0x2FA1F:
             return true
         default:
             return false
@@ -128,10 +128,10 @@ public struct BertWordPieceTokenizer: Sendable {
 
         for (offset, character) in input.enumerated() {
             for raw in character.unicodeScalars {
-                if Self.isControl(raw) {
+                if raw.value == 0 || raw.value == 0xFFFD || Self.isControl(raw) {
                     continue
                 }
-                if raw.properties.isWhitespace {
+                if Self.isWhitespace(raw) {
                     flush()
                     continue
                 }
@@ -140,15 +140,15 @@ public struct BertWordPieceTokenizer: Sendable {
                     tokens.append((String(raw), [(raw, offset, offset + 1)]))
                     continue
                 }
-                let pieces = String(raw).lowercased().decomposedStringWithCanonicalMapping.unicodeScalars
-                for scalar in pieces where !Self.isMark(scalar) {
-                    if scalar.properties.isWhitespace {
-                        flush()
-                    } else if Self.isPunctuationOrSymbol(scalar) {
-                        flush()
-                        tokens.append((String(scalar), [(scalar, offset, offset + 1)]))
-                    } else {
-                        current.append((scalar, offset, offset + 1))
+                let decomposed = String(raw).decomposedStringWithCanonicalMapping.unicodeScalars
+                for base in decomposed where base.properties.generalCategory != .nonspacingMark {
+                    for scalar in String(base).lowercased().unicodeScalars {
+                        if Self.isPunctuation(scalar) {
+                            flush()
+                            tokens.append((String(scalar), [(scalar, offset, offset + 1)]))
+                        } else {
+                            current.append((scalar, offset, offset + 1))
+                        }
                     }
                 }
             }
@@ -158,6 +158,9 @@ public struct BertWordPieceTokenizer: Sendable {
     }
 
     private func encodeWordPiece(_ token: BasicToken) -> [(Int32, Int, Int)] {
+        if token.1.count > Self.maxInputCharsPerWord {
+            return [(unkId, token.1.first?.1 ?? 0, token.1.last?.2 ?? 0)]
+        }
         if let id = vocab[token.0] {
             return [(id, token.1.first?.1 ?? 0, token.1.last?.2 ?? 0)]
         }

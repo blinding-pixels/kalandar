@@ -1,0 +1,6130 @@
+{
+ "vocab": "resources/capture-parser/task/vocab.txt",
+ "max_sequence_length": 128,
+ "cases": [
+  {
+   "text": "café naïve résumé Zoë crème brûlée",
+   "input_ids": [
+    101,
+    7668,
+    15743,
+    13746,
+    11199,
+    13675,
+    21382,
+    7987,
+    9307,
+    2063,
+    102
+   ]
+  },
+  {
+   "text": "नमस्ते दुनिया कल सुबह",
+   "input_ids": [
+    101,
+    1327,
+    29867,
+    29874,
+    29859,
+    1325,
+    29863,
+    29877,
+    29868,
+    29876,
+    1315,
+    29870,
+    1338,
+    29865,
+    29875,
+    102
+   ]
+  },
+  {
+   "text": "مرحبا غدا الساعة ٣",
+   "input_ids": [
+    101,
+    1295,
+    17149,
+    29820,
+    29816,
+    25573,
+    1289,
+    15394,
+    25573,
+    1270,
+    23673,
+    29824,
+    25573,
+    29830,
+    19433,
+    100,
+    102
+   ]
+  },
+  {
+   "text": "สวัสดีพรุ่งนี้",
+   "input_ids": [
+    101,
+    100,
+    102
+   ]
+  },
+  {
+   "text": "내일 오전 회의",
+   "input_ids": [
+    101,
+    1456,
+    30007,
+    29999,
+    30019,
+    30022,
+    1463,
+    30011,
+    30000,
+    30008,
+    30021,
+    100,
+    102
+   ]
+  },
+  {
+   "text": "明日の会議 午後3時",
+   "input_ids": [
+    101,
+    1865,
+    1864,
+    1671,
+    1763,
+    100,
+    100,
+    1846,
+    1017,
+    100,
+    102
+   ]
+  },
+  {
+   "text": "明天下午三点开会",
+   "input_ids": [
+    101,
+    1865,
+    1811,
+    1743,
+    100,
+    1741,
+    100,
+    100,
+    1763,
+    102
+   ]
+  },
+  {
+   "text": "meet 😀 at 3",
+   "input_ids": [
+    101,
+    3113,
+    100,
+    2012,
+    1017,
+    102
+   ]
+  },
+  {
+   "text": "family 👨‍👩‍👧 dinner",
+   "input_ids": [
+    101,
+    2155,
+    100,
+    4596,
+    102
+   ]
+  },
+  {
+   "text": "flag 🇮🇳 day",
+   "input_ids": [
+    101,
+    5210,
+    100,
+    2154,
+    102
+   ]
+  },
+  {
+   "text": "™ ® © ° € £ ¥ ₹ § ¶",
+   "input_ids": [
+    101,
+    1580,
+    1079,
+    1075,
+    1080,
+    1574,
+    1069,
+    1071,
+    1576,
+    1073,
+    1086,
+    102
+   ]
+  },
+  {
+   "text": "½ ¼ ² ³ × ÷ ± ∞ ≠ ≤",
+   "input_ids": [
+    101,
+    1092,
+    1091,
+    1082,
+    1083,
+    1095,
+    1099,
+    1081,
+    1601,
+    1027,
+    1608,
+    102
+   ]
+  },
+  {
+   "text": "ｆｕｌｌｗｉｄｔｈ　ｔｅｘｔ",
+   "input_ids": [
+    101,
+    100,
+    100,
+    102
+   ]
+  },
+  {
+   "text": "éclair ä",
+   "input_ids": [
+    101,
+    14925,
+    19771,
+    2099,
+    1037,
+    102
+   ]
+  },
+  {
+   "text": "zero​width soft­hyphen nb sp",
+   "input_ids": [
+    101,
+    5717,
+    9148,
+    11927,
+    2232,
+    3730,
+    10536,
+    8458,
+    2368,
+    1050,
+    2497,
+    11867,
+    102
+   ]
+  },
+  {
+   "text": "tab\there\nnew",
+   "input_ids": [
+    101,
+    21628,
+    2182,
+    2047,
+    102
+   ]
+  },
+  {
+   "text": "bom﻿start",
+   "input_ids": [
+    101,
+    8945,
+    5244,
+    7559,
+    2102,
+    102
+   ]
+  },
+  {
+   "text": "rtl ‮override",
+   "input_ids": [
+    101,
+    19387,
+    2140,
+    2058,
+    15637,
+    102
+   ]
+  },
+  {
+   "text": "İstanbul ǅ ß ẞ ﬁ",
+   "input_ids": [
+    101,
+    9960,
+    100,
+    1096,
+    1096,
+    1984,
+    102
+   ]
+  },
+  {
+   "text": "Ωmega ΣΑΣ σς",
+   "input_ids": [
+    101,
+    1179,
+    4168,
+    3654,
+    1173,
+    14608,
+    29733,
+    1173,
+    19579,
+    102
+   ]
+  },
+  {
+   "text": "Привет завтра",
+   "input_ids": [
+    101,
+    1194,
+    16856,
+    10325,
+    25529,
+    15290,
+    22919,
+    1187,
+    10260,
+    25529,
+    22919,
+    16856,
+    10260,
+    102
+   ]
+  },
+  {
+   "text": "გამარჯობა",
+   "input_ids": [
+    101,
+    100,
+    102
+   ]
+  },
+  {
+   "text": "Ελληνικά",
+   "input_ids": [
+    101,
+    1159,
+    29727,
+    29727,
+    24824,
+    16177,
+    18199,
+    29726,
+    14608,
+    102
+   ]
+  },
+  {
+   "text": "ⓐⓑⓒ ①②③",
+   "input_ids": [
+    101,
+    100,
+    100,
+    102
+   ]
+  },
+  {
+   "text": "…—–‘’“”«»",
+   "input_ids": [
+    101,
+    1529,
+    1517,
+    1516,
+    1520,
+    1521,
+    1523,
+    1524,
+    1077,
+    1090,
+    102
+   ]
+  },
+  {
+   "text": "x\u0000y",
+   "input_ids": [
+    101,
+    1060,
+    2100,
+    102
+   ]
+  },
+  {
+   "text": "a�b",
+   "input_ids": [
+    101,
+    11113,
+    102
+   ]
+  },
+  {
+   "text": "q3 kick-off @ 9:30am #ops-team (re: deck) [draft] {v2} <tbd> ~soon~ ^up^ |pipe| \\slash/",
+   "input_ids": [
+    101,
+    1053,
+    2509,
+    5926,
+    1011,
+    2125,
+    1030,
+    1023,
+    1024,
+    2382,
+    3286,
+    1001,
+    23092,
+    1011,
+    2136,
+    1006,
+    2128,
+    1024,
+    5877,
+    1007,
+    1031,
+    4433,
+    1033,
+    1063,
+    1058,
+    2475,
+    1065,
+    1026,
+    26419,
+    2094,
+    1028,
+    1066,
+    2574,
+    1066,
+    1034,
+    2039,
+    1034,
+    1064,
+    8667,
+    1064,
+    1032,
+    18296,
+    1013,
+    102
+   ]
+  },
+  {
+   "text": "abbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb end",
+   "input_ids": [
+    101,
+    100,
+    2203,
+    102
+   ]
+  },
+  {
+   "text": "ab a b ab a󠀁b",
+   "input_ids": [
+    101,
+    11113,
+    1037,
+    1038,
+    11113,
+    11113,
+    102
+   ]
+  },
+  {
+   "text": "x𫠠y 𫤠 丽z",
+   "input_ids": [
+    101,
+    100,
+    100,
+    100,
+    1062,
+    102
+   ]
+  },
+  {
+   "text": "😀😀 👍🏽 a😀b",
+   "input_ids": [
+    101,
+    100,
+    100,
+    100,
+    102
+   ]
+  },
+  {
+   "text": "𝐀𝐁 math",
+   "input_ids": [
+    101,
+    100,
+    8785,
+    102
+   ]
+  },
+  {
+   "text": "Ⅻ ⅻ",
+   "input_ids": [
+    101,
+    100,
+    100,
+    102
+   ]
+  },
+  {
+   "text": "ﬀ ﬃ",
+   "input_ids": [
+    101,
+    100,
+    100,
+    102
+   ]
+  },
+  {
+   "text": "à́̂b",
+   "input_ids": [
+    101,
+    11113,
+    102
+   ]
+  },
+  {
+   "text": "then sync with the design team about the roadmap then sync with the design team about the roadmap then sync with the design team about the roadmap then sync with the design team about the roadmap then sync with the design team about the roadmap then sync with the design team about the roadmap then sync with the design team about the roadmap then sync with the design team about the roadmap then sync with the design team about the roadmap then sync with the design team about the roadmap then sync with the design team about the roadmap then sync with the design team about the roadmap then sync with the design team about the roadmap then sync with the design team about the roadmap then sync with the design team about the roadmap then sync with the design team about the roadmap then sync with the design team about the roadmap then sync with the design team about the roadmap then sync with the design team about the roadmap then sync with the design team about the roadmap",
+   "input_ids": [
+    101,
+    2059,
+    26351,
+    2007,
+    1996,
+    2640,
+    2136,
+    2055,
+    1996,
+    2346,
+    2863,
+    2361,
+    2059,
+    26351,
+    2007,
+    1996,
+    2640,
+    2136,
+    2055,
+    1996,
+    2346,
+    2863,
+    2361,
+    2059,
+    26351,
+    2007,
+    1996,
+    2640,
+    2136,
+    2055,
+    1996,
+    2346,
+    2863,
+    2361,
+    2059,
+    26351,
+    2007,
+    1996,
+    2640,
+    2136,
+    2055,
+    1996,
+    2346,
+    2863,
+    2361,
+    2059,
+    26351,
+    2007,
+    1996,
+    2640,
+    2136,
+    2055,
+    1996,
+    2346,
+    2863,
+    2361,
+    2059,
+    26351,
+    2007,
+    1996,
+    2640,
+    2136,
+    2055,
+    1996,
+    2346,
+    2863,
+    2361,
+    2059,
+    26351,
+    2007,
+    1996,
+    2640,
+    2136,
+    2055,
+    1996,
+    2346,
+    2863,
+    2361,
+    2059,
+    26351,
+    2007,
+    1996,
+    2640,
+    2136,
+    2055,
+    1996,
+    2346,
+    2863,
+    2361,
+    2059,
+    26351,
+    2007,
+    1996,
+    2640,
+    2136,
+    2055,
+    1996,
+    2346,
+    2863,
+    2361,
+    2059,
+    26351,
+    2007,
+    1996,
+    2640,
+    2136,
+    2055,
+    1996,
+    2346,
+    2863,
+    2361,
+    2059,
+    26351,
+    2007,
+    1996,
+    2640,
+    2136,
+    2055,
+    1996,
+    2346,
+    2863,
+    2361,
+    2059,
+    26351,
+    2007,
+    1996,
+    2640,
+    102
+   ]
+  },
+  {
+   "text": "Remember to find the trail map Mon Wed Fri at 7:45am",
+   "input_ids": [
+    101,
+    3342,
+    2000,
+    2424,
+    1996,
+    4446,
+    4949,
+    12256,
+    21981,
+    10424,
+    2072,
+    2012,
+    1021,
+    1024,
+    3429,
+    3286,
+    102
+   ]
+  },
+  {
+   "text": "Ceramics critique every first Monday",
+   "input_ids": [
+    101,
+    17314,
+    16218,
+    2296,
+    2034,
+    6928,
+    102
+   ]
+  },
+  {
+   "text": "on the last day of every month, Ukulele circle",
+   "input_ids": [
+    101,
+    2006,
+    1996,
+    2197,
+    2154,
+    1997,
+    2296,
+    3204,
+    1010,
+    2866,
+    9307,
+    2571,
+    4418,
+    102
+   ]
+  },
+  {
+   "text": "Study group Sunday https://call.example.io/u/keira",
+   "input_ids": [
+    101,
+    2817,
+    2177,
+    4465,
+    16770,
+    1024,
+    1013,
+    1013,
+    2655,
+    1012,
+    2742,
+    1012,
+    22834,
+    1013,
+    1057,
+    1013,
+    26679,
+    2527,
+    102
+   ]
+  },
+  {
+   "text": "ping me to check the mail at noon today",
+   "input_ids": [
+    101,
+    17852,
+    2033,
+    2000,
+    4638,
+    1996,
+    5653,
+    2012,
+    11501,
+    2651,
+    102
+   ]
+  },
+  {
+   "text": "Bring the fabric samples when I leave the library",
+   "input_ids": [
+    101,
+    3288,
+    1996,
+    8313,
+    8168,
+    2043,
+    1045,
+    2681,
+    1996,
+    3075,
+    102
+   ]
+  },
+  {
+   "text": "Print the visitor passes from the 8th to the 10th",
+   "input_ids": [
+    101,
+    6140,
+    1996,
+    10367,
+    5235,
+    2013,
+    1996,
+    5893,
+    2000,
+    1996,
+    6049,
+    102
+   ]
+  },
+  {
+   "text": "Dinner tonight at 19:00 with Clara",
+   "input_ids": [
+    101,
+    4596,
+    3892,
+    2012,
+    2539,
+    1024,
+    4002,
+    2007,
+    10254,
+    102
+   ]
+  },
+  {
+   "text": "Design critique Wednesday 2 to 3 for feedback on the landing page",
+   "input_ids": [
+    101,
+    2640,
+    16218,
+    9317,
+    1016,
+    2000,
+    1017,
+    2005,
+    12247,
+    2006,
+    1996,
+    4899,
+    3931,
+    102
+   ]
+  },
+  {
+   "text": "Review the budget for project Titan for 2 hours.",
+   "input_ids": [
+    101,
+    3319,
+    1996,
+    5166,
+    2005,
+    2622,
+    16537,
+    2005,
+    1016,
+    2847,
+    1012,
+    102
+   ]
+  },
+  {
+   "text": "at 22:00 remind me to set the alarm",
+   "input_ids": [
+    101,
+    2012,
+    2570,
+    1024,
+    4002,
+    10825,
+    2033,
+    2000,
+    2275,
+    1996,
+    8598,
+    102
+   ]
+  },
+  {
+   "text": "remind me every quarter on Monday to move the laundry about the lease",
+   "input_ids": [
+    101,
+    10825,
+    2033,
+    2296,
+    4284,
+    2006,
+    6928,
+    2000,
+    2693,
+    1996,
+    14533,
+    2055,
+    1996,
+    10084,
+    102
+   ]
+  },
+  {
+   "text": "Remind me to Vacuum tonight",
+   "input_ids": [
+    101,
+    10825,
+    2033,
+    2000,
+    11641,
+    3892,
+    102
+   ]
+  },
+  {
+   "text": "on the last day of every month, Seed exchange",
+   "input_ids": [
+    101,
+    2006,
+    1996,
+    2197,
+    2154,
+    1997,
+    2296,
+    3204,
+    1010,
+    6534,
+    3863,
+    102
+   ]
+  },
+  {
+   "text": "Update the API endpoints for Atlas, take about 1 hour tomorrow afternoon",
+   "input_ids": [
+    101,
+    10651,
+    1996,
+    17928,
+    2203,
+    26521,
+    2005,
+    11568,
+    1010,
+    2202,
+    2055,
+    1015,
+    3178,
+    4826,
+    5027,
+    102
+   ]
+  },
+  {
+   "text": "tmrw, Tighten the greenhouse bolts",
+   "input_ids": [
+    101,
+    1056,
+    2213,
+    2099,
+    2860,
+    1010,
+    21245,
+    1996,
+    16635,
+    19947,
+    102
+   ]
+  },
+  {
+   "text": "Yoga daily 6:30 for 30 mins at the studio",
+   "input_ids": [
+    101,
+    13272,
+    3679,
+    1020,
+    1024,
+    2382,
+    2005,
+    2382,
+    8117,
+    2015,
+    2012,
+    1996,
+    2996,
+    102
+   ]
+  },
+  {
+   "text": "Storytelling hour this Saturday by 11am at the old mill",
+   "input_ids": [
+    101,
+    20957,
+    3178,
+    2023,
+    5095,
+    2011,
+    2340,
+    3286,
+    2012,
+    1996,
+    2214,
+    4971,
+    102
+   ]
+  },
+  {
+   "text": "Volunteer orientation next month on the 3rd at 09:00",
+   "input_ids": [
+    101,
+    6951,
+    10296,
+    2279,
+    3204,
+    2006,
+    1996,
+    3822,
+    2012,
+    5641,
+    1024,
+    4002,
+    102
+   ]
+  },
+  {
+   "text": "Inspect the nesting boxes tommorow at 6:20pm",
+   "input_ids": [
+    101,
+    22459,
+    1996,
+    21016,
+    8378,
+    3419,
+    5302,
+    10524,
+    2012,
+    1020,
+    1024,
+    2322,
+    9737,
+    102
+   ]
+  },
+  {
+   "text": "Update website copy for Chloé by Monday",
+   "input_ids": [
+    101,
+    10651,
+    4037,
+    6100,
+    2005,
+    9318,
+    2011,
+    6928,
+    102
+   ]
+  },
+  {
+   "text": "starting next Monday, Folk dance practice every morning until October",
+   "input_ids": [
+    101,
+    3225,
+    2279,
+    6928,
+    1010,
+    5154,
+    3153,
+    3218,
+    2296,
+    2851,
+    2127,
+    2255,
+    102
+   ]
+  },
+  {
+   "text": "Team birthdays celebration every first Friday at 4",
+   "input_ids": [
+    101,
+    2136,
+    5798,
+    2015,
+    7401,
+    2296,
+    2034,
+    5958,
+    2012,
+    1018,
+    102
+   ]
+  },
+  {
+   "text": "Meeting at the café tonight at 7",
+   "input_ids": [
+    101,
+    3116,
+    2012,
+    1996,
+    7668,
+    3892,
+    2012,
+    1021,
+    102
+   ]
+  },
+  {
+   "text": "Remind me to weekly, renew the locker rental",
+   "input_ids": [
+    101,
+    10825,
+    2033,
+    2000,
+    4882,
+    1010,
+    20687,
+    1996,
+    12625,
+    12635,
+    102
+   ]
+  },
+  {
+   "text": "Remember to Compost Monday",
+   "input_ids": [
+    101,
+    3342,
+    2000,
+    4012,
+    19894,
+    6928,
+    102
+   ]
+  },
+  {
+   "text": "Package the pottery samples the 1st at 15:30 high priority",
+   "input_ids": [
+    101,
+    7427,
+    1996,
+    11378,
+    8168,
+    1996,
+    3083,
+    2012,
+    2321,
+    1024,
+    2382,
+    2152,
+    9470,
+    102
+   ]
+  },
+  {
+   "text": "Sketch tmrw",
+   "input_ids": [
+    101,
+    11080,
+    1056,
+    2213,
+    2099,
+    2860,
+    102
+   ]
+  },
+  {
+   "text": "Review the project goals for project Titan for 1 hour.",
+   "input_ids": [
+    101,
+    3319,
+    1996,
+    2622,
+    3289,
+    2005,
+    2622,
+    16537,
+    2005,
+    1015,
+    3178,
+    1012,
+    102
+   ]
+  },
+  {
+   "text": "tomorow, Package the pottery samples",
+   "input_ids": [
+    101,
+    3419,
+    14604,
+    2860,
+    1010,
+    7427,
+    1996,
+    11378,
+    8168,
+    102
+   ]
+  },
+  {
+   "text": "Dinner with Isabella tonight at 7:30pm",
+   "input_ids": [
+    101,
+    4596,
+    2007,
+    10323,
+    3892,
+    2012,
+    1021,
+    1024,
+    2382,
+    9737,
+    102
+   ]
+  },
+  {
+   "text": "movie w/ cousins tonight 9:40pm",
+   "input_ids": [
+    101,
+    3185,
+    1059,
+    1013,
+    12334,
+    3892,
+    1023,
+    1024,
+    2871,
+    9737,
+    102
+   ]
+  },
+  {
+   "text": "Family gathering on Boxing Day",
+   "input_ids": [
+    101,
+    2155,
+    7215,
+    2006,
+    8362,
+    2154,
+    102
+   ]
+  },
+  {
+   "text": "Organize the closet for 2 hours, status: done.",
+   "input_ids": [
+    101,
+    10939,
+    1996,
+    9346,
+    2005,
+    1016,
+    2847,
+    1010,
+    3570,
+    1024,
+    2589,
+    1012,
+    102
+   ]
+  },
+  {
+   "text": "Ask June about weaving class tomorrow",
+   "input_ids": [
+    101,
+    3198,
+    2238,
+    2055,
+    15360,
+    2465,
+    4826,
+    102
+   ]
+  },
+  {
+   "text": "Vacuum Wednesday",
+   "input_ids": [
+    101,
+    11641,
+    9317,
+    102
+   ]
+  },
+  {
+   "text": "Costume fitting the 1st by 11am in the village square",
+   "input_ids": [
+    101,
+    9427,
+    11414,
+    1996,
+    3083,
+    2011,
+    2340,
+    3286,
+    1999,
+    1996,
+    2352,
+    2675,
+    102
+   ]
+  },
+  {
+   "text": "Karate Tue 6pm 15 min before",
+   "input_ids": [
+    101,
+    16894,
+    10722,
+    2063,
+    1020,
+    9737,
+    2321,
+    8117,
+    2077,
+    102
+   ]
+  },
+  {
+   "text": "Finalize the contract for the Q3 launch, status: complete",
+   "input_ids": [
+    101,
+    2345,
+    4697,
+    1996,
+    3206,
+    2005,
+    1996,
+    1053,
+    2509,
+    4888,
+    1010,
+    3570,
+    1024,
+    3143,
+    102
+   ]
+  },
+  {
+   "text": "Client check-in with Kai every 15th on tomorrow at 17:15 until 19:00 for 20 minutes at Blue Bottle to review staffing gaps and priorities",
+   "input_ids": [
+    101,
+    7396,
+    4638,
+    1011,
+    1999,
+    2007,
+    11928,
+    2296,
+    6286,
+    2006,
+    4826,
+    2012,
+    2459,
+    1024,
+    2321,
+    2127,
+    2539,
+    1024,
+    4002,
+    2005,
+    2322,
+    2781,
+    2012,
+    2630,
+    5835,
+    2000,
+    3319,
+    3095,
+    2075,
+    16680,
+    1998,
+    18402,
+    102
+   ]
+  },
+  {
+   "text": "Ping Kevin Jahns about Yjs — waiting",
+   "input_ids": [
+    101,
+    17852,
+    4901,
+    14855,
+    7295,
+    2015,
+    2055,
+    1061,
+    22578,
+    1517,
+    3403,
+    102
+   ]
+  },
+  {
+   "text": "Piano lesson every Tuesday at 8 AM until July 1st",
+   "input_ids": [
+    101,
+    3682,
+    10800,
+    2296,
+    9857,
+    2012,
+    1022,
+    2572,
+    2127,
+    2251,
+    3083,
+    102
+   ]
+  },
+  {
+   "text": "Plan the marketing campaign for project Atlas by Friday morning.",
+   "input_ids": [
+    101,
+    2933,
+    1996,
+    5821,
+    3049,
+    2005,
+    2622,
+    11568,
+    2011,
+    5958,
+    2851,
+    1012,
+    102
+   ]
+  },
+  {
+   "text": "nxt Friday, Weaving class",
+   "input_ids": [
+    101,
+    1050,
+    18413,
+    5958,
+    1010,
+    15360,
+    2465,
+    102
+   ]
+  },
+  {
+   "text": "Review the meal plan, every other Saturday, at 9 AM, starting today, for 6 weeks, unless it's a holiday then the following Thursday, until September 30, the night before, at the greenhouse",
+   "input_ids": [
+    101,
+    3319,
+    1996,
+    7954,
+    2933,
+    1010,
+    2296,
+    2060,
+    5095,
+    1010,
+    2012,
+    1023,
+    2572,
+    1010,
+    3225,
+    2651,
+    1010,
+    2005,
+    1020,
+    3134,
+    1010,
+    4983,
+    2009,
+    1005,
+    1055,
+    1037,
+    6209,
+    2059,
+    1996,
+    2206,
+    9432,
+    1010,
+    2127,
+    2244,
+    2382,
+    1010,
+    1996,
+    2305,
+    2077,
+    1010,
+    2012,
+    1996,
+    16635,
+    102
+   ]
+  },
+  {
+   "text": "remind me before the trip in the lobby to email the landlord 20 minutes before for the handoff",
+   "input_ids": [
+    101,
+    10825,
+    2033,
+    2077,
+    1996,
+    4440,
+    1999,
+    1996,
+    9568,
+    2000,
+    10373,
+    1996,
+    18196,
+    2322,
+    2781,
+    2077,
+    2005,
+    1996,
+    2192,
+    7245,
+    102
+   ]
+  },
+  {
+   "text": "Keys monthly",
+   "input_ids": [
+    101,
+    6309,
+    7058,
+    102
+   ]
+  },
+  {
+   "text": "☐ Call the insulation supplier monthly",
+   "input_ids": [
+    101,
+    100,
+    2655,
+    1996,
+    25710,
+    17024,
+    7058,
+    102
+   ]
+  },
+  {
+   "text": "High priority call insurance for Dad",
+   "input_ids": [
+    101,
+    2152,
+    9470,
+    2655,
+    5427,
+    2005,
+    3611,
+    102
+   ]
+  },
+  {
+   "text": "SAT question writing group Friday at 5pm",
+   "input_ids": [
+    101,
+    2938,
+    3160,
+    3015,
+    2177,
+    5958,
+    2012,
+    1019,
+    9737,
+    102
+   ]
+  },
+  {
+   "text": "Call the lens shop at 10am, then pick up the parcel at 4pm",
+   "input_ids": [
+    101,
+    2655,
+    1996,
+    10014,
+    4497,
+    2012,
+    2184,
+    3286,
+    1010,
+    2059,
+    4060,
+    2039,
+    1996,
+    20463,
+    2012,
+    1018,
+    9737,
+    102
+   ]
+  },
+  {
+   "text": "remind me to check on the cake in 30 minutes",
+   "input_ids": [
+    101,
+    10825,
+    2033,
+    2000,
+    4638,
+    2006,
+    1996,
+    9850,
+    1999,
+    2382,
+    2781,
+    102
+   ]
+  },
+  {
+   "text": "client dinner 14/04 at 20:30 at Harbor Room",
+   "input_ids": [
+    101,
+    7396,
+    4596,
+    2403,
+    1013,
+    5840,
+    2012,
+    2322,
+    1024,
+    2382,
+    2012,
+    6496,
+    2282,
+    102
+   ]
+  },
+  {
+   "text": "Q&A tomorrow via https://meet.google.com/abc-defg-hij",
+   "input_ids": [
+    101,
+    1053,
+    1004,
+    1037,
+    4826,
+    3081,
+    16770,
+    1024,
+    1013,
+    1013,
+    3113,
+    1012,
+    8224,
+    1012,
+    4012,
+    1013,
+    5925,
+    1011,
+    13366,
+    2290,
+    1011,
+    7632,
+    3501,
+    102
+   ]
+  },
+  {
+   "text": "Update the ferry timetable Mon Wed Fri",
+   "input_ids": [
+    101,
+    10651,
+    1996,
+    7115,
+    23839,
+    12256,
+    21981,
+    10424,
+    2072,
+    102
+   ]
+  },
+  {
+   "text": "remember to submit the audit report, for Board Prep, with Nina and Omar, by April 30, high priority, 90 minutes, in progress, #finance, #board",
+   "input_ids": [
+    101,
+    3342,
+    2000,
+    12040,
+    1996,
+    15727,
+    3189,
+    1010,
+    2005,
+    2604,
+    17463,
+    1010,
+    2007,
+    9401,
+    1998,
+    13192,
+    1010,
+    2011,
+    2258,
+    2382,
+    1010,
+    2152,
+    9470,
+    1010,
+    3938,
+    2781,
+    1010,
+    1999,
+    5082,
+    1010,
+    1001,
+    5446,
+    1010,
+    1001,
+    2604,
+    102
+   ]
+  },
+  {
+   "text": "Call June about print the visitor passes next Thursday before noon",
+   "input_ids": [
+    101,
+    2655,
+    2238,
+    2055,
+    6140,
+    1996,
+    10367,
+    5235,
+    2279,
+    9432,
+    2077,
+    11501,
+    102
+   ]
+  },
+  {
+   "text": "Review Sam's contact card Friday",
+   "input_ids": [
+    101,
+    3319,
+    3520,
+    1005,
+    1055,
+    3967,
+    4003,
+    5958,
+    102
+   ]
+  },
+  {
+   "text": "Wash the half size baking tray",
+   "input_ids": [
+    101,
+    9378,
+    1996,
+    2431,
+    2946,
+    21522,
+    11851,
+    102
+   ]
+  },
+  {
+   "text": "Stretch noon",
+   "input_ids": [
+    101,
+    7683,
+    11501,
+    102
+   ]
+  },
+  {
+   "text": "Remember to Call uncle tmrw",
+   "input_ids": [
+    101,
+    3342,
+    2000,
+    2655,
+    4470,
+    1056,
+    2213,
+    2099,
+    2860,
+    102
+   ]
+  },
+  {
+   "text": "Inspect the sun shade near print the visitor passes tonight at 15:30",
+   "input_ids": [
+    101,
+    22459,
+    1996,
+    3103,
+    8703,
+    2379,
+    6140,
+    1996,
+    10367,
+    5235,
+    3892,
+    2012,
+    2321,
+    1024,
+    2382,
+    102
+   ]
+  },
+  {
+   "text": "Review the project risks for project Titan for 1 hour.",
+   "input_ids": [
+    101,
+    3319,
+    1996,
+    2622,
+    10831,
+    2005,
+    2622,
+    16537,
+    2005,
+    1015,
+    3178,
+    1012,
+    102
+   ]
+  },
+  {
+   "text": "Workshop with Fatima Monday 15:00 at The Local",
+   "input_ids": [
+    101,
+    8395,
+    2007,
+    27596,
+    6928,
+    2321,
+    1024,
+    4002,
+    2012,
+    1996,
+    2334,
+    102
+   ]
+  },
+  {
+   "text": "Ping me to Low-key empty the rain bucket tomorrow",
+   "input_ids": [
+    101,
+    17852,
+    2033,
+    2000,
+    2659,
+    1011,
+    3145,
+    4064,
+    1996,
+    4542,
+    13610,
+    4826,
+    102
+   ]
+  },
+  {
+   "text": "Water plants before the trip",
+   "input_ids": [
+    101,
+    2300,
+    4264,
+    2077,
+    1996,
+    4440,
+    102
+   ]
+  },
+  {
+   "text": "Sailing theory class on the 1st",
+   "input_ids": [
+    101,
+    8354,
+    3399,
+    2465,
+    2006,
+    1996,
+    3083,
+    102
+   ]
+  },
+  {
+   "text": "Replace the lunch bag zipper",
+   "input_ids": [
+    101,
+    5672,
+    1996,
+    6265,
+    4524,
+    22082,
+    102
+   ]
+  },
+  {
+   "text": "Call the pharmacy, every weekday, at 6:30 PM, starting next month, for 10 days, unless it's a holiday then the following Thursday, but skip the first one, through December 1, 15 minutes before, at home",
+   "input_ids": [
+    101,
+    2655,
+    1996,
+    13882,
+    1010,
+    2296,
+    16904,
+    1010,
+    2012,
+    1020,
+    1024,
+    2382,
+    7610,
+    1010,
+    3225,
+    2279,
+    3204,
+    1010,
+    2005,
+    2184,
+    2420,
+    1010,
+    4983,
+    2009,
+    1005,
+    1055,
+    1037,
+    6209,
+    2059,
+    1996,
+    2206,
+    9432,
+    1010,
+    2021,
+    13558,
+    1996,
+    2034,
+    2028,
+    1010,
+    2083,
+    2285,
+    1015,
+    1010,
+    2321,
+    2781,
+    2077,
+    1010,
+    2012,
+    2188,
+    102
+   ]
+  },
+  {
+   "text": "add error handling to the API calls high priority for Marcus",
+   "input_ids": [
+    101,
+    5587,
+    7561,
+    8304,
+    2000,
+    1996,
+    17928,
+    4455,
+    2152,
+    9470,
+    2005,
+    6647,
+    102
+   ]
+  },
+  {
+   "text": "Remind me to phone the piano tuner daily for six weeks",
+   "input_ids": [
+    101,
+    10825,
+    2033,
+    2000,
+    3042,
+    1996,
+    3682,
+    8694,
+    2099,
+    3679,
+    2005,
+    2416,
+    3134,
+    102
+   ]
+  },
+  {
+   "text": "Tighten the greenhouse bolts daily at 6:20pm",
+   "input_ids": [
+    101,
+    21245,
+    1996,
+    16635,
+    19947,
+    3679,
+    2012,
+    1020,
+    1024,
+    2322,
+    9737,
+    102
+   ]
+  },
+  {
+   "text": "Sketch",
+   "input_ids": [
+    101,
+    11080,
+    102
+   ]
+  },
+  {
+   "text": "Remember to order the loom parts at the end of next month and send the attendance sheet on the 24th",
+   "input_ids": [
+    101,
+    3342,
+    2000,
+    2344,
+    1996,
+    8840,
+    5358,
+    3033,
+    2012,
+    1996,
+    2203,
+    1997,
+    2279,
+    3204,
+    1998,
+    4604,
+    1996,
+    5270,
+    7123,
+    2006,
+    1996,
+    13386,
+    102
+   ]
+  },
+  {
+   "text": "remind me to return the books before the library closes",
+   "input_ids": [
+    101,
+    10825,
+    2033,
+    2000,
+    2709,
+    1996,
+    2808,
+    2077,
+    1996,
+    3075,
+    14572,
+    102
+   ]
+  },
+  {
+   "text": "Bookbinding class every first Monday until October",
+   "input_ids": [
+    101,
+    2338,
+    8428,
+    4667,
+    2465,
+    2296,
+    2034,
+    6928,
+    2127,
+    2255,
+    102
+   ]
+  },
+  {
+   "text": "thurday, Marshland survey",
+   "input_ids": [
+    101,
+    16215,
+    3126,
+    10259,
+    1010,
+    9409,
+    3122,
+    5002,
+    102
+   ]
+  },
+  {
+   "text": "buzz me 10 minutes before my next meeting",
+   "input_ids": [
+    101,
+    12610,
+    2033,
+    2184,
+    2781,
+    2077,
+    2026,
+    2279,
+    3116,
+    102
+   ]
+  },
+  {
+   "text": "Clean the garage before guests arrive with tags home, urgent.",
+   "input_ids": [
+    101,
+    4550,
+    1996,
+    7381,
+    2077,
+    6368,
+    7180,
+    2007,
+    22073,
+    2188,
+    1010,
+    13661,
+    1012,
+    102
+   ]
+  },
+  {
+   "text": "remind me next Monday to pick up the prescription the night before for the checklist",
+   "input_ids": [
+    101,
+    10825,
+    2033,
+    2279,
+    6928,
+    2000,
+    4060,
+    2039,
+    1996,
+    20422,
+    1996,
+    2305,
+    2077,
+    2005,
+    1996,
+    4638,
+    9863,
+    102
+   ]
+  },
+  {
+   "text": "PTA meeting every third Monday at 7pm",
+   "input_ids": [
+    101,
+    13866,
+    2050,
+    3116,
+    2296,
+    2353,
+    6928,
+    2012,
+    1021,
+    9737,
+    102
+   ]
+  },
+  {
+   "text": "Remind me to from next month, label the herb pots weekly through August",
+   "input_ids": [
+    101,
+    10825,
+    2033,
+    2000,
+    2013,
+    2279,
+    3204,
+    1010,
+    3830,
+    1996,
+    12810,
+    18911,
+    4882,
+    2083,
+    2257,
+    102
+   ]
+  },
+  {
+   "text": "Remember to tommorow, ask about the ferry tickets",
+   "input_ids": [
+    101,
+    3342,
+    2000,
+    3419,
+    5302,
+    10524,
+    1010,
+    3198,
+    2055,
+    1996,
+    7115,
+    9735,
+    102
+   ]
+  },
+  {
+   "text": "Remember to Birdwatching weekly",
+   "input_ids": [
+    101,
+    3342,
+    2000,
+    4743,
+    18866,
+    2075,
+    4882,
+    102
+   ]
+  },
+  {
+   "text": "remind me tomorrow evening at the front desk to pay the rent for the checklist",
+   "input_ids": [
+    101,
+    10825,
+    2033,
+    4826,
+    3944,
+    2012,
+    1996,
+    2392,
+    4624,
+    2000,
+    3477,
+    1996,
+    9278,
+    2005,
+    1996,
+    4638,
+    9863,
+    102
+   ]
+  },
+  {
+   "text": "company all-hands next Monday 11am to 12pm",
+   "input_ids": [
+    101,
+    2194,
+    2035,
+    1011,
+    2398,
+    2279,
+    6928,
+    2340,
+    3286,
+    2000,
+    2260,
+    9737,
+    102
+   ]
+  },
+  {
+   "text": "Remind me to Inspect the sun shade near empty the rain bucket the 1st",
+   "input_ids": [
+    101,
+    10825,
+    2033,
+    2000,
+    22459,
+    1996,
+    3103,
+    8703,
+    2379,
+    4064,
+    1996,
+    4542,
+    13610,
+    1996,
+    3083,
+    102
+   ]
+  },
+  {
+   "text": "Develop the user story for Orion for 2 hours, status: in progress.",
+   "input_ids": [
+    101,
+    4503,
+    1996,
+    5310,
+    2466,
+    2005,
+    18747,
+    2005,
+    1016,
+    2847,
+    1010,
+    3570,
+    1024,
+    1999,
+    5082,
+    1012,
+    102
+   ]
+  },
+  {
+   "text": "Clean the kitchen for 45 minutes, status: complete.",
+   "input_ids": [
+    101,
+    4550,
+    1996,
+    3829,
+    2005,
+    3429,
+    2781,
+    1010,
+    3570,
+    1024,
+    3143,
+    1012,
+    102
+   ]
+  },
+  {
+   "text": "Fix login bug in project Atlas, status in progress",
+   "input_ids": [
+    101,
+    8081,
+    8833,
+    2378,
+    11829,
+    1999,
+    2622,
+    11568,
+    1010,
+    3570,
+    1999,
+    5082,
+    102
+   ]
+  },
+  {
+   "text": "callibration review every quarter at 9:45am for 30 minutes",
+   "input_ids": [
+    101,
+    2655,
+    12322,
+    8156,
+    3319,
+    2296,
+    4284,
+    2012,
+    1023,
+    1024,
+    3429,
+    3286,
+    2005,
+    2382,
+    2781,
+    102
+   ]
+  },
+  {
+   "text": "thurday, Check the tide tables",
+   "input_ids": [
+    101,
+    16215,
+    3126,
+    10259,
+    1010,
+    4638,
+    1996,
+    10401,
+    7251,
+    102
+   ]
+  },
+  {
+   "text": "call w professor next Thurs at 1:25pm",
+   "input_ids": [
+    101,
+    2655,
+    1059,
+    2934,
+    2279,
+    16215,
+    9236,
+    2012,
+    1015,
+    1024,
+    2423,
+    9737,
+    102
+   ]
+  },
+  {
+   "text": "Project demo Friday at 5 cc Tariq",
+   "input_ids": [
+    101,
+    2622,
+    9703,
+    5958,
+    2012,
+    1019,
+    10507,
+    16985,
+    18515,
+    102
+   ]
+  },
+  {
+   "text": "Ping me to send the attendance sheet tonight, then wipe the camera lens tonight",
+   "input_ids": [
+    101,
+    17852,
+    2033,
+    2000,
+    4604,
+    1996,
+    5270,
+    7123,
+    3892,
+    1010,
+    2059,
+    13387,
+    1996,
+    4950,
+    10014,
+    3892,
+    102
+   ]
+  },
+  {
+   "text": "Ping me to wipe the camera lens every other week",
+   "input_ids": [
+    101,
+    17852,
+    2033,
+    2000,
+    13387,
+    1996,
+    4950,
+    10014,
+    2296,
+    2060,
+    2733,
+    102
+   ]
+  },
+  {
+   "text": "Urgent discussion of storytelling hour this Saturday",
+   "input_ids": [
+    101,
+    13661,
+    6594,
+    1997,
+    20957,
+    3178,
+    2023,
+    5095,
+    102
+   ]
+  },
+  {
+   "text": "Vacuum Monday",
+   "input_ids": [
+    101,
+    11641,
+    6928,
+    102
+   ]
+  },
+  {
+   "text": "don't let me forget the umbrella if it's going to rain",
+   "input_ids": [
+    101,
+    2123,
+    1005,
+    1056,
+    2292,
+    2033,
+    5293,
+    1996,
+    12977,
+    2065,
+    2009,
+    1005,
+    1055,
+    2183,
+    2000,
+    4542,
+    102
+   ]
+  },
+  {
+   "text": "nails appt on Sep 1 at 12:20 at Gloss Lab",
+   "input_ids": [
+    101,
+    10063,
+    10439,
+    2102,
+    2006,
+    19802,
+    1015,
+    2012,
+    2260,
+    1024,
+    2322,
+    2012,
+    27068,
+    6845,
+    102
+   ]
+  },
+  {
+   "text": "Work Session discussing vendor onboarding every workday at 10am",
+   "input_ids": [
+    101,
+    2147,
+    5219,
+    10537,
+    21431,
+    27120,
+    2075,
+    2296,
+    2147,
+    10259,
+    2012,
+    2184,
+    3286,
+    102
+   ]
+  },
+  {
+   "text": "call the insurance company about the claim",
+   "input_ids": [
+    101,
+    2655,
+    1996,
+    5427,
+    2194,
+    2055,
+    1996,
+    4366,
+    102
+   ]
+  },
+  {
+   "text": "Astronomy evening on the last day of every month until the end of November",
+   "input_ids": [
+    101,
+    12799,
+    3944,
+    2006,
+    1996,
+    2197,
+    2154,
+    1997,
+    2296,
+    3204,
+    2127,
+    1996,
+    2203,
+    1997,
+    2281,
+    102
+   ]
+  },
+  {
+   "text": "Design crit every Friday at 11 AM for 90 minutes through August 12th",
+   "input_ids": [
+    101,
+    2640,
+    13675,
+    4183,
+    2296,
+    5958,
+    2012,
+    2340,
+    2572,
+    2005,
+    3938,
+    2781,
+    2083,
+    2257,
+    5940,
+    102
+   ]
+  },
+  {
+   "text": "Wax skis tmrw",
+   "input_ids": [
+    101,
+    13844,
+    8301,
+    2015,
+    1056,
+    2213,
+    2099,
+    2860,
+    102
+   ]
+  },
+  {
+   "text": "file expense report low priority",
+   "input_ids": [
+    101,
+    5371,
+    10961,
+    3189,
+    2659,
+    9470,
+    102
+   ]
+  },
+  {
+   "text": "Remember to phone the piano tuner, at 7:45am, daily",
+   "input_ids": [
+    101,
+    3342,
+    2000,
+    3042,
+    1996,
+    3682,
+    8694,
+    2099,
+    1010,
+    2012,
+    1021,
+    1024,
+    3429,
+    3286,
+    1010,
+    3679,
+    102
+   ]
+  },
+  {
+   "text": "design review with the product team Tuesday 3pm to 4pm in the big conference room",
+   "input_ids": [
+    101,
+    2640,
+    3319,
+    2007,
+    1996,
+    4031,
+    2136,
+    9857,
+    1017,
+    9737,
+    2000,
+    1018,
+    9737,
+    1999,
+    1996,
+    2502,
+    3034,
+    2282,
+    102
+   ]
+  },
+  {
+   "text": "Review the access log every first Monday through August",
+   "input_ids": [
+    101,
+    3319,
+    1996,
+    3229,
+    8833,
+    2296,
+    2034,
+    6928,
+    2083,
+    2257,
+    102
+   ]
+  },
+  {
+   "text": "Sailing theory class tonight; Weaving class next Friday morning",
+   "input_ids": [
+    101,
+    8354,
+    3399,
+    2465,
+    3892,
+    1025,
+    15360,
+    2465,
+    2279,
+    5958,
+    2851,
+    102
+   ]
+  },
+  {
+   "text": "starting next Monday, Replace the porch hinge every morning ending on December 12",
+   "input_ids": [
+    101,
+    3225,
+    2279,
+    6928,
+    1010,
+    5672,
+    1996,
+    7424,
+    7632,
+    15465,
+    2296,
+    2851,
+    4566,
+    2006,
+    2285,
+    2260,
+    102
+   ]
+  },
+  {
+   "text": "asap Count the brass fittings",
+   "input_ids": [
+    101,
+    17306,
+    2361,
+    4175,
+    1996,
+    8782,
+    11414,
+    2015,
+    102
+   ]
+  },
+  {
+   "text": "Mix interview with Jerome for Behind The Beat, about 3 hours, waiting on transcript",
+   "input_ids": [
+    101,
+    4666,
+    4357,
+    2007,
+    11120,
+    2005,
+    2369,
+    1996,
+    3786,
+    1010,
+    2055,
+    1017,
+    2847,
+    1010,
+    3403,
+    2006,
+    24051,
+    102
+   ]
+  },
+  {
+   "text": "Confirm the school transport p1",
+   "input_ids": [
+    101,
+    12210,
+    1996,
+    2082,
+    3665,
+    1052,
+    2487,
+    102
+   ]
+  },
+  {
+   "text": "Post the meter reading by month end",
+   "input_ids": [
+    101,
+    2695,
+    1996,
+    8316,
+    3752,
+    2011,
+    3204,
+    2203,
+    102
+   ]
+  },
+  {
+   "text": "renew domain names this week",
+   "input_ids": [
+    101,
+    20687,
+    5884,
+    3415,
+    2023,
+    2733,
+    102
+   ]
+  },
+  {
+   "text": "Water seedlings",
+   "input_ids": [
+    101,
+    2300,
+    6534,
+    11227,
+    102
+   ]
+  },
+  {
+   "text": "Change pillowcases tonight",
+   "input_ids": [
+    101,
+    2689,
+    10005,
+    18382,
+    2015,
+    3892,
+    102
+   ]
+  },
+  {
+   "text": "Remind me to find the trail map from the 8th to the 10th",
+   "input_ids": [
+    101,
+    10825,
+    2033,
+    2000,
+    2424,
+    1996,
+    4446,
+    4949,
+    2013,
+    1996,
+    5893,
+    2000,
+    1996,
+    6049,
+    102
+   ]
+  },
+  {
+   "text": "Band check-in every second Tuesday of the month beginning next month, except for the one after the first Monday in June, from half past the hour of our regular design sync until three-quarters of an hour later.",
+   "input_ids": [
+    101,
+    2316,
+    4638,
+    1011,
+    1999,
+    2296,
+    2117,
+    9857,
+    1997,
+    1996,
+    3204,
+    2927,
+    2279,
+    3204,
+    1010,
+    3272,
+    2005,
+    1996,
+    2028,
+    2044,
+    1996,
+    2034,
+    6928,
+    1999,
+    2238,
+    1010,
+    2013,
+    2431,
+    2627,
+    1996,
+    3178,
+    1997,
+    2256,
+    3180,
+    2640,
+    26351,
+    2127,
+    2093,
+    1011,
+    7728,
+    1997,
+    2019,
+    3178,
+    2101,
+    1012,
+    102
+   ]
+  },
+  {
+   "text": "Remember to Medication",
+   "input_ids": [
+    101,
+    3342,
+    2000,
+    14667,
+    102
+   ]
+  },
+  {
+   "text": "Submit the expense report for Apollo tagged finance, status: complete",
+   "input_ids": [
+    101,
+    12040,
+    1996,
+    10961,
+    3189,
+    2005,
+    9348,
+    26610,
+    5446,
+    1010,
+    3570,
+    1024,
+    3143,
+    102
+   ]
+  },
+  {
+   "text": "Village choir on the 1st",
+   "input_ids": [
+    101,
+    2352,
+    6596,
+    2006,
+    1996,
+    3083,
+    102
+   ]
+  },
+  {
+   "text": "Ceramics class Tuesday at 6pm and textile class Thursday at 7pm",
+   "input_ids": [
+    101,
+    17314,
+    2465,
+    9857,
+    2012,
+    1020,
+    9737,
+    1998,
+    12437,
+    2465,
+    9432,
+    2012,
+    1021,
+    9737,
+    102
+   ]
+  },
+  {
+   "text": "Photograph the kiln shelves end of month low-key",
+   "input_ids": [
+    101,
+    9982,
+    1996,
+    11382,
+    19666,
+    15475,
+    2203,
+    1997,
+    3204,
+    2659,
+    1011,
+    3145,
+    102
+   ]
+  },
+  {
+   "text": "Marshland survey Mon Wed Fri at 15:30",
+   "input_ids": [
+    101,
+    9409,
+    3122,
+    5002,
+    12256,
+    21981,
+    10424,
+    2072,
+    2012,
+    2321,
+    1024,
+    2382,
+    102
+   ]
+  },
+  {
+   "text": "Folk dance practice monthly on the 15th",
+   "input_ids": [
+    101,
+    5154,
+    3153,
+    3218,
+    7058,
+    2006,
+    1996,
+    6286,
+    102
+   ]
+  },
+  {
+   "text": "Harbor watch handover the 26th",
+   "input_ids": [
+    101,
+    6496,
+    3422,
+    2192,
+    7840,
+    1996,
+    14935,
+    102
+   ]
+  },
+  {
+   "text": "Sprint kickoff every first Monday on April 2 at 15:00 until 16:30 for 20 minutes with Arjun at Library Annex to review board prep and next steps",
+   "input_ids": [
+    101,
+    9043,
+    25233,
+    2296,
+    2034,
+    6928,
+    2006,
+    2258,
+    1016,
+    2012,
+    2321,
+    1024,
+    4002,
+    2127,
+    2385,
+    1024,
+    2382,
+    2005,
+    2322,
+    2781,
+    2007,
+    26024,
+    2012,
+    3075,
+    17827,
+    2000,
+    3319,
+    2604,
+    17463,
+    1998,
+    2279,
+    4084,
+    102
+   ]
+  },
+  {
+   "text": "Digitize the music scores on the last day of every month",
+   "input_ids": [
+    101,
+    15340,
+    4697,
+    1996,
+    2189,
+    7644,
+    2006,
+    1996,
+    2197,
+    2154,
+    1997,
+    2296,
+    3204,
+    102
+   ]
+  },
+  {
+   "text": "finalize the itinerary by the 20th",
+   "input_ids": [
+    101,
+    2345,
+    4697,
+    1996,
+    2009,
+    26455,
+    5649,
+    2011,
+    1996,
+    3983,
+    102
+   ]
+  },
+  {
+   "text": "Find the missing adapter, at 7pm, Mon Wed Fri",
+   "input_ids": [
+    101,
+    2424,
+    1996,
+    4394,
+    15581,
+    2121,
+    1010,
+    2012,
+    1021,
+    9737,
+    1010,
+    12256,
+    21981,
+    10424,
+    2072,
+    102
+   ]
+  },
+  {
+   "text": "Tighten the greenhouse bolts this Saturday at 9:10am high priority",
+   "input_ids": [
+    101,
+    21245,
+    1996,
+    16635,
+    19947,
+    2023,
+    5095,
+    2012,
+    1023,
+    1024,
+    2184,
+    3286,
+    2152,
+    9470,
+    102
+   ]
+  },
+  {
+   "text": "Remind me to wednsday, find the trail map",
+   "input_ids": [
+    101,
+    10825,
+    2033,
+    2000,
+    21981,
+    3619,
+    10259,
+    1010,
+    2424,
+    1996,
+    4446,
+    4949,
+    102
+   ]
+  },
+  {
+   "text": "Clean the house for 2 hours, status: complete.",
+   "input_ids": [
+    101,
+    4550,
+    1996,
+    2160,
+    2005,
+    1016,
+    2847,
+    1010,
+    3570,
+    1024,
+    3143,
+    1012,
+    102
+   ]
+  },
+  {
+   "text": "Feed hens Monday",
+   "input_ids": [
+    101,
+    5438,
+    21863,
+    2015,
+    6928,
+    102
+   ]
+  },
+  {
+   "text": "Organize the laundry for 1 hour, status: done.",
+   "input_ids": [
+    101,
+    10939,
+    1996,
+    14533,
+    2005,
+    1015,
+    3178,
+    1010,
+    3570,
+    1024,
+    2589,
+    1012,
+    102
+   ]
+  },
+  {
+   "text": "Check the tide tables #volunteers in three days",
+   "input_ids": [
+    101,
+    4638,
+    1996,
+    10401,
+    7251,
+    1001,
+    7314,
+    1999,
+    2093,
+    2420,
+    102
+   ]
+  },
+  {
+   "text": "Planning breakfast on the bank holiday",
+   "input_ids": [
+    101,
+    4041,
+    6350,
+    2006,
+    1996,
+    2924,
+    6209,
+    102
+   ]
+  },
+  {
+   "text": "Paint the guest room under Home Renovation by Friday morning",
+   "input_ids": [
+    101,
+    6773,
+    1996,
+    4113,
+    2282,
+    2104,
+    2188,
+    10525,
+    2011,
+    5958,
+    2851,
+    102
+   ]
+  },
+  {
+   "text": "Inspect the sun shade near canal restoration briefing this Saturday",
+   "input_ids": [
+    101,
+    22459,
+    1996,
+    3103,
+    8703,
+    2379,
+    5033,
+    6418,
+    27918,
+    2023,
+    5095,
+    102
+   ]
+  },
+  {
+   "text": "Draft the final proposal for the Q3 launch by next Friday",
+   "input_ids": [
+    101,
+    4433,
+    1996,
+    2345,
+    6378,
+    2005,
+    1996,
+    1053,
+    2509,
+    4888,
+    2011,
+    2279,
+    5958,
+    102
+   ]
+  },
+  {
+   "text": "Therapist session Tuesday until 6 for weekly check-in",
+   "input_ids": [
+    101,
+    19294,
+    5219,
+    9857,
+    2127,
+    1020,
+    2005,
+    4882,
+    4638,
+    1011,
+    1999,
+    102
+   ]
+  },
+  {
+   "text": "Pack the SAT workbook Friday at 4pm",
+   "input_ids": [
+    101,
+    5308,
+    1996,
+    2938,
+    2147,
+    8654,
+    5958,
+    2012,
+    1018,
+    9737,
+    102
+   ]
+  },
+  {
+   "text": "take the spare glasses tomorrow lunchtime at the office",
+   "input_ids": [
+    101,
+    2202,
+    1996,
+    8622,
+    7877,
+    4826,
+    6265,
+    7292,
+    2012,
+    1996,
+    2436,
+    102
+   ]
+  },
+  {
+   "text": "Marshland survey end of month at 15:30 on Zoom",
+   "input_ids": [
+    101,
+    9409,
+    3122,
+    5002,
+    2203,
+    1997,
+    3204,
+    2012,
+    2321,
+    1024,
+    2382,
+    2006,
+    24095,
+    102
+   ]
+  },
+  {
+   "text": "Ping me to Urgent discussion of charge the field recorder at the end of next month",
+   "input_ids": [
+    101,
+    17852,
+    2033,
+    2000,
+    13661,
+    6594,
+    1997,
+    3715,
+    1996,
+    2492,
+    14520,
+    2012,
+    1996,
+    2203,
+    1997,
+    2279,
+    3204,
+    102
+   ]
+  },
+  {
+   "text": "mentor sesh tomorrow at 5ish with Kavya",
+   "input_ids": [
+    101,
+    10779,
+    7367,
+    4095,
+    4826,
+    2012,
+    1019,
+    4509,
+    2007,
+    10556,
+    10736,
+    2050,
+    102
+   ]
+  },
+  {
+   "text": "Inspect the nesting boxes monthly on the 15th / Review the access log every weekday",
+   "input_ids": [
+    101,
+    22459,
+    1996,
+    21016,
+    8378,
+    7058,
+    2006,
+    1996,
+    6286,
+    1013,
+    3319,
+    1996,
+    3229,
+    8833,
+    2296,
+    16904,
+    102
+   ]
+  },
+  {
+   "text": "Update the ferry timetable #volunteers this Saturday",
+   "input_ids": [
+    101,
+    10651,
+    1996,
+    7115,
+    23839,
+    1001,
+    7314,
+    2023,
+    5095,
+    102
+   ]
+  },
+  {
+   "text": "Canal restoration briefing quarterly",
+   "input_ids": [
+    101,
+    5033,
+    6418,
+    27918,
+    12174,
+    102
+   ]
+  },
+  {
+   "text": "Feed hens Monday",
+   "input_ids": [
+    101,
+    5438,
+    21863,
+    2015,
+    6928,
+    102
+   ]
+  },
+  {
+   "text": "Dinner with my cousins at the boathouse",
+   "input_ids": [
+    101,
+    4596,
+    2007,
+    2026,
+    12334,
+    2012,
+    1996,
+    4049,
+    4580,
+    102
+   ]
+  },
+  {
+   "text": "Remember to take the compost out each Tuesday",
+   "input_ids": [
+    101,
+    3342,
+    2000,
+    2202,
+    1996,
+    4012,
+    19894,
+    2041,
+    2169,
+    9857,
+    102
+   ]
+  },
+  {
+   "text": "Upload rooming list for Safa by 9am",
+   "input_ids": [
+    101,
+    2039,
+    11066,
+    2282,
+    2075,
+    2862,
+    2005,
+    7842,
+    7011,
+    2011,
+    1023,
+    3286,
+    102
+   ]
+  },
+  {
+   "text": "Breakfast with Sam tomorrow 8:30 for 1 hour",
+   "input_ids": [
+    101,
+    6350,
+    2007,
+    3520,
+    4826,
+    1022,
+    1024,
+    2382,
+    2005,
+    1015,
+    3178,
+    102
+   ]
+  },
+  {
+   "text": "Wash the paint rollers from the 8th to the 10th",
+   "input_ids": [
+    101,
+    9378,
+    1996,
+    6773,
+    11220,
+    2015,
+    2013,
+    1996,
+    5893,
+    2000,
+    1996,
+    6049,
+    102
+   ]
+  },
+  {
+   "text": "remind me to check the mail in 15 minutes",
+   "input_ids": [
+    101,
+    10825,
+    2033,
+    2000,
+    4638,
+    1996,
+    5653,
+    1999,
+    2321,
+    2781,
+    102
+   ]
+  },
+  {
+   "text": "sushi w/ Emi tomorrow at 8:25pm at Kumo House",
+   "input_ids": [
+    101,
+    10514,
+    6182,
+    1059,
+    1013,
+    12495,
+    4826,
+    2012,
+    1022,
+    1024,
+    2423,
+    9737,
+    2012,
+    13970,
+    5302,
+    2160,
+    102
+   ]
+  },
+  {
+   "text": "on the last day of every month, Proofread the village newsletter",
+   "input_ids": [
+    101,
+    2006,
+    1996,
+    2197,
+    2154,
+    1997,
+    2296,
+    3204,
+    1010,
+    6947,
+    16416,
+    2094,
+    1996,
+    2352,
+    17178,
+    102
+   ]
+  },
+  {
+   "text": "lecture at NYU Wednesday 7pm",
+   "input_ids": [
+    101,
+    8835,
+    2012,
+    27935,
+    9317,
+    1021,
+    9737,
+    102
+   ]
+  },
+  {
+   "text": "Ping me to wipe the camera lens Mon Wed Fri at 15:30",
+   "input_ids": [
+    101,
+    17852,
+    2033,
+    2000,
+    13387,
+    1996,
+    4950,
+    10014,
+    12256,
+    21981,
+    10424,
+    2072,
+    2012,
+    2321,
+    1024,
+    2382,
+    102
+   ]
+  },
+  {
+   "text": "write unit tests for the parser by next week",
+   "input_ids": [
+    101,
+    4339,
+    3131,
+    5852,
+    2005,
+    1996,
+    11968,
+    8043,
+    2011,
+    2279,
+    2733,
+    102
+   ]
+  },
+  {
+   "text": "Tighten snare stand before soundcheck",
+   "input_ids": [
+    101,
+    21245,
+    1055,
+    26148,
+    3233,
+    2077,
+    2614,
+    5403,
+    3600,
+    102
+   ]
+  },
+  {
+   "text": "Film discussion at 3ish",
+   "input_ids": [
+    101,
+    2143,
+    6594,
+    2012,
+    1017,
+    4509,
+    102
+   ]
+  },
+  {
+   "text": "Send the invoice for Apollo tagged finance by end of week",
+   "input_ids": [
+    101,
+    4604,
+    1996,
+    1999,
+    6767,
+    6610,
+    2005,
+    9348,
+    26610,
+    5446,
+    2011,
+    2203,
+    1997,
+    2733,
+    102
+   ]
+  },
+  {
+   "text": "take the reading glasses Mon Wed Fri at 15:30",
+   "input_ids": [
+    101,
+    2202,
+    1996,
+    3752,
+    7877,
+    12256,
+    21981,
+    10424,
+    2072,
+    2012,
+    2321,
+    1024,
+    2382,
+    102
+   ]
+  },
+  {
+   "text": "Review the expense records tagged finance by end of week",
+   "input_ids": [
+    101,
+    3319,
+    1996,
+    10961,
+    2636,
+    26610,
+    5446,
+    2011,
+    2203,
+    1997,
+    2733,
+    102
+   ]
+  },
+  {
+   "text": "Nature walk",
+   "input_ids": [
+    101,
+    3267,
+    3328,
+    102
+   ]
+  },
+  {
+   "text": "Call mom Sunday evening",
+   "input_ids": [
+    101,
+    2655,
+    3566,
+    4465,
+    3944,
+    102
+   ]
+  },
+  {
+   "text": "Draft onboarding doc for Apollo, should take 30 minutes",
+   "input_ids": [
+    101,
+    4433,
+    27120,
+    2075,
+    9986,
+    2005,
+    9348,
+    1010,
+    2323,
+    2202,
+    2382,
+    2781,
+    102
+   ]
+  },
+  {
+   "text": "todo Prepare the label proofs",
+   "input_ids": [
+    101,
+    28681,
+    2080,
+    7374,
+    1996,
+    3830,
+    6947,
+    2015,
+    102
+   ]
+  },
+  {
+   "text": "Rehearse the march before phone the piano tuner next Friday morning",
+   "input_ids": [
+    101,
+    2128,
+    26560,
+    3366,
+    1996,
+    2233,
+    2077,
+    3042,
+    1996,
+    3682,
+    8694,
+    2099,
+    2279,
+    5958,
+    2851,
+    102
+   ]
+  },
+  {
+   "text": "remind me every Monday at the dog park to pack the suitcase for the project",
+   "input_ids": [
+    101,
+    10825,
+    2033,
+    2296,
+    6928,
+    2012,
+    1996,
+    3899,
+    2380,
+    2000,
+    5308,
+    1996,
+    15940,
+    2005,
+    1996,
+    2622,
+    102
+   ]
+  },
+  {
+   "text": "Review hiring tracker for Partner onboarding, tagged analytics, about 2 hours, in progress.",
+   "input_ids": [
+    101,
+    3319,
+    14763,
+    27080,
+    2005,
+    4256,
+    27120,
+    2075,
+    1010,
+    26610,
+    25095,
+    1010,
+    2055,
+    1016,
+    2847,
+    1010,
+    1999,
+    5082,
+    1012,
+    102
+   ]
+  },
+  {
+   "text": "Tighten the greenhouse bolts tommorow",
+   "input_ids": [
+    101,
+    21245,
+    1996,
+    16635,
+    19947,
+    3419,
+    5302,
+    10524,
+    102
+   ]
+  },
+  {
+   "text": "high priority fix the server vulnerability",
+   "input_ids": [
+    101,
+    2152,
+    9470,
+    8081,
+    1996,
+    8241,
+    18130,
+    102
+   ]
+  },
+  {
+   "text": "Fold the spare blankets on the last Friday of the month",
+   "input_ids": [
+    101,
+    10671,
+    1996,
+    8622,
+    15019,
+    2006,
+    1996,
+    2197,
+    5958,
+    1997,
+    1996,
+    3204,
+    102
+   ]
+  },
+  {
+   "text": "Ping me to label the herb pots by 4 pm / renew the locker rental before noon",
+   "input_ids": [
+    101,
+    17852,
+    2033,
+    2000,
+    3830,
+    1996,
+    12810,
+    18911,
+    2011,
+    1018,
+    7610,
+    1013,
+    20687,
+    1996,
+    12625,
+    12635,
+    2077,
+    11501,
+    102
+   ]
+  },
+  {
+   "text": "Tag the archived invoices in project Station Refit",
+   "input_ids": [
+    101,
+    6415,
+    1996,
+    9749,
+    1999,
+    6767,
+    23522,
+    1999,
+    2622,
+    2276,
+    27070,
+    102
+   ]
+  },
+  {
+   "text": "Update the library for Atlas, currently in progress, spend 45 mins",
+   "input_ids": [
+    101,
+    10651,
+    1996,
+    3075,
+    2005,
+    11568,
+    1010,
+    2747,
+    1999,
+    5082,
+    1010,
+    5247,
+    3429,
+    8117,
+    2015,
+    102
+   ]
+  },
+  {
+   "text": "Diwali celebration next Thursday at 7",
+   "input_ids": [
+    101,
+    4487,
+    13476,
+    2072,
+    7401,
+    2279,
+    9432,
+    2012,
+    1021,
+    102
+   ]
+  },
+  {
+   "text": "Print the visitor passes asap",
+   "input_ids": [
+    101,
+    6140,
+    1996,
+    10367,
+    5235,
+    17306,
+    2361,
+    102
+   ]
+  },
+  {
+   "text": "Fix the CSS bugs in project Zenith for 1 hour, status: blocked.",
+   "input_ids": [
+    101,
+    8081,
+    1996,
+    20116,
+    2015,
+    12883,
+    1999,
+    2622,
+    28672,
+    2005,
+    1015,
+    3178,
+    1010,
+    3570,
+    1024,
+    8534,
+    1012,
+    102
+   ]
+  },
+  {
+   "text": "Work through problem set 3 under self-study, 90 minutes",
+   "input_ids": [
+    101,
+    2147,
+    2083,
+    3291,
+    2275,
+    1017,
+    2104,
+    2969,
+    1011,
+    2817,
+    1010,
+    3938,
+    2781,
+    102
+   ]
+  },
+  {
+   "text": "Ping me to Ask June about order the loom parts end of month by 11am",
+   "input_ids": [
+    101,
+    17852,
+    2033,
+    2000,
+    3198,
+    2238,
+    2055,
+    2344,
+    1996,
+    8840,
+    5358,
+    3033,
+    2203,
+    1997,
+    3204,
+    2011,
+    2340,
+    3286,
+    102
+   ]
+  },
+  {
+   "text": "Domain naming discussion Monday bring ideas for the new website",
+   "input_ids": [
+    101,
+    5884,
+    10324,
+    6594,
+    6928,
+    3288,
+    4784,
+    2005,
+    1996,
+    2047,
+    4037,
+    102
+   ]
+  },
+  {
+   "text": "Phone call with mom, roughly 25 minutes",
+   "input_ids": [
+    101,
+    3042,
+    2655,
+    2007,
+    3566,
+    1010,
+    5560,
+    2423,
+    2781,
+    102
+   ]
+  },
+  {
+   "text": "Piano lesson April 8 at 5:15pm at Studio B",
+   "input_ids": [
+    101,
+    3682,
+    10800,
+    2258,
+    1022,
+    2012,
+    1019,
+    1024,
+    2321,
+    9737,
+    2012,
+    2996,
+    1038,
+    102
+   ]
+  },
+  {
+   "text": "Hiring panel: every December 20 May 10 11:30 until 14:00 for 30 minutes, Zoe at the east wing, to review interview notes and priorities",
+   "input_ids": [
+    101,
+    14763,
+    5997,
+    1024,
+    2296,
+    2285,
+    2322,
+    2089,
+    2184,
+    2340,
+    1024,
+    2382,
+    2127,
+    2403,
+    1024,
+    4002,
+    2005,
+    2382,
+    2781,
+    1010,
+    11199,
+    2012,
+    1996,
+    2264,
+    3358,
+    1010,
+    2000,
+    3319,
+    4357,
+    3964,
+    1998,
+    18402,
+    102
+   ]
+  },
+  {
+   "text": "call plumber",
+   "input_ids": [
+    101,
+    2655,
+    22088,
+    5677,
+    102
+   ]
+  },
+  {
+   "text": "Ping me to clean the coffee grinder by month end",
+   "input_ids": [
+    101,
+    17852,
+    2033,
+    2000,
+    4550,
+    1996,
+    4157,
+    23088,
+    2121,
+    2011,
+    3204,
+    2203,
+    102
+   ]
+  },
+  {
+   "text": "Concert Saturday at 8 remind me Friday at noon",
+   "input_ids": [
+    101,
+    4164,
+    5095,
+    2012,
+    1022,
+    10825,
+    2033,
+    5958,
+    2012,
+    11501,
+    102
+   ]
+  },
+  {
+   "text": "blood test Mon at 7:05am at health hub",
+   "input_ids": [
+    101,
+    2668,
+    3231,
+    12256,
+    2012,
+    1021,
+    1024,
+    5709,
+    3286,
+    2012,
+    2740,
+    9594,
+    102
+   ]
+  },
+  {
+   "text": "remind me this afternoon to renew the passport 5 minutes before for the apartment",
+   "input_ids": [
+    101,
+    10825,
+    2033,
+    2023,
+    5027,
+    2000,
+    20687,
+    1996,
+    12293,
+    1019,
+    2781,
+    2077,
+    2005,
+    1996,
+    4545,
+    102
+   ]
+  },
+  {
+   "text": "Research workshop: every Thursday next Tuesday 11:30 until 14:00 for 75 minutes, Sara at the office, to review budget assumptions and next steps",
+   "input_ids": [
+    101,
+    2470,
+    8395,
+    1024,
+    2296,
+    9432,
+    2279,
+    9857,
+    2340,
+    1024,
+    2382,
+    2127,
+    2403,
+    1024,
+    4002,
+    2005,
+    4293,
+    2781,
+    1010,
+    7354,
+    2012,
+    1996,
+    2436,
+    1010,
+    2000,
+    3319,
+    5166,
+    17568,
+    1998,
+    2279,
+    4084,
+    102
+   ]
+  },
+  {
+   "text": "label the herb pots every other week starting next week",
+   "input_ids": [
+    101,
+    3830,
+    1996,
+    12810,
+    18911,
+    2296,
+    2060,
+    2733,
+    3225,
+    2279,
+    2733,
+    102
+   ]
+  },
+  {
+   "text": "Proofread the village newsletter Mon Wed Fri at 7:45am",
+   "input_ids": [
+    101,
+    6947,
+    16416,
+    2094,
+    1996,
+    2352,
+    17178,
+    12256,
+    21981,
+    10424,
+    2072,
+    2012,
+    1021,
+    1024,
+    3429,
+    3286,
+    102
+   ]
+  },
+  {
+   "text": "Remember to empty the rain bucket tomorow at 7pm",
+   "input_ids": [
+    101,
+    3342,
+    2000,
+    4064,
+    1996,
+    4542,
+    13610,
+    3419,
+    14604,
+    2860,
+    2012,
+    1021,
+    9737,
+    102
+   ]
+  },
+  {
+   "text": "Research workshop every Thursday on next Tuesday at 11:30 until 14:00 for 75 minutes at the office; Sara; to review budget assumptions and open questions",
+   "input_ids": [
+    101,
+    2470,
+    8395,
+    2296,
+    9432,
+    2006,
+    2279,
+    9857,
+    2012,
+    2340,
+    1024,
+    2382,
+    2127,
+    2403,
+    1024,
+    4002,
+    2005,
+    4293,
+    2781,
+    2012,
+    1996,
+    2436,
+    1025,
+    7354,
+    1025,
+    2000,
+    3319,
+    5166,
+    17568,
+    1998,
+    2330,
+    3980,
+    102
+   ]
+  },
+  {
+   "text": "Wash the paint rollers thurday",
+   "input_ids": [
+    101,
+    9378,
+    1996,
+    6773,
+    11220,
+    2015,
+    16215,
+    3126,
+    10259,
+    102
+   ]
+  },
+  {
+   "text": "remind me to check the mail at 11am",
+   "input_ids": [
+    101,
+    10825,
+    2033,
+    2000,
+    4638,
+    1996,
+    5653,
+    2012,
+    2340,
+    3286,
+    102
+   ]
+  },
+  {
+   "text": "from next month, Orchid society on the last day of every month ending on December 12",
+   "input_ids": [
+    101,
+    2013,
+    2279,
+    3204,
+    1010,
+    15573,
+    2554,
+    2006,
+    1996,
+    2197,
+    2154,
+    1997,
+    2296,
+    3204,
+    4566,
+    2006,
+    2285,
+    2260,
+    102
+   ]
+  },
+  {
+   "text": "Remember to turn the compost heap daily starting in December",
+   "input_ids": [
+    101,
+    3342,
+    2000,
+    2735,
+    1996,
+    4012,
+    19894,
+    16721,
+    3679,
+    3225,
+    1999,
+    2285,
+    102
+   ]
+  },
+  {
+   "text": "nhl watch party tonight 7pm with Rafi",
+   "input_ids": [
+    101,
+    7097,
+    3422,
+    2283,
+    3892,
+    1021,
+    9737,
+    2007,
+    7148,
+    2072,
+    102
+   ]
+  },
+  {
+   "text": "remind me to check the mail tomorrow afternoon",
+   "input_ids": [
+    101,
+    10825,
+    2033,
+    2000,
+    4638,
+    1996,
+    5653,
+    4826,
+    5027,
+    102
+   ]
+  },
+  {
+   "text": "Remember to label the herb pots every morning starting in December",
+   "input_ids": [
+    101,
+    3342,
+    2000,
+    3830,
+    1996,
+    12810,
+    18911,
+    2296,
+    2851,
+    3225,
+    1999,
+    2285,
+    102
+   ]
+  },
+  {
+   "text": "Architecture review: every 2 weeks Saturday 17:15 until 19:00 for 30 minutes, Noah at Zoom, to review release checklist and next steps",
+   "input_ids": [
+    101,
+    4294,
+    3319,
+    1024,
+    2296,
+    1016,
+    3134,
+    5095,
+    2459,
+    1024,
+    2321,
+    2127,
+    2539,
+    1024,
+    4002,
+    2005,
+    2382,
+    2781,
+    1010,
+    7240,
+    2012,
+    24095,
+    1010,
+    2000,
+    3319,
+    2713,
+    4638,
+    9863,
+    1998,
+    2279,
+    4084,
+    102
+   ]
+  },
+  {
+   "text": "Storytelling hour the 1st; Weaving class on the 24th",
+   "input_ids": [
+    101,
+    20957,
+    3178,
+    1996,
+    3083,
+    1025,
+    15360,
+    2465,
+    2006,
+    1996,
+    13386,
+    102
+   ]
+  },
+  {
+   "text": "Chemistry lab Monday 13:00 to 15:00 in Room 204",
+   "input_ids": [
+    101,
+    6370,
+    6845,
+    6928,
+    2410,
+    1024,
+    4002,
+    2000,
+    2321,
+    1024,
+    4002,
+    1999,
+    2282,
+    19627,
+    102
+   ]
+  },
+  {
+   "text": "Invoices",
+   "input_ids": [
+    101,
+    1999,
+    6767,
+    23522,
+    102
+   ]
+  },
+  {
+   "text": "remind me this Friday at the station to review the invoice 45 minutes before for the project",
+   "input_ids": [
+    101,
+    10825,
+    2033,
+    2023,
+    5958,
+    2012,
+    1996,
+    2276,
+    2000,
+    3319,
+    1996,
+    1999,
+    6767,
+    6610,
+    3429,
+    2781,
+    2077,
+    2005,
+    1996,
+    2622,
+    102
+   ]
+  },
+  {
+   "text": "high priority complete the audit",
+   "input_ids": [
+    101,
+    2152,
+    9470,
+    3143,
+    1996,
+    15727,
+    102
+   ]
+  },
+  {
+   "text": "remind me every week to water the plants for the handoff",
+   "input_ids": [
+    101,
+    10825,
+    2033,
+    2296,
+    2733,
+    2000,
+    2300,
+    1996,
+    4264,
+    2005,
+    1996,
+    2192,
+    7245,
+    102
+   ]
+  },
+  {
+   "text": "Update the duty roster every second Monday starting in November through March",
+   "input_ids": [
+    101,
+    10651,
+    1996,
+    4611,
+    9238,
+    2296,
+    2117,
+    6928,
+    3225,
+    1999,
+    2281,
+    2083,
+    2233,
+    102
+   ]
+  },
+  {
+   "text": "rehearsal every day at 7:45 for 55 minutes",
+   "input_ids": [
+    101,
+    17887,
+    2296,
+    2154,
+    2012,
+    1021,
+    1024,
+    3429,
+    2005,
+    4583,
+    2781,
+    102
+   ]
+  },
+  {
+   "text": "Community supper quarterly from next month",
+   "input_ids": [
+    101,
+    2451,
+    15264,
+    12174,
+    2013,
+    2279,
+    3204,
+    102
+   ]
+  },
+  {
+   "text": "Community supper weekly at 7:45am ending on December 12 except holidays",
+   "input_ids": [
+    101,
+    2451,
+    15264,
+    4882,
+    2012,
+    1021,
+    1024,
+    3429,
+    3286,
+    4566,
+    2006,
+    2285,
+    2260,
+    3272,
+    11938,
+    102
+   ]
+  },
+  {
+   "text": "quarterly, Orchid society",
+   "input_ids": [
+    101,
+    12174,
+    1010,
+    15573,
+    2554,
+    102
+   ]
+  },
+  {
+   "text": "dust the blinds by Saturday afternoon",
+   "input_ids": [
+    101,
+    6497,
+    1996,
+    28279,
+    2011,
+    5095,
+    5027,
+    102
+   ]
+  },
+  {
+   "text": "Take score printout to Mami by tomorrow 7am",
+   "input_ids": [
+    101,
+    2202,
+    3556,
+    6140,
+    5833,
+    2000,
+    5003,
+    4328,
+    2011,
+    4826,
+    1021,
+    3286,
+    102
+   ]
+  },
+  {
+   "text": "Schedule release notes for North Star with Sam, with tags travel and booking, for 90 minutes, done, urgent by noon.",
+   "input_ids": [
+    101,
+    6134,
+    2713,
+    3964,
+    2005,
+    2167,
+    2732,
+    2007,
+    3520,
+    1010,
+    2007,
+    22073,
+    3604,
+    1998,
+    21725,
+    1010,
+    2005,
+    3938,
+    2781,
+    1010,
+    2589,
+    1010,
+    13661,
+    2011,
+    11501,
+    1012,
+    102
+   ]
+  },
+  {
+   "text": "Tighten the greenhouse bolts monthly on the 15th except bank holidays",
+   "input_ids": [
+    101,
+    21245,
+    1996,
+    16635,
+    19947,
+    7058,
+    2006,
+    1996,
+    6286,
+    3272,
+    2924,
+    11938,
+    102
+   ]
+  },
+  {
+   "text": "Urgent discussion of community supper next Friday morning",
+   "input_ids": [
+    101,
+    13661,
+    6594,
+    1997,
+    2451,
+    15264,
+    2279,
+    5958,
+    2851,
+    102
+   ]
+  },
+  {
+   "text": "remember to File the test certificates",
+   "input_ids": [
+    101,
+    3342,
+    2000,
+    5371,
+    1996,
+    3231,
+    17987,
+    102
+   ]
+  },
+  {
+   "text": "tommorow, Inspect the nesting boxes",
+   "input_ids": [
+    101,
+    3419,
+    5302,
+    10524,
+    1010,
+    22459,
+    1996,
+    21016,
+    8378,
+    102
+   ]
+  },
+  {
+   "text": "Restore the allotment bench every other week",
+   "input_ids": [
+    101,
+    9239,
+    1996,
+    2035,
+    4140,
+    3672,
+    6847,
+    2296,
+    2060,
+    2733,
+    102
+   ]
+  },
+  {
+   "text": "Review the team feedback for Apollo, currently waiting, spend 45 mins",
+   "input_ids": [
+    101,
+    3319,
+    1996,
+    2136,
+    12247,
+    2005,
+    9348,
+    1010,
+    2747,
+    3403,
+    1010,
+    5247,
+    3429,
+    8117,
+    2015,
+    102
+   ]
+  },
+  {
+   "text": "Remind me to send the attendance sheet this Saturday before noon",
+   "input_ids": [
+    101,
+    10825,
+    2033,
+    2000,
+    4604,
+    1996,
+    5270,
+    7123,
+    2023,
+    5095,
+    2077,
+    11501,
+    102
+   ]
+  },
+  {
+   "text": "buy a new umbrella",
+   "input_ids": [
+    101,
+    4965,
+    1037,
+    2047,
+    12977,
+    102
+   ]
+  },
+  {
+   "text": "Rehearse Wednesday",
+   "input_ids": [
+    101,
+    2128,
+    26560,
+    3366,
+    9317,
+    102
+   ]
+  },
+  {
+   "text": "Remember to order the loom parts every second Thursday at 7pm",
+   "input_ids": [
+    101,
+    3342,
+    2000,
+    2344,
+    1996,
+    8840,
+    5358,
+    3033,
+    2296,
+    2117,
+    9432,
+    2012,
+    1021,
+    9737,
+    102
+   ]
+  },
+  {
+   "text": "Ping me to twice a week, check the damp meter",
+   "input_ids": [
+    101,
+    17852,
+    2033,
+    2000,
+    3807,
+    1037,
+    2733,
+    1010,
+    4638,
+    1996,
+    10620,
+    8316,
+    102
+   ]
+  },
+  {
+   "text": "Team standup tomorrow at 9am about sprint blockers",
+   "input_ids": [
+    101,
+    2136,
+    3233,
+    6279,
+    4826,
+    2012,
+    1023,
+    3286,
+    2055,
+    9043,
+    3796,
+    2545,
+    102
+   ]
+  },
+  {
+   "text": "Sketch daily",
+   "input_ids": [
+    101,
+    11080,
+    3679,
+    102
+   ]
+  },
+  {
+   "text": "Remember to ask about the ferry tickets Mon Wed Fri for six weeks",
+   "input_ids": [
+    101,
+    3342,
+    2000,
+    3198,
+    2055,
+    1996,
+    7115,
+    9735,
+    12256,
+    21981,
+    10424,
+    2072,
+    2005,
+    2416,
+    3134,
+    102
+   ]
+  },
+  {
+   "text": "Film discussion on Saturday",
+   "input_ids": [
+    101,
+    2143,
+    6594,
+    2006,
+    5095,
+    102
+   ]
+  },
+  {
+   "text": "Remind me to Low-key check the damp meter tomorrow",
+   "input_ids": [
+    101,
+    10825,
+    2033,
+    2000,
+    2659,
+    1011,
+    3145,
+    4638,
+    1996,
+    10620,
+    8316,
+    4826,
+    102
+   ]
+  },
+  {
+   "text": "Remember to Sketch",
+   "input_ids": [
+    101,
+    3342,
+    2000,
+    11080,
+    102
+   ]
+  },
+  {
+   "text": "Remind me to Call June about pack the spare hearing aids at the end of next month at 7:45am",
+   "input_ids": [
+    101,
+    10825,
+    2033,
+    2000,
+    2655,
+    2238,
+    2055,
+    5308,
+    1996,
+    8622,
+    4994,
+    8387,
+    2012,
+    1996,
+    2203,
+    1997,
+    2279,
+    3204,
+    2012,
+    1021,
+    1024,
+    3429,
+    3286,
+    102
+   ]
+  },
+  {
+   "text": "Bring charger to Ammaji before dawn",
+   "input_ids": [
+    101,
+    3288,
+    3715,
+    2099,
+    2000,
+    2572,
+    2863,
+    4478,
+    2077,
+    6440,
+    102
+   ]
+  },
+  {
+   "text": "Exercise the generator monthly unless the building is closed",
+   "input_ids": [
+    101,
+    6912,
+    1996,
+    13103,
+    7058,
+    4983,
+    1996,
+    2311,
+    2003,
+    2701,
+    102
+   ]
+  },
+  {
+   "text": "remind me to check the mail every Saturday",
+   "input_ids": [
+    101,
+    10825,
+    2033,
+    2000,
+    4638,
+    1996,
+    5653,
+    2296,
+    5095,
+    102
+   ]
+  },
+  {
+   "text": "Bring the SAT notes Saturday and take the sun hat Sunday",
+   "input_ids": [
+    101,
+    3288,
+    1996,
+    2938,
+    3964,
+    5095,
+    1998,
+    2202,
+    1996,
+    3103,
+    6045,
+    4465,
+    102
+   ]
+  },
+  {
+   "text": "Interview Dr. Park Monday at 11",
+   "input_ids": [
+    101,
+    4357,
+    2852,
+    1012,
+    2380,
+    6928,
+    2012,
+    2340,
+    102
+   ]
+  },
+  {
+   "text": "Fix the leaking faucet under Home Renovation before lunch",
+   "input_ids": [
+    101,
+    8081,
+    1996,
+    24325,
+    6904,
+    18796,
+    2102,
+    2104,
+    2188,
+    10525,
+    2077,
+    6265,
+    102
+   ]
+  },
+  {
+   "text": "photoshoot tomorrow 4pm for 3 hours at pier 7",
+   "input_ids": [
+    101,
+    7760,
+    23416,
+    4826,
+    1018,
+    9737,
+    2005,
+    1017,
+    2847,
+    2012,
+    10356,
+    1021,
+    102
+   ]
+  },
+  {
+   "text": "Repair product backlog for Support migration, with tags design and copy, spend 40 minutes, complete, high priority before the launch.",
+   "input_ids": [
+    101,
+    7192,
+    4031,
+    2067,
+    21197,
+    2005,
+    2490,
+    9230,
+    1010,
+    2007,
+    22073,
+    2640,
+    1998,
+    6100,
+    1010,
+    5247,
+    2871,
+    2781,
+    1010,
+    3143,
+    1010,
+    2152,
+    9470,
+    2077,
+    1996,
+    4888,
+    1012,
+    102
+   ]
+  },
+  {
+   "text": "Label the herb cuttings tonight critical",
+   "input_ids": [
+    101,
+    3830,
+    1996,
+    12810,
+    6276,
+    2015,
+    3892,
+    4187,
+    102
+   ]
+  },
+  {
+   "text": "coffee with boss tomorrow morning",
+   "input_ids": [
+    101,
+    4157,
+    2007,
+    5795,
+    4826,
+    2851,
+    102
+   ]
+  },
+  {
+   "text": "Ceramics demonstration tomorow at noon",
+   "input_ids": [
+    101,
+    17314,
+    10467,
+    3419,
+    14604,
+    2860,
+    2012,
+    11501,
+    102
+   ]
+  },
+  {
+   "text": "Review the message from Henry Friday",
+   "input_ids": [
+    101,
+    3319,
+    1996,
+    4471,
+    2013,
+    2888,
+    5958,
+    102
+   ]
+  },
+  {
+   "text": "Film screening thurday at 7pm",
+   "input_ids": [
+    101,
+    2143,
+    11326,
+    16215,
+    3126,
+    10259,
+    2012,
+    1021,
+    9737,
+    102
+   ]
+  },
+  {
+   "text": "Demo rehearsal every Saturday on March 15 at 17:15 until 19:00 for 1 hour at North Desk; Sam; to review QA results and dependencies",
+   "input_ids": [
+    101,
+    9703,
+    17887,
+    2296,
+    5095,
+    2006,
+    2233,
+    2321,
+    2012,
+    2459,
+    1024,
+    2321,
+    2127,
+    2539,
+    1024,
+    4002,
+    2005,
+    1015,
+    3178,
+    2012,
+    2167,
+    4624,
+    1025,
+    3520,
+    1025,
+    2000,
+    3319,
+    1053,
+    2050,
+    3463,
+    1998,
+    12530,
+    15266,
+    102
+   ]
+  },
+  {
+   "text": "remind me at 18:30 to take the roast out",
+   "input_ids": [
+    101,
+    10825,
+    2033,
+    2012,
+    2324,
+    1024,
+    2382,
+    2000,
+    2202,
+    1996,
+    25043,
+    2041,
+    102
+   ]
+  },
+  {
+   "text": "Draft the sales report for the Q3 launch, take about 1 hour, in progress",
+   "input_ids": [
+    101,
+    4433,
+    1996,
+    4341,
+    3189,
+    2005,
+    1996,
+    1053,
+    2509,
+    4888,
+    1010,
+    2202,
+    2055,
+    1015,
+    3178,
+    1010,
+    1999,
+    5082,
+    102
+   ]
+  },
+  {
+   "text": "Count the brass fittings quarterly except the final week of the month",
+   "input_ids": [
+    101,
+    4175,
+    1996,
+    8782,
+    11414,
+    2015,
+    12174,
+    3272,
+    1996,
+    2345,
+    2733,
+    1997,
+    1996,
+    3204,
+    102
+   ]
+  },
+  {
+   "text": "Ping me to phone the piano tuner every first Monday before noon through August but skip the first week",
+   "input_ids": [
+    101,
+    17852,
+    2033,
+    2000,
+    3042,
+    1996,
+    3682,
+    8694,
+    2099,
+    2296,
+    2034,
+    6928,
+    2077,
+    11501,
+    2083,
+    2257,
+    2021,
+    13558,
+    1996,
+    2034,
+    2733,
+    102
+   ]
+  },
+  {
+   "text": "Ping me to take the reading glasses on the 24th by 4 pm",
+   "input_ids": [
+    101,
+    17852,
+    2033,
+    2000,
+    2202,
+    1996,
+    3752,
+    7877,
+    2006,
+    1996,
+    13386,
+    2011,
+    1018,
+    7610,
+    102
+   ]
+  },
+  {
+   "text": "Organize the craft room for 2 hours, status: in progress.",
+   "input_ids": [
+    101,
+    10939,
+    1996,
+    7477,
+    2282,
+    2005,
+    1016,
+    2847,
+    1010,
+    3570,
+    1024,
+    1999,
+    5082,
+    1012,
+    102
+   ]
+  },
+  {
+   "text": "just file the travel reimbursement, for Project Atlas, with Nina and Omar, by tomorrow, high priority, 90 minutes, in progress, #finance, #board",
+   "input_ids": [
+    101,
+    2074,
+    5371,
+    1996,
+    3604,
+    24964,
+    14905,
+    28393,
+    3672,
+    1010,
+    2005,
+    2622,
+    11568,
+    1010,
+    2007,
+    9401,
+    1998,
+    13192,
+    1010,
+    2011,
+    4826,
+    1010,
+    2152,
+    9470,
+    1010,
+    3938,
+    2781,
+    1010,
+    1999,
+    5082,
+    1010,
+    1001,
+    5446,
+    1010,
+    1001,
+    2604,
+    102
+   ]
+  },
+  {
+   "text": "Rehearse the march before count the brass fittings tomorrow",
+   "input_ids": [
+    101,
+    2128,
+    26560,
+    3366,
+    1996,
+    2233,
+    2077,
+    4175,
+    1996,
+    8782,
+    11414,
+    2015,
+    4826,
+    102
+   ]
+  },
+  {
+   "text": "Dentist Tuesday 2pm until 3 for a filling",
+   "input_ids": [
+    101,
+    24385,
+    9857,
+    1016,
+    9737,
+    2127,
+    1017,
+    2005,
+    1037,
+    8110,
+    102
+   ]
+  },
+  {
+   "text": "Sprint kickoff every first Monday on April 2 at 15:00 for 20 minutes until 16:30 at Library Annex; to review board prep and action owners with Arjun",
+   "input_ids": [
+    101,
+    9043,
+    25233,
+    2296,
+    2034,
+    6928,
+    2006,
+    2258,
+    1016,
+    2012,
+    2321,
+    1024,
+    4002,
+    2005,
+    2322,
+    2781,
+    2127,
+    2385,
+    1024,
+    2382,
+    2012,
+    3075,
+    17827,
+    1025,
+    2000,
+    3319,
+    2604,
+    17463,
+    1998,
+    2895,
+    5608,
+    2007,
+    26024,
+    102
+   ]
+  },
+  {
+   "text": "Review backlog, to Nina, for Finance Ops, every other Tuesday, starting next week, unless it's a holiday then the following Thursday, until September 30, by noon, urgent, not started",
+   "input_ids": [
+    101,
+    3319,
+    2067,
+    21197,
+    1010,
+    2000,
+    9401,
+    1010,
+    2005,
+    5446,
+    23092,
+    1010,
+    2296,
+    2060,
+    9857,
+    1010,
+    3225,
+    2279,
+    2733,
+    1010,
+    4983,
+    2009,
+    1005,
+    1055,
+    1037,
+    6209,
+    2059,
+    1996,
+    2206,
+    9432,
+    1010,
+    2127,
+    2244,
+    2382,
+    1010,
+    2011,
+    11501,
+    1010,
+    13661,
+    1010,
+    2025,
+    2318,
+    102
+   ]
+  },
+  {
+   "text": "Remember to collect the clay order every morning by 4 pm",
+   "input_ids": [
+    101,
+    3342,
+    2000,
+    8145,
+    1996,
+    5726,
+    2344,
+    2296,
+    2851,
+    2011,
+    1018,
+    7610,
+    102
+   ]
+  },
+  {
+   "text": "every weekday, Local history talk",
+   "input_ids": [
+    101,
+    2296,
+    16904,
+    1010,
+    2334,
+    2381,
+    2831,
+    102
+   ]
+  },
+  {
+   "text": "Return the borrowed ladder tmrw",
+   "input_ids": [
+    101,
+    2709,
+    1996,
+    11780,
+    10535,
+    1056,
+    2213,
+    2099,
+    2860,
+    102
+   ]
+  },
+  {
+   "text": "sibling call every Sunday at 9:10am with bhai",
+   "input_ids": [
+    101,
+    22941,
+    2655,
+    2296,
+    4465,
+    2012,
+    1023,
+    1024,
+    2184,
+    3286,
+    2007,
+    1038,
+    10932,
+    102
+   ]
+  },
+  {
+   "text": "pick up the cake for Omar",
+   "input_ids": [
+    101,
+    4060,
+    2039,
+    1996,
+    9850,
+    2005,
+    13192,
+    102
+   ]
+  },
+  {
+   "text": "[ ] Inspect the attic hatch at 2pm",
+   "input_ids": [
+    101,
+    1031,
+    1033,
+    22459,
+    1996,
+    14832,
+    11300,
+    2012,
+    1016,
+    9737,
+    102
+   ]
+  },
+  {
+   "text": "Monthly rent reminder every 1st",
+   "input_ids": [
+    101,
+    7058,
+    9278,
+    14764,
+    2296,
+    3083,
+    102
+   ]
+  },
+  {
+   "text": "✓ Check the volunteer rota by Friday",
+   "input_ids": [
+    101,
+    100,
+    4638,
+    1996,
+    6951,
+    18672,
+    2050,
+    2011,
+    5958,
+    102
+   ]
+  },
+  {
+   "text": "Remind me to charge the field recorder by 11am; find the trail map at 15:30",
+   "input_ids": [
+    101,
+    10825,
+    2033,
+    2000,
+    3715,
+    1996,
+    2492,
+    14520,
+    2011,
+    2340,
+    3286,
+    1025,
+    2424,
+    1996,
+    4446,
+    4949,
+    2012,
+    2321,
+    1024,
+    2382,
+    102
+   ]
+  },
+  {
+   "text": "Vacuum daily",
+   "input_ids": [
+    101,
+    11641,
+    3679,
+    102
+   ]
+  },
+  {
+   "text": "Photograph the kiln shelves by 11am, then Confirm the school transport at 7:45am",
+   "input_ids": [
+    101,
+    9982,
+    1996,
+    11382,
+    19666,
+    15475,
+    2011,
+    2340,
+    3286,
+    1010,
+    2059,
+    12210,
+    1996,
+    2082,
+    3665,
+    2012,
+    1021,
+    1024,
+    3429,
+    3286,
+    102
+   ]
+  },
+  {
+   "text": "alert me in 45 minutes to check the laundry",
+   "input_ids": [
+    101,
+    9499,
+    2033,
+    1999,
+    3429,
+    2781,
+    2000,
+    4638,
+    1996,
+    14533,
+    102
+   ]
+  },
+  {
+   "text": "high priority complete the annual report",
+   "input_ids": [
+    101,
+    2152,
+    9470,
+    3143,
+    1996,
+    3296,
+    3189,
+    102
+   ]
+  },
+  {
+   "text": "call the plumber by tomorrow afternoon",
+   "input_ids": [
+    101,
+    2655,
+    1996,
+    22088,
+    5677,
+    2011,
+    4826,
+    5027,
+    102
+   ]
+  },
+  {
+   "text": "Kitchen demo planning under Home Renovation — blocked on contractor",
+   "input_ids": [
+    101,
+    3829,
+    9703,
+    4041,
+    2104,
+    2188,
+    10525,
+    1517,
+    8534,
+    2006,
+    13666,
+    102
+   ]
+  },
+  {
+   "text": "Therapy Monday",
+   "input_ids": [
+    101,
+    7242,
+    6928,
+    102
+   ]
+  },
+  {
+   "text": "Local history talk end of month bring a notebook and sturdy shoes",
+   "input_ids": [
+    101,
+    2334,
+    2381,
+    2831,
+    2203,
+    1997,
+    3204,
+    3288,
+    1037,
+    14960,
+    1998,
+    23073,
+    6007,
+    102
+   ]
+  },
+  {
+   "text": "Fencing gloves",
+   "input_ids": [
+    101,
+    15962,
+    11875,
+    102
+   ]
+  },
+  {
+   "text": "Design review Tuesday until 4pm to walk through the new onboarding flow",
+   "input_ids": [
+    101,
+    2640,
+    3319,
+    9857,
+    2127,
+    1018,
+    9737,
+    2000,
+    3328,
+    2083,
+    1996,
+    2047,
+    27120,
+    2075,
+    4834,
+    102
+   ]
+  },
+  {
+   "text": "Remind me to charge the field recorder weekly and bring the hiking poles every weekday",
+   "input_ids": [
+    101,
+    10825,
+    2033,
+    2000,
+    3715,
+    1996,
+    2492,
+    14520,
+    4882,
+    1998,
+    3288,
+    1996,
+    13039,
+    10567,
+    2296,
+    16904,
+    102
+   ]
+  },
+  {
+   "text": "Work Call discussing vendor onboarding every workday at 1pm",
+   "input_ids": [
+    101,
+    2147,
+    2655,
+    10537,
+    21431,
+    27120,
+    2075,
+    2296,
+    2147,
+    10259,
+    2012,
+    1015,
+    9737,
+    102
+   ]
+  },
+  {
+   "text": "review the medication list twice a week until the end of November",
+   "input_ids": [
+    101,
+    3319,
+    1996,
+    14667,
+    2862,
+    3807,
+    1037,
+    2733,
+    2127,
+    1996,
+    2203,
+    1997,
+    2281,
+    102
+   ]
+  },
+  {
+   "text": "Remind me to review the medication list next Thursday and renew the locker rental next Thursday",
+   "input_ids": [
+    101,
+    10825,
+    2033,
+    2000,
+    3319,
+    1996,
+    14667,
+    2862,
+    2279,
+    9432,
+    1998,
+    20687,
+    1996,
+    12625,
+    12635,
+    2279,
+    9432,
+    102
+   ]
+  },
+  {
+   "text": "Monitor the database performance for #ops, currently in progress, for 2 hours",
+   "input_ids": [
+    101,
+    8080,
+    1996,
+    7809,
+    2836,
+    2005,
+    1001,
+    23092,
+    1010,
+    2747,
+    1999,
+    5082,
+    1010,
+    2005,
+    1016,
+    2847,
+    102
+   ]
+  },
+  {
+   "text": "Sushi with the robotics team Thursday",
+   "input_ids": [
+    101,
+    10514,
+    6182,
+    2007,
+    1996,
+    21331,
+    2136,
+    9432,
+    102
+   ]
+  },
+  {
+   "text": "Community supper at 9:10am and Sailing theory class at 6:20pm",
+   "input_ids": [
+    101,
+    2451,
+    15264,
+    2012,
+    1023,
+    1024,
+    2184,
+    3286,
+    1998,
+    8354,
+    3399,
+    2465,
+    2012,
+    1020,
+    1024,
+    2322,
+    9737,
+    102
+   ]
+  },
+  {
+   "text": "Review the access log assigned to Noor for Winter Appeal next Thursday",
+   "input_ids": [
+    101,
+    3319,
+    1996,
+    3229,
+    8833,
+    4137,
+    2000,
+    2053,
+    2953,
+    2005,
+    3467,
+    5574,
+    2279,
+    9432,
+    102
+   ]
+  },
+  {
+   "text": "Pay phone bill before 10/01",
+   "input_ids": [
+    101,
+    3477,
+    3042,
+    3021,
+    2077,
+    2184,
+    1013,
+    5890,
+    102
+   ]
+  },
+  {
+   "text": "Sync the files for Atlas, status: complete, for 20 minutes",
+   "input_ids": [
+    101,
+    26351,
+    1996,
+    6764,
+    2005,
+    11568,
+    1010,
+    3570,
+    1024,
+    3143,
+    1010,
+    2005,
+    2322,
+    2781,
+    102
+   ]
+  },
+  {
+   "text": "Bookbinding class Mon Wed Fri; Sailing theory class weekly",
+   "input_ids": [
+    101,
+    2338,
+    8428,
+    4667,
+    2465,
+    12256,
+    21981,
+    10424,
+    2072,
+    1025,
+    8354,
+    3399,
+    2465,
+    4882,
+    102
+   ]
+  },
+  {
+   "text": "Ship billing page copy for the Q3 launch — in progress",
+   "input_ids": [
+    101,
+    2911,
+    25640,
+    3931,
+    6100,
+    2005,
+    1996,
+    1053,
+    2509,
+    4888,
+    1517,
+    1999,
+    5082,
+    102
+   ]
+  },
+  {
+   "text": "Online lesson Wednesday https://hub.example.com/#session",
+   "input_ids": [
+    101,
+    3784,
+    10800,
+    9317,
+    16770,
+    1024,
+    1013,
+    1013,
+    9594,
+    1012,
+    2742,
+    1012,
+    4012,
+    1013,
+    1001,
+    5219,
+    102
+   ]
+  },
+  {
+   "text": "Inspect the sun shade near weaving class at the end of next month at 7:45am",
+   "input_ids": [
+    101,
+    22459,
+    1996,
+    3103,
+    8703,
+    2379,
+    15360,
+    2465,
+    2012,
+    1996,
+    2203,
+    1997,
+    2279,
+    3204,
+    2012,
+    1021,
+    1024,
+    3429,
+    3286,
+    102
+   ]
+  },
+  {
+   "text": "Ping me to tomorow, ask about the ferry tickets",
+   "input_ids": [
+    101,
+    17852,
+    2033,
+    2000,
+    3419,
+    14604,
+    2860,
+    1010,
+    3198,
+    2055,
+    1996,
+    7115,
+    9735,
+    102
+   ]
+  },
+  {
+   "text": "remind me every 3 days to clean the kitchen about the lease",
+   "input_ids": [
+    101,
+    10825,
+    2033,
+    2296,
+    1017,
+    2420,
+    2000,
+    4550,
+    1996,
+    3829,
+    2055,
+    1996,
+    10084,
+    102
+   ]
+  }
+ ]
+}
