@@ -99,9 +99,13 @@ pub struct CaptureSchedule {
 
 static TIME_PHRASE: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(
-        r"(?i)(?:\b(?:at|by|@|around|from)\s*)?(?:\b\d{1,2}(?::\d{2})?\s*(?:a\.?m\.?|p\.?m\.?|am|pm)(?:\W|$)|\b\d{1,2}:\d{2}\b|\b\d{3,4}\s*h(?:rs)?\b|\b\d{1,2}\s*h\b|\b(?:noon|midday|midnight|eod|cob|end\s+of\s+(?:the\s+)?day|close\s+of\s+business)\b|\b(?:this\s+|tomorrow\s+)?(?:morning|afternoon|evening|night|tonight|tonite)\b)",
+        r"(?i)(?:\b(?:at|by|@|around|from)\s*)?(?:\b\d{1,2}(?::\d{2})?\s*(?:a\.?m\.?|p\.?m\.?|am|pm)(?:\W|$)|\b\d{1,2}:\d{2}\b|\b\d{3,4}\s*h(?:rs)?\b|\b\d{1,2}\s*h\b|\b(?:noon|midday|midnight|eod|cob|end\s+of\s+(?:the\s+)?day|close\s+of\s+business)\b|\b(?:this\s+)?(?:morning|afternoon|evening|night|tonight|tonite)\b)",
     )
     .unwrap_or_else(|e| panic!("time phrase: {e}"))
+});
+
+static CONNECTOR: LazyLock<Regex> = LazyLock::new(|| {
+    Regex::new(r"(?i)\b(?:by|before|on)\s+$").unwrap_or_else(|e| panic!("connector: {e}"))
 });
 
 static ALERT_WORD: LazyLock<Regex> = LazyLock::new(|| {
@@ -281,7 +285,20 @@ fn collect_warnings(r: &LineResolution) -> Vec<PreviewWarning> {
     out
 }
 
-fn schedule_of(r: &LineResolution) -> Option<PreviewSchedule> {
+fn minutes_in(text: &str) -> Option<i64> {
+    let caps = DURATION_AMOUNT.captures(text)?;
+    let amount = crate::capture::lexicon::number_value(caps.get(1)?.as_str())?;
+    let per = crate::capture::lexicon::unit_minutes(caps.get(2)?.as_str())?;
+    let minutes = (amount * per).round();
+    (minutes > 0.0 && minutes < 1_000_000.0).then_some(minutes as i64)
+}
+
+static DURATION_AMOUNT: LazyLock<Regex> = LazyLock::new(|| {
+    Regex::new(r"(?i)(\d+(?:\.\d+)?|an?|one|two|three|four|five|six|seven|eight|nine|ten|half\s+an?)\s*(hours?|hrs?|h|minutes?|mins?|m)\b")
+        .unwrap_or_else(|e| panic!("duration amount: {e}"))
+});
+
+fn schedule_of(r: &LineResolution, duration_text: Option<&str>) -> Option<PreviewSchedule> {
     let (alert_minutes_before, alert_at, alerts_off) = match &r.alert {
         Some(Alert::Relative { minutes_before, at }) => {
             (Some(*minutes_before), at.as_ref().map(moment), false)
@@ -297,6 +314,7 @@ fn schedule_of(r: &LineResolution) -> Option<PreviewSchedule> {
         },
         _ => None,
     };
+    let duration_minutes = duration_minutes.or_else(|| duration_text.and_then(minutes_in));
     let schedule = PreviewSchedule {
         start: r.start.as_ref().map(moment),
         end: r.end.as_ref().map(moment),
@@ -336,6 +354,11 @@ pub fn capture_schedule(
             .map(|(a, b)| LabelledSpan::new(Role::Alert, *a, *b)),
     );
     for span in &mut all {
+        if matches!(span.role, Role::EventStart | Role::DueDate | Role::DueTime | Role::Trigger) {
+            if let Some(m) = line.get(..span.start).and_then(|before| CONNECTOR.find(before)) {
+                span.start = m.start();
+            }
+        }
         if matches!(span.role, Role::LeadTime | Role::Alert) {
             if let Some(m) = line
                 .get(..span.start)
@@ -466,10 +489,11 @@ pub fn capture_schedule(
             text: line[s.start..s.end].to_string(),
         })
         .collect();
+    let schedule = schedule_of(&parts.resolution, texts.duration.as_deref());
     CaptureSchedule {
         spans,
         texts,
-        schedule: schedule_of(&parts.resolution),
+        schedule,
         warnings: collect_warnings(&parts.resolution),
     }
 }
