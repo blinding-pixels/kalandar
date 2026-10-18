@@ -427,7 +427,7 @@ fn preview_capture_routes_reminder_drafts_through_runtime() {
     let reminder = preview
         .reminder
         .expect("reminder preview should be present");
-    assert_eq!(reminder.title, "water plants");
+    assert_eq!(reminder.title, "Water Plants");
     assert_eq!(reminder.remind_at_text.as_deref(), Some("9am"));
     assert_eq!(
         reminder.recurrence.as_ref().map(|value| value.interval),
