@@ -1,0 +1,97 @@
+{"id": "p4be-holidays-01", "category": "holidays", "kind": "reminder", "text": "remind me on Christmas Eve to call grandma", "expect": {"start": "2026-12-24"}}
+{"id": "p4be-holidays-02", "category": "holidays", "kind": "reminder", "text": "remind me to call mom on Mother's Day", "expect": {"start": "2027-05-09"}}
+{"id": "p4be-holidays-03", "category": "holidays", "kind": "reminder", "text": "remind me Thanksgiving morning to start the turkey", "expect": {"start": "2026-11-26T09:00"}}
+{"id": "p4be-holidays-04", "category": "holidays", "kind": "reminder", "text": "remind me New Year's Eve at 11pm to call dad", "expect": {"start": "2026-12-31T23:00"}}
+{"id": "p4be-holidays-05", "category": "holidays", "kind": "reminder", "text": "remind me the day before Easter to pick up the ham", "expect": {"start": "2027-03-27"}}
+{"id": "p4be-holidays-06", "category": "holidays", "kind": "task", "text": "pay the bills before Christmas", "expect": {"start": "2026-12-25"}}
+{"id": "p4be-holidays-07", "category": "holidays", "kind": "task", "text": "finish the quarterly report by Thanksgiving", "expect": {"start": "2026-11-26"}}
+{"id": "p4be-holidays-08", "category": "holidays", "kind": "task", "text": "return library books by Halloween", "expect": {"start": "2026-10-31"}}
+{"id": "p4be-holidays-09", "category": "holidays", "kind": "calendar", "text": "Christmas Eve dinner at 6", "expect": {"start": "2026-12-24T18:00", "absent_warnings": ["possible_holiday_title"]}}
+{"id": "p4be-holidays-10", "category": "holidays", "kind": "calendar", "text": "Halloween party", "expect": {"start": "2026-10-31", "absent_warnings": ["possible_holiday_title"]}}
+{"id": "p4be-holidays-11", "category": "holidays", "kind": "calendar", "text": "Mother's Day brunch", "expect": {"start": "2027-05-09T11:00", "absent_warnings": ["possible_holiday_title"]}}
+{"id": "p4be-holidays-12", "category": "holidays", "kind": "calendar", "text": "Thanksgiving dinner at grandma's", "expect": {"start": "2026-11-26T18:00"}}
+{"id": "p4be-holidays-13", "category": "holidays", "kind": "calendar", "text": "Easter Sunday brunch", "expect": {"start": "2027-03-28T11:00"}}
+{"id": "p4be-holidays-14", "category": "holidays", "kind": "calendar", "text": "Christmas", "expect": {"start": "2026-12-25"}}
+{"id": "p4be-holidays-15", "category": "holidays", "kind": "calendar", "text": "Thanksgiving with family", "expect": {"start": "2026-11-26"}}
+{"id": "p4be-holidays-16", "category": "holidays", "kind": "calendar", "text": "Valentine's Day dinner with Sam at 7:30pm", "expect": {"start": "2027-02-14T19:30"}}
+{"id": "p4be-holidays-17", "category": "holidays", "kind": "task", "text": "buy Christmas lights", "expect": {"start": null}}
+{"id": "p4be-holidays-18", "category": "holidays", "kind": "task", "text": "order Halloween costume for Mia", "expect": {"start": null}}
+{"id": "p4be-holidays-19", "category": "holidays", "kind": "task", "text": "Thanksgiving recipes to try", "expect": {"start": null}}
+{"id": "p4be-holidays-20", "category": "holidays", "kind": "reminder", "text": "remind me to wrap Christmas presents", "expect": {"start": null}}
+{"id": "p4be-holidays-21", "category": "holidays", "kind": "task", "text": "write Mother's Day card for mom", "expect": {"start": null}}
+{"id": "p4be-holidays-22", "category": "holidays", "kind": "task", "text": "plan Easter egg hunt", "expect": {"start": null}}
+{"id": "p4be-holidays-23", "category": "holidays", "kind": "calendar", "text": "Thanksgiving potluck", "expect": {"start": "2026-11-26", "warnings": ["possible_holiday_title"]}}
+{"id": "p4be-holidays-24", "category": "holidays", "kind": "calendar", "text": "Halloween bash", "expect": {"start": "2026-10-31", "warnings": ["possible_holiday_title"]}}
+{"id": "p4be-holidays-25", "category": "holidays", "kind": "calendar", "text": "Christmas karaoke at 8pm", "expect": {"start": "2026-12-25T20:00", "warnings": ["possible_holiday_title"]}}
+{"id": "p4be-missing_trigger-01", "category": "missing_trigger", "kind": "reminder", "text": "remind me to call the dentist", "expect": {"warnings": ["missing_trigger"]}}
+{"id": "p4be-missing_trigger-02", "category": "missing_trigger", "kind": "reminder", "text": "remind me to water the plants", "expect": {"warnings": ["missing_trigger"]}}
+{"id": "p4be-missing_trigger-03", "category": "missing_trigger", "kind": "reminder", "text": "remember to cancel the gym membership", "expect": {"warnings": ["missing_trigger"]}}
+{"id": "p4be-missing_trigger-04", "category": "missing_trigger", "kind": "reminder", "text": "remind me about Jake's birthday gift", "expect": {"warnings": ["missing_trigger"]}}
+{"id": "p4be-missing_trigger-05", "category": "missing_trigger", "kind": "reminder", "text": "remind me to buy Christmas lights", "expect": {"start": null, "warnings": ["missing_trigger"]}}
+{"id": "p4be-missing_trigger-06", "category": "missing_trigger", "kind": "reminder", "text": "remind me to text Maya back", "expect": {"warnings": ["missing_trigger"]}}
+{"id": "p4be-missing_trigger-07", "category": "missing_trigger", "kind": "reminder", "text": "remind me to take out the trash when I get home", "expect": {"absent_warnings": ["missing_trigger"]}}
+{"id": "p4be-missing_trigger-08", "category": "missing_trigger", "kind": "reminder", "text": "remind me to pick up milk at the store", "expect": {"absent_warnings": ["missing_trigger"]}}
+{"id": "p4be-missing_trigger-09", "category": "missing_trigger", "kind": "reminder", "text": "remind me to drop off the forms next time I'm at the pharmacy", "expect": {"absent_warnings": ["missing_trigger"]}}
+{"id": "p4be-missing_trigger-10", "category": "missing_trigger", "kind": "reminder", "text": "remind me to call mom when I land", "expect": {"absent_warnings": ["missing_trigger"]}}
+{"id": "p4be-missing_trigger-11", "category": "missing_trigger", "kind": "reminder", "text": "remind me to stretch at 3pm", "expect": {"start": "2026-10-18T15:00", "absent_warnings": ["missing_trigger"]}}
+{"id": "p4be-missing_trigger-12", "category": "missing_trigger", "kind": "reminder", "text": "remind me tonight to charge my laptop", "expect": {"start": "2026-10-18T20:00", "absent_warnings": ["missing_trigger"]}}
+{"id": "p4be-missing_date-01", "category": "missing_date", "kind": "calendar", "text": "coffee with Priya", "expect": {"start": null, "warnings": ["missing_date"]}}
+{"id": "p4be-missing_date-02", "category": "missing_date", "kind": "calendar", "text": "team offsite planning session", "expect": {"start": null, "warnings": ["missing_date"]}}
+{"id": "p4be-missing_date-03", "category": "missing_date", "kind": "calendar", "text": "dentist appointment", "expect": {"start": null, "warnings": ["missing_date"]}}
+{"id": "p4be-missing_date-04", "category": "missing_date", "kind": "calendar", "text": "book club", "expect": {"start": null, "warnings": ["missing_date"]}}
+{"id": "p4be-missing_date-05", "category": "missing_date", "kind": "calendar", "text": "haircut with Lena", "expect": {"start": null, "warnings": ["missing_date"]}}
+{"id": "p4be-missing_date-06", "category": "missing_date", "kind": "calendar", "text": "call with the landlord about the lease", "expect": {"start": null, "warnings": ["missing_date"]}}
+{"id": "p4be-missing_date-07", "category": "missing_date", "kind": "calendar", "text": "coffee with Priya at 3pm", "expect": {"start": "2026-10-18T15:00", "absent_warnings": ["missing_date"]}}
+{"id": "p4be-missing_date-08", "category": "missing_date", "kind": "calendar", "text": "yoga this evening", "expect": {"start": "2026-10-18T19:00", "absent_warnings": ["missing_date"]}}
+{"id": "p4be-missing_date-09", "category": "missing_date", "kind": "calendar", "text": "standup in 2 hours", "expect": {"start": "2026-10-18T12:00", "absent_warnings": ["missing_date"]}}
+{"id": "p4be-missing_date-10", "category": "missing_date", "kind": "calendar", "text": "Christmas party at Dana's", "expect": {"start": "2026-12-25", "absent_warnings": ["missing_date"]}}
+{"id": "p4be-missing_date-11", "category": "missing_date", "kind": "calendar", "text": "dinner with Alex at 7:30pm", "expect": {"start": "2026-10-18T19:30", "absent_warnings": ["missing_date"]}}
+{"id": "p4be-missing_date-12", "category": "missing_date", "kind": "calendar", "text": "dentist tomorrow", "expect": {"start": "2026-10-19", "absent_warnings": ["missing_date"]}}
+{"id": "p4be-unresolved_reference-01", "category": "unresolved_reference", "kind": "task", "text": "send the invoice after the meeting", "expect": {"start": null, "warnings": ["unresolved_reference"]}}
+{"id": "p4be-unresolved_reference-02", "category": "unresolved_reference", "kind": "reminder", "text": "remind me to call Sam when he's back", "expect": {"start": null, "warnings": ["unresolved_reference"]}}
+{"id": "p4be-unresolved_reference-03", "category": "unresolved_reference", "kind": "task", "text": "deploy once the build is green", "expect": {"start": null, "warnings": ["unresolved_reference"]}}
+{"id": "p4be-unresolved_reference-04", "category": "unresolved_reference", "kind": "task", "text": "book a hotel before the trip", "expect": {"start": null, "warnings": ["unresolved_reference"]}}
+{"id": "p4be-unresolved_reference-05", "category": "unresolved_reference", "kind": "reminder", "text": "remind me to tidy the living room before my sister arrives", "expect": {"start": null, "warnings": ["unresolved_reference"]}}
+{"id": "p4be-unresolved_reference-06", "category": "unresolved_reference", "kind": "task", "text": "update the README after Jordan's review", "expect": {"start": null, "warnings": ["unresolved_reference"]}}
+{"id": "p4be-unresolved_reference-07", "category": "unresolved_reference", "kind": "reminder", "text": "remind me to stretch after lunch", "expect": {"start": "2026-10-18T13:00", "absent_warnings": ["unresolved_reference"]}}
+{"id": "p4be-unresolved_reference-08", "category": "unresolved_reference", "kind": "task", "text": "submit timesheet before 5pm", "expect": {"start": "2026-10-18T17:00", "absent_warnings": ["unresolved_reference"]}}
+{"id": "p4be-unresolved_reference-09", "category": "unresolved_reference", "kind": "task", "text": "pay rent before the 28th", "expect": {"start": "2026-10-28", "absent_warnings": ["unresolved_reference"]}}
+{"id": "p4be-unresolved_reference-10", "category": "unresolved_reference", "kind": "reminder", "text": "remind me to call the bank after work", "expect": {"start": "2026-10-18T18:00", "absent_warnings": ["unresolved_reference"]}}
+{"id": "p4be-unresolved_reference-11", "category": "unresolved_reference", "kind": "reminder", "text": "remind me to feed the cat when I get home", "expect": {"absent_warnings": ["unresolved_reference"]}}
+{"id": "p4be-unresolved_reference-12", "category": "unresolved_reference", "kind": "task", "text": "follow up with Dana 3 days later", "expect": {"absent_warnings": ["unresolved_reference"]}}
+{"id": "p4be-vague_time-01", "category": "vague_time", "kind": "task", "text": "fix the garage door sometime", "expect": {"warnings": ["vague_time"]}}
+{"id": "p4be-vague_time-02", "category": "vague_time", "kind": "reminder", "text": "remind me to call grandpa later", "expect": {"start": null, "warnings": ["vague_time"]}}
+{"id": "p4be-vague_time-03", "category": "vague_time", "kind": "task", "text": "clean out the fridge soon", "expect": {"start": null, "warnings": ["vague_time"]}}
+{"id": "p4be-vague_time-04", "category": "vague_time", "kind": "task", "text": "learn to bake bread one of these days", "expect": {"warnings": ["vague_time"]}}
+{"id": "p4be-vague_time-05", "category": "vague_time", "kind": "task", "text": "get the car serviced asap", "expect": {"start": null, "warnings": ["vague_time"]}}
+{"id": "p4be-vague_time-06", "category": "vague_time", "kind": "task", "text": "sort out the insurance sometime next week", "expect": {"start": "2026-10-19", "warnings": ["vague_time"]}}
+{"id": "p4be-vague_time-07", "category": "vague_time", "kind": "reminder", "text": "remind me to call grandpa later today", "expect": {"absent_warnings": ["vague_time"]}}
+{"id": "p4be-vague_time-08", "category": "vague_time", "kind": "reminder", "text": "remind me to check on the dough this afternoon", "expect": {"start": "2026-10-18T14:00", "absent_warnings": ["vague_time"]}}
+{"id": "p4be-vague_time-09", "category": "vague_time", "kind": "reminder", "text": "remind me to take my meds tonight", "expect": {"start": "2026-10-18T20:00", "absent_warnings": ["vague_time"]}}
+{"id": "p4be-vague_time-10", "category": "vague_time", "kind": "task", "text": "finish the slides later this week", "expect": {"absent_warnings": ["vague_time"]}}
+{"id": "p4be-vague_time-11", "category": "vague_time", "kind": "task", "text": "renew passport by end of month", "expect": {"start": "2026-10-31", "absent_warnings": ["vague_time"]}}
+{"id": "p4be-vague_time-12", "category": "vague_time", "kind": "calendar", "text": "call with Tom Friday afternoon", "expect": {"start": "2026-10-23T14:00", "absent_warnings": ["vague_time"]}}
+{"id": "p4be-multiple_items-01", "category": "multiple_items", "kind": "task", "text": "call mom at 5 and pay rent on the 1st", "expect": {"start": "2026-10-18T17:00", "warnings": ["multiple_items"]}}
+{"id": "p4be-multiple_items-02", "category": "multiple_items", "kind": "calendar", "text": "gym at 6 then dinner at 8", "expect": {"start": "2026-10-18T18:00", "warnings": ["multiple_items"]}}
+{"id": "p4be-multiple_items-03", "category": "multiple_items", "kind": "calendar", "text": "dentist Monday; haircut Tuesday", "expect": {"start": "2026-10-19", "warnings": ["multiple_items"]}}
+{"id": "p4be-multiple_items-04", "category": "multiple_items", "kind": "task", "text": "email Jo at 9 plus call Sam at 4", "expect": {"warnings": ["multiple_items"]}}
+{"id": "p4be-multiple_items-05", "category": "multiple_items", "kind": "task", "text": "submit the expense report Friday also book flights Monday", "expect": {"warnings": ["multiple_items"]}}
+{"id": "p4be-multiple_items-06", "category": "multiple_items", "kind": "reminder", "text": "remind me to water plants tomorrow at 8am and take the bins out on Thursday", "expect": {"start": "2026-10-19T08:00", "warnings": ["multiple_items"]}}
+{"id": "p4be-multiple_items-07", "category": "multiple_items", "kind": "calendar", "text": "standup Monday and Wednesday at 3", "expect": {"absent_warnings": ["multiple_items"]}}
+{"id": "p4be-multiple_items-08", "category": "multiple_items", "kind": "reminder", "text": "remind me to take my pills at 7am and 7pm", "expect": {"absent_warnings": ["multiple_items"]}}
+{"id": "p4be-multiple_items-09", "category": "multiple_items", "kind": "calendar", "text": "dinner with Sam and Alex on Friday", "expect": {"start": "2026-10-23T18:00", "absent_warnings": ["multiple_items"]}}
+{"id": "p4be-multiple_items-10", "category": "multiple_items", "kind": "task", "text": "buy milk and eggs tomorrow", "expect": {"start": "2026-10-19", "absent_warnings": ["multiple_items"]}}
+{"id": "p4be-multiple_items-11", "category": "multiple_items", "kind": "task", "text": "call mom and dad at 6", "expect": {"absent_warnings": ["multiple_items"]}}
+{"id": "p4be-multiple_items-12", "category": "multiple_items", "kind": "calendar", "text": "piano lessons Tuesday and Thursday at 4pm", "expect": {"absent_warnings": ["multiple_items"]}}
+{"id": "p4be-underspecified_recurrence-01", "category": "underspecified_recurrence", "kind": "task", "text": "water the plants every few days", "expect": {"warnings": ["underspecified_recurrence"]}}
+{"id": "p4be-underspecified_recurrence-02", "category": "underspecified_recurrence", "kind": "reminder", "text": "remind me to stretch every so often", "expect": {"warnings": ["underspecified_recurrence"]}}
+{"id": "p4be-underspecified_recurrence-03", "category": "underspecified_recurrence", "kind": "reminder", "text": "remind me to check the mailbox from time to time", "expect": {"warnings": ["underspecified_recurrence"]}}
+{"id": "p4be-underspecified_recurrence-04", "category": "underspecified_recurrence", "kind": "task", "text": "back up the laptop regularly", "expect": {"warnings": ["underspecified_recurrence"]}}
+{"id": "p4be-underspecified_recurrence-05", "category": "underspecified_recurrence", "kind": "reminder", "text": "remind me to drink water occasionally", "expect": {"warnings": ["underspecified_recurrence"]}}
+{"id": "p4be-underspecified_recurrence-06", "category": "underspecified_recurrence", "kind": "reminder", "text": "remind me to call grandma every now and then", "expect": {"warnings": ["underspecified_recurrence"]}}
+{"id": "p4be-underspecified_recurrence-07", "category": "underspecified_recurrence", "kind": "reminder", "text": "remind me to water the plants every 3 days", "expect": {"absent_warnings": ["underspecified_recurrence"]}}
+{"id": "p4be-underspecified_recurrence-08", "category": "underspecified_recurrence", "kind": "reminder", "text": "remind me to stretch every hour", "expect": {"absent_warnings": ["underspecified_recurrence"]}}
+{"id": "p4be-underspecified_recurrence-09", "category": "underspecified_recurrence", "kind": "task", "text": "back up the laptop every Sunday", "expect": {"absent_warnings": ["underspecified_recurrence"]}}
+{"id": "p4be-underspecified_recurrence-10", "category": "underspecified_recurrence", "kind": "reminder", "text": "remind me to take vitamins every morning", "expect": {"absent_warnings": ["underspecified_recurrence"]}}
+{"id": "p4be-underspecified_recurrence-11", "category": "underspecified_recurrence", "kind": "calendar", "text": "team sync every other Tuesday at 10am", "expect": {"absent_warnings": ["underspecified_recurrence"]}}
+{"id": "p4be-underspecified_recurrence-12", "category": "underspecified_recurrence", "kind": "task", "text": "pay rent on the 1st of every month", "expect": {"absent_warnings": ["underspecified_recurrence"]}}

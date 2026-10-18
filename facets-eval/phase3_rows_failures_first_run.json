@@ -1,0 +1,273 @@
+[
+ {
+  "id": "p3-exdates-04",
+  "text": "remind me to water the plants every Tuesday at 6:30pm, not on the 24th",
+  "now": null,
+  "problems": [
+   [
+    "recurrence.exdates",
+    [],
+    [
+     "2026-11-24T18:30",
+     "2027-08-24T18:30"
+    ]
+   ]
+  ]
+ },
+ {
+  "id": "p3-exdates-05",
+  "text": "remind me to run every mon/wed/fri at 7am, skip the week of the 10th",
+  "now": null,
+  "problems": [
+   [
+    "recurrence.exdates",
+    [],
+    [
+     "2026-11-09T07:00",
+     "2026-11-11T07:00",
+     "2026-11-13T07:00"
+    ]
+   ]
+  ]
+ },
+ {
+  "id": "p3-exdates-06",
+  "text": "long run every weekend at 8am, skip the week of the 10th",
+  "now": null,
+  "problems": [
+   [
+    "recurrence.exdates",
+    [],
+    [
+     "2026-11-08T08:00",
+     "2026-11-14T08:00"
+    ]
+   ]
+  ]
+ },
+ {
+  "id": "p3-exdates-07",
+  "text": "long run every weekend at 8am, skip the week of the 10th",
+  "now": null,
+  "problems": [
+   [
+    "recurrence.exdates",
+    [],
+    [
+     "2026-11-14T08:00",
+     "2026-11-15T08:00"
+    ]
+   ]
+  ]
+ },
+ {
+  "id": "p3-exdates-18",
+  "text": "swim class every Tuesday and Thursday at 8am, skip the week of the 28th",
+  "now": null,
+  "problems": [
+   [
+    "recurrence.exdates",
+    [],
+    [
+     "2026-10-27T08:00",
+     "2026-10-29T08:00"
+    ]
+   ]
+  ]
+ },
+ {
+  "id": "p3-exdates-19",
+  "text": "remind me to feed the fish every day at 7pm until Jan 3 except Christmas Eve and New Year's Eve",
+  "now": null,
+  "problems": [
+   [
+    "recurrence.until",
+    null,
+    "2027-01-03"
+   ]
+  ]
+ },
+ {
+  "id": "p3-counts-14",
+  "text": "remind me to take antibiotics every day at 8pm for 3 days",
+  "now": null,
+  "problems": [
+   [
+    "start",
+    "2026-10-21T20:00",
+    "2026-10-18T20:00"
+   ]
+  ]
+ },
+ {
+  "id": "p3-counts-19",
+  "text": "yoga every Thursday at 6pm until Dec 17",
+  "now": null,
+  "problems": [
+   [
+    "recurrence.until",
+    null,
+    "2026-12-17"
+   ]
+  ]
+ },
+ {
+  "id": "p3-missing_repeats-10",
+  "text": "book club last Friday of the month at 7pm",
+  "now": null,
+  "problems": [
+   [
+    "start",
+    "2026-10-16T19:00",
+    "2026-10-30T19:00"
+   ],
+   [
+    "recurrence.frequency",
+    null,
+    "monthly"
+   ],
+   [
+    "recurrence.weekdays",
+    [],
+    [
+     "-1FR"
+    ]
+   ]
+  ]
+ },
+ {
+  "id": "p3-weekdays-12",
+  "text": "drive to the airport Friday night at 2",
+  "now": null,
+  "problems": [
+   [
+    "start",
+    "2026-10-23T14:00",
+    "2026-10-24T02:00"
+   ]
+  ]
+ },
+ {
+  "id": "p3-timezones-08",
+  "text": "sync with Lisbon partners 8pm CET on Friday",
+  "now": null,
+  "problems": [
+   [
+    "start",
+    "2026-10-23T11:00",
+    "2026-10-23T12:00"
+   ]
+  ]
+ },
+ {
+  "id": "p3-lead_times-06",
+  "text": "remind me 15 minutes early for the 9am call Tuesday",
+  "now": null,
+  "problems": [
+   [
+    "start",
+    "2026-10-20T09:00",
+    "2026-10-20T08:45"
+   ],
+   [
+    "lead_minutes",
+    null,
+    15
+   ]
+  ]
+ },
+ {
+  "id": "p3-lead_times-16",
+  "text": "remind me a day early about the vet appointment Thursday at 10am",
+  "now": null,
+  "problems": [
+   [
+    "start",
+    "2026-10-22T10:00",
+    "2026-10-21T10:00"
+   ],
+   [
+    "lead_minutes",
+    null,
+    1440
+   ]
+  ]
+ },
+ {
+  "id": "p3-warnings-08",
+  "text": "bi-weekly 1:1 with Dana on Thursdays at 11am",
+  "now": null,
+  "problems": [
+   [
+    "recurrence.interval",
+    1,
+    2
+   ],
+   [
+    "warnings",
+    [
+     "end_assumed"
+    ],
+    [
+     "ambiguous_biweekly"
+    ]
+   ]
+  ]
+ },
+ {
+  "id": "p3-warnings-16",
+  "text": "book the summer trip sometime in March",
+  "now": null,
+  "problems": [
+   [
+    "start",
+    "2027-06-01T17:00",
+    "2027-03-01T17:00"
+   ],
+   [
+    "warnings",
+    [
+     "time_assumed"
+    ],
+    [
+     "day_assumed"
+    ]
+   ]
+  ]
+ },
+ {
+  "id": "p3-slang-16",
+  "text": "remind me to take vitamins mon thru fri at 8am",
+  "now": null,
+  "problems": [
+   [
+    "recurrence.frequency",
+    null,
+    "weekly"
+   ],
+   [
+    "recurrence.weekdays",
+    [],
+    [
+     "MO",
+     "TU",
+     "WE",
+     "TH",
+     "FR"
+    ]
+   ]
+  ]
+ },
+ {
+  "id": "p3-holidays-02",
+  "text": "remind me to buy a turkey the day before Thanksgiving",
+  "now": null,
+  "problems": [
+   [
+    "start",
+    "2026-11-24T09:00",
+    "2026-11-25T09:00"
+   ]
+  ]
+ }
+]

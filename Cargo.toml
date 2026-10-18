@@ -1,0 +1,45 @@
+[package]
+name = "chrono-english-rs"
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+description = "English natural-language date parser, a Rust port of chrono-node v2.10.1"
+publish = false
+
+[features]
+default = ["tz", "facets"]
+tz = ["dep:chrono-tz"]
+facets = ["tz", "dep:serde", "chrono/serde"]
+
+[dependencies]
+chrono = { version = "0.4", default-features = false, features = ["std", "clock"] }
+chrono-tz = { version = "0.10", optional = true }
+fancy-regex = "0.14"
+regex = "1"
+serde = { version = "1", features = ["derive"], optional = true }
+
+[dev-dependencies]
+serde_json = "1"
+
+[lints.rust]
+unsafe_code = "forbid"
+
+[[example]]
+name = "diff_runner"
+required-features = ["tz"]
+
+[[example]]
+name = "facets_eval"
+required-features = ["facets"]
+
+[[example]]
+name = "facets_debug"
+required-features = ["facets"]
+
+[[example]]
+name = "rows_eval"
+required-features = ["facets"]
+
+[[example]]
+name = "holiday_probe"
+required-features = ["facets"]

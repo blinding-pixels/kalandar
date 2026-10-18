@@ -1,0 +1,117 @@
+[
+ {
+  "id": "p4bf-holidays-02",
+  "text": "buy christmas lights for the front yard",
+  "now": null,
+  "problems": [
+   [
+    "start",
+    "2026-12-25T17:00",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "p4bf-holidays-03",
+  "text": "order halloween costume for maya",
+  "now": null,
+  "problems": [
+   [
+    "start",
+    "2026-10-31T17:00",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "p4bf-holidays-08",
+  "text": "write up christmas card list",
+  "now": null,
+  "problems": [
+   [
+    "start",
+    "2026-12-25T17:00",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "p4bf-holidays-09",
+  "text": "halloween bash at the kims",
+  "now": null,
+  "problems": [
+   [
+    "warnings",
+    [
+     "all_day_assumed",
+     "no_time"
+    ],
+    [
+     "possible_holiday_title"
+    ]
+   ]
+  ]
+ },
+ {
+  "id": "p4bf-holidays-10",
+  "text": "new years eve shindig at dave's",
+  "now": null,
+  "problems": [
+   [
+    "warnings",
+    [
+     "all_day_assumed",
+     "no_time"
+    ],
+    [
+     "possible_holiday_title"
+    ]
+   ]
+  ]
+ },
+ {
+  "id": "p4bf-holidays-12",
+  "text": "labor day cookout at the lake",
+  "now": null,
+  "problems": [
+   [
+    "warnings",
+    [
+     "all_day_assumed",
+     "no_time"
+    ],
+    [
+     "possible_holiday_title"
+    ]
+   ]
+  ]
+ },
+ {
+  "id": "p4bf-holidays-15",
+  "text": "get the christmas tree up by dec 20",
+  "now": null,
+  "problems": [
+   [
+    "start",
+    "2026-12-25T17:00",
+    "2026-12-20T17:00"
+   ]
+  ]
+ },
+ {
+  "id": "p4bf-unresolved_reference-02",
+  "text": "remind me to return the drill once dan's back from vacation",
+  "now": null,
+  "problems": [
+   [
+    "warnings",
+    [
+     "missing_trigger"
+    ],
+    [
+     "unresolved_reference"
+    ]
+   ]
+  ]
+ }
+]

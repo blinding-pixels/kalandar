@@ -1,0 +1,19 @@
+[
+ {
+  "id": "p4be-holidays-23",
+  "text": "Thanksgiving potluck",
+  "now": null,
+  "problems": [
+   [
+    "warnings",
+    [
+     "all_day_assumed",
+     "no_time"
+    ],
+    [
+     "possible_holiday_title"
+    ]
+   ]
+  ]
+ }
+]

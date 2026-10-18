@@ -1,0 +1,74 @@
+[
+ {
+  "id": "p3b-exdates-04",
+  "text": "yoga every thursday 6pm, skip the wk of the 10th",
+  "now": null,
+  "problems": [
+   [
+    "recurrence.exdates",
+    [],
+    [
+     "2026-11-12T18:00"
+    ]
+   ]
+  ]
+ },
+ {
+  "id": "p3b-counts-01",
+  "text": "remind me to take meds every tues & thurs for 3 wks",
+  "now": null,
+  "problems": [
+   [
+    "recurrence.count",
+    null,
+    6
+   ]
+  ]
+ },
+ {
+  "id": "p3b-missing_repeats-04",
+  "text": "stretch every 45 minutes 9am-5pm",
+  "now": "2026-10-19T01:30:00Z",
+  "problems": [
+   [
+    "start",
+    "2026-10-18T18:45",
+    "2026-10-19T09:00"
+   ],
+   [
+    "recurrence.window",
+    null,
+    [
+     "09:00",
+     "17:00"
+    ]
+   ],
+   [
+    "recurrence.hours",
+    [],
+    [
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16
+    ]
+   ]
+  ]
+ },
+ {
+  "id": "p3b-timezones-10",
+  "text": "remind me 3pm PT nov 5 to call the LA office",
+  "now": null,
+  "problems": [
+   [
+    "start",
+    "2026-11-05T17:00",
+    "2026-11-05T18:00"
+   ]
+  ]
+ }
+]

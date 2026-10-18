@@ -1,0 +1,64 @@
+[
+ {
+  "id": "p4d-events-08",
+  "text": "nana in town nov 3-5",
+  "now": null,
+  "problems": [
+   [
+    "start",
+    "2026-11-03T15:00",
+    "2026-11-03"
+   ],
+   [
+    "end",
+    "2026-11-05T05:00",
+    "2026-11-05"
+   ]
+  ]
+ },
+ {
+  "id": "p4d-warnings-01",
+  "text": "grab the kids at 3:30 then haircut thursday",
+  "now": null,
+  "problems": [
+   [
+    "start",
+    "2026-10-22T15:30",
+    "2026-10-18T15:30"
+   ],
+   [
+    "warnings",
+    [
+     "ambiguous_meridiem"
+    ],
+    [
+     "multiple_items"
+    ]
+   ]
+  ]
+ },
+ {
+  "id": "p4d-warnings-10",
+  "text": "swim lessons every saturday 10am except school holidays",
+  "now": null,
+  "problems": [
+   [
+    "recurrence.exdates",
+    [
+     "2026-10-31T10:00",
+     "2026-12-26T10:00"
+    ],
+    []
+   ],
+   [
+    "warnings",
+    [
+     "end_assumed"
+    ],
+    [
+     "unresolved_exception"
+    ]
+   ]
+  ]
+ }
+]

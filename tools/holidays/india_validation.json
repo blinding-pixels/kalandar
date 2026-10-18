@@ -1,0 +1,83 @@
+{
+ "diwali": {
+  "agree": 24,
+  "total": 24,
+  "differ": []
+ },
+ "holi": {
+  "agree": 23,
+  "total": 24,
+  "differ": [
+   "2004: official 2004-03-06, computed 2004-03-07"
+  ]
+ },
+ "dussehra": {
+  "agree": 24,
+  "total": 24,
+  "differ": []
+ },
+ "janmashtami": {
+  "agree": 23,
+  "total": 24,
+  "differ": [
+   "2002: official 2002-08-30, computed 2002-08-31"
+  ]
+ },
+ "ganesh_chaturthi": {
+  "agree": 24,
+  "total": 24,
+  "differ": []
+ },
+ "maha_shivaratri": {
+  "agree": 24,
+  "total": 24,
+  "differ": []
+ },
+ "raksha_bandhan": {
+  "agree": 24,
+  "total": 24,
+  "differ": []
+ },
+ "ram_navami": {
+  "agree": 23,
+  "total": 24,
+  "differ": [
+   "2008: official 2008-04-14, computed 2008-04-13"
+  ]
+ },
+ "navratri": {
+  "agree": 0,
+  "total": 0,
+  "differ": []
+ },
+ "chaitra_navratri": {
+  "agree": 1,
+  "total": 1,
+  "differ": []
+ },
+ "karva_chauth": {
+  "agree": 16,
+  "total": 16,
+  "differ": []
+ },
+ "makar_sankranti": {
+  "agree": 22,
+  "total": 24,
+  "differ": [
+   "2004: official 2004-01-15, computed 2004-01-14",
+   "2020: official 2020-01-15, computed 2020-01-14"
+  ]
+ },
+ "pongal": {
+  "agree": 23,
+  "total": 24,
+  "differ": [
+   "2004: official 2004-01-16, computed 2004-01-15"
+  ]
+ },
+ "onam": {
+  "agree": 24,
+  "total": 24,
+  "differ": []
+ }
+}

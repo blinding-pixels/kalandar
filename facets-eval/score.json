@@ -1,0 +1,3084 @@
+{
+ "summary": {
+  "gold_spans": {
+   "calendar": {
+    "lines": 150,
+    "exact": 143,
+    "start_ok": 143,
+    "rec_lines": 29,
+    "rec_ok": 29,
+    "ambiguous": 59
+   },
+   "reminder": {
+    "lines": 157,
+    "exact": 146,
+    "start_ok": 149,
+    "rec_lines": 37,
+    "rec_ok": 34,
+    "ambiguous": 28
+   },
+   "task": {
+    "lines": 137,
+    "exact": 129,
+    "start_ok": 129,
+    "rec_lines": 27,
+    "rec_ok": 26,
+    "ambiguous": 12
+   }
+  },
+  "model_spans": {
+   "calendar": {
+    "lines": 150,
+    "exact": 136,
+    "start_ok": 139,
+    "rec_lines": 29,
+    "rec_ok": 26,
+    "ambiguous": 59
+   },
+   "reminder": {
+    "lines": 157,
+    "exact": 140,
+    "start_ok": 144,
+    "rec_lines": 37,
+    "rec_ok": 29,
+    "ambiguous": 28
+   },
+   "task": {
+    "lines": 137,
+    "exact": 112,
+    "start_ok": 114,
+    "rec_lines": 27,
+    "rec_ok": 18,
+    "ambiguous": 12
+   }
+  },
+  "model_capture": {
+   "calendar": {
+    "lines": 150,
+    "exact": 139,
+    "start_ok": 141,
+    "rec_lines": 29,
+    "rec_ok": 28,
+    "ambiguous": 59
+   },
+   "reminder": {
+    "lines": 157,
+    "exact": 146,
+    "start_ok": 149,
+    "rec_lines": 37,
+    "rec_ok": 34,
+    "ambiguous": 28
+   },
+   "task": {
+    "lines": 137,
+    "exact": 124,
+    "start_ok": 124,
+    "rec_lines": 27,
+    "rec_ok": 24,
+    "ambiguous": 12
+   }
+  },
+  "no_spans": {
+   "calendar": {
+    "lines": 150,
+    "exact": 139,
+    "start_ok": 140,
+    "rec_lines": 29,
+    "rec_ok": 28,
+    "ambiguous": 59
+   },
+   "reminder": {
+    "lines": 157,
+    "exact": 143,
+    "start_ok": 146,
+    "rec_lines": 37,
+    "rec_ok": 34,
+    "ambiguous": 28
+   },
+   "task": {
+    "lines": 137,
+    "exact": 127,
+    "start_ok": 127,
+    "rec_lines": 27,
+    "rec_ok": 26,
+    "ambiguous": 12
+   }
+  }
+ },
+ "failures": {
+  "gold_spans": [
+   {
+    "id": "calendar-122",
+    "text": "interview Fri 10:00 AM PST",
+    "problems": [
+     [
+      "start",
+      "2026-10-23T11:00",
+      "2026-10-23T10:00"
+     ],
+     [
+      "end",
+      "2026-10-23T12:00",
+      "2026-10-23T11:00"
+     ]
+    ],
+    "notes": "PST read loosely as Pacific time (PDT in October), so 10:00 local",
+    "ambiguous": false,
+    "warnings": [
+     "converted_timezone",
+     "end_assumed"
+    ]
+   },
+   {
+    "id": "calendar-125",
+    "text": "reunión con Ana mañana a las 3",
+    "problems": [
+     [
+      "start",
+      null,
+      "2026-10-19T15:00"
+     ],
+     [
+      "end",
+      null,
+      "2026-10-19T16:00"
+     ]
+    ],
+    "notes": "Spanish: mañana = tomorrow, a las 3 -> bare 3 pm; not covered by conventions",
+    "ambiguous": true,
+    "warnings": [
+     "unparsed",
+     "missing_date"
+    ]
+   },
+   {
+    "id": "calendar-126",
+    "text": "rendez-vous avec Paul demain à 14h",
+    "problems": [
+     [
+      "start",
+      "2026-10-18T14:00",
+      "2026-10-19T14:00"
+     ],
+     [
+      "end",
+      "2026-10-18T15:00",
+      "2026-10-19T15:00"
+     ]
+    ],
+    "notes": "French: demain = tomorrow, 14h; not covered by conventions",
+    "ambiguous": false,
+    "warnings": [
+     "end_assumed"
+    ]
+   },
+   {
+    "id": "calendar-127",
+    "text": "Abendessen mit Lena Freitag um 19 Uhr",
+    "problems": [
+     [
+      "start",
+      null,
+      "2026-10-23T19:00"
+     ],
+     [
+      "end",
+      null,
+      "2026-10-23T20:00"
+     ]
+    ],
+    "notes": "German: Freitag = Friday, 19 Uhr; not covered by conventions",
+    "ambiguous": false,
+    "warnings": [
+     "unparsed",
+     "missing_date"
+    ]
+   },
+   {
+    "id": "calendar-128",
+    "text": "cena con amigos el sábado a las 9",
+    "problems": [
+     [
+      "start",
+      null,
+      "2026-10-24T21:00"
+     ],
+     [
+      "end",
+      null,
+      "2026-10-24T22:00"
+     ]
+    ],
+    "notes": "Spanish: cena = dinner so 9 is pm, sábado = Saturday; not covered by conventions",
+    "ambiguous": false,
+    "warnings": [
+     "unparsed",
+     "missing_date"
+    ]
+   },
+   {
+    "id": "calendar-129",
+    "text": "réunion d'équipe lundi à 10h",
+    "problems": [
+     [
+      "start",
+      "2026-10-18T10:00",
+      "2026-10-19T10:00"
+     ],
+     [
+      "end",
+      "2026-10-18T11:00",
+      "2026-10-19T11:00"
+     ]
+    ],
+    "notes": "French: lundi = Monday, 10h; not covered by conventions",
+    "ambiguous": false,
+    "warnings": [
+     "end_assumed"
+    ]
+   },
+   {
+    "id": "calendar-130",
+    "text": "pranzo con Marco domani alle 13",
+    "problems": [
+     [
+      "start",
+      null,
+      "2026-10-19T13:00"
+     ],
+     [
+      "end",
+      null,
+      "2026-10-19T14:00"
+     ]
+    ],
+    "notes": "Italian: domani = tomorrow, alle 13; not covered by conventions",
+    "ambiguous": false,
+    "warnings": [
+     "unparsed",
+     "missing_date"
+    ]
+   },
+   {
+    "id": "reminder-025",
+    "text": "feed the cat at 7am and 7pm",
+    "problems": [
+     [
+      "start",
+      "2026-10-19T07:00",
+      "2026-10-18T19:00"
+     ]
+    ],
+    "notes": "Two times. 7am today has passed (it would roll to tomorrow), so the earliest fire is 19:00 today. It may imply a daily routine, but no recurrence is stated.",
+    "ambiguous": false,
+    "warnings": [
+     "rolled_to_tomorrow"
+    ]
+   },
+   {
+    "id": "reminder-068",
+    "text": "remind me to stand up every 30 minutes",
+    "problems": [
+     [
+      "recurrence",
+      {
+       "frequency": "minutely",
+       "interval": 30,
+       "weekdays": [],
+       "month_days": [],
+       "months": [],
+       "count": null,
+       "start_date": null,
+       "end_date": null
+      },
+      null
+     ]
+    ],
+    "notes": "Every 30 minutes cannot be expressed: the schema has no minutely frequency, so recurrence is null. The first fire is in 30 minutes.",
+    "ambiguous": false,
+    "warnings": []
+   },
+   {
+    "id": "reminder-083",
+    "text": "remind me to take iron tablets daily for 3 weeks",
+    "problems": [
+     [
+      "recurrence.count",
+      21,
+      null
+     ]
+    ],
+    "notes": "The first occurrence is tomorrow (09:00 today has passed). end = first occurrence + 21 days.",
+    "ambiguous": false,
+    "warnings": [
+     "no_time"
+    ]
+   },
+   {
+    "id": "reminder-087",
+    "text": "remind me to do physio exercises every day for 6 weeks starting tomorrow",
+    "problems": [
+     [
+      "recurrence.count",
+      42,
+      null
+     ]
+    ],
+    "notes": "end = 2026-10-19 + 42 days.",
+    "ambiguous": false,
+    "warnings": [
+     "no_time"
+    ]
+   },
+   {
+    "id": "reminder-093",
+    "text": "remind me to book the SAT this week",
+    "problems": [
+     [
+      "start",
+      "2026-10-18",
+      "2026-10-19"
+     ]
+    ],
+    "notes": "'this week' is not covered. Today is the last day of the current week, so it is read as the coming week (Monday 10-19). It could also mean today.",
+    "ambiguous": true,
+    "warnings": [
+     "no_time"
+    ]
+   },
+   {
+    "id": "reminder-127",
+    "text": "remind me to turn off the sprinkler in 10",
+    "problems": [
+     [
+      "start",
+      null,
+      "2026-10-18T10:10"
+     ]
+    ],
+    "notes": "'in 10' has no unit. It is read as 10 minutes.",
+    "ambiguous": true,
+    "warnings": [
+     "unparsed",
+     "missing_trigger"
+    ]
+   },
+   {
+    "id": "reminder-129",
+    "text": "recuérdame llamar a mamá a las 5",
+    "problems": [
+     [
+      "start",
+      null,
+      "2026-10-18T17:00"
+     ]
+    ],
+    "notes": "Spanish, not covered by the conventions: 'a las 5' becomes 17:00 by the bare-hour rule.",
+    "ambiguous": true,
+    "warnings": [
+     "unparsed",
+     "missing_trigger"
+    ]
+   },
+   {
+    "id": "reminder-130",
+    "text": "rappelle-moi de payer le loyer le 1er",
+    "problems": [
+     [
+      "start",
+      null,
+      "2026-11-01T09:00"
+     ]
+    ],
+    "notes": "French, not covered: 'le 1er' = the 1st.",
+    "ambiguous": false,
+    "warnings": [
+     "unparsed",
+     "missing_trigger"
+    ]
+   },
+   {
+    "id": "reminder-131",
+    "text": "erinnere mich morgen die Pflanzen zu gießen",
+    "problems": [
+     [
+      "start",
+      null,
+      "2026-10-19T09:00"
+     ]
+    ],
+    "notes": "German, not covered: 'morgen' = tomorrow.",
+    "ambiguous": false,
+    "warnings": [
+     "unparsed",
+     "missing_trigger"
+    ]
+   },
+   {
+    "id": "reminder-132",
+    "text": "recuérdame sacar la basura cada martes",
+    "problems": [
+     [
+      "start",
+      null,
+      "2026-10-20T09:00"
+     ],
+     [
+      "recurrence",
+      null,
+      {
+       "frequency": "weekly",
+       "interval": 1,
+       "weekdays": [
+        "TU"
+       ],
+       "month_days": [],
+       "months": [],
+       "count": null,
+       "start_date": null,
+       "end_date": null
+      }
+     ]
+    ],
+    "notes": "Spanish, not covered: 'cada martes' = every Tuesday.",
+    "ambiguous": false,
+    "warnings": [
+     "missing_trigger"
+    ]
+   },
+   {
+    "id": "reminder-133",
+    "text": "ricordami di chiamare Luca domani alle 10",
+    "problems": [
+     [
+      "start",
+      null,
+      "2026-10-19T10:00"
+     ]
+    ],
+    "notes": "Italian, not covered: 'domani alle 10' = tomorrow at 10. Bare 10 becomes am.",
+    "ambiguous": true,
+    "warnings": [
+     "unparsed",
+     "missing_trigger"
+    ]
+   },
+   {
+    "id": "task-110",
+    "text": "submit payroll every second Friday",
+    "problems": [
+     [
+      "start",
+      "2026-10-23",
+      "2026-11-13"
+     ],
+     [
+      "recurrence.frequency",
+      "weekly",
+      "monthly"
+     ],
+     [
+      "recurrence.interval",
+      2,
+      1
+     ],
+     [
+      "recurrence.weekdays",
+      [
+       "FR"
+      ],
+      [
+       "2FR"
+      ]
+     ]
+    ],
+    "notes": "Read as the 2nd Friday of each month, by analogy with 'every first Monday'. It could also mean every other Friday (weekly, interval 2, first 10-23).",
+    "ambiguous": true,
+    "warnings": []
+   },
+   {
+    "id": "task-141",
+    "text": "need to finish the quarterly review by Q4",
+    "problems": [
+     [
+      "start",
+      null,
+      "2026-12-31T17:00"
+     ]
+    ],
+    "notes": "'by Q4' isn't covered by the conventions. We're already in Q4, so read as the end of this Q4; it could also mean the start of a future Q4.",
+    "ambiguous": true,
+    "warnings": [
+     "unparsed"
+    ]
+   },
+   {
+    "id": "task-145",
+    "text": "print 10 copies for the 9am meeting",
+    "problems": [
+     [
+      "start",
+      null,
+      "2026-10-19T09:00"
+     ]
+    ],
+    "notes": "Not tagged as a due date; taken as due by the 9am meeting. 09:00 today has passed, so it's tomorrow.",
+    "ambiguous": false,
+    "warnings": []
+   },
+   {
+    "id": "task-146",
+    "text": "comprar leche mañana",
+    "problems": [
+     [
+      "start",
+      null,
+      "2026-10-19T17:00"
+     ]
+    ],
+    "notes": "Spanish 'mañana' = tomorrow (non-English, not in the conventions).",
+    "ambiguous": false,
+    "warnings": [
+     "unparsed"
+    ]
+   },
+   {
+    "id": "task-147",
+    "text": "appeler le dentiste lundi",
+    "problems": [
+     [
+      "start",
+      null,
+      "2026-10-19T17:00"
+     ]
+    ],
+    "notes": "French 'lundi' = Monday (non-English).",
+    "ambiguous": false,
+    "warnings": [
+     "unparsed"
+    ]
+   },
+   {
+    "id": "task-148",
+    "text": "Rechnung bezahlen bis Freitag",
+    "problems": [
+     [
+      "start",
+      null,
+      "2026-10-23T17:00"
+     ]
+    ],
+    "notes": "German 'bis Freitag' = by Friday (non-English).",
+    "ambiguous": false,
+    "warnings": [
+     "unparsed"
+    ]
+   },
+   {
+    "id": "task-149",
+    "text": "pagar el alquiler el día 1",
+    "problems": [
+     [
+      "start",
+      null,
+      "2026-11-01T17:00"
+     ]
+    ],
+    "notes": "Spanish 'el día 1' = the 1st (non-English).",
+    "ambiguous": false,
+    "warnings": [
+     "unparsed"
+    ]
+   },
+   {
+    "id": "task-151",
+    "text": "llamar a mamá el sábado a las 5",
+    "problems": [
+     [
+      "start",
+      null,
+      "2026-10-24T17:00"
+     ]
+    ],
+    "notes": "Spanish 'el sábado a las 5' = Saturday at 5; bare 5 is pm by rule 3 (non-English).",
+    "ambiguous": true,
+    "warnings": [
+     "unparsed"
+    ]
+   }
+  ],
+  "model_spans": [
+   {
+    "id": "calendar-065",
+    "text": "dinner at Sunday's Saturday at 8",
+    "problems": [
+     [
+      "start",
+      "2026-10-18T20:00",
+      "2026-10-24T20:00"
+     ],
+     [
+      "end",
+      "2026-10-18T21:00",
+      "2026-10-24T21:00"
+     ]
+    ],
+    "notes": "dinner makes bare 8 pm; 'Sunday's' is a venue name",
+    "ambiguous": false,
+    "warnings": [
+     "end_assumed"
+    ]
+   },
+   {
+    "id": "calendar-102",
+    "text": "date night every other Saturday at 7 from January",
+    "problems": [
+     [
+      "start",
+      "2026-10-24T19:00",
+      "2027-01-02T19:00"
+     ],
+     [
+      "end",
+      "2026-10-24T20:00",
+      "2027-01-02T20:00"
+     ],
+     [
+      "recurrence.start_date",
+      null,
+      "2027-01-01"
+     ],
+     [
+      "recurrence.end_date",
+      "2026-12-31",
+      null
+     ]
+    ],
+    "notes": "'night' makes bare 7 pm; from January -> 2027-01-01, first Saturday Jan 2",
+    "ambiguous": false,
+    "warnings": [
+     "end_assumed"
+    ]
+   },
+   {
+    "id": "calendar-103",
+    "text": "volunteer shift every second and fourth Sunday 9am to noon",
+    "problems": [
+     [
+      "recurrence.end_date",
+      "2026-10-18",
+      null
+     ]
+    ],
+    "notes": "today is the 3rd Sunday; next is 4th Sunday Oct 25",
+    "ambiguous": false,
+    "warnings": []
+   },
+   {
+    "id": "calendar-105",
+    "text": "pay day drinks last Friday of every month at 5",
+    "problems": [
+     [
+      "start",
+      "2026-10-23T17:00",
+      "2026-10-30T17:00"
+     ],
+     [
+      "end",
+      "2026-10-23T18:00",
+      "2026-10-30T18:00"
+     ],
+     [
+      "recurrence.frequency",
+      "weekly",
+      "monthly"
+     ],
+     [
+      "recurrence.weekdays",
+      [
+       "FR"
+      ],
+      [
+       "-1FR"
+      ]
+     ]
+    ],
+    "notes": "'drinks' makes bare 5 pm",
+    "ambiguous": false,
+    "warnings": [
+     "end_assumed"
+    ]
+   },
+   {
+    "id": "calendar-114",
+    "text": "dentist Monday at 9, haircut Tuesday at 5",
+    "problems": [
+     [
+      "end",
+      "2026-10-20T05:00",
+      "2026-10-19T10:00"
+     ]
+    ],
+    "notes": "two events; labelled the first (bare 9 -> am); second is haircut Tue Oct 20 17:00",
+    "ambiguous": true,
+    "warnings": [
+     "ambiguous_meridiem",
+     "ambiguous_meridiem",
+     "multiple_items"
+    ]
+   },
+   {
+    "id": "calendar-116",
+    "text": "flight out Friday 6am, return Sunday 9pm",
+    "problems": [
+     [
+      "end",
+      "2026-10-23T21:00",
+      "2026-10-23T07:00"
+     ]
+    ],
+    "notes": "two events; labelled the first (flight out); return is Sun Oct 25 21:00",
+    "ambiguous": false,
+    "warnings": [
+     "multiple_items"
+    ]
+   },
+   {
+    "id": "calendar-120",
+    "text": "sync @ 4",
+    "problems": [
+     [
+      "start",
+      null,
+      "2026-10-18T16:00"
+     ],
+     [
+      "end",
+      null,
+      "2026-10-18T17:00"
+     ]
+    ],
+    "notes": "@ = at; bare 4 -> pm, today",
+    "ambiguous": true,
+    "warnings": [
+     "unparsed"
+    ]
+   },
+   {
+    "id": "calendar-122",
+    "text": "interview Fri 10:00 AM PST",
+    "problems": [
+     [
+      "start",
+      "2026-10-23T11:00",
+      "2026-10-23T10:00"
+     ],
+     [
+      "end",
+      "2026-10-23T12:00",
+      "2026-10-23T11:00"
+     ]
+    ],
+    "notes": "PST read loosely as Pacific time (PDT in October), so 10:00 local",
+    "ambiguous": false,
+    "warnings": [
+     "converted_timezone",
+     "end_assumed"
+    ]
+   },
+   {
+    "id": "calendar-125",
+    "text": "reunión con Ana mañana a las 3",
+    "problems": [
+     [
+      "start",
+      null,
+      "2026-10-19T15:00"
+     ],
+     [
+      "end",
+      null,
+      "2026-10-19T16:00"
+     ]
+    ],
+    "notes": "Spanish: mañana = tomorrow, a las 3 -> bare 3 pm; not covered by conventions",
+    "ambiguous": true,
+    "warnings": [
+     "unparsed",
+     "missing_date"
+    ]
+   },
+   {
+    "id": "calendar-126",
+    "text": "rendez-vous avec Paul demain à 14h",
+    "problems": [
+     [
+      "start",
+      "2026-10-18T14:00",
+      "2026-10-19T14:00"
+     ],
+     [
+      "end",
+      "2026-10-18T15:00",
+      "2026-10-19T15:00"
+     ]
+    ],
+    "notes": "French: demain = tomorrow, 14h; not covered by conventions",
+    "ambiguous": false,
+    "warnings": [
+     "end_assumed"
+    ]
+   },
+   {
+    "id": "calendar-127",
+    "text": "Abendessen mit Lena Freitag um 19 Uhr",
+    "problems": [
+     [
+      "start",
+      null,
+      "2026-10-23T19:00"
+     ],
+     [
+      "end",
+      null,
+      "2026-10-23T20:00"
+     ]
+    ],
+    "notes": "German: Freitag = Friday, 19 Uhr; not covered by conventions",
+    "ambiguous": false,
+    "warnings": [
+     "missing_date"
+    ]
+   },
+   {
+    "id": "calendar-128",
+    "text": "cena con amigos el sábado a las 9",
+    "problems": [
+     [
+      "start",
+      null,
+      "2026-10-24T21:00"
+     ],
+     [
+      "end",
+      null,
+      "2026-10-24T22:00"
+     ]
+    ],
+    "notes": "Spanish: cena = dinner so 9 is pm, sábado = Saturday; not covered by conventions",
+    "ambiguous": false,
+    "warnings": [
+     "unparsed",
+     "missing_date"
+    ]
+   },
+   {
+    "id": "calendar-129",
+    "text": "réunion d'équipe lundi à 10h",
+    "problems": [
+     [
+      "start",
+      "2026-10-18T10:00",
+      "2026-10-19T10:00"
+     ],
+     [
+      "end",
+      "2026-10-18T11:00",
+      "2026-10-19T11:00"
+     ]
+    ],
+    "notes": "French: lundi = Monday, 10h; not covered by conventions",
+    "ambiguous": false,
+    "warnings": [
+     "end_assumed"
+    ]
+   },
+   {
+    "id": "calendar-130",
+    "text": "pranzo con Marco domani alle 13",
+    "problems": [
+     [
+      "start",
+      null,
+      "2026-10-19T13:00"
+     ],
+     [
+      "end",
+      null,
+      "2026-10-19T14:00"
+     ]
+    ],
+    "notes": "Italian: domani = tomorrow, alle 13; not covered by conventions",
+    "ambiguous": false,
+    "warnings": [
+     "missing_date"
+    ]
+   },
+   {
+    "id": "reminder-025",
+    "text": "feed the cat at 7am and 7pm",
+    "problems": [
+     [
+      "start",
+      "2026-10-19T07:00",
+      "2026-10-18T19:00"
+     ]
+    ],
+    "notes": "Two times. 7am today has passed (it would roll to tomorrow), so the earliest fire is 19:00 today. It may imply a daily routine, but no recurrence is stated.",
+    "ambiguous": false,
+    "warnings": [
+     "rolled_to_tomorrow"
+    ]
+   },
+   {
+    "id": "reminder-068",
+    "text": "remind me to stand up every 30 minutes",
+    "problems": [
+     [
+      "recurrence",
+      {
+       "frequency": "minutely",
+       "interval": 30,
+       "weekdays": [],
+       "month_days": [],
+       "months": [],
+       "count": null,
+       "start_date": null,
+       "end_date": null
+      },
+      null
+     ]
+    ],
+    "notes": "Every 30 minutes cannot be expressed: the schema has no minutely frequency, so recurrence is null. The first fire is in 30 minutes.",
+    "ambiguous": false,
+    "warnings": []
+   },
+   {
+    "id": "reminder-070",
+    "text": "remind me to pay the credit card on the last day of every month",
+    "problems": [
+     [
+      "start",
+      "2026-11-17",
+      "2026-10-31"
+     ],
+     [
+      "recurrence.month_days",
+      [],
+      [
+       -1
+      ]
+     ]
+    ],
+    "notes": "",
+    "ambiguous": false,
+    "warnings": [
+     "no_time"
+    ]
+   },
+   {
+    "id": "reminder-079",
+    "text": "remind me to water the lawn every Tue, Thu and Sat at 6am",
+    "problems": [
+     [
+      "recurrence.weekdays",
+      [
+       "TH",
+       "TU"
+      ],
+      [
+       "SA",
+       "TH",
+       "TU"
+      ]
+     ]
+    ],
+    "notes": "",
+    "ambiguous": false,
+    "warnings": []
+   },
+   {
+    "id": "reminder-083",
+    "text": "remind me to take iron tablets daily for 3 weeks",
+    "problems": [
+     [
+      "start",
+      "2026-11-08",
+      "2026-10-19"
+     ],
+     [
+      "recurrence.end_date",
+      null,
+      "2026-11-09"
+     ]
+    ],
+    "notes": "The first occurrence is tomorrow (09:00 today has passed). end = first occurrence + 21 days.",
+    "ambiguous": false,
+    "warnings": [
+     "no_time"
+    ]
+   },
+   {
+    "id": "reminder-084",
+    "text": "remind me to stretch every morning until the end of June",
+    "problems": [
+     [
+      "recurrence.end_date",
+      null,
+      "2027-06-30"
+     ]
+    ],
+    "notes": "'until the end of June' is an explicit date (2027-06-30), so the 'until <month>' guess rule does not apply.",
+    "ambiguous": false,
+    "warnings": []
+   },
+   {
+    "id": "reminder-086",
+    "text": "remind me to log my hours every Friday from next month",
+    "problems": [
+     [
+      "start",
+      "2026-10-23",
+      "2026-11-06"
+     ],
+     [
+      "recurrence.start_date",
+      null,
+      "2026-11-01"
+     ]
+    ],
+    "notes": "Starts 11-01 (a Sunday), so the start is adjusted to the first Friday, 11-06.",
+    "ambiguous": false,
+    "warnings": [
+     "no_time"
+    ]
+   },
+   {
+    "id": "reminder-087",
+    "text": "remind me to do physio exercises every day for 6 weeks starting tomorrow",
+    "problems": [
+     [
+      "recurrence.count",
+      42,
+      null
+     ],
+     [
+      "recurrence.start_date",
+      null,
+      "2026-10-19"
+     ]
+    ],
+    "notes": "end = 2026-10-19 + 42 days.",
+    "ambiguous": false,
+    "warnings": [
+     "no_time"
+    ]
+   },
+   {
+    "id": "reminder-093",
+    "text": "remind me to book the SAT this week",
+    "problems": [
+     [
+      "start",
+      "2026-10-18",
+      "2026-10-19"
+     ]
+    ],
+    "notes": "'this week' is not covered. Today is the last day of the current week, so it is read as the coming week (Monday 10-19). It could also mean today.",
+    "ambiguous": true,
+    "warnings": [
+     "no_time"
+    ]
+   },
+   {
+    "id": "reminder-127",
+    "text": "remind me to turn off the sprinkler in 10",
+    "problems": [
+     [
+      "start",
+      null,
+      "2026-10-18T10:10"
+     ]
+    ],
+    "notes": "'in 10' has no unit. It is read as 10 minutes.",
+    "ambiguous": true,
+    "warnings": [
+     "unparsed",
+     "missing_trigger"
+    ]
+   },
+   {
+    "id": "reminder-129",
+    "text": "recuérdame llamar a mamá a las 5",
+    "problems": [
+     [
+      "start",
+      null,
+      "2026-10-18T17:00"
+     ]
+    ],
+    "notes": "Spanish, not covered by the conventions: 'a las 5' becomes 17:00 by the bare-hour rule.",
+    "ambiguous": true,
+    "warnings": [
+     "missing_trigger"
+    ]
+   },
+   {
+    "id": "reminder-130",
+    "text": "rappelle-moi de payer le loyer le 1er",
+    "problems": [
+     [
+      "start",
+      null,
+      "2026-11-01T09:00"
+     ]
+    ],
+    "notes": "French, not covered: 'le 1er' = the 1st.",
+    "ambiguous": false,
+    "warnings": [
+     "missing_trigger"
+    ]
+   },
+   {
+    "id": "reminder-131",
+    "text": "erinnere mich morgen die Pflanzen zu gießen",
+    "problems": [
+     [
+      "start",
+      null,
+      "2026-10-19T09:00"
+     ]
+    ],
+    "notes": "German, not covered: 'morgen' = tomorrow.",
+    "ambiguous": false,
+    "warnings": [
+     "unparsed",
+     "missing_trigger"
+    ]
+   },
+   {
+    "id": "reminder-132",
+    "text": "recuérdame sacar la basura cada martes",
+    "problems": [
+     [
+      "start",
+      null,
+      "2026-10-20T09:00"
+     ],
+     [
+      "recurrence",
+      null,
+      {
+       "frequency": "weekly",
+       "interval": 1,
+       "weekdays": [
+        "TU"
+       ],
+       "month_days": [],
+       "months": [],
+       "count": null,
+       "start_date": null,
+       "end_date": null
+      }
+     ]
+    ],
+    "notes": "Spanish, not covered: 'cada martes' = every Tuesday.",
+    "ambiguous": false,
+    "warnings": [
+     "unparsed",
+     "missing_trigger"
+    ]
+   },
+   {
+    "id": "reminder-133",
+    "text": "ricordami di chiamare Luca domani alle 10",
+    "problems": [
+     [
+      "start",
+      null,
+      "2026-10-19T10:00"
+     ]
+    ],
+    "notes": "Italian, not covered: 'domani alle 10' = tomorrow at 10. Bare 10 becomes am.",
+    "ambiguous": true,
+    "warnings": [
+     "unparsed",
+     "missing_trigger"
+    ]
+   },
+   {
+    "id": "reminder-152",
+    "text": "remind me to order more coffee Friday",
+    "problems": [
+     [
+      "start",
+      null,
+      "2026-10-23"
+     ]
+    ],
+    "notes": "",
+    "ambiguous": false,
+    "warnings": [
+     "missing_trigger"
+    ]
+   },
+   {
+    "id": "reminder-162",
+    "text": "remind me to take the recycling first Tuesday of the month",
+    "problems": [
+     [
+      "start",
+      null,
+      "2026-11-03"
+     ],
+     [
+      "recurrence",
+      null,
+      {
+       "frequency": "monthly",
+       "interval": 1,
+       "weekdays": [
+        "1TU"
+       ],
+       "month_days": [],
+       "months": [],
+       "count": null,
+       "start_date": null,
+       "end_date": null
+      }
+     ]
+    ],
+    "notes": "",
+    "ambiguous": false,
+    "warnings": [
+     "unparsed",
+     "missing_trigger"
+    ]
+   },
+   {
+    "id": "task-081",
+    "text": "mon call accountant",
+    "problems": [
+     [
+      "start",
+      null,
+      "2026-10-19"
+     ]
+    ],
+    "notes": "",
+    "ambiguous": false,
+    "warnings": []
+   },
+   {
+    "id": "task-082",
+    "text": "call mom tmrw",
+    "problems": [
+     [
+      "start",
+      null,
+      "2026-10-19"
+     ]
+    ],
+    "notes": "'tmrw' read as tomorrow (abbreviation not in the conventions).",
+    "ambiguous": false,
+    "warnings": []
+   },
+   {
+    "id": "task-083",
+    "text": "finish essay tommorow by 10pm",
+    "problems": [
+     [
+      "start",
+      "2026-10-18T22:00",
+      "2026-10-19T22:00"
+     ]
+    ],
+    "notes": "Misspelled 'tommorow' read as tomorrow.",
+    "ambiguous": false,
+    "warnings": []
+   },
+   {
+    "id": "task-085",
+    "text": "send report nxt week",
+    "problems": [
+     [
+      "start",
+      null,
+      "2026-10-19"
+     ]
+    ],
+    "notes": "'nxt week' read as next week.",
+    "ambiguous": false,
+    "warnings": []
+   },
+   {
+    "id": "task-089",
+    "text": "buy milk 2moro",
+    "problems": [
+     [
+      "start",
+      null,
+      "2026-10-19"
+     ]
+    ],
+    "notes": "'2moro' read as tomorrow.",
+    "ambiguous": false,
+    "warnings": []
+   },
+   {
+    "id": "task-097",
+    "text": "study Spanish for 45 minutes daily",
+    "problems": [
+     [
+      "start",
+      null,
+      "2026-10-18"
+     ],
+     [
+      "recurrence",
+      null,
+      {
+       "frequency": "daily",
+       "interval": 1,
+       "weekdays": [],
+       "month_days": [],
+       "months": [],
+       "count": null,
+       "start_date": null,
+       "end_date": null
+      }
+     ]
+    ],
+    "notes": "Line has no time, so the task default 17:00 applies; recurrence time left null. 'for 45 minutes' is a duration.",
+    "ambiguous": false,
+    "warnings": []
+   },
+   {
+    "id": "task-105",
+    "text": "gym every Monday, Wednesday and Friday at 7am",
+    "problems": [
+     [
+      "start",
+      "2026-10-23T07:00",
+      "2026-10-19T07:00"
+     ],
+     [
+      "recurrence",
+      null,
+      {
+       "frequency": "weekly",
+       "interval": 1,
+       "weekdays": [
+        "FR",
+        "MO",
+        "WE"
+       ],
+       "month_days": [],
+       "months": [],
+       "count": null,
+       "start_date": null,
+       "end_date": null
+      }
+     ]
+    ],
+    "notes": "",
+    "ambiguous": false,
+    "warnings": []
+   },
+   {
+    "id": "task-106",
+    "text": "backup laptop weekly",
+    "problems": [
+     [
+      "start",
+      null,
+      "2026-10-18"
+     ],
+     [
+      "recurrence",
+      null,
+      {
+       "frequency": "weekly",
+       "interval": 1,
+       "weekdays": [],
+       "month_days": [],
+       "months": [],
+       "count": null,
+       "start_date": null,
+       "end_date": null
+      }
+     ]
+    ],
+    "notes": "'weekly' with no day: first occurrence taken as today, on the start's weekday.",
+    "ambiguous": false,
+    "warnings": []
+   },
+   {
+    "id": "task-110",
+    "text": "submit payroll every second Friday",
+    "problems": [
+     [
+      "start",
+      "2026-10-23",
+      "2026-11-13"
+     ],
+     [
+      "recurrence.frequency",
+      "weekly",
+      "monthly"
+     ],
+     [
+      "recurrence.interval",
+      2,
+      1
+     ],
+     [
+      "recurrence.weekdays",
+      [
+       "FR"
+      ],
+      [
+       "2FR"
+      ]
+     ]
+    ],
+    "notes": "Read as the 2nd Friday of each month, by analogy with 'every first Monday'. It could also mean every other Friday (weekly, interval 2, first 10-23).",
+    "ambiguous": true,
+    "warnings": []
+   },
+   {
+    "id": "task-113",
+    "text": "check smoke detectors twice a year",
+    "problems": [
+     [
+      "start",
+      null,
+      "2026-10-18"
+     ],
+     [
+      "recurrence",
+      null,
+      {
+       "frequency": "monthly",
+       "interval": 6,
+       "weekdays": [],
+       "month_days": [],
+       "months": [],
+       "count": null,
+       "start_date": null,
+       "end_date": null
+      }
+     ]
+    ],
+    "notes": "'twice a year' isn't covered by the conventions; read as every 6 months starting today.",
+    "ambiguous": false,
+    "warnings": [
+     "unparsed"
+    ]
+   },
+   {
+    "id": "task-114",
+    "text": "send investor update monthly starting next month",
+    "problems": [
+     [
+      "recurrence",
+      null,
+      {
+       "frequency": "monthly",
+       "interval": 1,
+       "weekdays": [],
+       "month_days": [],
+       "months": [],
+       "count": null,
+       "start_date": "2026-11-01",
+       "end_date": null
+      }
+     ]
+    ],
+    "notes": "'starting next month' read as 11-01; monthly on the start's day.",
+    "ambiguous": false,
+    "warnings": [
+     "day_assumed"
+    ]
+   },
+   {
+    "id": "task-116",
+    "text": "mow the lawn every Saturday until October",
+    "problems": [
+     [
+      "recurrence.end_date",
+      null,
+      "2027-09-30"
+     ]
+    ],
+    "notes": "We're already in October, so 'until October' read as next October; the end is the last day of the month before it (a guess).",
+    "ambiguous": false,
+    "warnings": []
+   },
+   {
+    "id": "task-118",
+    "text": "water garden daily starting tomorrow through August 31",
+    "problems": [
+     [
+      "start",
+      "2027-08-31",
+      "2026-10-19"
+     ],
+     [
+      "recurrence",
+      null,
+      {
+       "frequency": "daily",
+       "interval": 1,
+       "weekdays": [],
+       "month_days": [],
+       "months": [],
+       "count": null,
+       "start_date": "2026-10-19",
+       "end_date": "2027-08-31"
+      }
+     ]
+    ],
+    "notes": "",
+    "ambiguous": false,
+    "warnings": []
+   },
+   {
+    "id": "task-124",
+    "text": "1:1 prep every Thursday but skip the first one",
+    "problems": [
+     [
+      "start",
+      null,
+      "2026-10-29"
+     ],
+     [
+      "recurrence",
+      null,
+      {
+       "frequency": "weekly",
+       "interval": 1,
+       "weekdays": [
+        "TH"
+       ],
+       "month_days": [],
+       "months": [],
+       "count": null,
+       "start_date": null,
+       "end_date": null
+      }
+     ]
+    ],
+    "notes": "The first Thursday (10-22) is skipped, so the first actual due date is 10-29. Under the strict first-occurrence rule it would be 10-22.",
+    "ambiguous": false,
+    "warnings": [
+     "unparsed"
+    ]
+   },
+   {
+    "id": "task-128",
+    "text": "write up the incident review for last Tuesday's outage with Devon for Platform Reliability, about 3 hours, by Friday",
+    "problems": [
+     [
+      "start",
+      "2026-10-13",
+      "2026-10-23"
+     ]
+    ],
+    "notes": "'last Tuesday' is part of the title. 'about 3 hours' is a duration.",
+    "ambiguous": false,
+    "warnings": []
+   },
+   {
+    "id": "task-131",
+    "text": "research summer camps for the kids that run in July and are close to home #family by end of month",
+    "problems": [
+     [
+      "start",
+      "2027-07-01",
+      "2026-10-31"
+     ]
+    ],
+    "notes": "'in July' describes the camps, not the due date.",
+    "ambiguous": false,
+    "warnings": [
+     "day_assumed"
+    ]
+   },
+   {
+    "id": "task-133",
+    "text": "email Jo today, book the venue by Monday",
+    "problems": [
+     [
+      "start",
+      null,
+      "2026-10-18"
+     ]
+    ],
+    "notes": "Two tasks; labeled the first (email Jo today). The second is book the venue, by Monday 2026-10-19T17:00.",
+    "ambiguous": false,
+    "warnings": [
+     "multiple_items"
+    ]
+   },
+   {
+    "id": "task-141",
+    "text": "need to finish the quarterly review by Q4",
+    "problems": [
+     [
+      "start",
+      null,
+      "2026-12-31T17:00"
+     ]
+    ],
+    "notes": "'by Q4' isn't covered by the conventions. We're already in Q4, so read as the end of this Q4; it could also mean the start of a future Q4.",
+    "ambiguous": true,
+    "warnings": [
+     "unparsed"
+    ]
+   },
+   {
+    "id": "task-146",
+    "text": "comprar leche mañana",
+    "problems": [
+     [
+      "start",
+      null,
+      "2026-10-19T17:00"
+     ]
+    ],
+    "notes": "Spanish 'mañana' = tomorrow (non-English, not in the conventions).",
+    "ambiguous": false,
+    "warnings": []
+   },
+   {
+    "id": "task-147",
+    "text": "appeler le dentiste lundi",
+    "problems": [
+     [
+      "start",
+      null,
+      "2026-10-19T17:00"
+     ]
+    ],
+    "notes": "French 'lundi' = Monday (non-English).",
+    "ambiguous": false,
+    "warnings": [
+     "unparsed"
+    ]
+   },
+   {
+    "id": "task-148",
+    "text": "Rechnung bezahlen bis Freitag",
+    "problems": [
+     [
+      "start",
+      null,
+      "2026-10-23T17:00"
+     ]
+    ],
+    "notes": "German 'bis Freitag' = by Friday (non-English).",
+    "ambiguous": false,
+    "warnings": []
+   },
+   {
+    "id": "task-149",
+    "text": "pagar el alquiler el día 1",
+    "problems": [
+     [
+      "start",
+      null,
+      "2026-11-01T17:00"
+     ]
+    ],
+    "notes": "Spanish 'el día 1' = the 1st (non-English).",
+    "ambiguous": false,
+    "warnings": [
+     "unparsed"
+    ]
+   },
+   {
+    "id": "task-151",
+    "text": "llamar a mamá el sábado a las 5",
+    "problems": [
+     [
+      "start",
+      null,
+      "2026-10-24T17:00"
+     ]
+    ],
+    "notes": "Spanish 'el sábado a las 5' = Saturday at 5; bare 5 is pm by rule 3 (non-English).",
+    "ambiguous": true,
+    "warnings": [
+     "unparsed"
+    ]
+   },
+   {
+    "id": "task-157",
+    "text": "send the deck EOD",
+    "problems": [
+     [
+      "start",
+      null,
+      "2026-10-18T17:00"
+     ]
+    ],
+    "notes": "'EOD' = end of day, today.",
+    "ambiguous": false,
+    "warnings": []
+   },
+   {
+    "id": "task-163",
+    "text": "reply to Ben's email in an hour",
+    "problems": [
+     [
+      "start",
+      null,
+      "2026-10-18T11:00"
+     ]
+    ],
+    "notes": "",
+    "ambiguous": false,
+    "warnings": []
+   }
+  ],
+  "model_capture": [
+   {
+    "id": "calendar-065",
+    "text": "dinner at Sunday's Saturday at 8",
+    "problems": [
+     [
+      "start",
+      "2026-10-18T20:00",
+      "2026-10-24T20:00"
+     ],
+     [
+      "end",
+      "2026-10-18T21:00",
+      "2026-10-24T21:00"
+     ]
+    ],
+    "notes": "dinner makes bare 8 pm; 'Sunday's' is a venue name",
+    "ambiguous": false,
+    "warnings": [
+     "end_assumed"
+    ]
+   },
+   {
+    "id": "calendar-103",
+    "text": "volunteer shift every second and fourth Sunday 9am to noon",
+    "problems": [
+     [
+      "recurrence",
+      null,
+      {
+       "frequency": "monthly",
+       "interval": 1,
+       "weekdays": [
+        "2SU",
+        "4SU"
+       ],
+       "month_days": [],
+       "months": [],
+       "count": null,
+       "start_date": null,
+       "end_date": null
+      }
+     ]
+    ],
+    "notes": "today is the 3rd Sunday; next is 4th Sunday Oct 25",
+    "ambiguous": false,
+    "warnings": [
+     "moved_to_next_week"
+    ]
+   },
+   {
+    "id": "calendar-116",
+    "text": "flight out Friday 6am, return Sunday 9pm",
+    "problems": [
+     [
+      "end",
+      "2026-10-23T21:00",
+      "2026-10-23T07:00"
+     ]
+    ],
+    "notes": "two events; labelled the first (flight out); return is Sun Oct 25 21:00",
+    "ambiguous": false,
+    "warnings": [
+     "multiple_items"
+    ]
+   },
+   {
+    "id": "calendar-120",
+    "text": "sync @ 4",
+    "problems": [
+     [
+      "start",
+      null,
+      "2026-10-18T16:00"
+     ],
+     [
+      "end",
+      null,
+      "2026-10-18T17:00"
+     ]
+    ],
+    "notes": "@ = at; bare 4 -> pm, today",
+    "ambiguous": true,
+    "warnings": [
+     "unparsed"
+    ]
+   },
+   {
+    "id": "calendar-122",
+    "text": "interview Fri 10:00 AM PST",
+    "problems": [
+     [
+      "start",
+      "2026-10-23T11:00",
+      "2026-10-23T10:00"
+     ],
+     [
+      "end",
+      "2026-10-23T12:00",
+      "2026-10-23T11:00"
+     ]
+    ],
+    "notes": "PST read loosely as Pacific time (PDT in October), so 10:00 local",
+    "ambiguous": false,
+    "warnings": [
+     "converted_timezone",
+     "end_assumed"
+    ]
+   },
+   {
+    "id": "calendar-125",
+    "text": "reunión con Ana mañana a las 3",
+    "problems": [
+     [
+      "start",
+      null,
+      "2026-10-19T15:00"
+     ],
+     [
+      "end",
+      null,
+      "2026-10-19T16:00"
+     ]
+    ],
+    "notes": "Spanish: mañana = tomorrow, a las 3 -> bare 3 pm; not covered by conventions",
+    "ambiguous": true,
+    "warnings": [
+     "unparsed",
+     "missing_date"
+    ]
+   },
+   {
+    "id": "calendar-126",
+    "text": "rendez-vous avec Paul demain à 14h",
+    "problems": [
+     [
+      "start",
+      "2026-10-18T14:00",
+      "2026-10-19T14:00"
+     ],
+     [
+      "end",
+      "2026-10-18T15:00",
+      "2026-10-19T15:00"
+     ]
+    ],
+    "notes": "French: demain = tomorrow, 14h; not covered by conventions",
+    "ambiguous": false,
+    "warnings": [
+     "end_assumed"
+    ]
+   },
+   {
+    "id": "calendar-127",
+    "text": "Abendessen mit Lena Freitag um 19 Uhr",
+    "problems": [
+     [
+      "start",
+      null,
+      "2026-10-23T19:00"
+     ],
+     [
+      "end",
+      null,
+      "2026-10-23T20:00"
+     ]
+    ],
+    "notes": "German: Freitag = Friday, 19 Uhr; not covered by conventions",
+    "ambiguous": false,
+    "warnings": [
+     "missing_date"
+    ]
+   },
+   {
+    "id": "calendar-128",
+    "text": "cena con amigos el sábado a las 9",
+    "problems": [
+     [
+      "start",
+      null,
+      "2026-10-24T21:00"
+     ],
+     [
+      "end",
+      null,
+      "2026-10-24T22:00"
+     ]
+    ],
+    "notes": "Spanish: cena = dinner so 9 is pm, sábado = Saturday; not covered by conventions",
+    "ambiguous": false,
+    "warnings": [
+     "unparsed",
+     "missing_date"
+    ]
+   },
+   {
+    "id": "calendar-129",
+    "text": "réunion d'équipe lundi à 10h",
+    "problems": [
+     [
+      "start",
+      "2026-10-18T10:00",
+      "2026-10-19T10:00"
+     ],
+     [
+      "end",
+      "2026-10-18T11:00",
+      "2026-10-19T11:00"
+     ]
+    ],
+    "notes": "French: lundi = Monday, 10h; not covered by conventions",
+    "ambiguous": false,
+    "warnings": [
+     "end_assumed"
+    ]
+   },
+   {
+    "id": "calendar-130",
+    "text": "pranzo con Marco domani alle 13",
+    "problems": [
+     [
+      "start",
+      null,
+      "2026-10-19T13:00"
+     ],
+     [
+      "end",
+      null,
+      "2026-10-19T14:00"
+     ]
+    ],
+    "notes": "Italian: domani = tomorrow, alle 13; not covered by conventions",
+    "ambiguous": false,
+    "warnings": [
+     "missing_date"
+    ]
+   },
+   {
+    "id": "reminder-025",
+    "text": "feed the cat at 7am and 7pm",
+    "problems": [
+     [
+      "start",
+      "2026-10-19T07:00",
+      "2026-10-18T19:00"
+     ]
+    ],
+    "notes": "Two times. 7am today has passed (it would roll to tomorrow), so the earliest fire is 19:00 today. It may imply a daily routine, but no recurrence is stated.",
+    "ambiguous": false,
+    "warnings": [
+     "rolled_to_tomorrow"
+    ]
+   },
+   {
+    "id": "reminder-068",
+    "text": "remind me to stand up every 30 minutes",
+    "problems": [
+     [
+      "recurrence",
+      {
+       "frequency": "minutely",
+       "interval": 30,
+       "weekdays": [],
+       "month_days": [],
+       "months": [],
+       "count": null,
+       "start_date": null,
+       "end_date": null
+      },
+      null
+     ]
+    ],
+    "notes": "Every 30 minutes cannot be expressed: the schema has no minutely frequency, so recurrence is null. The first fire is in 30 minutes.",
+    "ambiguous": false,
+    "warnings": []
+   },
+   {
+    "id": "reminder-083",
+    "text": "remind me to take iron tablets daily for 3 weeks",
+    "problems": [
+     [
+      "recurrence.count",
+      21,
+      null
+     ]
+    ],
+    "notes": "The first occurrence is tomorrow (09:00 today has passed). end = first occurrence + 21 days.",
+    "ambiguous": false,
+    "warnings": [
+     "no_time"
+    ]
+   },
+   {
+    "id": "reminder-087",
+    "text": "remind me to do physio exercises every day for 6 weeks starting tomorrow",
+    "problems": [
+     [
+      "recurrence.count",
+      42,
+      null
+     ]
+    ],
+    "notes": "end = 2026-10-19 + 42 days.",
+    "ambiguous": false,
+    "warnings": [
+     "no_time"
+    ]
+   },
+   {
+    "id": "reminder-093",
+    "text": "remind me to book the SAT this week",
+    "problems": [
+     [
+      "start",
+      "2026-10-18",
+      "2026-10-19"
+     ]
+    ],
+    "notes": "'this week' is not covered. Today is the last day of the current week, so it is read as the coming week (Monday 10-19). It could also mean today.",
+    "ambiguous": true,
+    "warnings": [
+     "no_time"
+    ]
+   },
+   {
+    "id": "reminder-127",
+    "text": "remind me to turn off the sprinkler in 10",
+    "problems": [
+     [
+      "start",
+      null,
+      "2026-10-18T10:10"
+     ]
+    ],
+    "notes": "'in 10' has no unit. It is read as 10 minutes.",
+    "ambiguous": true,
+    "warnings": [
+     "unparsed",
+     "missing_trigger"
+    ]
+   },
+   {
+    "id": "reminder-129",
+    "text": "recuérdame llamar a mamá a las 5",
+    "problems": [
+     [
+      "start",
+      null,
+      "2026-10-18T17:00"
+     ]
+    ],
+    "notes": "Spanish, not covered by the conventions: 'a las 5' becomes 17:00 by the bare-hour rule.",
+    "ambiguous": true,
+    "warnings": [
+     "missing_trigger"
+    ]
+   },
+   {
+    "id": "reminder-130",
+    "text": "rappelle-moi de payer le loyer le 1er",
+    "problems": [
+     [
+      "start",
+      null,
+      "2026-11-01T09:00"
+     ]
+    ],
+    "notes": "French, not covered: 'le 1er' = the 1st.",
+    "ambiguous": false,
+    "warnings": [
+     "missing_trigger"
+    ]
+   },
+   {
+    "id": "reminder-131",
+    "text": "erinnere mich morgen die Pflanzen zu gießen",
+    "problems": [
+     [
+      "start",
+      null,
+      "2026-10-19T09:00"
+     ]
+    ],
+    "notes": "German, not covered: 'morgen' = tomorrow.",
+    "ambiguous": false,
+    "warnings": [
+     "unparsed",
+     "missing_trigger"
+    ]
+   },
+   {
+    "id": "reminder-132",
+    "text": "recuérdame sacar la basura cada martes",
+    "problems": [
+     [
+      "start",
+      null,
+      "2026-10-20T09:00"
+     ],
+     [
+      "recurrence",
+      null,
+      {
+       "frequency": "weekly",
+       "interval": 1,
+       "weekdays": [
+        "TU"
+       ],
+       "month_days": [],
+       "months": [],
+       "count": null,
+       "start_date": null,
+       "end_date": null
+      }
+     ]
+    ],
+    "notes": "Spanish, not covered: 'cada martes' = every Tuesday.",
+    "ambiguous": false,
+    "warnings": [
+     "unparsed",
+     "missing_trigger"
+    ]
+   },
+   {
+    "id": "reminder-133",
+    "text": "ricordami di chiamare Luca domani alle 10",
+    "problems": [
+     [
+      "start",
+      null,
+      "2026-10-19T10:00"
+     ]
+    ],
+    "notes": "Italian, not covered: 'domani alle 10' = tomorrow at 10. Bare 10 becomes am.",
+    "ambiguous": true,
+    "warnings": [
+     "unparsed",
+     "missing_trigger"
+    ]
+   },
+   {
+    "id": "task-083",
+    "text": "finish essay tommorow by 10pm",
+    "problems": [
+     [
+      "start",
+      "2026-10-18T22:00",
+      "2026-10-19T22:00"
+     ]
+    ],
+    "notes": "Misspelled 'tommorow' read as tomorrow.",
+    "ambiguous": false,
+    "warnings": []
+   },
+   {
+    "id": "task-110",
+    "text": "submit payroll every second Friday",
+    "problems": [
+     [
+      "start",
+      "2026-10-23",
+      "2026-11-13"
+     ],
+     [
+      "recurrence.frequency",
+      "weekly",
+      "monthly"
+     ],
+     [
+      "recurrence.interval",
+      2,
+      1
+     ],
+     [
+      "recurrence.weekdays",
+      [
+       "FR"
+      ],
+      [
+       "2FR"
+      ]
+     ]
+    ],
+    "notes": "Read as the 2nd Friday of each month, by analogy with 'every first Monday'. It could also mean every other Friday (weekly, interval 2, first 10-23).",
+    "ambiguous": true,
+    "warnings": []
+   },
+   {
+    "id": "task-114",
+    "text": "send investor update monthly starting next month",
+    "problems": [
+     [
+      "start",
+      null,
+      "2026-11-01"
+     ],
+     [
+      "recurrence",
+      null,
+      {
+       "frequency": "monthly",
+       "interval": 1,
+       "weekdays": [],
+       "month_days": [],
+       "months": [],
+       "count": null,
+       "start_date": "2026-11-01",
+       "end_date": null
+      }
+     ]
+    ],
+    "notes": "'starting next month' read as 11-01; monthly on the start's day.",
+    "ambiguous": false,
+    "warnings": []
+   },
+   {
+    "id": "task-118",
+    "text": "water garden daily starting tomorrow through August 31",
+    "problems": [
+     [
+      "start",
+      null,
+      "2026-10-19"
+     ],
+     [
+      "recurrence",
+      null,
+      {
+       "frequency": "daily",
+       "interval": 1,
+       "weekdays": [],
+       "month_days": [],
+       "months": [],
+       "count": null,
+       "start_date": "2026-10-19",
+       "end_date": "2027-08-31"
+      }
+     ]
+    ],
+    "notes": "",
+    "ambiguous": false,
+    "warnings": []
+   },
+   {
+    "id": "task-128",
+    "text": "write up the incident review for last Tuesday's outage with Devon for Platform Reliability, about 3 hours, by Friday",
+    "problems": [
+     [
+      "start",
+      "2026-10-13",
+      "2026-10-23"
+     ]
+    ],
+    "notes": "'last Tuesday' is part of the title. 'about 3 hours' is a duration.",
+    "ambiguous": false,
+    "warnings": []
+   },
+   {
+    "id": "task-131",
+    "text": "research summer camps for the kids that run in July and are close to home #family by end of month",
+    "problems": [
+     [
+      "start",
+      "2027-07-01",
+      "2026-10-31"
+     ]
+    ],
+    "notes": "'in July' describes the camps, not the due date.",
+    "ambiguous": false,
+    "warnings": [
+     "day_assumed"
+    ]
+   },
+   {
+    "id": "task-133",
+    "text": "email Jo today, book the venue by Monday",
+    "problems": [
+     [
+      "start",
+      null,
+      "2026-10-18"
+     ]
+    ],
+    "notes": "Two tasks; labeled the first (email Jo today). The second is book the venue, by Monday 2026-10-19T17:00.",
+    "ambiguous": false,
+    "warnings": [
+     "multiple_items"
+    ]
+   },
+   {
+    "id": "task-141",
+    "text": "need to finish the quarterly review by Q4",
+    "problems": [
+     [
+      "start",
+      null,
+      "2026-12-31T17:00"
+     ]
+    ],
+    "notes": "'by Q4' isn't covered by the conventions. We're already in Q4, so read as the end of this Q4; it could also mean the start of a future Q4.",
+    "ambiguous": true,
+    "warnings": [
+     "unparsed"
+    ]
+   },
+   {
+    "id": "task-146",
+    "text": "comprar leche mañana",
+    "problems": [
+     [
+      "start",
+      null,
+      "2026-10-19T17:00"
+     ]
+    ],
+    "notes": "Spanish 'mañana' = tomorrow (non-English, not in the conventions).",
+    "ambiguous": false,
+    "warnings": []
+   },
+   {
+    "id": "task-147",
+    "text": "appeler le dentiste lundi",
+    "problems": [
+     [
+      "start",
+      null,
+      "2026-10-19T17:00"
+     ]
+    ],
+    "notes": "French 'lundi' = Monday (non-English).",
+    "ambiguous": false,
+    "warnings": [
+     "unparsed"
+    ]
+   },
+   {
+    "id": "task-148",
+    "text": "Rechnung bezahlen bis Freitag",
+    "problems": [
+     [
+      "start",
+      null,
+      "2026-10-23T17:00"
+     ]
+    ],
+    "notes": "German 'bis Freitag' = by Friday (non-English).",
+    "ambiguous": false,
+    "warnings": []
+   },
+   {
+    "id": "task-149",
+    "text": "pagar el alquiler el día 1",
+    "problems": [
+     [
+      "start",
+      null,
+      "2026-11-01T17:00"
+     ]
+    ],
+    "notes": "Spanish 'el día 1' = the 1st (non-English).",
+    "ambiguous": false,
+    "warnings": [
+     "unparsed"
+    ]
+   },
+   {
+    "id": "task-151",
+    "text": "llamar a mamá el sábado a las 5",
+    "problems": [
+     [
+      "start",
+      null,
+      "2026-10-24T17:00"
+     ]
+    ],
+    "notes": "Spanish 'el sábado a las 5' = Saturday at 5; bare 5 is pm by rule 3 (non-English).",
+    "ambiguous": true,
+    "warnings": [
+     "unparsed"
+    ]
+   }
+  ],
+  "no_spans": [
+   {
+    "id": "calendar-061",
+    "text": "march practice Wednesday at 5",
+    "problems": [
+     [
+      "start",
+      "2027-03-01T17:00",
+      "2026-10-21T17:00"
+     ],
+     [
+      "end",
+      "2027-03-01T18:00",
+      "2026-10-21T18:00"
+     ]
+    ],
+    "notes": "bare 5 -> pm; 'march' is not the month",
+    "ambiguous": true,
+    "warnings": [
+     "ambiguous_meridiem",
+     "day_assumed",
+     "end_assumed"
+    ]
+   },
+   {
+    "id": "calendar-065",
+    "text": "dinner at Sunday's Saturday at 8",
+    "problems": [
+     [
+      "start",
+      "2026-10-18T20:00",
+      "2026-10-24T20:00"
+     ],
+     [
+      "end",
+      "2026-10-18T21:00",
+      "2026-10-24T21:00"
+     ]
+    ],
+    "notes": "dinner makes bare 8 pm; 'Sunday's' is a venue name",
+    "ambiguous": false,
+    "warnings": [
+     "end_assumed"
+    ]
+   },
+   {
+    "id": "calendar-069",
+    "text": "March madness watch party March 21 at 6",
+    "problems": [
+     [
+      "start",
+      "2027-03-01T18:00",
+      "2027-03-21T18:00"
+     ],
+     [
+      "end",
+      "2027-03-01T19:00",
+      "2027-03-21T19:00"
+     ]
+    ],
+    "notes": "bare 6 -> pm",
+    "ambiguous": true,
+    "warnings": [
+     "ambiguous_meridiem",
+     "day_assumed",
+     "end_assumed"
+    ]
+   },
+   {
+    "id": "calendar-103",
+    "text": "volunteer shift every second and fourth Sunday 9am to noon",
+    "problems": [
+     [
+      "recurrence",
+      null,
+      {
+       "frequency": "monthly",
+       "interval": 1,
+       "weekdays": [
+        "2SU",
+        "4SU"
+       ],
+       "month_days": [],
+       "months": [],
+       "count": null,
+       "start_date": null,
+       "end_date": null
+      }
+     ]
+    ],
+    "notes": "today is the 3rd Sunday; next is 4th Sunday Oct 25",
+    "ambiguous": false,
+    "warnings": [
+     "moved_to_next_week"
+    ]
+   },
+   {
+    "id": "calendar-122",
+    "text": "interview Fri 10:00 AM PST",
+    "problems": [
+     [
+      "start",
+      "2026-10-23T11:00",
+      "2026-10-23T10:00"
+     ],
+     [
+      "end",
+      "2026-10-23T12:00",
+      "2026-10-23T11:00"
+     ]
+    ],
+    "notes": "PST read loosely as Pacific time (PDT in October), so 10:00 local",
+    "ambiguous": false,
+    "warnings": [
+     "converted_timezone",
+     "end_assumed"
+    ]
+   },
+   {
+    "id": "calendar-125",
+    "text": "reunión con Ana mañana a las 3",
+    "problems": [
+     [
+      "start",
+      null,
+      "2026-10-19T15:00"
+     ],
+     [
+      "end",
+      null,
+      "2026-10-19T16:00"
+     ]
+    ],
+    "notes": "Spanish: mañana = tomorrow, a las 3 -> bare 3 pm; not covered by conventions",
+    "ambiguous": true,
+    "warnings": [
+     "missing_date"
+    ]
+   },
+   {
+    "id": "calendar-126",
+    "text": "rendez-vous avec Paul demain à 14h",
+    "problems": [
+     [
+      "start",
+      "2026-10-18T14:00",
+      "2026-10-19T14:00"
+     ],
+     [
+      "end",
+      "2026-10-18T15:00",
+      "2026-10-19T15:00"
+     ]
+    ],
+    "notes": "French: demain = tomorrow, 14h; not covered by conventions",
+    "ambiguous": false,
+    "warnings": [
+     "end_assumed"
+    ]
+   },
+   {
+    "id": "calendar-127",
+    "text": "Abendessen mit Lena Freitag um 19 Uhr",
+    "problems": [
+     [
+      "start",
+      null,
+      "2026-10-23T19:00"
+     ],
+     [
+      "end",
+      null,
+      "2026-10-23T20:00"
+     ]
+    ],
+    "notes": "German: Freitag = Friday, 19 Uhr; not covered by conventions",
+    "ambiguous": false,
+    "warnings": [
+     "missing_date"
+    ]
+   },
+   {
+    "id": "calendar-128",
+    "text": "cena con amigos el sábado a las 9",
+    "problems": [
+     [
+      "start",
+      null,
+      "2026-10-24T21:00"
+     ],
+     [
+      "end",
+      null,
+      "2026-10-24T22:00"
+     ]
+    ],
+    "notes": "Spanish: cena = dinner so 9 is pm, sábado = Saturday; not covered by conventions",
+    "ambiguous": false,
+    "warnings": [
+     "missing_date"
+    ]
+   },
+   {
+    "id": "calendar-129",
+    "text": "réunion d'équipe lundi à 10h",
+    "problems": [
+     [
+      "start",
+      "2026-10-18T10:00",
+      "2026-10-19T10:00"
+     ],
+     [
+      "end",
+      "2026-10-18T11:00",
+      "2026-10-19T11:00"
+     ]
+    ],
+    "notes": "French: lundi = Monday, 10h; not covered by conventions",
+    "ambiguous": false,
+    "warnings": [
+     "end_assumed"
+    ]
+   },
+   {
+    "id": "calendar-130",
+    "text": "pranzo con Marco domani alle 13",
+    "problems": [
+     [
+      "start",
+      null,
+      "2026-10-19T13:00"
+     ],
+     [
+      "end",
+      null,
+      "2026-10-19T14:00"
+     ]
+    ],
+    "notes": "Italian: domani = tomorrow, alle 13; not covered by conventions",
+    "ambiguous": false,
+    "warnings": [
+     "missing_date"
+    ]
+   },
+   {
+    "id": "reminder-025",
+    "text": "feed the cat at 7am and 7pm",
+    "problems": [
+     [
+      "start",
+      "2026-10-19T07:00",
+      "2026-10-18T19:00"
+     ]
+    ],
+    "notes": "Two times. 7am today has passed (it would roll to tomorrow), so the earliest fire is 19:00 today. It may imply a daily routine, but no recurrence is stated.",
+    "ambiguous": false,
+    "warnings": [
+     "rolled_to_tomorrow"
+    ]
+   },
+   {
+    "id": "reminder-068",
+    "text": "remind me to stand up every 30 minutes",
+    "problems": [
+     [
+      "recurrence",
+      {
+       "frequency": "minutely",
+       "interval": 30,
+       "weekdays": [],
+       "month_days": [],
+       "months": [],
+       "count": null,
+       "start_date": null,
+       "end_date": null
+      },
+      null
+     ]
+    ],
+    "notes": "Every 30 minutes cannot be expressed: the schema has no minutely frequency, so recurrence is null. The first fire is in 30 minutes.",
+    "ambiguous": false,
+    "warnings": []
+   },
+   {
+    "id": "reminder-083",
+    "text": "remind me to take iron tablets daily for 3 weeks",
+    "problems": [
+     [
+      "recurrence.count",
+      21,
+      null
+     ]
+    ],
+    "notes": "The first occurrence is tomorrow (09:00 today has passed). end = first occurrence + 21 days.",
+    "ambiguous": false,
+    "warnings": [
+     "no_time"
+    ]
+   },
+   {
+    "id": "reminder-087",
+    "text": "remind me to do physio exercises every day for 6 weeks starting tomorrow",
+    "problems": [
+     [
+      "recurrence.count",
+      42,
+      null
+     ]
+    ],
+    "notes": "end = 2026-10-19 + 42 days.",
+    "ambiguous": false,
+    "warnings": [
+     "no_time"
+    ]
+   },
+   {
+    "id": "reminder-093",
+    "text": "remind me to book the SAT this week",
+    "problems": [
+     [
+      "start",
+      "2026-10-18",
+      "2026-10-19"
+     ]
+    ],
+    "notes": "'this week' is not covered. Today is the last day of the current week, so it is read as the coming week (Monday 10-19). It could also mean today.",
+    "ambiguous": true,
+    "warnings": [
+     "no_time"
+    ]
+   },
+   {
+    "id": "reminder-096",
+    "text": "remind me to march the forms over to HR at 2",
+    "problems": [
+     [
+      "start",
+      "2027-03-01T14:00",
+      "2026-10-18T14:00"
+     ]
+    ],
+    "notes": "'march' is a verb. Bare 2 becomes 14:00 (rule 3).",
+    "ambiguous": true,
+    "warnings": [
+     "ambiguous_meridiem",
+     "day_assumed"
+    ]
+   },
+   {
+    "id": "reminder-101",
+    "text": "remind me to send Monday's notes Tuesday",
+    "problems": [
+     [
+      "start",
+      "2026-10-19",
+      "2026-10-20"
+     ]
+    ],
+    "notes": "'Monday's' is part of the title.",
+    "ambiguous": false,
+    "warnings": [
+     "no_time"
+    ]
+   },
+   {
+    "id": "reminder-116",
+    "text": "remind me to book the annual boiler service and ask for the morning slot next Monday",
+    "problems": [
+     [
+      "start",
+      "2026-10-19T09:00",
+      "2026-10-19"
+     ]
+    ],
+    "notes": "'morning slot' is part of the title. next Monday = 10-19, at the default 09:00.",
+    "ambiguous": false,
+    "warnings": [
+     "time_assumed"
+    ]
+   },
+   {
+    "id": "reminder-127",
+    "text": "remind me to turn off the sprinkler in 10",
+    "problems": [
+     [
+      "start",
+      null,
+      "2026-10-18T10:10"
+     ]
+    ],
+    "notes": "'in 10' has no unit. It is read as 10 minutes.",
+    "ambiguous": true,
+    "warnings": [
+     "missing_trigger"
+    ]
+   },
+   {
+    "id": "reminder-129",
+    "text": "recuérdame llamar a mamá a las 5",
+    "problems": [
+     [
+      "start",
+      null,
+      "2026-10-18T17:00"
+     ]
+    ],
+    "notes": "Spanish, not covered by the conventions: 'a las 5' becomes 17:00 by the bare-hour rule.",
+    "ambiguous": true,
+    "warnings": [
+     "missing_trigger"
+    ]
+   },
+   {
+    "id": "reminder-130",
+    "text": "rappelle-moi de payer le loyer le 1er",
+    "problems": [
+     [
+      "start",
+      null,
+      "2026-11-01T09:00"
+     ]
+    ],
+    "notes": "French, not covered: 'le 1er' = the 1st.",
+    "ambiguous": false,
+    "warnings": [
+     "missing_trigger"
+    ]
+   },
+   {
+    "id": "reminder-131",
+    "text": "erinnere mich morgen die Pflanzen zu gießen",
+    "problems": [
+     [
+      "start",
+      null,
+      "2026-10-19T09:00"
+     ]
+    ],
+    "notes": "German, not covered: 'morgen' = tomorrow.",
+    "ambiguous": false,
+    "warnings": [
+     "missing_trigger"
+    ]
+   },
+   {
+    "id": "reminder-132",
+    "text": "recuérdame sacar la basura cada martes",
+    "problems": [
+     [
+      "start",
+      null,
+      "2026-10-20T09:00"
+     ],
+     [
+      "recurrence",
+      null,
+      {
+       "frequency": "weekly",
+       "interval": 1,
+       "weekdays": [
+        "TU"
+       ],
+       "month_days": [],
+       "months": [],
+       "count": null,
+       "start_date": null,
+       "end_date": null
+      }
+     ]
+    ],
+    "notes": "Spanish, not covered: 'cada martes' = every Tuesday.",
+    "ambiguous": false,
+    "warnings": [
+     "missing_trigger"
+    ]
+   },
+   {
+    "id": "reminder-133",
+    "text": "ricordami di chiamare Luca domani alle 10",
+    "problems": [
+     [
+      "start",
+      null,
+      "2026-10-19T10:00"
+     ]
+    ],
+    "notes": "Italian, not covered: 'domani alle 10' = tomorrow at 10. Bare 10 becomes am.",
+    "ambiguous": true,
+    "warnings": [
+     "missing_trigger"
+    ]
+   },
+   {
+    "id": "task-073",
+    "text": "march band uniform fitting Thursday",
+    "problems": [
+     [
+      "start",
+      "2027-03-01",
+      "2026-10-22"
+     ]
+    ],
+    "notes": "'march' is the band, not the month.",
+    "ambiguous": false,
+    "warnings": [
+     "day_assumed"
+    ]
+   },
+   {
+    "id": "task-110",
+    "text": "submit payroll every second Friday",
+    "problems": [
+     [
+      "start",
+      "2026-10-23",
+      "2026-11-13"
+     ],
+     [
+      "recurrence.frequency",
+      "weekly",
+      "monthly"
+     ],
+     [
+      "recurrence.interval",
+      2,
+      1
+     ],
+     [
+      "recurrence.weekdays",
+      [
+       "FR"
+      ],
+      [
+       "2FR"
+      ]
+     ]
+    ],
+    "notes": "Read as the 2nd Friday of each month, by analogy with 'every first Monday'. It could also mean every other Friday (weekly, interval 2, first 10-23).",
+    "ambiguous": true,
+    "warnings": []
+   },
+   {
+    "id": "task-128",
+    "text": "write up the incident review for last Tuesday's outage with Devon for Platform Reliability, about 3 hours, by Friday",
+    "problems": [
+     [
+      "start",
+      "2026-10-13",
+      "2026-10-23"
+     ]
+    ],
+    "notes": "'last Tuesday' is part of the title. 'about 3 hours' is a duration.",
+    "ambiguous": false,
+    "warnings": []
+   },
+   {
+    "id": "task-131",
+    "text": "research summer camps for the kids that run in July and are close to home #family by end of month",
+    "problems": [
+     [
+      "start",
+      "2027-07-01",
+      "2026-10-31"
+     ]
+    ],
+    "notes": "'in July' describes the camps, not the due date.",
+    "ambiguous": false,
+    "warnings": [
+     "day_assumed"
+    ]
+   },
+   {
+    "id": "task-141",
+    "text": "need to finish the quarterly review by Q4",
+    "problems": [
+     [
+      "start",
+      null,
+      "2026-12-31T17:00"
+     ]
+    ],
+    "notes": "'by Q4' isn't covered by the conventions. We're already in Q4, so read as the end of this Q4; it could also mean the start of a future Q4.",
+    "ambiguous": true,
+    "warnings": []
+   },
+   {
+    "id": "task-146",
+    "text": "comprar leche mañana",
+    "problems": [
+     [
+      "start",
+      null,
+      "2026-10-19T17:00"
+     ]
+    ],
+    "notes": "Spanish 'mañana' = tomorrow (non-English, not in the conventions).",
+    "ambiguous": false,
+    "warnings": []
+   },
+   {
+    "id": "task-147",
+    "text": "appeler le dentiste lundi",
+    "problems": [
+     [
+      "start",
+      null,
+      "2026-10-19T17:00"
+     ]
+    ],
+    "notes": "French 'lundi' = Monday (non-English).",
+    "ambiguous": false,
+    "warnings": []
+   },
+   {
+    "id": "task-148",
+    "text": "Rechnung bezahlen bis Freitag",
+    "problems": [
+     [
+      "start",
+      null,
+      "2026-10-23T17:00"
+     ]
+    ],
+    "notes": "German 'bis Freitag' = by Friday (non-English).",
+    "ambiguous": false,
+    "warnings": []
+   },
+   {
+    "id": "task-149",
+    "text": "pagar el alquiler el día 1",
+    "problems": [
+     [
+      "start",
+      null,
+      "2026-11-01T17:00"
+     ]
+    ],
+    "notes": "Spanish 'el día 1' = the 1st (non-English).",
+    "ambiguous": false,
+    "warnings": []
+   },
+   {
+    "id": "task-151",
+    "text": "llamar a mamá el sábado a las 5",
+    "problems": [
+     [
+      "start",
+      null,
+      "2026-10-24T17:00"
+     ]
+    ],
+    "notes": "Spanish 'el sábado a las 5' = Saturday at 5; bare 5 is pm by rule 3 (non-English).",
+    "ambiguous": true,
+    "warnings": []
+   }
+  ]
+ }
+}

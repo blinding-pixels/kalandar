@@ -1,0 +1,141 @@
+[
+ {
+  "id": "p4c-repeats-04",
+  "text": "remind me to stretch hourly from 10am to 4pm on weekdays",
+  "now": null,
+  "problems": [
+   [
+    "recurrence.frequency",
+    "weekly",
+    "hourly"
+   ],
+   [
+    "recurrence.window",
+    null,
+    [
+     "10:00",
+     "16:00"
+    ]
+   ],
+   [
+    "recurrence.hours",
+    [],
+    [
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16
+    ]
+   ]
+  ]
+ },
+ {
+  "id": "p4c-exdates-02",
+  "text": "file expense report every Friday, skip Thanksgiving week",
+  "now": null,
+  "problems": [
+   [
+    "recurrence.exdates",
+    [],
+    [
+     "2026-11-27T17:00"
+    ]
+   ]
+  ]
+ },
+ {
+  "id": "p4c-exdates-12",
+  "text": "bins out every Thursday, not the week of Easter",
+  "now": null,
+  "problems": [
+   [
+    "recurrence.exdates",
+    [],
+    [
+     "2027-03-25"
+    ]
+   ]
+  ]
+ },
+ {
+  "id": "p4c-exdates-14",
+  "text": "pay the cleaner on the 1st of every month, not in December",
+  "now": null,
+  "problems": [
+   [
+    "recurrence.exdates",
+    [],
+    [
+     "2026-12-01T17:00"
+    ]
+   ]
+  ]
+ },
+ {
+  "id": "p4c-events-06",
+  "text": "family camping Fri to Sun",
+  "now": null,
+  "problems": [
+   [
+    "end",
+    null,
+    "2026-10-25"
+   ]
+  ]
+ },
+ {
+  "id": "p4c-events-11",
+  "text": "training in Denver mon to wed",
+  "now": null,
+  "problems": [
+   [
+    "end",
+    null,
+    "2026-10-21"
+   ]
+  ]
+ },
+ {
+  "id": "p4c-warnings-01",
+  "text": "call mom at 5 and pay rent on the 1st",
+  "now": null,
+  "problems": [
+   [
+    "start",
+    "2026-11-01T17:00",
+    "2026-10-18T17:00"
+   ],
+   [
+    "warnings",
+    [
+     "ambiguous_meridiem"
+    ],
+    [
+     "multiple_items"
+    ]
+   ]
+  ]
+ },
+ {
+  "id": "p4c-warnings-03",
+  "text": "remind me at 8pm to take my pills; water the plants tomorrow morning",
+  "now": null,
+  "problems": [
+   [
+    "start",
+    "2026-10-19T20:00",
+    "2026-10-18T20:00"
+   ],
+   [
+    "warnings",
+    [],
+    [
+     "multiple_items"
+    ]
+   ]
+  ]
+ }
+]

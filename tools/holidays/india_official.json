@@ -1,0 +1,1681 @@
+{
+  "note": "Dates transcribed (not computed) from the Government of India DoPT office memoranda \"Holidays to be observed in Central Government Offices during the year YYYY\": Annexure I (compulsory/gazetted holidays for Delhi/New Delhi administrative offices) and Annexure II (restricted holidays). \"list\" is \"gazetted\" when the festival is in Annexure I, else \"restricted\". Where DoPT later changed a date by corrigendum/OM (moon-sighting changes etc.) the corrected date is used and the change is cited in \"memo\". dussehra is the gazetted Vijaya Dashami row; diwali is the gazetted \"Diwali (Deepavali)\" row; janmashtami prefers the gazetted (Vaishnava) row when a separate RH Smarta date also exists. Where a festival appears twice in one year's list (Islamic festivals occurring twice in a Gregorian year), the first occurrence is recorded. navratri_start is recorded only where a dated row explicitly names \"1st Navratra\" (2027 only, in the combined RH row \"Chaitra Sukladi/Gudi Padava/Ugadi/Cheti Chand/1st Navratra\"). source_kind \"dopt_pdf\" covers DoPT originals on documents.doptcirculars.nic.in / dopt.gov.in, DoPT's own HTML copies (2002, 2003) and web.archive.org captures of the persmin.nic.in originals (2004, 2007, 2008). Years 2000, 2001, 2005 and 2006 could not be sourced and are omitted. 2002: Holi has no numbered Annexure I row; Annexure I carries the footnote \"Holi - 29th March - holiday on account of Good Friday\", recorded as gazetted.",
+  "years": {
+    "2002": {
+      "source": "https://documents.doptcirculars.nic.in/D2/D02est/jcm3_6.htm",
+      "source_kind": "dopt_pdf",
+      "memo": "No.12/6/2001-JCA, New Delhi, the 10th July, 2001 (Sub: Holiday to be observed in Government Offices during the year 2002)",
+      "festivals": {
+        "diwali": {
+          "date": "2002-11-04",
+          "list": "gazetted"
+        },
+        "holi": {
+          "date": "2002-03-29",
+          "list": "gazetted"
+        },
+        "dussehra": {
+          "date": "2002-10-15",
+          "list": "gazetted"
+        },
+        "janmashtami": {
+          "date": "2002-08-30",
+          "list": "gazetted"
+        },
+        "ganesh_chaturthi": {
+          "date": "2002-09-10",
+          "list": "restricted"
+        },
+        "maha_shivaratri": {
+          "date": "2002-03-12",
+          "list": "gazetted"
+        },
+        "raksha_bandhan": {
+          "date": "2002-08-22",
+          "list": "restricted"
+        },
+        "ram_navami": {
+          "date": "2002-04-21",
+          "list": "restricted"
+        },
+        "makar_sankranti": {
+          "date": "2002-01-14",
+          "list": "restricted"
+        },
+        "pongal": {
+          "date": "2002-01-14",
+          "list": "restricted"
+        },
+        "onam": {
+          "date": "2002-08-21",
+          "list": "restricted"
+        },
+        "eid_ul_fitr": {
+          "date": "2002-12-06",
+          "list": "gazetted"
+        },
+        "eid_ul_adha": {
+          "date": "2002-02-23",
+          "list": "gazetted"
+        },
+        "muharram": {
+          "date": "2002-03-25",
+          "list": "gazetted"
+        },
+        "milad_un_nabi": {
+          "date": "2002-05-25",
+          "list": "gazetted"
+        }
+      }
+    },
+    "2003": {
+      "source": "https://documents.doptcirculars.nic.in/D2/D02est/jcm3_7.htm",
+      "source_kind": "dopt_pdf",
+      "memo": "No.12/4/2002-JCA, New Delhi, the 15th July, 2002 (Sub: Holiday to be observed in Government Offices during the year 2003)",
+      "festivals": {
+        "diwali": {
+          "date": "2003-10-25",
+          "list": "gazetted"
+        },
+        "holi": {
+          "date": "2003-03-19",
+          "list": "gazetted"
+        },
+        "dussehra": {
+          "date": "2003-10-04",
+          "list": "gazetted"
+        },
+        "janmashtami": {
+          "date": "2003-08-20",
+          "list": "gazetted"
+        },
+        "ganesh_chaturthi": {
+          "date": "2003-08-31",
+          "list": "restricted"
+        },
+        "maha_shivaratri": {
+          "date": "2003-03-01",
+          "list": "restricted"
+        },
+        "raksha_bandhan": {
+          "date": "2003-08-12",
+          "list": "restricted"
+        },
+        "ram_navami": {
+          "date": "2003-04-11",
+          "list": "gazetted"
+        },
+        "makar_sankranti": {
+          "date": "2003-01-14",
+          "list": "restricted"
+        },
+        "pongal": {
+          "date": "2003-01-15",
+          "list": "restricted"
+        },
+        "onam": {
+          "date": "2003-09-08",
+          "list": "restricted"
+        },
+        "eid_ul_fitr": {
+          "date": "2003-11-26",
+          "list": "gazetted"
+        },
+        "eid_ul_adha": {
+          "date": "2003-02-12",
+          "list": "gazetted"
+        },
+        "muharram": {
+          "date": "2003-03-14",
+          "list": "gazetted"
+        },
+        "milad_un_nabi": {
+          "date": "2003-05-14",
+          "list": "gazetted"
+        }
+      }
+    },
+    "2004": {
+      "source": "https://web.archive.org/web/20040212035045/http://persmin.nic.in:80/holiday.pdf",
+      "source_kind": "dopt_pdf",
+      "memo": "No.12/5/2003-JCA, Dated the 3rd July, 2003 (Subject: Holidays to be observed in Government Offices during the year 2004); corrigendum No.12/5/2003-JCA dated 2nd January, 2004 [ganesh_chaturthi moved from Aug 19 to Sep 18 by that corrigendum: https://web.archive.org/web/20040325125758/http://www.persmin.nic.in:80/ganesh.pdf]",
+      "festivals": {
+        "diwali": {
+          "date": "2004-11-12",
+          "list": "gazetted"
+        },
+        "holi": {
+          "date": "2004-03-06",
+          "list": "restricted"
+        },
+        "dussehra": {
+          "date": "2004-10-22",
+          "list": "gazetted"
+        },
+        "janmashtami": {
+          "date": "2004-09-07",
+          "list": "gazetted"
+        },
+        "ganesh_chaturthi": {
+          "date": "2004-09-18",
+          "list": "restricted"
+        },
+        "maha_shivaratri": {
+          "date": "2004-02-18",
+          "list": "gazetted"
+        },
+        "raksha_bandhan": {
+          "date": "2004-08-29",
+          "list": "restricted"
+        },
+        "ram_navami": {
+          "date": "2004-03-30",
+          "list": "gazetted"
+        },
+        "makar_sankranti": {
+          "date": "2004-01-15",
+          "list": "restricted"
+        },
+        "pongal": {
+          "date": "2004-01-16",
+          "list": "restricted"
+        },
+        "onam": {
+          "date": "2004-08-28",
+          "list": "restricted"
+        },
+        "eid_ul_fitr": {
+          "date": "2004-11-15",
+          "list": "gazetted"
+        },
+        "eid_ul_adha": {
+          "date": "2004-02-02",
+          "list": "gazetted"
+        },
+        "muharram": {
+          "date": "2004-03-02",
+          "list": "gazetted"
+        },
+        "milad_un_nabi": {
+          "date": "2004-05-02",
+          "list": "gazetted"
+        }
+      }
+    },
+    "2007": {
+      "source": "https://web.archive.org/web/20060901031223/http://persmin.nic.in:80/List_Of_Holiday_2007.pdf",
+      "source_kind": "dopt_pdf",
+      "memo": "No.12/2/2006-JCA, dated the 13th June, 2006 (day handwritten; reads as '13', Hindi page also reads 13) [Id-ul-Zuha listed twice in Annexure I (Jan 01 and Dec 21); the first is recorded]",
+      "festivals": {
+        "diwali": {
+          "date": "2007-11-09",
+          "list": "gazetted"
+        },
+        "holi": {
+          "date": "2007-03-04",
+          "list": "restricted"
+        },
+        "dussehra": {
+          "date": "2007-10-21",
+          "list": "gazetted"
+        },
+        "janmashtami": {
+          "date": "2007-09-04",
+          "list": "gazetted"
+        },
+        "ganesh_chaturthi": {
+          "date": "2007-09-15",
+          "list": "restricted"
+        },
+        "maha_shivaratri": {
+          "date": "2007-02-16",
+          "list": "gazetted"
+        },
+        "raksha_bandhan": {
+          "date": "2007-08-28",
+          "list": "restricted"
+        },
+        "ram_navami": {
+          "date": "2007-03-27",
+          "list": "gazetted"
+        },
+        "makar_sankranti": {
+          "date": "2007-01-14",
+          "list": "restricted"
+        },
+        "pongal": {
+          "date": "2007-01-15",
+          "list": "restricted"
+        },
+        "onam": {
+          "date": "2007-08-27",
+          "list": "restricted"
+        },
+        "eid_ul_fitr": {
+          "date": "2007-10-14",
+          "list": "gazetted"
+        },
+        "eid_ul_adha": {
+          "date": "2007-01-01",
+          "list": "gazetted"
+        },
+        "muharram": {
+          "date": "2007-01-30",
+          "list": "gazetted"
+        },
+        "milad_un_nabi": {
+          "date": "2007-04-01",
+          "list": "gazetted"
+        }
+      }
+    },
+    "2008": {
+      "source": "https://web.archive.org/web/20080421191809/http://persmin.nic.in/HolidayList/2008.pdf",
+      "source_kind": "dopt_pdf",
+      "memo": "No.12/1/2007-JCA, dated the 30th July, 2007 [Makar Sankranti RH has N. India Jan 14 and Bengal Jan 15; Jan 14 recorded]",
+      "festivals": {
+        "diwali": {
+          "date": "2008-10-28",
+          "list": "gazetted"
+        },
+        "holi": {
+          "date": "2008-03-22",
+          "list": "gazetted"
+        },
+        "dussehra": {
+          "date": "2008-10-09",
+          "list": "gazetted"
+        },
+        "janmashtami": {
+          "date": "2008-08-24",
+          "list": "restricted"
+        },
+        "ganesh_chaturthi": {
+          "date": "2008-09-03",
+          "list": "restricted"
+        },
+        "maha_shivaratri": {
+          "date": "2008-03-06",
+          "list": "gazetted"
+        },
+        "raksha_bandhan": {
+          "date": "2008-08-16",
+          "list": "restricted"
+        },
+        "ram_navami": {
+          "date": "2008-04-14",
+          "list": "gazetted"
+        },
+        "makar_sankranti": {
+          "date": "2008-01-14",
+          "list": "restricted"
+        },
+        "pongal": {
+          "date": "2008-01-15",
+          "list": "restricted"
+        },
+        "onam": {
+          "date": "2008-09-12",
+          "list": "restricted"
+        },
+        "eid_ul_fitr": {
+          "date": "2008-10-02",
+          "list": "gazetted"
+        },
+        "eid_ul_adha": {
+          "date": "2008-12-09",
+          "list": "gazetted"
+        },
+        "muharram": {
+          "date": "2008-01-19",
+          "list": "gazetted"
+        },
+        "milad_un_nabi": {
+          "date": "2008-03-21",
+          "list": "gazetted"
+        }
+      }
+    },
+    "2009": {
+      "source": "https://documents.doptcirculars.nic.in/D2/D02est/12_11_2008-JCA.pdf",
+      "source_kind": "dopt_pdf",
+      "memo": "F.No.12/11/2008-JCA, dated the 11th June, 2008 [Muharram listed twice in Annexure I (Jan 08 and Dec 28); the first is recorded. Makar Sankranti RH has North India Jan 13 and Bengal Jan 14; Jan 13 recorded]",
+      "festivals": {
+        "diwali": {
+          "date": "2009-10-17",
+          "list": "gazetted"
+        },
+        "holi": {
+          "date": "2009-03-11",
+          "list": "gazetted"
+        },
+        "dussehra": {
+          "date": "2009-09-28",
+          "list": "gazetted"
+        },
+        "janmashtami": {
+          "date": "2009-08-14",
+          "list": "gazetted"
+        },
+        "ganesh_chaturthi": {
+          "date": "2009-08-23",
+          "list": "restricted"
+        },
+        "maha_shivaratri": {
+          "date": "2009-02-23",
+          "list": "restricted"
+        },
+        "raksha_bandhan": {
+          "date": "2009-08-05",
+          "list": "restricted"
+        },
+        "ram_navami": {
+          "date": "2009-04-03",
+          "list": "gazetted"
+        },
+        "makar_sankranti": {
+          "date": "2009-01-13",
+          "list": "restricted"
+        },
+        "pongal": {
+          "date": "2009-01-14",
+          "list": "restricted"
+        },
+        "onam": {
+          "date": "2009-09-02",
+          "list": "restricted"
+        },
+        "eid_ul_fitr": {
+          "date": "2009-09-21",
+          "list": "gazetted"
+        },
+        "eid_ul_adha": {
+          "date": "2009-11-28",
+          "list": "gazetted"
+        },
+        "muharram": {
+          "date": "2009-01-08",
+          "list": "gazetted"
+        },
+        "milad_un_nabi": {
+          "date": "2009-03-10",
+          "list": "gazetted"
+        }
+      }
+    },
+    "2010": {
+      "source": "https://documents.doptcirculars.nic.in/D2/D02est/12_5_2009-JCA-2.pdf",
+      "source_kind": "dopt_pdf",
+      "memo": "F.No.12/5/2009-JCA-2, dated the 9th June, 2009",
+      "festivals": {
+        "diwali": {
+          "date": "2010-11-05",
+          "list": "gazetted"
+        },
+        "holi": {
+          "date": "2010-03-01",
+          "list": "gazetted"
+        },
+        "dussehra": {
+          "date": "2010-10-17",
+          "list": "gazetted"
+        },
+        "janmashtami": {
+          "date": "2010-09-02",
+          "list": "gazetted"
+        },
+        "ganesh_chaturthi": {
+          "date": "2010-09-11",
+          "list": "restricted"
+        },
+        "maha_shivaratri": {
+          "date": "2010-02-12",
+          "list": "restricted"
+        },
+        "raksha_bandhan": {
+          "date": "2010-08-24",
+          "list": "restricted"
+        },
+        "ram_navami": {
+          "date": "2010-03-24",
+          "list": "gazetted"
+        },
+        "makar_sankranti": {
+          "date": "2010-01-14",
+          "list": "restricted"
+        },
+        "pongal": {
+          "date": "2010-01-14",
+          "list": "restricted"
+        },
+        "onam": {
+          "date": "2010-08-23",
+          "list": "restricted"
+        },
+        "eid_ul_fitr": {
+          "date": "2010-09-11",
+          "list": "gazetted"
+        },
+        "eid_ul_adha": {
+          "date": "2010-11-17",
+          "list": "gazetted"
+        },
+        "muharram": {
+          "date": "2010-12-17",
+          "list": "gazetted"
+        },
+        "milad_un_nabi": {
+          "date": "2010-02-27",
+          "list": "gazetted"
+        }
+      }
+    },
+    "2011": {
+      "source": "https://documents.doptcirculars.nic.in/D2/D02est/12_1_2010-JCA-2.pdf",
+      "source_kind": "dopt_pdf",
+      "memo": "F.No.12/1/2010-JCA-2, dated the 21st June, 2010 [amendment No.12/1/2010-JCA-2 dated 28.06.2010 changes only the Saka date/weekday of the Diwali row]",
+      "festivals": {
+        "diwali": {
+          "date": "2011-10-26",
+          "list": "gazetted"
+        },
+        "holi": {
+          "date": "2011-03-20",
+          "list": "restricted"
+        },
+        "dussehra": {
+          "date": "2011-10-06",
+          "list": "gazetted"
+        },
+        "janmashtami": {
+          "date": "2011-08-22",
+          "list": "gazetted"
+        },
+        "ganesh_chaturthi": {
+          "date": "2011-09-01",
+          "list": "restricted"
+        },
+        "maha_shivaratri": {
+          "date": "2011-03-02",
+          "list": "gazetted"
+        },
+        "raksha_bandhan": {
+          "date": "2011-08-13",
+          "list": "restricted"
+        },
+        "ram_navami": {
+          "date": "2011-04-12",
+          "list": "gazetted"
+        },
+        "makar_sankranti": {
+          "date": "2011-01-14",
+          "list": "restricted"
+        },
+        "pongal": {
+          "date": "2011-01-15",
+          "list": "restricted"
+        },
+        "onam": {
+          "date": "2011-09-09",
+          "list": "restricted"
+        },
+        "eid_ul_fitr": {
+          "date": "2011-08-31",
+          "list": "gazetted"
+        },
+        "eid_ul_adha": {
+          "date": "2011-11-07",
+          "list": "gazetted"
+        },
+        "muharram": {
+          "date": "2011-12-06",
+          "list": "gazetted"
+        },
+        "milad_un_nabi": {
+          "date": "2011-02-16",
+          "list": "gazetted"
+        }
+      }
+    },
+    "2012": {
+      "source": "https://documents.doptcirculars.nic.in/D2/D02est/12_3_2011-JCA-2-1.pdf",
+      "source_kind": "dopt_pdf",
+      "memo": "F.No.12/3/2011-JCA-2 dated the 27th June, 2011 (header OCR-mangled as 'F.N0.12/.3/2011-SJCA-2')",
+      "festivals": {
+        "diwali": {
+          "date": "2012-11-13",
+          "list": "gazetted"
+        },
+        "holi": {
+          "date": "2012-03-08",
+          "list": "gazetted"
+        },
+        "dussehra": {
+          "date": "2012-10-24",
+          "list": "gazetted"
+        },
+        "janmashtami": {
+          "date": "2012-08-10",
+          "list": "gazetted"
+        },
+        "ganesh_chaturthi": {
+          "date": "2012-09-19",
+          "list": "restricted"
+        },
+        "maha_shivaratri": {
+          "date": "2012-02-20",
+          "list": "gazetted"
+        },
+        "raksha_bandhan": {
+          "date": "2012-08-02",
+          "list": "restricted"
+        },
+        "ram_navami": {
+          "date": "2012-04-01",
+          "list": "restricted"
+        },
+        "karva_chauth": {
+          "date": "2012-11-02",
+          "list": "restricted"
+        },
+        "makar_sankranti": {
+          "date": "2012-01-14",
+          "list": "restricted"
+        },
+        "pongal": {
+          "date": "2012-01-15",
+          "list": "restricted"
+        },
+        "onam": {
+          "date": "2012-08-29",
+          "list": "restricted"
+        },
+        "eid_ul_fitr": {
+          "date": "2012-08-20",
+          "list": "gazetted"
+        },
+        "eid_ul_adha": {
+          "date": "2012-10-27",
+          "list": "gazetted"
+        },
+        "muharram": {
+          "date": "2012-11-25",
+          "list": "gazetted"
+        },
+        "milad_un_nabi": {
+          "date": "2012-02-05",
+          "list": "gazetted"
+        }
+      }
+    },
+    "2013": {
+      "source": "https://documents.doptcirculars.nic.in/D2/D02est/12_4_2012-JCA-2.pdf",
+      "source_kind": "dopt_pdf",
+      "memo": "F.No.12/4/2012-JCA-2 dated the 5th June, 2012 [muharram moved from Nov 14 to Nov 15 by OM No.12/10/2013-JCA-2 dated 11.11.2013: https://documents.doptcirculars.nic.in/D2/D02est/12_10_2013-JCA-2.pdf]",
+      "festivals": {
+        "diwali": {
+          "date": "2013-11-03",
+          "list": "gazetted"
+        },
+        "holi": {
+          "date": "2013-03-27",
+          "list": "gazetted"
+        },
+        "dussehra": {
+          "date": "2013-10-13",
+          "list": "gazetted"
+        },
+        "janmashtami": {
+          "date": "2013-08-28",
+          "list": "gazetted"
+        },
+        "ganesh_chaturthi": {
+          "date": "2013-09-09",
+          "list": "restricted"
+        },
+        "maha_shivaratri": {
+          "date": "2013-03-10",
+          "list": "restricted"
+        },
+        "raksha_bandhan": {
+          "date": "2013-08-20",
+          "list": "restricted"
+        },
+        "ram_navami": {
+          "date": "2013-04-19",
+          "list": "gazetted"
+        },
+        "karva_chauth": {
+          "date": "2013-10-22",
+          "list": "restricted"
+        },
+        "makar_sankranti": {
+          "date": "2013-01-13",
+          "list": "restricted"
+        },
+        "pongal": {
+          "date": "2013-01-14",
+          "list": "restricted"
+        },
+        "onam": {
+          "date": "2013-09-16",
+          "list": "restricted"
+        },
+        "eid_ul_fitr": {
+          "date": "2013-08-09",
+          "list": "gazetted"
+        },
+        "eid_ul_adha": {
+          "date": "2013-10-16",
+          "list": "gazetted"
+        },
+        "muharram": {
+          "date": "2013-11-15",
+          "list": "gazetted"
+        },
+        "milad_un_nabi": {
+          "date": "2013-01-25",
+          "list": "gazetted"
+        }
+      }
+    },
+    "2014": {
+      "source": "https://documents.doptcirculars.nic.in/D2/D02est/12_5_2013-JCA-2-11062013.pdf",
+      "source_kind": "dopt_pdf",
+      "memo": "F.No.12/5/2013-JCA-2 dated the 11th June, 2013",
+      "festivals": {
+        "diwali": {
+          "date": "2014-10-23",
+          "list": "gazetted"
+        },
+        "holi": {
+          "date": "2014-03-17",
+          "list": "gazetted"
+        },
+        "dussehra": {
+          "date": "2014-10-03",
+          "list": "gazetted"
+        },
+        "janmashtami": {
+          "date": "2014-08-18",
+          "list": "gazetted"
+        },
+        "ganesh_chaturthi": {
+          "date": "2014-08-29",
+          "list": "restricted"
+        },
+        "maha_shivaratri": {
+          "date": "2014-02-27",
+          "list": "restricted"
+        },
+        "raksha_bandhan": {
+          "date": "2014-08-10",
+          "list": "restricted"
+        },
+        "ram_navami": {
+          "date": "2014-04-08",
+          "list": "gazetted"
+        },
+        "karva_chauth": {
+          "date": "2014-10-11",
+          "list": "restricted"
+        },
+        "makar_sankranti": {
+          "date": "2014-01-14",
+          "list": "restricted"
+        },
+        "pongal": {
+          "date": "2014-01-14",
+          "list": "restricted"
+        },
+        "onam": {
+          "date": "2014-09-07",
+          "list": "restricted"
+        },
+        "eid_ul_fitr": {
+          "date": "2014-07-29",
+          "list": "gazetted"
+        },
+        "eid_ul_adha": {
+          "date": "2014-10-06",
+          "list": "gazetted"
+        },
+        "muharram": {
+          "date": "2014-11-04",
+          "list": "gazetted"
+        },
+        "milad_un_nabi": {
+          "date": "2014-01-14",
+          "list": "gazetted"
+        }
+      }
+    },
+    "2015": {
+      "source": "https://documents.doptcirculars.nic.in/D2/D02est/12_5_2014_JCA_2-06062014.pdf",
+      "source_kind": "dopt_pdf",
+      "memo": "F.No.12/5/2014-JCA-2 dated the 6th June, 2014 (Office Memorandum) [maha_shivaratri was not in the original list; added as RH on Feb 17 by OM No.12/5/2014-JCA-2 dated 10.07.2014: https://documents.doptcirculars.nic.in/D2/D02est/12_5_2014-JCA-2-10072014.pdf. Milad-un-Nabi is listed twice in Annexure I (Jan 04 and Dec 24); the first is recorded]",
+      "festivals": {
+        "diwali": {
+          "date": "2015-11-11",
+          "list": "gazetted"
+        },
+        "holi": {
+          "date": "2015-03-06",
+          "list": "gazetted"
+        },
+        "dussehra": {
+          "date": "2015-10-22",
+          "list": "gazetted"
+        },
+        "janmashtami": {
+          "date": "2015-09-05",
+          "list": "gazetted"
+        },
+        "ganesh_chaturthi": {
+          "date": "2015-09-17",
+          "list": "restricted"
+        },
+        "maha_shivaratri": {
+          "date": "2015-02-17",
+          "list": "restricted"
+        },
+        "raksha_bandhan": {
+          "date": "2015-08-29",
+          "list": "restricted"
+        },
+        "ram_navami": {
+          "date": "2015-03-28",
+          "list": "gazetted"
+        },
+        "karva_chauth": {
+          "date": "2015-10-30",
+          "list": "restricted"
+        },
+        "makar_sankranti": {
+          "date": "2015-01-14",
+          "list": "restricted"
+        },
+        "pongal": {
+          "date": "2015-01-15",
+          "list": "restricted"
+        },
+        "onam": {
+          "date": "2015-08-28",
+          "list": "restricted"
+        },
+        "eid_ul_fitr": {
+          "date": "2015-07-18",
+          "list": "gazetted"
+        },
+        "eid_ul_adha": {
+          "date": "2015-09-25",
+          "list": "gazetted"
+        },
+        "muharram": {
+          "date": "2015-10-24",
+          "list": "gazetted"
+        },
+        "milad_un_nabi": {
+          "date": "2015-01-04",
+          "list": "gazetted"
+        }
+      }
+    },
+    "2016": {
+      "source": "https://documents.doptcirculars.nic.in/D2/D02est/12_7_2015-JCA-2-11062015.pdf",
+      "source_kind": "dopt_pdf",
+      "memo": "F.No.12/7/2015-JCA-2 dated the 11th June, 2015 [eid_ul_fitr Jul 06->Jul 07 (OM 12/10/2016-JCA2 dated 05.07.2016: https://documents.doptcirculars.nic.in/D2/D02est/12_10_2016-JCA2-05062016.pdf); eid_ul_adha Sep 12->Sep 13 (OM 12/11/2016-JCA2 dated 06.09.2016: https://documents.doptcirculars.nic.in/D2/D02est/12_11_2016-JCA2-06092016.pdf); milad_un_nabi Dec 13->Dec 12 (OM 12/18/2016-JCA2 dated 07.12.2016: https://documents.doptcirculars.nic.in/D2/D02est/12_18_2016-JCA2-07122016.pdf)]",
+      "festivals": {
+        "diwali": {
+          "date": "2016-10-30",
+          "list": "gazetted"
+        },
+        "holi": {
+          "date": "2016-03-24",
+          "list": "gazetted"
+        },
+        "dussehra": {
+          "date": "2016-10-11",
+          "list": "gazetted"
+        },
+        "janmashtami": {
+          "date": "2016-08-25",
+          "list": "gazetted"
+        },
+        "ganesh_chaturthi": {
+          "date": "2016-09-05",
+          "list": "restricted"
+        },
+        "maha_shivaratri": {
+          "date": "2016-03-07",
+          "list": "restricted"
+        },
+        "raksha_bandhan": {
+          "date": "2016-08-18",
+          "list": "restricted"
+        },
+        "ram_navami": {
+          "date": "2016-04-15",
+          "list": "gazetted"
+        },
+        "karva_chauth": {
+          "date": "2016-10-19",
+          "list": "restricted"
+        },
+        "makar_sankranti": {
+          "date": "2016-01-14",
+          "list": "restricted"
+        },
+        "pongal": {
+          "date": "2016-01-15",
+          "list": "restricted"
+        },
+        "onam": {
+          "date": "2016-09-14",
+          "list": "restricted"
+        },
+        "eid_ul_fitr": {
+          "date": "2016-07-07",
+          "list": "gazetted"
+        },
+        "eid_ul_adha": {
+          "date": "2016-09-13",
+          "list": "gazetted"
+        },
+        "muharram": {
+          "date": "2016-10-12",
+          "list": "gazetted"
+        },
+        "milad_un_nabi": {
+          "date": "2016-12-12",
+          "list": "gazetted"
+        }
+      }
+    },
+    "2017": {
+      "source": "https://documents.doptcirculars.nic.in/D2/D02est/12_8_2016-JCA-2-24062016A.pdf",
+      "source_kind": "dopt_pdf",
+      "memo": "F.No.12/8/2016-JCA-2, Dated the 24th June, 2016",
+      "festivals": {
+        "diwali": {
+          "date": "2017-10-19",
+          "list": "gazetted"
+        },
+        "holi": {
+          "date": "2017-03-13",
+          "list": "gazetted"
+        },
+        "dussehra": {
+          "date": "2017-09-30",
+          "list": "gazetted"
+        },
+        "janmashtami": {
+          "date": "2017-08-15",
+          "list": "restricted"
+        },
+        "ganesh_chaturthi": {
+          "date": "2017-08-25",
+          "list": "restricted"
+        },
+        "maha_shivaratri": {
+          "date": "2017-02-24",
+          "list": "gazetted"
+        },
+        "raksha_bandhan": {
+          "date": "2017-08-07",
+          "list": "restricted"
+        },
+        "ram_navami": {
+          "date": "2017-04-04",
+          "list": "gazetted"
+        },
+        "karva_chauth": {
+          "date": "2017-10-08",
+          "list": "restricted"
+        },
+        "makar_sankranti": {
+          "date": "2017-01-14",
+          "list": "restricted"
+        },
+        "pongal": {
+          "date": "2017-01-14",
+          "list": "restricted"
+        },
+        "onam": {
+          "date": "2017-09-04",
+          "list": "restricted"
+        },
+        "eid_ul_fitr": {
+          "date": "2017-06-26",
+          "list": "gazetted"
+        },
+        "eid_ul_adha": {
+          "date": "2017-09-02",
+          "list": "gazetted"
+        },
+        "muharram": {
+          "date": "2017-10-01",
+          "list": "gazetted"
+        },
+        "milad_un_nabi": {
+          "date": "2017-12-02",
+          "list": "gazetted"
+        }
+      }
+    },
+    "2018": {
+      "source": "https://documents.doptcirculars.nic.in/D2/D02est/12_3_2017-JCA-2-14062017A.pdf",
+      "source_kind": "dopt_pdf",
+      "memo": "F.No.12/3/2017-JCA-2, Office Memorandum dated the 14th June, 2017 [Bakrid moved to Aug 23 by OM 12/4/2018-JCA2 dated 14.08.2018, then restored to Aug 22 by OM dated 20.08.2018; net unchanged]",
+      "festivals": {
+        "diwali": {
+          "date": "2018-11-07",
+          "list": "gazetted"
+        },
+        "holi": {
+          "date": "2018-03-02",
+          "list": "gazetted"
+        },
+        "dussehra": {
+          "date": "2018-10-19",
+          "list": "gazetted"
+        },
+        "janmashtami": {
+          "date": "2018-09-03",
+          "list": "gazetted"
+        },
+        "ganesh_chaturthi": {
+          "date": "2018-09-13",
+          "list": "restricted"
+        },
+        "maha_shivaratri": {
+          "date": "2018-02-14",
+          "list": "gazetted"
+        },
+        "raksha_bandhan": {
+          "date": "2018-08-26",
+          "list": "restricted"
+        },
+        "ram_navami": {
+          "date": "2018-03-25",
+          "list": "restricted"
+        },
+        "karva_chauth": {
+          "date": "2018-10-27",
+          "list": "restricted"
+        },
+        "makar_sankranti": {
+          "date": "2018-01-14",
+          "list": "restricted"
+        },
+        "pongal": {
+          "date": "2018-01-14",
+          "list": "restricted"
+        },
+        "onam": {
+          "date": "2018-08-25",
+          "list": "restricted"
+        },
+        "eid_ul_fitr": {
+          "date": "2018-06-16",
+          "list": "gazetted"
+        },
+        "eid_ul_adha": {
+          "date": "2018-08-22",
+          "list": "gazetted"
+        },
+        "muharram": {
+          "date": "2018-09-21",
+          "list": "gazetted"
+        },
+        "milad_un_nabi": {
+          "date": "2018-11-21",
+          "list": "gazetted"
+        }
+      }
+    },
+    "2019": {
+      "source": "https://dopt.gov.in/sites/default/files/holiday%20list%202019%202_1.pdf",
+      "source_kind": "dopt_pdf",
+      "memo": "F. No.12/2/2018-JCA-2, Dated the 11th July, 2018",
+      "festivals": {
+        "diwali": {
+          "date": "2019-10-27",
+          "list": "gazetted"
+        },
+        "holi": {
+          "date": "2019-03-21",
+          "list": "gazetted"
+        },
+        "dussehra": {
+          "date": "2019-10-08",
+          "list": "gazetted"
+        },
+        "janmashtami": {
+          "date": "2019-08-24",
+          "list": "gazetted"
+        },
+        "ganesh_chaturthi": {
+          "date": "2019-09-02",
+          "list": "restricted"
+        },
+        "maha_shivaratri": {
+          "date": "2019-03-04",
+          "list": "gazetted"
+        },
+        "raksha_bandhan": {
+          "date": "2019-08-15",
+          "list": "restricted"
+        },
+        "ram_navami": {
+          "date": "2019-04-13",
+          "list": "restricted"
+        },
+        "karva_chauth": {
+          "date": "2019-10-17",
+          "list": "restricted"
+        },
+        "makar_sankranti": {
+          "date": "2019-01-14",
+          "list": "restricted"
+        },
+        "pongal": {
+          "date": "2019-01-15",
+          "list": "restricted"
+        },
+        "onam": {
+          "date": "2019-09-11",
+          "list": "restricted"
+        },
+        "eid_ul_fitr": {
+          "date": "2019-06-05",
+          "list": "gazetted"
+        },
+        "eid_ul_adha": {
+          "date": "2019-08-12",
+          "list": "gazetted"
+        },
+        "muharram": {
+          "date": "2019-09-10",
+          "list": "gazetted"
+        },
+        "milad_un_nabi": {
+          "date": "2019-11-10",
+          "list": "gazetted"
+        }
+      }
+    },
+    "2020": {
+      "source": "https://dopt.gov.in/sites/default/files/Holiday%20list%202020.pdf",
+      "source_kind": "dopt_pdf",
+      "memo": "F.No.12/1/2019-JCA-2, Office Memorandum dated the 18 June, 2019 (day handwritten)",
+      "festivals": {
+        "diwali": {
+          "date": "2020-11-14",
+          "list": "gazetted"
+        },
+        "holi": {
+          "date": "2020-03-10",
+          "list": "gazetted"
+        },
+        "dussehra": {
+          "date": "2020-10-25",
+          "list": "gazetted"
+        },
+        "janmashtami": {
+          "date": "2020-08-12",
+          "list": "gazetted"
+        },
+        "ganesh_chaturthi": {
+          "date": "2020-08-22",
+          "list": "restricted"
+        },
+        "maha_shivaratri": {
+          "date": "2020-02-21",
+          "list": "restricted"
+        },
+        "raksha_bandhan": {
+          "date": "2020-08-03",
+          "list": "restricted"
+        },
+        "ram_navami": {
+          "date": "2020-04-02",
+          "list": "gazetted"
+        },
+        "karva_chauth": {
+          "date": "2020-11-04",
+          "list": "restricted"
+        },
+        "makar_sankranti": {
+          "date": "2020-01-15",
+          "list": "restricted"
+        },
+        "pongal": {
+          "date": "2020-01-15",
+          "list": "restricted"
+        },
+        "onam": {
+          "date": "2020-08-31",
+          "list": "restricted"
+        },
+        "eid_ul_fitr": {
+          "date": "2020-05-25",
+          "list": "gazetted"
+        },
+        "eid_ul_adha": {
+          "date": "2020-08-01",
+          "list": "gazetted"
+        },
+        "muharram": {
+          "date": "2020-08-30",
+          "list": "gazetted"
+        },
+        "milad_un_nabi": {
+          "date": "2020-10-30",
+          "list": "gazetted"
+        }
+      }
+    },
+    "2021": {
+      "source": "https://documents.doptcirculars.nic.in/D2/D02est/HolidaylistKKLde.pdf",
+      "source_kind": "dopt_pdf",
+      "memo": "F.No.12/9/2020-JCA-2, Office Memorandum dated the 10th June, 2020 [muharram moved from Aug 19 to Aug 20 by OM No.12/13/2016-JCA-2 dated 11.08.2021: https://documents.doptcirculars.nic.in/D2/D02est/MuharramhiZm8.PDF]",
+      "festivals": {
+        "diwali": {
+          "date": "2021-11-04",
+          "list": "gazetted"
+        },
+        "holi": {
+          "date": "2021-03-29",
+          "list": "gazetted"
+        },
+        "dussehra": {
+          "date": "2021-10-15",
+          "list": "gazetted"
+        },
+        "janmashtami": {
+          "date": "2021-08-30",
+          "list": "gazetted"
+        },
+        "ganesh_chaturthi": {
+          "date": "2021-09-10",
+          "list": "restricted"
+        },
+        "maha_shivaratri": {
+          "date": "2021-03-11",
+          "list": "restricted"
+        },
+        "raksha_bandhan": {
+          "date": "2021-08-22",
+          "list": "restricted"
+        },
+        "ram_navami": {
+          "date": "2021-04-21",
+          "list": "gazetted"
+        },
+        "karva_chauth": {
+          "date": "2021-10-24",
+          "list": "restricted"
+        },
+        "makar_sankranti": {
+          "date": "2021-01-14",
+          "list": "restricted"
+        },
+        "pongal": {
+          "date": "2021-01-14",
+          "list": "restricted"
+        },
+        "onam": {
+          "date": "2021-08-21",
+          "list": "restricted"
+        },
+        "eid_ul_fitr": {
+          "date": "2021-05-14",
+          "list": "gazetted"
+        },
+        "eid_ul_adha": {
+          "date": "2021-07-21",
+          "list": "gazetted"
+        },
+        "muharram": {
+          "date": "2021-08-20",
+          "list": "gazetted"
+        },
+        "milad_un_nabi": {
+          "date": "2021-10-19",
+          "list": "gazetted"
+        }
+      }
+    },
+    "2022": {
+      "source": "https://documents.doptcirculars.nic.in/D2/D02est/holiday%20list%2020220rsMX.pdf",
+      "source_kind": "dopt_pdf",
+      "memo": "F.No.12/5/2021-JCA-2, dated the 8th June, 2021 (DoPT listing: 12/5/2021-JCA, 08/06/2021)",
+      "festivals": {
+        "diwali": {
+          "date": "2022-10-24",
+          "list": "gazetted"
+        },
+        "holi": {
+          "date": "2022-03-18",
+          "list": "gazetted"
+        },
+        "dussehra": {
+          "date": "2022-10-05",
+          "list": "gazetted"
+        },
+        "janmashtami": {
+          "date": "2022-08-19",
+          "list": "gazetted"
+        },
+        "ganesh_chaturthi": {
+          "date": "2022-08-31",
+          "list": "restricted"
+        },
+        "maha_shivaratri": {
+          "date": "2022-03-01",
+          "list": "gazetted"
+        },
+        "raksha_bandhan": {
+          "date": "2022-08-11",
+          "list": "restricted"
+        },
+        "ram_navami": {
+          "date": "2022-04-10",
+          "list": "restricted"
+        },
+        "karva_chauth": {
+          "date": "2022-10-13",
+          "list": "restricted"
+        },
+        "makar_sankranti": {
+          "date": "2022-01-14",
+          "list": "restricted"
+        },
+        "pongal": {
+          "date": "2022-01-14",
+          "list": "restricted"
+        },
+        "onam": {
+          "date": "2022-09-08",
+          "list": "restricted"
+        },
+        "eid_ul_fitr": {
+          "date": "2022-05-03",
+          "list": "gazetted"
+        },
+        "eid_ul_adha": {
+          "date": "2022-07-10",
+          "list": "gazetted"
+        },
+        "muharram": {
+          "date": "2022-08-09",
+          "list": "gazetted"
+        },
+        "milad_un_nabi": {
+          "date": "2022-10-09",
+          "list": "gazetted"
+        }
+      }
+    },
+    "2023": {
+      "source": "https://documents.doptcirculars.nic.in/D2/D02est/Naresh_NIC_1_20220616164953373JH62n.pdf",
+      "source_kind": "dopt_pdf",
+      "memo": "F. No. 12/5/2022-JCA, dated 16 June 2022 (day digits garbled in scan; date confirmed by DoPT listing 16/06/2022 and by the corrigendum citing 'O.M of even no., dated 16/06/2022')",
+      "festivals": {
+        "diwali": {
+          "date": "2023-11-12",
+          "list": "gazetted"
+        },
+        "holi": {
+          "date": "2023-03-08",
+          "list": "gazetted"
+        },
+        "dussehra": {
+          "date": "2023-10-24",
+          "list": "gazetted"
+        },
+        "janmashtami": {
+          "date": "2023-09-07",
+          "list": "gazetted"
+        },
+        "ganesh_chaturthi": {
+          "date": "2023-09-19",
+          "list": "restricted"
+        },
+        "maha_shivaratri": {
+          "date": "2023-02-18",
+          "list": "restricted"
+        },
+        "raksha_bandhan": {
+          "date": "2023-08-30",
+          "list": "restricted"
+        },
+        "ram_navami": {
+          "date": "2023-03-30",
+          "list": "gazetted"
+        },
+        "karva_chauth": {
+          "date": "2023-11-01",
+          "list": "restricted"
+        },
+        "makar_sankranti": {
+          "date": "2023-01-14",
+          "list": "restricted"
+        },
+        "pongal": {
+          "date": "2023-01-15",
+          "list": "restricted"
+        },
+        "onam": {
+          "date": "2023-08-29",
+          "list": "restricted"
+        },
+        "eid_ul_fitr": {
+          "date": "2023-04-22",
+          "list": "gazetted"
+        },
+        "eid_ul_adha": {
+          "date": "2023-06-29",
+          "list": "gazetted"
+        },
+        "muharram": {
+          "date": "2023-07-29",
+          "list": "gazetted"
+        },
+        "milad_un_nabi": {
+          "date": "2023-09-28",
+          "list": "gazetted"
+        }
+      }
+    },
+    "2024": {
+      "source": "https://documents.doptcirculars.nic.in/D2/D02est/Holiday%20to%20be%20observed%20in%20Central%20government%20offices%20during%20the%20year%202024kFtwz.PDF",
+      "source_kind": "dopt_pdf",
+      "memo": "F.No.12/2/2023-JCA, dated the 3rd July, 2023",
+      "festivals": {
+        "diwali": {
+          "date": "2024-10-31",
+          "list": "gazetted"
+        },
+        "holi": {
+          "date": "2024-03-25",
+          "list": "gazetted"
+        },
+        "dussehra": {
+          "date": "2024-10-12",
+          "list": "gazetted"
+        },
+        "janmashtami": {
+          "date": "2024-08-26",
+          "list": "gazetted"
+        },
+        "ganesh_chaturthi": {
+          "date": "2024-09-07",
+          "list": "restricted"
+        },
+        "maha_shivaratri": {
+          "date": "2024-03-08",
+          "list": "restricted"
+        },
+        "raksha_bandhan": {
+          "date": "2024-08-19",
+          "list": "restricted"
+        },
+        "ram_navami": {
+          "date": "2024-04-17",
+          "list": "gazetted"
+        },
+        "karva_chauth": {
+          "date": "2024-10-20",
+          "list": "restricted"
+        },
+        "makar_sankranti": {
+          "date": "2024-01-14",
+          "list": "restricted"
+        },
+        "pongal": {
+          "date": "2024-01-15",
+          "list": "restricted"
+        },
+        "onam": {
+          "date": "2024-09-15",
+          "list": "restricted"
+        },
+        "eid_ul_fitr": {
+          "date": "2024-04-11",
+          "list": "gazetted"
+        },
+        "eid_ul_adha": {
+          "date": "2024-06-17",
+          "list": "gazetted"
+        },
+        "muharram": {
+          "date": "2024-07-17",
+          "list": "gazetted"
+        },
+        "milad_un_nabi": {
+          "date": "2024-09-16",
+          "list": "gazetted"
+        }
+      }
+    },
+    "2025": {
+      "source": "https://dopt.gov.in/sites/default/files/List%20of%20holidays%202025.pdf",
+      "source_kind": "dopt_pdf",
+      "memo": "F.No.12/2/2023-JCA, dated the 9th July, 2024",
+      "festivals": {
+        "diwali": {
+          "date": "2025-10-20",
+          "list": "gazetted"
+        },
+        "holi": {
+          "date": "2025-03-14",
+          "list": "gazetted"
+        },
+        "dussehra": {
+          "date": "2025-10-02",
+          "list": "gazetted"
+        },
+        "janmashtami": {
+          "date": "2025-08-16",
+          "list": "gazetted"
+        },
+        "ganesh_chaturthi": {
+          "date": "2025-08-27",
+          "list": "restricted"
+        },
+        "maha_shivaratri": {
+          "date": "2025-02-26",
+          "list": "gazetted"
+        },
+        "raksha_bandhan": {
+          "date": "2025-08-09",
+          "list": "restricted"
+        },
+        "ram_navami": {
+          "date": "2025-04-06",
+          "list": "restricted"
+        },
+        "karva_chauth": {
+          "date": "2025-10-10",
+          "list": "restricted"
+        },
+        "makar_sankranti": {
+          "date": "2025-01-14",
+          "list": "restricted"
+        },
+        "pongal": {
+          "date": "2025-01-14",
+          "list": "restricted"
+        },
+        "onam": {
+          "date": "2025-09-05",
+          "list": "restricted"
+        },
+        "eid_ul_fitr": {
+          "date": "2025-03-31",
+          "list": "gazetted"
+        },
+        "eid_ul_adha": {
+          "date": "2025-06-07",
+          "list": "gazetted"
+        },
+        "muharram": {
+          "date": "2025-07-06",
+          "list": "gazetted"
+        },
+        "milad_un_nabi": {
+          "date": "2025-09-05",
+          "list": "gazetted"
+        }
+      }
+    },
+    "2026": {
+      "source": "https://documents.doptcirculars.nic.in/D2/D02est/Holidays%20to%20be%20observed%20in%20Central%20Government%20Offices%20during%20the%20year%2020265vgBs.pdf",
+      "source_kind": "dopt_pdf",
+      "memo": "F.No.12/2/2023-JCA, dated the 3rd July, 2025 [eid_ul_adha moved from May 27 to May 28 by OM F.No.12/3/2023-JCA dated 22.05.2026: https://documents.doptcirculars.nic.in/D2/D02est/Change%20in%20the%20date%20of%20holiday%20of%20Id-ul-Zuhamg709.PDF]",
+      "festivals": {
+        "diwali": {
+          "date": "2026-11-08",
+          "list": "gazetted"
+        },
+        "holi": {
+          "date": "2026-03-04",
+          "list": "gazetted"
+        },
+        "dussehra": {
+          "date": "2026-10-20",
+          "list": "gazetted"
+        },
+        "janmashtami": {
+          "date": "2026-09-04",
+          "list": "gazetted"
+        },
+        "ganesh_chaturthi": {
+          "date": "2026-09-14",
+          "list": "restricted"
+        },
+        "maha_shivaratri": {
+          "date": "2026-02-15",
+          "list": "restricted"
+        },
+        "raksha_bandhan": {
+          "date": "2026-08-28",
+          "list": "restricted"
+        },
+        "ram_navami": {
+          "date": "2026-03-26",
+          "list": "gazetted"
+        },
+        "karva_chauth": {
+          "date": "2026-10-29",
+          "list": "restricted"
+        },
+        "makar_sankranti": {
+          "date": "2026-01-14",
+          "list": "restricted"
+        },
+        "pongal": {
+          "date": "2026-01-14",
+          "list": "restricted"
+        },
+        "onam": {
+          "date": "2026-08-26",
+          "list": "restricted"
+        },
+        "eid_ul_fitr": {
+          "date": "2026-03-21",
+          "list": "gazetted"
+        },
+        "eid_ul_adha": {
+          "date": "2026-05-28",
+          "list": "gazetted"
+        },
+        "muharram": {
+          "date": "2026-06-26",
+          "list": "gazetted"
+        },
+        "milad_un_nabi": {
+          "date": "2026-08-26",
+          "list": "gazetted"
+        }
+      }
+    },
+    "2027": {
+      "source": "https://documents.doptcirculars.nic.in/D2/D02est/Holiday%20list%202027Cj0HU.PDF",
+      "source_kind": "dopt_pdf",
+      "memo": "F. No.12/2/2023-JCA, dated 16 July 2026 (day digits OCR-garbled; date from DoPT listing 16/07/2026)",
+      "festivals": {
+        "diwali": {
+          "date": "2027-10-29",
+          "list": "gazetted"
+        },
+        "holi": {
+          "date": "2027-03-23",
+          "list": "gazetted"
+        },
+        "dussehra": {
+          "date": "2027-10-09",
+          "list": "gazetted"
+        },
+        "janmashtami": {
+          "date": "2027-08-25",
+          "list": "gazetted"
+        },
+        "ganesh_chaturthi": {
+          "date": "2027-09-04",
+          "list": "restricted"
+        },
+        "maha_shivaratri": {
+          "date": "2027-03-06",
+          "list": "restricted"
+        },
+        "raksha_bandhan": {
+          "date": "2027-08-17",
+          "list": "restricted"
+        },
+        "ram_navami": {
+          "date": "2027-04-15",
+          "list": "gazetted"
+        },
+        "navratri_start": {
+          "date": "2027-04-07",
+          "list": "restricted"
+        },
+        "karva_chauth": {
+          "date": "2027-10-18",
+          "list": "restricted"
+        },
+        "makar_sankranti": {
+          "date": "2027-01-14",
+          "list": "restricted"
+        },
+        "pongal": {
+          "date": "2027-01-15",
+          "list": "restricted"
+        },
+        "onam": {
+          "date": "2027-09-12",
+          "list": "restricted"
+        },
+        "eid_ul_fitr": {
+          "date": "2027-03-10",
+          "list": "gazetted"
+        },
+        "eid_ul_adha": {
+          "date": "2027-05-17",
+          "list": "gazetted"
+        },
+        "muharram": {
+          "date": "2027-06-16",
+          "list": "gazetted"
+        },
+        "milad_un_nabi": {
+          "date": "2027-08-15",
+          "list": "gazetted"
+        }
+      }
+    }
+  }
+}

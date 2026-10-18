@@ -1,0 +1,101 @@
+{
+ "note": "Phase 5: \"except holidays\" now means the home region's public and bank holidays from date-holidays. For the default zone that is the US federal holidays. The new expected exdates were written from the US federal holiday calendar (5 U.S.C. 6103 with weekend observance rules), not from the resolver output.",
+ "changes": [
+  {
+   "id": "p3-exdates-08",
+   "text": "team standup every weekday at 9am except holidays",
+   "old": [
+    "2026-11-26T09:00",
+    "2026-11-27T09:00",
+    "2026-12-24T09:00",
+    "2026-12-25T09:00",
+    "2026-12-31T09:00",
+    "2027-01-01T09:00",
+    "2027-02-09T09:00",
+    "2027-02-15T09:00",
+    "2027-03-17T09:00",
+    "2027-03-26T09:00",
+    "2027-05-31T09:00",
+    "2027-07-01T09:00",
+    "2027-09-06T09:00"
+   ],
+   "new": [
+    "2026-11-11T09:00",
+    "2026-11-26T09:00",
+    "2026-12-25T09:00",
+    "2027-01-01T09:00",
+    "2027-01-18T09:00",
+    "2027-02-15T09:00",
+    "2027-05-31T09:00",
+    "2027-06-18T09:00",
+    "2027-07-05T09:00",
+    "2027-09-06T09:00",
+    "2027-10-11T09:00"
+   ]
+  },
+  {
+   "id": "p3-exdates-09",
+   "text": "remind me to put the bins out every Thursday at 7am except holidays",
+   "old": [
+    "2026-11-26T07:00",
+    "2026-12-24T07:00",
+    "2026-12-31T07:00",
+    "2027-07-01T07:00"
+   ],
+   "new": [
+    "2026-11-26T07:00"
+   ]
+  },
+  {
+   "id": "p3-exdates-20",
+   "text": "pay rent on the 1st of every month except holidays",
+   "old": [
+    "2027-01-01",
+    "2027-07-01"
+   ],
+   "new": [
+    "2027-01-01"
+   ]
+  },
+  {
+   "id": "p3b-exdates-06",
+   "text": "submit timesheet every fri except holidays",
+   "old": [
+    "2026-11-27",
+    "2026-12-25",
+    "2027-01-01",
+    "2027-03-26"
+   ],
+   "new": [
+    "2026-12-25",
+    "2027-01-01",
+    "2027-06-18"
+   ]
+  },
+  {
+   "id": "p4c-exdates-05",
+   "text": "1:1 with Dana every Monday at 11am except holidays",
+   "old": [
+    "2027-02-15T11:00",
+    "2027-05-31T11:00",
+    "2027-09-06T11:00"
+   ],
+   "new": [
+    "2027-01-18T11:00",
+    "2027-02-15T11:00",
+    "2027-05-31T11:00",
+    "2027-07-05T11:00",
+    "2027-09-06T11:00",
+    "2027-10-11T11:00"
+   ]
+  },
+  {
+   "id": "p4d-exdates-10",
+   "text": "trash day every tuesday except holidays",
+   "old": [
+    "2027-02-09"
+   ],
+   "new": []
+  }
+ ]
+}
