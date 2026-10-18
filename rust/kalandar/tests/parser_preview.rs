@@ -483,3 +483,46 @@ fn preview_capture_keeps_low_signal_text_as_thought() {
         "idea about better shell notifications"
     );
 }
+
+#[test]
+fn preview_capture_includes_the_resolved_schedule() {
+    let Some(parser) = parser() else {
+        return;
+    };
+    let preview = parser.preview_capture(CapturePreviewRequest {
+        text: "task: finish report tomorrow at 3pm".to_string(),
+        now_iso: Some("2026-05-16T12:00:00.000Z".to_string()),
+        timezone: "America/New_York".to_string(),
+        locale: Some("en-US".to_string()),
+        known_assignees: None,
+    });
+    let start = preview
+        .schedule
+        .and_then(|schedule| schedule.start)
+        .expect("resolved start");
+    assert_eq!(start.local.as_deref(), Some("2026-05-17T15:00:00"));
+    assert_eq!(start.instant.as_deref(), Some("2026-05-17T15:00:00-04:00"));
+
+    let preview = parser.preview_capture(CapturePreviewRequest {
+        text: "reminder: water plants every other saturday at 9am".to_string(),
+        now_iso: Some("2026-05-16T12:00:00.000Z".to_string()),
+        timezone: "America/New_York".to_string(),
+        locale: Some("en-US".to_string()),
+        known_assignees: None,
+    });
+    let recurrence = preview
+        .schedule
+        .and_then(|schedule| schedule.recurrence)
+        .expect("resolved recurrence");
+    assert_eq!(recurrence.rrule, "FREQ=WEEKLY;INTERVAL=2;BYDAY=SA");
+    assert_eq!(recurrence.time.as_deref(), Some("09:00"));
+
+    let preview = parser.preview_capture(CapturePreviewRequest {
+        text: "task: buy groceries".to_string(),
+        now_iso: Some("2026-05-16T12:00:00.000Z".to_string()),
+        timezone: "America/New_York".to_string(),
+        locale: Some("en-US".to_string()),
+        known_assignees: None,
+    });
+    assert!(preview.schedule.is_none());
+}

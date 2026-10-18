@@ -1,7 +1,8 @@
 use super::{
-    postprocess::finalize_task_title, CapturePreviewRecurrenceException, CapturePreviewRequest,
-    CapturePreviewTaskDraft, CapturePreviewWarning,
+    postprocess::finalize_task_title, schedule::extract_schedule, CapturePreviewRequest,
+    CapturePreviewTaskDraft, CapturePreviewWarning, PreviewSchedule,
 };
+use kalandar_dates::capture::CaptureKind;
 use regex::Regex;
 use std::collections::BTreeSet;
 use std::sync::OnceLock;
@@ -10,23 +11,22 @@ pub struct TaskParseOutput {
     pub draft: CapturePreviewTaskDraft,
     pub warnings: Vec<CapturePreviewWarning>,
     pub confidence: f64,
+    pub schedule: Option<PreviewSchedule>,
 }
 
 pub fn parse_task_preview(text: &str, request: &CapturePreviewRequest) -> TaskParseOutput {
-    let corrected = apply_date_typo_corrections(text);
-    let mut working = corrected.working;
+    let mut working = normalize_whitespace(text);
 
     let priority = detect_priority(&mut working);
     let status = detect_status(&mut working);
-    let duration = detect_duration(&mut working);
     let tags = extract_tags(&mut working);
     let project = extract_project(&mut working);
     let assignees = extract_assignees(&mut working, request.known_assignees.as_deref());
-    let schedule = extract_schedule(&mut working);
-    let title = build_task_title(&working);
+    let schedule = extract_schedule(&working, CaptureKind::Task, request);
+    let title = build_task_title(&schedule.remaining);
 
     let mut warnings = Vec::new();
-    if schedule.due_date_text.is_none() && schedule.recurrence_text.is_none() {
+    if schedule.texts.moment.is_none() && schedule.texts.recurrence.is_none() {
         warnings.push(warning(
             "no_due_date",
             "info",
@@ -51,6 +51,7 @@ pub fn parse_task_preview(text: &str, request: &CapturePreviewRequest) -> TaskPa
             ));
         }
     }
+    warnings.extend(schedule.warnings.iter().cloned());
 
     let confidence = if title == "Task" {
         0.3
@@ -64,6 +65,7 @@ pub fn parse_task_preview(text: &str, request: &CapturePreviewRequest) -> TaskPa
         0.55
     };
 
+    let recurrence_exceptions = schedule.recurrence_exceptions();
     TaskParseOutput {
         draft: CapturePreviewTaskDraft {
             title,
@@ -72,30 +74,18 @@ pub fn parse_task_preview(text: &str, request: &CapturePreviewRequest) -> TaskPa
             tags,
             priority,
             status,
-            due_date_text: schedule.due_date_text,
-            due_time_text: schedule.due_time_text,
-            duration_text: duration,
-            recurrence_text: schedule.recurrence_text,
-            recurrence_start_text: schedule.recurrence_start_text,
-            recurrence_end_text: schedule.recurrence_end_text,
-            recurrence_exceptions: schedule.recurrence_exceptions,
+            due_date_text: schedule.texts.date.clone(),
+            due_time_text: schedule.texts.time.clone(),
+            duration_text: schedule.texts.duration.clone(),
+            recurrence_text: schedule.texts.recurrence.clone(),
+            recurrence_start_text: schedule.texts.recurrence_start.clone(),
+            recurrence_end_text: schedule.texts.recurrence_end.clone(),
+            recurrence_exceptions,
         },
         warnings,
         confidence,
+        schedule: schedule.schedule,
     }
-}
-
-struct DateCorrectionOutput {
-    working: String,
-}
-
-struct ScheduleExtraction {
-    due_date_text: Option<String>,
-    due_time_text: Option<String>,
-    recurrence_text: Option<String>,
-    recurrence_start_text: Option<String>,
-    recurrence_end_text: Option<String>,
-    recurrence_exceptions: Vec<CapturePreviewRecurrenceException>,
 }
 
 fn warning(code: &str, severity: &str, message: &str) -> CapturePreviewWarning {
@@ -122,50 +112,6 @@ fn capture(text: &str, regex: &Regex) -> Option<(usize, usize, String)> {
             matched.as_str().trim().to_string(),
         )
     })
-}
-
-fn capture_group(text: &str, regex: &Regex, index: usize) -> Option<(usize, usize, String)> {
-    let captures = regex.captures(text)?;
-    let full = captures.get(0)?;
-    let group = captures.get(index)?;
-    Some((full.start(), full.end(), group.as_str().trim().to_string()))
-}
-
-fn apply_date_typo_corrections(input: &str) -> DateCorrectionOutput {
-    let mut output = input.to_string();
-    for (from, to) in [
-        ("tmrw", "tomorrow"),
-        ("tmr", "tomorrow"),
-        ("tomorow", "tomorrow"),
-        ("tonite", "tonight"),
-        ("arvo", "afternoon"),
-        ("thurrsday", "thursday"),
-        ("thurdsay", "thursday"),
-        ("wendesday", "wednesday"),
-        ("wednsday", "wednesday"),
-        ("next tues", "next tuesday"),
-        ("next fri", "next friday"),
-        ("next mon", "next monday"),
-        ("thurs", "thursday"),
-        ("thur", "thursday"),
-        ("fri", "friday"),
-        ("mon", "monday"),
-        ("tues", "tuesday"),
-        ("wed", "wednesday"),
-        ("sat", "saturday"),
-        ("sun", "sunday"),
-        ("close of business", "end of day"),
-        ("cob", "end of day"),
-        ("eod", "end of day"),
-    ] {
-        output = Regex::new(&format!(r"(?i)\b{}\b", regex::escape(from)))
-            .expect("date correction regex should compile")
-            .replace_all(&output, to)
-            .to_string();
-    }
-    DateCorrectionOutput {
-        working: normalize_whitespace(&output),
-    }
 }
 
 fn detect_priority(working: &mut String) -> Option<String> {
@@ -203,26 +149,6 @@ fn detect_status(working: &mut String) -> Option<String> {
         if let Some((start, end, _)) = capture(working, &regex) {
             remove_segment(working, start, end);
             return Some(value.to_string());
-        }
-    }
-    None
-}
-
-fn detect_duration(working: &mut String) -> Option<String> {
-    for pattern in [
-        r"(?i)\bfor\s+(\d+\s*(?:minutes?|mins?|hours?|hrs?))\b",
-        r"(?i)\bspend\s+(\d+\s*(?:minutes?|mins?|hours?|hrs?))\b",
-        r"(?i)\btake(?:\s+about)?\s+(\d+\s*(?:minutes?|mins?|hours?|hrs?))\b",
-        r"(?i)\b(\d+\s*(?:minutes?|mins?|hours?|hrs?))\b",
-    ] {
-        let regex = Regex::new(pattern).expect("duration regex should compile");
-        if let Some((start, end, value)) = capture_group(working, &regex, 1) {
-            let full = regex
-                .find(working)
-                .expect("full duration match should exist");
-            remove_segment(working, full.start(), full.end());
-            let _ = (start, end);
-            return Some(normalize_whitespace(&value));
         }
     }
     None
@@ -557,129 +483,6 @@ fn is_likely_project(value: &str) -> bool {
     Regex::new(r"^(?:[A-Z][a-z]+[A-Z][A-Za-z]*|[A-Z]{2,}|[A-Z][a-z]+\d+)$")
         .expect("project token regex should compile")
         .is_match(value)
-}
-
-fn extract_schedule(working: &mut String) -> ScheduleExtraction {
-    let recurrence_signal = Regex::new(
-        r"(?i)\b(?:every|daily|weekly|monthly|yearly|weekdays?|weekends?|every\s+other)\b",
-    )
-    .expect("recurrence signal regex should compile")
-    .is_match(working);
-
-    let due_time_text = capture_schedule(
-        working,
-        Regex::new(
-            r"(?i)\b(?:by|at|before)\s+((?:[1-9]|1[0-2])(?::[0-5]\d)?\s*(?:am|pm)|noon|midnight)\b",
-        )
-        .expect("due time regex should compile"),
-        true,
-    );
-
-    let mut recurrence_exceptions = Vec::new();
-    let mut recurrence_start_text = None;
-    let mut recurrence_end_text = None;
-    let mut recurrence_text = None;
-    let mut due_date_text = None;
-
-    if recurrence_signal {
-        let exception_regex = Regex::new(
-            r"(?i)\b(?:unless|except(?:\s+for)?|but\s+skip|but\s+not|skip\s+the\s+first\s+one)\b",
-        )
-        .expect("exception regex should compile");
-        while let Some((start, end, value)) = extract_bounded_clause(working, &exception_regex) {
-            recurrence_exceptions.push(CapturePreviewRecurrenceException {
-                raw: value,
-                condition: None,
-                action: None,
-            });
-            remove_segment(working, start, end);
-        }
-
-        recurrence_start_text = capture_schedule(
-            working,
-            Regex::new(r"(?i)\b(?:starting|beginning|from)\s+(today|tomorrow|tonight|next\s+(?:week|month|mon(?:day)?|tue(?:s|sday)?|wed(?:nesday)?|thu(?:r|rs|rsday|ursday)?|fri(?:day)?|sat(?:urday)?|sun(?:day)?)|this\s+(?:week|month|mon(?:day)?|tue(?:s|sday)?|wed(?:nesday)?|thu(?:r|rs|rsday|ursday)?|fri(?:day)?|sat(?:urday)?|sun(?:day)?)|\d{1,2}(?:st|nd|rd|th)?\s+(?:jan|feb|mar|apr|may|jun|jul|aug|sep(?:t)?|oct|nov|dec)[a-z]*|(?:jan|feb|mar|apr|may|jun|jul|aug|sep(?:t)?|oct|nov|dec)[a-z]*\s+\d{1,2}(?:st|nd|rd|th)?|\d{1,2}[/-]\d{1,2})\b")
-                .expect("recurrence start regex should compile"),
-            false,
-        )
-        .map(|value| format!("starting {}", value));
-
-        recurrence_end_text = capture_schedule(
-            working,
-            Regex::new(r"(?i)\b(?:until|till|through|ending(?:\s+on)?)\s+(today|tomorrow|tonight|next\s+(?:week|month|mon(?:day)?|tue(?:s|sday)?|wed(?:nesday)?|thu(?:r|rs|rsday|ursday)?|fri(?:day)?|sat(?:urday)?|sun(?:day)?)|this\s+(?:week|month|mon(?:day)?|tue(?:s|sday)?|wed(?:nesday)?|thu(?:r|rs|rsday|ursday)?|fri(?:day)?|sat(?:urday)?|sun(?:day)?)|\d{1,2}(?:st|nd|rd|th)?\s+(?:jan|feb|mar|apr|may|jun|jul|aug|sep(?:t)?|oct|nov|dec)[a-z]*|(?:jan|feb|mar|apr|may|jun|jul|aug|sep(?:t)?|oct|nov|dec)[a-z]*\s+\d{1,2}(?:st|nd|rd|th)?|\d{1,2}[/-]\d{1,2})\b")
-                .expect("recurrence end regex should compile"),
-            false,
-        )
-        .map(|value| format!("till {}", value));
-
-        recurrence_text = capture_schedule(
-            working,
-            Regex::new(r"(?i)\b(every\s+other\s+day|every\s+other\s+(?:mon(?:day)?|tue(?:s|sday)?|wed(?:nesday)?|thu(?:r|rs|rsday|ursday)?|fri(?:day)?|sat(?:urday)?|sun(?:day)?)|every\s+(?:first|1st|second|2nd|third|3rd|fourth|4th|last)\s+(?:mon(?:day)?|tue(?:s|sday)?|wed(?:nesday)?|thu(?:r|rs|rsday|ursday)?|fri(?:day)?|sat(?:urday)?|sun(?:day)?)\s+of\s+every\s+month|every\s+(?:day|weekday|weekend|mon(?:day)?|tue(?:s|sday)?|wed(?:nesday)?|thu(?:r|rs|rsday|ursday)?|fri(?:day)?|sat(?:urday)?|sun(?:day)?)|daily|weekly|monthly|yearly)\b")
-                .expect("recurrence regex should compile"),
-            false,
-        );
-    } else {
-        due_date_text = capture_schedule(
-            working,
-            Regex::new(r"(?i)\b(?:by|before|on)\s+(the\s+first\s+business\s+day\s+next\s+month|end of (?:the )?(?:day|week|month)|(?:today|tomorrow|tonight)(?:\s+(?:morning|afternoon|evening|night|noon))?|next\s+(?:week|month|mon(?:day)?|tue(?:s|sday)?|wed(?:nesday)?|thu(?:r|rs|rsday|ursday)?|fri(?:day)?|sat(?:urday)?|sun(?:day)?)|this\s+(?:week|month|mon(?:day)?|tue(?:s|sday)?|wed(?:nesday)?|thu(?:r|rs|rsday|ursday)?|fri(?:day)?|sat(?:urday)?|sun(?:day)?)|(?:mon(?:day)?|tue(?:s|sday)?|wed(?:nesday)?|thu(?:r|rs|rsday|ursday)?|fri(?:day)?|sat(?:urday)?|sun(?:day)?)(?:\s+(?:morning|afternoon|evening|night|noon))?|(?:jan|feb|mar|apr|may|jun|jul|aug|sep(?:t)?|oct|nov|dec)[a-z]*\s+\d{1,2}(?:st|nd|rd|th)?|\d{1,2}(?:st|nd|rd|th)?\s+(?:jan|feb|mar|apr|may|jun|jul|aug|sep(?:t)?|oct|nov|dec)[a-z]*|before\s+lunch|after\s+dinner|before\s+guests\s+arrive)\b")
-                .expect("due date phrase regex should compile"),
-            false,
-        )
-        .map(|value| {
-            let lower = value.to_lowercase();
-            if lower.starts_with("by ") || lower.starts_with("before ") || lower.starts_with("on ")
-            {
-                value
-            } else {
-                format!("on {}", value)
-            }
-        });
-
-        if due_date_text.is_none() {
-            due_date_text = capture_schedule(
-                working,
-                Regex::new(r"(?i)\b(today|tomorrow|tonight|next\s+(?:week|month|mon(?:day)?|tue(?:s|sday)?|wed(?:nesday)?|thu(?:r|rs|rsday|ursday)?|fri(?:day)?|sat(?:urday)?|sun(?:day)?)|this\s+(?:week|month|mon(?:day)?|tue(?:s|sday)?|wed(?:nesday)?|thu(?:r|rs|rsday|ursday)?|fri(?:day)?|sat(?:urday)?|sun(?:day)?)|(?:mon(?:day)?|tue(?:s|sday)?|wed(?:nesday)?|thu(?:r|rs|rsday|ursday)?|fri(?:day)?|sat(?:urday)?|sun(?:day)?)(?:\s+(?:morning|afternoon|evening|night|noon))?|(?:jan|feb|mar|apr|may|jun|jul|aug|sep(?:t)?|oct|nov|dec)[a-z]*\s+\d{1,2}(?:st|nd|rd|th)?|\d{1,2}(?:st|nd|rd|th)?\s+(?:jan|feb|mar|apr|may|jun|jul|aug|sep(?:t)?|oct|nov|dec)[a-z]*)\b")
-                    .expect("named due date regex should compile"),
-                false,
-            );
-        }
-    }
-
-    ScheduleExtraction {
-        due_date_text,
-        due_time_text,
-        recurrence_text,
-        recurrence_start_text,
-        recurrence_end_text,
-        recurrence_exceptions,
-    }
-}
-
-fn capture_schedule(working: &mut String, regex: Regex, group_only: bool) -> Option<String> {
-    let captures = regex.captures(working.as_str())?;
-    let full = captures.get(0)?;
-    let text = if group_only {
-        captures.get(1)?.as_str().trim().to_string()
-    } else {
-        full.as_str().trim().to_string()
-    };
-    remove_segment(working, full.start(), full.end());
-    Some(normalize_whitespace(&text))
-}
-
-fn extract_bounded_clause(working: &str, regex: &Regex) -> Option<(usize, usize, String)> {
-    let matched = regex.find(working)?;
-    let search_start = matched.end();
-    let mut end = find_clause_end(working, search_start);
-    let trailing_punct = Regex::new(r"^\s*[.,;:!?]+")
-        .expect("trailing punctuation regex should compile")
-        .find(&working[end..]);
-    if let Some(found) = trailing_punct {
-        end += found.end();
-    }
-    let text = normalize_whitespace(
-        working[matched.start()..end].trim_end_matches(&['.', ',', ';', ':', '!', '?'][..]),
-    );
-    (!text.is_empty()).then_some((matched.start(), end, text))
 }
 
 fn extract_prefixed_clause(working: &str, prefix: &str) -> Option<(usize, usize, String)> {

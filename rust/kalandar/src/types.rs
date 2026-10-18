@@ -1,3 +1,6 @@
+pub use kalandar_dates::capture::{
+    PreviewMoment, PreviewRecurrence, PreviewSchedule, PreviewWeekday,
+};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -98,6 +101,7 @@ pub struct CapturePreviewResult {
     pub thought: Option<CapturePreviewThoughtDraft>,
     pub unavailable_reason: Option<String>,
     pub warnings: Vec<CapturePreviewWarning>,
+    pub schedule: Option<PreviewSchedule>,
 }
 
 impl CapturePreviewResult {
@@ -116,6 +120,7 @@ impl CapturePreviewResult {
                 severity: "warning".to_string(),
                 message: message.to_string(),
             }],
+            schedule: None,
         }
     }
 
@@ -134,6 +139,7 @@ impl CapturePreviewResult {
             thought: Some(CapturePreviewThoughtDraft { text }),
             unavailable_reason: None,
             warnings: Vec::new(),
+            schedule: None,
         }
     }
 
@@ -148,6 +154,7 @@ impl CapturePreviewResult {
             thought: None,
             unavailable_reason: None,
             warnings: Vec::new(),
+            schedule: None,
         }
     }
 
@@ -167,6 +174,7 @@ impl CapturePreviewResult {
             thought: None,
             unavailable_reason: None,
             warnings,
+            schedule: None,
         }
     }
 
@@ -186,6 +194,7 @@ impl CapturePreviewResult {
             thought: None,
             unavailable_reason: None,
             warnings,
+            schedule: None,
         }
     }
 
@@ -205,6 +214,14 @@ impl CapturePreviewResult {
             thought: None,
             unavailable_reason: None,
             warnings,
+            schedule: None,
         }
+    }
+}
+
+impl CapturePreviewResult {
+    pub fn with_schedule(mut self, schedule: Option<PreviewSchedule>) -> Self {
+        self.schedule = schedule;
+        self
     }
 }

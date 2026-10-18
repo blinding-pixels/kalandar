@@ -1,6 +1,4 @@
-use kalandar::{
-    CaptureParser, CaptureParserError, CapturePreviewRequest, CapturePreviewResult,
-};
+use kalandar::{CaptureParser, CaptureParserError, CapturePreviewRequest, CapturePreviewResult};
 use std::{
     env,
     io::{self, Read},

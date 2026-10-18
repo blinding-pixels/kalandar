@@ -184,6 +184,7 @@ fn build_task_result(
         candidates,
         parsed.warnings,
     )
+    .with_schedule(parsed.schedule)
 }
 
 fn build_reminder_result(
@@ -203,6 +204,7 @@ fn build_reminder_result(
         candidates,
         parsed.warnings,
     )
+    .with_schedule(parsed.schedule)
 }
 
 fn build_calendar_result(

@@ -339,6 +339,8 @@ dependencies = [
 name = "kalandar"
 version = "0.1.2"
 dependencies = [
+ "chrono",
+ "kalandar-dates",
  "ndarray",
  "ort",
  "regex",

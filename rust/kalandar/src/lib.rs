@@ -9,6 +9,7 @@ mod ort_runtime;
 mod postprocess;
 mod preview_runtime;
 mod reminder_lightweight;
+mod schedule;
 mod shadow_text;
 mod task_lightweight;
 mod tokenizer;
