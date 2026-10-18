@@ -525,7 +525,7 @@ dependencies = [
 
 [[package]]
 name = "kalandar"
-version = "0.2.0"
+version = "0.2.1"
 dependencies = [
  "chrono",
  "fancy-regex",
@@ -543,7 +543,7 @@ dependencies = [
 
 [[package]]
 name = "kalandar-dates"
-version = "0.2.0"
+version = "0.2.1"
 dependencies = [
  "chrono",
  "chrono-tz",
@@ -555,7 +555,7 @@ dependencies = [
 
 [[package]]
 name = "kalandar-dates-ffi"
-version = "0.2.0"
+version = "0.2.1"
 dependencies = [
  "kalandar",
  "kalandar-dates",

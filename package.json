@@ -1,6 +1,6 @@
 {
   "name": "kalandar",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Natural-language capture parsing for tasks, reminders, and calendar events across JavaScript, Rust, and Apple-native runtimes.",
   "type": "module",
   "main": "./dist/capture/index.js",

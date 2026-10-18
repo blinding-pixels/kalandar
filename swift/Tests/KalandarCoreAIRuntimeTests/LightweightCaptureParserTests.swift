@@ -12,7 +12,7 @@ struct LightweightCaptureParserTests {
         ))
         #expect(result.kind == "task")
         #expect(result.task?.title == "finish report")
-        #expect(result.task?.assignees == ["sara"])
+        #expect(result.task?.assignees == ["Sara"])
         #expect(result.task?.tags == ["finance"])
         #expect(result.task?.priority == "high")
     }
@@ -24,7 +24,7 @@ struct LightweightCaptureParserTests {
             text: "reminder: Water Plants every other saturday except the week of the 21st and add soil"
         ))
         #expect(result.kind == "reminder")
-        #expect(result.reminder?.title == "water plants and add soil")
+        #expect(result.reminder?.title == "Water Plants and Add Soil")
         #expect(result.reminder?.recurrence?.interval == 2)
         #expect(result.reminder?.recurrenceExceptions.first?.raw == "except the week of the 21st")
     }

@@ -1,6 +1,6 @@
 [package]
 name = "kalandar-dates"
-version = "0.2.0"
+version = "0.2.1"
 edition = "2021"
 license = "MIT AND CC-BY-SA-3.0"
 description = "Date, time, repeat, lead-time and holiday resolution for Kalandar, built on a Rust port of chrono-node v2.10.1."

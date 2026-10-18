@@ -437,6 +437,13 @@ fileprivate struct FfiConverterString: FfiConverter {
         writeBytes(&buf, value.utf8)
     }
 }
+public func capturePreviewJson(request: String) -> String  {
+    return try!  FfiConverterString.lift(try! rustCall() {
+    uniffi_kalandar_dates_ffi_fn_func_capture_preview_json(
+        FfiConverterString.lower(request),$0
+    )
+})
+}
 public func captureScheduleJson(request: String) -> String  {
     return try!  FfiConverterString.lift(try! rustCall() {
     uniffi_kalandar_dates_ffi_fn_func_capture_schedule_json(
@@ -465,6 +472,9 @@ private let initializationResult: InitializationResult = {
     let scaffolding_contract_version = ffi_kalandar_dates_ffi_uniffi_contract_version()
     if bindings_contract_version != scaffolding_contract_version {
         return InitializationResult.contractVersionMismatch
+    }
+    if (uniffi_kalandar_dates_ffi_checksum_func_capture_preview_json() != 27000) {
+        return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_kalandar_dates_ffi_checksum_func_capture_schedule_json() != 7694) {
         return InitializationResult.apiChecksumMismatch

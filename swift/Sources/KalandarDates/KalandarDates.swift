@@ -225,6 +225,10 @@ public enum KalandarDates {
         return try JSONDecoder().decode(CaptureSchedule.self, from: response)
     }
 
+    public static func capturePreviewJSON(_ request: String) -> String {
+        capturePreviewJson(request: request)
+    }
+
     public static func holidayData() throws -> HolidayDataInfo {
         try JSONDecoder().decode(HolidayDataInfo.self, from: Data(holidayDataJson().utf8))
     }

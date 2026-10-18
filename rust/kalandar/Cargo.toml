@@ -1,6 +1,6 @@
 [package]
 name = "kalandar"
-version = "0.2.0"
+version = "0.2.1"
 edition = "2021"
 license = "MIT"
 description = "Native Rust capture-preview parser runtime for Kalandar."
@@ -34,7 +34,7 @@ ort-download = ["onnx", "ort/download-binaries", "ort/copy-dylibs", "ort/tls-nat
 
 [dependencies]
 chrono = { version = "0.4", default-features = false, features = ["std", "clock"] }
-kalandar-dates = { path = "../kalandar-dates", version = "0.2.0" }
+kalandar-dates = { path = "../kalandar-dates", version = "0.2.1" }
 ndarray = { version = "0.17.2", optional = true }
 ort = { version = "2.0.0-rc.12", optional = true, default-features = false, features = ["std", "ndarray", "api-24"] }
 fancy-regex = "0.14"
