@@ -1,9 +1,10 @@
 use super::{
-    normalize_whitespace, strip_leading_title_filler, strip_reminder_lead_prefix,
-    strip_residual_temporal_tokens, strip_trailing_dangling_preposition,
+    leading_title_filler, strip_leading_title_filler, strip_reminder_lead_prefix,
+    strip_residual_temporal_tokens, strip_trailing_dangling_preposition, TITLE_SMALL_WORDS,
 };
-use crate::reminder_lightweight::{ascii_regex, trailing_filler_patterns};
-use regex::Regex;
+use crate::js::{self, normalize_whitespace, replace_all, replace_first};
+use crate::reminder_lightweight::trailing_filler_patterns;
+use fancy_regex::Regex;
 use std::sync::OnceLock;
 
 const TITLE_CORRECTIONS: &[(&str, &str)] = &[
@@ -66,11 +67,6 @@ const ACRONYM_MAP: &[(&str, &str)] = &[
     ("ux", "UX"),
 ];
 
-const TITLE_SMALL_WORDS: &[&str] = &[
-    "a", "an", "the", "and", "but", "or", "nor", "for", "to", "in", "on", "at", "by", "of", "with",
-    "from", "up", "as", "is",
-];
-
 pub(crate) fn finalize_reminder_title(working: &str) -> String {
     extract_title(working)
 }
@@ -93,14 +89,6 @@ fn possessive_base(word: &str) -> Option<&str> {
     (!base.is_empty() && base.bytes().all(|byte| byte.is_ascii_alphabetic())).then_some(base)
 }
 
-fn capitalize_first(text: &str) -> String {
-    let mut chars = text.chars();
-    match chars.next() {
-        Some(first) if first.len_utf16() == 1 => first.to_uppercase().chain(chars).collect(),
-        _ => text.to_string(),
-    }
-}
-
 fn clean_title_word(word: &str) -> String {
     if is_upper_acronym(word) {
         return word.to_string();
@@ -110,7 +98,7 @@ fn clean_title_word(word: &str) -> String {
 }
 
 fn smart_title_case(input: &str) -> String {
-    let words: Vec<&str> = input.split_whitespace().collect();
+    let words: Vec<&str> = js::words(input).collect();
     let count = words.len();
 
     let mut output = words
@@ -126,18 +114,18 @@ fn smart_title_case(input: &str) -> String {
                 return acronym.to_string();
             }
             if let Some(base) = possessive_base(&cleaned) {
-                return format!("{}'s", capitalize_first(base));
+                return format!("{}'s", js::capitalize(base));
             }
             if index > 0 && index < count - 1 && TITLE_SMALL_WORDS.contains(&lower.as_str()) {
                 return lower;
             }
-            capitalize_first(&cleaned)
+            js::capitalize(&cleaned)
         })
         .collect::<Vec<_>>()
         .join(" ");
 
     for (pattern, replacement) in phrase_corrections() {
-        output = pattern.replace_all(&output, *replacement).into_owned();
+        output = replace_all(pattern, &output, replacement);
     }
 
     output
@@ -146,14 +134,14 @@ fn smart_title_case(input: &str) -> String {
 fn extract_title(input: &str) -> String {
     let mut working = input.to_string();
     for pattern in start_strip_patterns() {
-        working = pattern.replace(&working, "").into_owned();
+        working = replace_first(pattern, &working, "");
     }
     for pattern in trailing_filler_patterns() {
-        working = pattern.replace(&working, "").into_owned();
+        working = replace_first(pattern, &working, "");
     }
 
     for pattern in title_noise_patterns() {
-        working = pattern.replace_all(&working, " ").into_owned();
+        working = replace_all(pattern, &working, " ");
     }
     working = normalize_whitespace(&working);
     working = strip_reminder_lead_prefix(&working);
@@ -163,7 +151,7 @@ fn extract_title(input: &str) -> String {
     ));
 
     let mut deduped: Vec<&str> = Vec::new();
-    for word in working.split_whitespace() {
+    for word in js::words(&working) {
         if deduped
             .last()
             .is_some_and(|last| last.to_lowercase() == word.to_lowercase())
@@ -175,11 +163,9 @@ fn extract_title(input: &str) -> String {
 
     let mut normalized = deduped.join(" ");
     for (pattern, replacement) in title_word_corrections() {
-        normalized = pattern.replace_all(&normalized, *replacement).into_owned();
+        normalized = replace_all(pattern, &normalized, replacement);
     }
-    normalized = leading_connector_pattern()
-        .replace(&normalized, "")
-        .into_owned();
+    normalized = replace_first(leading_title_filler(), &normalized, "");
     normalized = normalize_whitespace(&normalized);
 
     smart_title_case(if normalized.is_empty() {
@@ -198,7 +184,7 @@ fn start_strip_patterns() -> &'static [Regex] {
             r"(?i)^\s*for\b[\s,:-]*",
         ]
         .into_iter()
-        .map(ascii_regex)
+        .map(js::regex)
         .collect()
     })
 }
@@ -219,7 +205,7 @@ fn title_noise_patterns() -> &'static [Regex] {
             r"(?i)\b(?:to|about|that)\s*$",
         ]
         .into_iter()
-        .map(ascii_regex)
+        .map(js::regex)
         .collect()
     })
 }
@@ -234,14 +220,9 @@ fn title_word_corrections() -> &'static [(Regex, &'static str)] {
             (r"(?i)\bcehck\b", "check"),
         ]
         .into_iter()
-        .map(|(pattern, replacement)| (ascii_regex(pattern), replacement))
+        .map(|(pattern, replacement)| (js::regex(pattern), replacement))
         .collect()
     })
-}
-
-fn leading_connector_pattern() -> &'static Regex {
-    static REGEX: OnceLock<Regex> = OnceLock::new();
-    REGEX.get_or_init(|| ascii_regex(r"(?i)^(?:to(?:\s+the)?|that(?:\s+i)?|about)\b[\s,:-]*"))
 }
 
 fn phrase_corrections() -> &'static [(Regex, &'static str)] {
@@ -258,7 +239,7 @@ fn phrase_corrections() -> &'static [(Regex, &'static str)] {
             (r"\bKeys(?: Keys)+\b", "Keys"),
         ]
         .into_iter()
-        .map(|(pattern, replacement)| (ascii_regex(pattern), replacement))
+        .map(|(pattern, replacement)| (js::regex(pattern), replacement))
         .collect()
     })
 }

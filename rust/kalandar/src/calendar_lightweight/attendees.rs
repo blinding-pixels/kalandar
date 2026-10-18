@@ -1,5 +1,5 @@
-use super::js::{cached, match_all};
 use super::ParseContext;
+use crate::js::{cached, match_all};
 use fancy_regex::Regex;
 use std::sync::OnceLock;
 

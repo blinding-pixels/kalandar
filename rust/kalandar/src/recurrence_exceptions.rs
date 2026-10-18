@@ -1,16 +1,12 @@
-use super::js::{cached, compile, exec, group, test, trim};
-use chrono::{DateTime, Datelike, NaiveDate, Utc};
+use crate::js::{cached, compile, exec, group, test, trim};
+use crate::CapturePreviewRecurrenceException;
+use chrono::{Datelike, NaiveDate};
 use fancy_regex::Regex;
-use kalandar_dates::chrono_tz::Tz;
+use kalandar_dates::capture::{Context, PreviewSchedule};
 use std::sync::OnceLock;
 
 const WEEKDAY_TOKEN: &str = "(monday|tuesday|wednesday|thursday|friday|saturday|sunday|mon(?:day)?|tue(?:s|sday)?|wed(?:nesday)?|thu(?:r|rs|rsday|ursday)?|fri(?:day)?|sat(?:urday)?|sun(?:day)?)";
 const MONTH_TOKEN: &str = "(january|jan|february|feb|march|mar|april|apr|may|june|jun|july|jul|august|aug|september|sep|sept|october|oct|november|nov|december|dec)";
-
-pub(crate) struct ClassifyOptions {
-    pub now: DateTime<Utc>,
-    pub timezone: Tz,
-}
 
 pub(crate) struct StructuredRecurrenceException {
     pub raw: String,
@@ -70,8 +66,8 @@ fn normalize_ordinal(value: &str) -> Option<&'static str> {
     }
 }
 
-fn zoned_date(now: DateTime<Utc>, timezone: Tz) -> (i64, i64, i64) {
-    let local = now.with_timezone(&timezone);
+fn zoned_date(context: &Context) -> (i64, i64, i64) {
+    let local = context.now.with_timezone(&context.zone);
     (
         i64::from(local.year()),
         i64::from(local.month()),
@@ -101,9 +97,9 @@ fn normalize_iso_date_year(
     month: i64,
     day: i64,
     explicit_year: Option<i64>,
-    options: &ClassifyOptions,
+    context: &Context,
 ) -> Option<String> {
-    let reference = zoned_date(options.now, options.timezone);
+    let reference = zoned_date(context);
     let mut year = explicit_year.unwrap_or(reference.0);
     if !is_valid_calendar_date(year, month, day) {
         return None;
@@ -122,7 +118,7 @@ fn number(text: &str) -> i64 {
     text.parse().unwrap_or(0)
 }
 
-fn extract_specific_date(raw: &str, options: &ClassifyOptions) -> Option<String> {
+fn extract_specific_date(raw: &str, context: &Context) -> Option<String> {
     static ISO: OnceLock<Regex> = OnceLock::new();
     static SLASH: OnceLock<Regex> = OnceLock::new();
     static MONTH_NAME: OnceLock<Regex> = OnceLock::new();
@@ -149,7 +145,7 @@ fn extract_specific_date(raw: &str, options: &ClassifyOptions) -> Option<String>
                 number(year.as_str())
             }
         });
-        return normalize_iso_date_year(month, day, explicit_year, options);
+        return normalize_iso_date_year(month, day, explicit_year, context);
     }
 
     let month_name = exec(
@@ -163,13 +159,10 @@ fn extract_specific_date(raw: &str, options: &ClassifyOptions) -> Option<String>
     let month = month_number(&group(&month_name, 1).to_lowercase())?;
     let day = number(group(&month_name, 2));
     let explicit_year = month_name.get(3).map(|year| number(year.as_str()));
-    normalize_iso_date_year(i64::from(month), day, explicit_year, options)
+    normalize_iso_date_year(i64::from(month), day, explicit_year, context)
 }
 
-pub(crate) fn classify_recurrence_exception_condition(
-    raw: &str,
-    options: &ClassifyOptions,
-) -> Option<&'static str> {
+fn classify_recurrence_exception_condition(raw: &str, context: &Context) -> Option<&'static str> {
     static HOLIDAY: OnceLock<Regex> = OnceLock::new();
     static WEEKEND: OnceLock<Regex> = OnceLock::new();
 
@@ -187,7 +180,7 @@ pub(crate) fn classify_recurrence_exception_condition(
             return Some("ordinal");
         }
     }
-    extract_specific_date(raw, options).map(|_| "specific_date")
+    extract_specific_date(raw, context).map(|_| "specific_date")
 }
 
 fn normalize_weekday_token(text: &str) -> Option<&'static str> {
@@ -206,7 +199,7 @@ fn normalize_weekday_token(text: &str) -> Option<&'static str> {
     .map(|(_, weekday)| weekday)
 }
 
-pub(crate) fn classify_recurrence_exception_action(raw: &str) -> Option<&'static str> {
+fn classify_recurrence_exception_action(raw: &str) -> Option<&'static str> {
     static SHIFT: OnceLock<Regex> = OnceLock::new();
     static REPLACE: OnceLock<Regex> = OnceLock::new();
     static TRAILING_PUNCTUATION: OnceLock<Regex> = OnceLock::new();
@@ -247,11 +240,11 @@ pub(crate) fn classify_recurrence_exception_action(raw: &str) -> Option<&'static
 
 pub(crate) fn classify_recurrence_exception(
     raw: &str,
-    options: &ClassifyOptions,
+    context: &Context,
 ) -> StructuredRecurrenceException {
     static LEAD: OnceLock<Regex> = OnceLock::new();
 
-    let condition = classify_recurrence_exception_condition(raw, options);
+    let condition = classify_recurrence_exception_condition(raw, context);
     let mut action = classify_recurrence_exception_action(raw);
     if action.is_none()
         && condition.is_some()
@@ -264,4 +257,41 @@ pub(crate) fn classify_recurrence_exception(
         condition,
         action,
     }
+}
+
+pub(crate) fn to_recurrence_exceptions(
+    entries: &[StructuredRecurrenceException],
+    schedule: Option<&PreviewSchedule>,
+) -> Vec<CapturePreviewRecurrenceException> {
+    let resolved = schedule
+        .and_then(|schedule| schedule.recurrence.as_ref())
+        .map(|recurrence| recurrence.exceptions.as_slice())
+        .unwrap_or_default();
+    let same_count = resolved.len() == entries.len();
+    entries
+        .iter()
+        .enumerate()
+        .map(|(index, entry)| {
+            if resolved.is_empty() {
+                return CapturePreviewRecurrenceException {
+                    raw: entry.raw.clone(),
+                    condition: entry.condition.map(str::to_string),
+                    action: entry.action.map(str::to_string),
+                };
+            }
+            let matched = if same_count {
+                resolved.get(index)
+            } else {
+                resolved.iter().find(|exception| {
+                    exception.raw.contains(entry.raw.as_str())
+                        || entry.raw.contains(exception.raw.as_str())
+                })
+            };
+            CapturePreviewRecurrenceException {
+                raw: entry.raw.clone(),
+                condition: matched.and_then(|exception| exception.condition.clone()),
+                action: matched.and_then(|exception| exception.action.clone()),
+            }
+        })
+        .collect()
 }

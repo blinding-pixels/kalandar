@@ -31,6 +31,14 @@ pub(crate) fn normalize_whitespace(text: &str) -> String {
     words(text).collect::<Vec<_>>().join(" ")
 }
 
+pub(crate) fn capitalize(text: &str) -> String {
+    let mut chars = text.chars();
+    match chars.next() {
+        Some(first) if first.len_utf16() == 1 => first.to_uppercase().chain(chars).collect(),
+        _ => text.to_string(),
+    }
+}
+
 pub(crate) fn utf16_len(text: &str) -> usize {
     text.chars().map(char::len_utf16).sum()
 }
@@ -44,7 +52,7 @@ pub(crate) fn slice(text: &str, start: usize, end: usize) -> &str {
     text.get(start.min(end)..end).unwrap_or("")
 }
 
-pub(crate) fn translate(source: &str) -> String {
+fn translate(source: &str) -> String {
     let mut output = String::with_capacity(source.len() * 2);
     let mut chars = source.chars().peekable();
     let mut in_class = false;
@@ -107,7 +115,11 @@ pub(crate) fn compile(source: &str, flags: &str) -> Regex {
         translate(source)
     };
     Regex::new(&pattern)
-        .unwrap_or_else(|error| panic!("calendar rule regex should compile: {source}: {error}"))
+        .unwrap_or_else(|error| panic!("rule regex should compile: {source}: {error}"))
+}
+
+pub(crate) fn regex(source: &str) -> Regex {
+    compile(source, "")
 }
 
 pub(crate) fn cached<'a>(cell: &'a OnceLock<Regex>, source: &str, flags: &str) -> &'a Regex {
@@ -124,6 +136,14 @@ pub(crate) fn exec<'t>(regex: &Regex, text: &'t str) -> Option<Captures<'t>> {
 
 pub(crate) fn match_all<'t>(regex: &Regex, text: &'t str) -> Vec<Captures<'t>> {
     regex.captures_iter(text).filter_map(Result::ok).collect()
+}
+
+pub(crate) fn replace_first(regex: &Regex, text: &str, replacement: &str) -> String {
+    regex.replace(text, replacement).into_owned()
+}
+
+pub(crate) fn replace_all(regex: &Regex, text: &str, replacement: &str) -> String {
+    regex.replace_all(text, replacement).into_owned()
 }
 
 pub(crate) fn group<'t>(captures: &Captures<'t>, index: usize) -> &'t str {

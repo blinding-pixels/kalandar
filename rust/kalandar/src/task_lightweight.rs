@@ -1,13 +1,15 @@
 use super::intent::{classify_intent_embedded, IntentKind};
 use super::{
-    postprocess::{finalize_task_title, js_regex, normalize_whitespace, replace_all},
-    schedule::context_for,
-    CapturePreviewRecurrenceException, CapturePreviewRequest, CapturePreviewTaskDraft,
-    CapturePreviewWarning, PreviewSchedule,
+    js::{self, normalize_whitespace, replace_all},
+    postprocess::finalize_task_title,
+    recurrence_exceptions::{
+        classify_recurrence_exception, to_recurrence_exceptions, StructuredRecurrenceException,
+    },
+    schedule::{context_for, ScheduleOutput},
+    CapturePreviewRequest, CapturePreviewTaskDraft, CapturePreviewWarning, PreviewSchedule,
 };
-use chrono::{Datelike, NaiveDate};
 use fancy_regex::{Captures, Regex};
-use kalandar_dates::capture::{capture_schedule, CaptureKind, Context, ScheduleSpan};
+use kalandar_dates::capture::{capture_schedule, CaptureKind, Context};
 use std::collections::BTreeSet;
 use std::sync::OnceLock;
 
@@ -16,9 +18,6 @@ pub struct TaskParseOutput {
     pub warnings: Vec<CapturePreviewWarning>,
     pub schedule: Option<PreviewSchedule>,
 }
-
-const ASCII_WORD_BOUNDARY: &str =
-    "(?:(?<=[0-9A-Za-z_])(?![0-9A-Za-z_])|(?<![0-9A-Za-z_])(?=[0-9A-Za-z_]))";
 
 const DEFAULT_KNOWN_ASSIGNEES: [&str; 17] = [
     "alex", "diego", "jake", "james", "jamie", "jen", "jester", "john", "lee", "mark", "mike",
@@ -79,20 +78,11 @@ const LOW_PRIORITY_PATTERNS: [&str; 9] = [
     r"(?i)\bnot\s+urgent\b",
 ];
 
-const WEEKDAY_TOKEN: &str = r"(monday|tuesday|wednesday|thursday|friday|saturday|sunday|mon(?:day)?|tue(?:s|sday)?|wed(?:nesday)?|thu(?:r|rs|rsday|ursday)?|fri(?:day)?|sat(?:urday)?|sun(?:day)?)";
-const MONTH_TOKEN: &str = r"(january|jan|february|feb|march|mar|april|apr|may|june|jun|july|jul|august|aug|september|sep|sept|october|oct|november|nov|december|dec)";
-
 type ValueFn<'a, T> = &'a dyn Fn(&Captures) -> Option<T>;
 
 struct RegexExtraction<T> {
     value: T,
     working: String,
-}
-
-struct StructuredRecurrenceException {
-    raw: String,
-    condition: Option<&'static str>,
-    action: Option<&'static str>,
 }
 
 #[derive(Default)]
@@ -122,30 +112,8 @@ struct TaskParseContext<'a> {
     schedule: Option<PreviewSchedule>,
 }
 
-pub(crate) fn ascii_regex(pattern: &str) -> Regex {
-    let mut converted = String::with_capacity(pattern.len() * 2);
-    let mut chars = pattern.chars();
-    while let Some(current) = chars.next() {
-        if current != '\\' {
-            converted.push(current);
-            continue;
-        }
-        match chars.next() {
-            Some('b') => converted.push_str(ASCII_WORD_BOUNDARY),
-            Some('w') => converted.push_str("[0-9A-Za-z_]"),
-            Some('d') => converted.push_str("[0-9]"),
-            Some(other) => {
-                converted.push('\\');
-                converted.push(other);
-            }
-            None => converted.push('\\'),
-        }
-    }
-    js_regex(&converted)
-}
-
 fn compile_all(patterns: &[&str]) -> Vec<Regex> {
-    patterns.iter().map(|pattern| ascii_regex(pattern)).collect()
+    patterns.iter().map(|pattern| js::regex(pattern)).collect()
 }
 
 fn temporal_boundary() -> String {
@@ -156,21 +124,6 @@ fn temporal_boundary() -> String {
 
 fn person_list() -> String {
     format!(r"{PERSON_TOKEN}(?:\s*(?:,|and|&)\s*{PERSON_TOKEN})*")
-}
-
-fn is_match(regex: &Regex, text: &str) -> bool {
-    regex.is_match(text).unwrap_or(false)
-}
-
-fn group(captures: &Captures, index: usize) -> String {
-    captures
-        .get(index)
-        .map(|matched| matched.as_str().to_string())
-        .unwrap_or_default()
-}
-
-fn whitespace_tokens(value: &str) -> Vec<&str> {
-    value.split_whitespace().collect()
 }
 
 pub fn parse_task_preview(text: &str, request: &CapturePreviewRequest) -> TaskParseOutput {
@@ -218,7 +171,12 @@ fn status_pass(ctx: &mut TaskParseContext) {
 
 fn schedule_pass(ctx: &mut TaskParseContext) {
     let found = capture_schedule(&ctx.working, CaptureKind::Task, None, &ctx.context);
-    let texts = found.texts;
+    let ScheduleOutput {
+        remaining,
+        texts,
+        schedule,
+        warnings,
+    } = ScheduleOutput::new(found, &ctx.working);
     ctx.fields.due_date = texts.date;
     ctx.fields.due_time = texts.time;
     ctx.fields.duration = texts.duration;
@@ -232,14 +190,9 @@ fn schedule_pass(ctx: &mut TaskParseContext) {
             &ctx.context,
         );
     }
-    ctx.schedule = found.schedule;
-    ctx.warnings
-        .extend(found.warnings.iter().map(|warning| CapturePreviewWarning {
-            code: warning.code.to_string(),
-            severity: "info".to_string(),
-            message: warning.message.clone(),
-        }));
-    ctx.working = remove_schedule_spans(&ctx.working, &found.spans);
+    ctx.schedule = schedule;
+    ctx.warnings.extend(warnings);
+    ctx.working = remaining;
 }
 
 fn tags_pass(ctx: &mut TaskParseContext) {
@@ -268,22 +221,6 @@ fn assignee_pass(ctx: &mut TaskParseContext) {
 
 fn title_pass(ctx: &mut TaskParseContext) {
     ctx.fields.title = build_task_title(&ctx.working);
-}
-
-fn remove_schedule_spans(text: &str, spans: &[ScheduleSpan]) -> String {
-    let mut ordered = spans.iter().collect::<Vec<_>>();
-    ordered.sort_by_key(|span| (span.start, span.end));
-    let mut output = String::new();
-    let mut cursor = 0;
-    for span in ordered {
-        if span.start >= cursor {
-            output.push_str(text.get(cursor..span.start).unwrap_or_default());
-            output.push(' ');
-        }
-        cursor = cursor.max(span.end);
-    }
-    output.push_str(text.get(cursor..).unwrap_or_default());
-    normalize_whitespace(&output)
 }
 
 fn build_task_warnings(ctx: &TaskParseContext) -> Vec<CapturePreviewWarning> {
@@ -323,7 +260,7 @@ fn build_task_warnings(ctx: &TaskParseContext) -> Vec<CapturePreviewWarning> {
             .filter(|hint| {
                 !hint.starts_with('@')
                     && !hint.contains('@')
-                    && !known_set.contains(&hint.trim().to_lowercase())
+                    && !known_set.contains(&js::trim(hint).to_lowercase())
             })
             .cloned()
             .collect::<Vec<_>>();
@@ -377,43 +314,6 @@ fn finalize_task_parse_context(ctx: TaskParseContext) -> TaskParseOutput {
     }
 }
 
-fn to_recurrence_exceptions(
-    entries: &[StructuredRecurrenceException],
-    schedule: Option<&PreviewSchedule>,
-) -> Vec<CapturePreviewRecurrenceException> {
-    let resolved = schedule
-        .and_then(|schedule| schedule.recurrence.as_ref())
-        .map(|recurrence| recurrence.exceptions.as_slice())
-        .unwrap_or_default();
-    let same_count = resolved.len() == entries.len();
-    entries
-        .iter()
-        .enumerate()
-        .map(|(index, entry)| {
-            if resolved.is_empty() {
-                return CapturePreviewRecurrenceException {
-                    raw: entry.raw.clone(),
-                    condition: entry.condition.map(str::to_string),
-                    action: entry.action.map(str::to_string),
-                };
-            }
-            let matched = if same_count {
-                resolved.get(index)
-            } else {
-                resolved.iter().find(|exception| {
-                    exception.raw.contains(entry.raw.as_str())
-                        || entry.raw.contains(exception.raw.as_str())
-                })
-            };
-            CapturePreviewRecurrenceException {
-                raw: entry.raw.clone(),
-                condition: matched.and_then(|exception| exception.condition.clone()),
-                action: matched.and_then(|exception| exception.action.clone()),
-            }
-        })
-        .collect()
-}
-
 fn remove_segment(working: &str, start: usize, end: usize) -> String {
     normalize_whitespace(&format!("{} {}", &working[..start], &working[end..]))
 }
@@ -424,7 +324,7 @@ fn find_best_regex_extraction<T>(
 ) -> Option<RegexExtraction<T>> {
     let mut best: Option<(usize, usize, T)> = None;
     for (regex, value) in definitions {
-        let Some(captures) = regex.captures(working).ok().flatten() else {
+        let Some(captures) = js::exec(regex, working) else {
             continue;
         };
         let Some(matched) = captures.get(0) else {
@@ -453,7 +353,7 @@ fn detect_priority(input: &str) -> (Option<&'static str>, String) {
     static MEDIUM: OnceLock<Vec<Regex>> = OnceLock::new();
     static LOW: OnceLock<Vec<Regex>> = OnceLock::new();
     let negated = NEGATED
-        .get_or_init(|| ascii_regex(r"(?i)\b(?:not|non)[\s-]*(?:urgent|important|critical)\b"));
+        .get_or_init(|| js::regex(r"(?i)\b(?:not|non)[\s-]*(?:urgent|important|critical)\b"));
     let high = HIGH.get_or_init(|| compile_all(&HIGH_PRIORITY_PATTERNS));
     let medium = MEDIUM.get_or_init(|| compile_all(&MEDIUM_PRIORITY_PATTERNS));
     let low = LOW.get_or_init(|| compile_all(&LOW_PRIORITY_PATTERNS));
@@ -467,7 +367,7 @@ fn detect_priority(input: &str) -> (Option<&'static str>, String) {
                           next_priority: &'static str| {
         let mut matched = false;
         for pattern in patterns {
-            if is_match(pattern, working) {
+            if js::test(pattern, working) {
                 matched = true;
             }
             *working = replace_all(pattern, working, " ");
@@ -482,7 +382,7 @@ fn detect_priority(input: &str) -> (Option<&'static str>, String) {
         }
     };
 
-    if is_match(negated, &working) {
+    if js::test(negated, &working) {
         working = replace_all(negated, &working, " ");
         priority = Some("low");
     }
@@ -506,7 +406,7 @@ fn detect_status(input: &str) -> (Option<&'static str>, String) {
     let regexes = REGEXES.get_or_init(|| {
         STATUS_PATTERNS
             .iter()
-            .map(|(pattern, _)| ascii_regex(pattern))
+            .map(|(pattern, _)| js::regex(pattern))
             .collect()
     });
     let values = STATUS_PATTERNS
@@ -524,10 +424,13 @@ fn detect_status(input: &str) -> (Option<&'static str>, String) {
     }
 }
 
+fn edge_punctuation() -> &'static Regex {
+    static REGEX: OnceLock<Regex> = OnceLock::new();
+    REGEX.get_or_init(|| js::regex(r"^[,;:]+|[,;:!?]+$"))
+}
+
 fn cleanup_tag_token(value: &str) -> Option<String> {
-    static EDGES: OnceLock<Regex> = OnceLock::new();
-    let edges = EDGES.get_or_init(|| ascii_regex(r"^[,;:]+|[,;:!?]+$"));
-    let trimmed = replace_all(edges, value.trim(), "");
+    let trimmed = replace_all(edge_punctuation(), js::trim(value), "");
     if trimmed.is_empty() {
         return None;
     }
@@ -542,7 +445,7 @@ fn cleanup_tag_token(value: &str) -> Option<String> {
 
 fn hashtag_regex() -> &'static Regex {
     static REGEX: OnceLock<Regex> = OnceLock::new();
-    REGEX.get_or_init(|| ascii_regex(r"#[A-Za-z0-9][A-Za-z0-9_-]*"))
+    REGEX.get_or_init(|| js::regex(r"#[A-Za-z0-9][A-Za-z0-9_-]*"))
 }
 
 fn parse_tag_list(value: &str) -> Vec<String> {
@@ -554,7 +457,7 @@ fn parse_tag_list(value: &str) -> Vec<String> {
         .collect::<Vec<_>>();
     let raw_parts = if hashtag_matches.is_empty() {
         SPLIT
-            .get_or_init(|| ascii_regex(r"(?i)\s*(?:,|and)\s*"))
+            .get_or_init(|| js::regex(r"(?i)\s*(?:,|and)\s*"))
             .split(value)
             .filter_map(Result::ok)
             .collect::<Vec<_>>()
@@ -588,10 +491,9 @@ fn extract_tags(input: &str) -> (Vec<String>, String) {
         }
     };
 
-    let clause = CLAUSE.get_or_init(|| {
-        ascii_regex(r"(?i)\b(?:with\s+)?(?:tags?\b\s*:?\s*|tagged\s+)([^.;]+)$")
-    });
-    let clause_value = |captures: &Captures| Some(group(captures, 1));
+    let clause = CLAUSE
+        .get_or_init(|| js::regex(r"(?i)\b(?:with\s+)?(?:tags?\b\s*:?\s*|tagged\s+)([^.;]+)$"));
+    let clause_value = |captures: &Captures| Some(js::group(captures, 1).to_string());
     if let Some(extraction) = find_best_regex_extraction(&working, &[(clause, &clause_value)]) {
         append_tags(parse_tag_list(&extraction.value), &mut tags);
         working = extraction.working;
@@ -611,7 +513,7 @@ fn extract_tags(input: &str) -> (Vec<String>, String) {
                 .collect(),
             &mut tags,
         );
-        let tag_word = TAG_WORD.get_or_init(|| ascii_regex(r"(?i)\b(?:with\s+)?tags?\b[:]?"));
+        let tag_word = TAG_WORD.get_or_init(|| js::regex(r"(?i)\b(?:with\s+)?tags?\b[:]?"));
         working = normalize_whitespace(&replace_all(
             tag_word,
             &replace_all(hashtag, &working, " "),
@@ -623,32 +525,26 @@ fn extract_tags(input: &str) -> (Vec<String>, String) {
 }
 
 fn title_case_name(value: &str) -> String {
-    value
-        .split_whitespace()
+    js::words(value)
         .map(|part| {
             if part.contains('@') {
                 return part.to_string();
             }
-            let mut chars = part.chars();
-            match chars.next() {
-                Some(first) => format!("{}{}", first.to_uppercase(), chars.as_str().to_lowercase()),
-                None => String::new(),
-            }
+            let (head, tail) = part.split_at(part.chars().next().map_or(0, char::len_utf8));
+            js::capitalize(&format!("{head}{}", tail.to_lowercase()))
         })
         .collect::<Vec<_>>()
         .join(" ")
 }
 
 fn clean_named_value(value: &str) -> String {
-    static EDGES: OnceLock<Regex> = OnceLock::new();
-    let edges = EDGES.get_or_init(|| ascii_regex(r"^[,;:]+|[,;:!?]+$"));
-    normalize_whitespace(&replace_all(edges, value, ""))
+    normalize_whitespace(&replace_all(edge_punctuation(), value, ""))
 }
 
 fn split_entity_list(value: &str) -> Vec<String> {
     static SPLIT: OnceLock<Regex> = OnceLock::new();
     SPLIT
-        .get_or_init(|| ascii_regex(r"(?i)\s*(?:,|and|&)\s*"))
+        .get_or_init(|| js::regex(r"(?i)\s*(?:,|and|&)\s*"))
         .split(value)
         .filter_map(Result::ok)
         .map(clean_named_value)
@@ -658,9 +554,9 @@ fn split_entity_list(value: &str) -> Vec<String> {
 
 fn is_weekday_or_month(token: &str) -> bool {
     static REGEX: OnceLock<Regex> = OnceLock::new();
-    is_match(
+    js::test(
         REGEX.get_or_init(|| {
-            ascii_regex(r"(?i)^(?:mon(?:day)?|tue(?:s|sday)?|wed(?:nesday)?|thu(?:r|rs|rsday)?|fri(?:day)?|sat(?:urday)?|sun(?:day)?|january|february|march|april|may|june|july|august|september|october|november|december|jan|feb|mar|apr|jun|jul|aug|sep|sept|oct|nov|dec)$")
+            js::regex(r"(?i)^(?:mon(?:day)?|tue(?:s|sday)?|wed(?:nesday)?|thu(?:r|rs|rsday)?|fri(?:day)?|sat(?:urday)?|sun(?:day)?|january|february|march|april|may|june|july|august|september|october|november|december|jan|feb|mar|apr|jun|jul|aug|sep|sept|oct|nov|dec)$")
         }),
         token,
     )
@@ -670,28 +566,28 @@ fn is_likely_person(value: &str, known_assignees: &BTreeSet<String>) -> bool {
     static REGEXES: OnceLock<[Regex; 4]> = OnceLock::new();
     let [mention, email, reserved, name_token] = REGEXES.get_or_init(|| {
         [
-            ascii_regex(r"(?i)^@[a-z0-9_.+-]+$"),
-            ascii_regex(r"(?i)^[a-z0-9.+-]+@[a-z0-9.-]+\.[a-z]{2,}$"),
-            ascii_regex(
+            js::regex(r"(?i)^@[a-z0-9_.+-]+$"),
+            js::regex(r"(?i)^[a-z0-9.+-]+@[a-z0-9.-]+\.[a-z]{2,}$"),
+            js::regex(
                 r"(?i)^(?:project|tag|tags|today|tomorrow|tonight|next|this|every|daily|weekly|monthly)$",
             ),
-            ascii_regex(r"^[A-Z][a-z]+(?:[-'][A-Z][a-z]+)?$"),
+            js::regex(r"^[A-Z][a-z]+(?:[-'][A-Z][a-z]+)?$"),
         ]
     });
     let cleaned = clean_named_value(value);
     if cleaned.is_empty() {
         return false;
     }
-    if is_match(mention, &cleaned) || is_match(email, &cleaned) {
+    if js::test(mention, &cleaned) || js::test(email, &cleaned) {
         return true;
     }
     if known_assignees.contains(&cleaned.to_lowercase()) {
         return true;
     }
-    if is_match(reserved, &cleaned) {
+    if js::test(reserved, &cleaned) {
         return false;
     }
-    let tokens = whitespace_tokens(&cleaned);
+    let tokens: Vec<&str> = js::words(&cleaned).collect();
     if tokens.iter().any(|token| is_weekday_or_month(token)) {
         return false;
     }
@@ -701,7 +597,7 @@ fn is_likely_person(value: &str, known_assignees: &BTreeSet<String>) -> bool {
     if tokens.len() > 2 {
         return false;
     }
-    tokens.iter().all(|token| is_match(name_token, token))
+    tokens.iter().all(|token| js::test(name_token, token))
 }
 
 fn normalize_assignee_value(value: &str, known_assignees: &BTreeSet<String>) -> Option<String> {
@@ -719,24 +615,24 @@ fn is_likely_project(value: &str) -> bool {
     static REGEXES: OnceLock<[Regex; 2]> = OnceLock::new();
     let [reserved, single] = REGEXES.get_or_init(|| {
         [
-            ascii_regex(
+            js::regex(
                 r"(?i)^(?:with|to|by|before|every|starting|until|till|high|medium|low|urgent)$",
             ),
-            ascii_regex(r"^(?:[A-Z][a-z]+[A-Z][A-Za-z]*|[A-Z]{2,}|[A-Z][a-z]+\d+|[A-Z][a-z]+)$"),
+            js::regex(r"^(?:[A-Z][a-z]+[A-Z][A-Za-z]*|[A-Z]{2,}|[A-Z][a-z]+\d+|[A-Z][a-z]+)$"),
         ]
     });
     let cleaned = clean_named_value(value);
-    if cleaned.is_empty() || is_match(reserved, &cleaned) {
+    if cleaned.is_empty() || js::test(reserved, &cleaned) {
         return false;
     }
-    let tokens = whitespace_tokens(&cleaned);
+    let tokens: Vec<&str> = js::words(&cleaned).collect();
     if tokens.iter().any(|token| is_weekday_or_month(token)) {
         return false;
     }
     if tokens.len() >= 2 {
         return true;
     }
-    is_match(single, &cleaned)
+    js::test(single, &cleaned)
 }
 
 fn extract_project(input: &str) -> (Option<String>, String) {
@@ -744,19 +640,19 @@ fn extract_project(input: &str) -> (Option<String>, String) {
     let [explicit, for_project, titlecase] = REGEXES.get_or_init(|| {
         let boundary = temporal_boundary();
         [
-            ascii_regex(&format!(r"(?i)\b(?:in|under)\s+project\s+(.+?){boundary}")),
-            ascii_regex(&format!(r"(?i)\bfor\s+project\s+(.+?){boundary}")),
-            ascii_regex(&format!(
+            js::regex(&format!(r"(?i)\b(?:in|under)\s+project\s+(.+?){boundary}")),
+            js::regex(&format!(r"(?i)\bfor\s+project\s+(.+?){boundary}")),
+            js::regex(&format!(
                 r"\b[Ff][Oo][Rr]\s+([A-Z][a-z0-9-]*(?:\s+(?!(?:{PROJECT_CHAIN_RESERVED})\b)[A-Za-z][A-Za-z0-9-]*){{0,3}}){boundary}"
             )),
         ]
     });
     let keyword_value = |captures: &Captures| {
-        let candidate = clean_named_value(&group(captures, 1));
+        let candidate = clean_named_value(js::group(captures, 1));
         (!candidate.is_empty()).then(|| format!("Project {candidate}"))
     };
     let titlecase_value = |captures: &Captures| {
-        let candidate = clean_named_value(&group(captures, 1));
+        let candidate = clean_named_value(js::group(captures, 1));
         is_likely_project(&candidate).then_some(candidate)
     };
     match find_best_regex_extraction(
@@ -778,7 +674,7 @@ fn get_known_assignee_set(values: Option<&[String]>) -> BTreeSet<String> {
         None => DEFAULT_KNOWN_ASSIGNEES.to_vec(),
     };
     seed.into_iter()
-        .map(|value| value.trim().to_lowercase())
+        .map(|value| js::trim(value).to_lowercase())
         .filter(|value| !value.is_empty())
         .collect()
 }
@@ -800,7 +696,7 @@ fn extract_assignees(
         }
     };
 
-    let mention = MENTION.get_or_init(|| ascii_regex(r"(?<![A-Za-z0-9_.+-])@[A-Za-z0-9_.+-]+"));
+    let mention = MENTION.get_or_init(|| js::regex(r"(?<![A-Za-z0-9_.+-])@[A-Za-z0-9_.+-]+"));
     let mentions = mention
         .find_iter(&working)
         .filter_map(Result::ok)
@@ -814,19 +710,19 @@ fn extract_assignees(
     }
 
     let contextual_with_lead = CONTEXTUAL_WITH_LEAD.get_or_init(|| {
-        ascii_regex(r"(?i)^\s*(?:meeting|meet(?:ing)?|sync|chat|coffee|lunch|dinner|breakfast|call|review)\s+with\b")
+        js::regex(r"(?i)^\s*(?:meeting|meet(?:ing)?|sync|chat|coffee|lunch|dinner|breakfast|call|review)\s+with\b")
     });
     let [to_clause, for_clause, with_clause] = CLAUSES.get_or_init(|| {
         let boundary = temporal_boundary();
         let people = person_list();
         [
-            ascii_regex(&format!(r"(?i)\bto\s+({people}){boundary}")),
-            ascii_regex(&format!(r"(?i)\bfor\s+({people}){boundary}")),
-            ascii_regex(&format!(r"(?i)\bwith\s+({people}){boundary}")),
+            js::regex(&format!(r"(?i)\bto\s+({people}){boundary}")),
+            js::regex(&format!(r"(?i)\bfor\s+({people}){boundary}")),
+            js::regex(&format!(r"(?i)\bwith\s+({people}){boundary}")),
         ]
     });
     let normalize_list = |captures: &Captures| {
-        split_entity_list(&group(captures, 1))
+        split_entity_list(js::group(captures, 1))
             .iter()
             .filter_map(|part| normalize_assignee_value(part, &known_assignees))
             .collect::<Vec<_>>()
@@ -837,7 +733,7 @@ fn extract_assignees(
         (!values.is_empty()).then_some(values)
     };
     let with_value = |captures: &Captures| {
-        if is_match(contextual_with_lead, input) {
+        if js::test(contextual_with_lead, input) {
             return None;
         }
         let values = normalize_list(captures);
@@ -871,195 +767,6 @@ fn merge_structured_recurrence_exceptions(
         return;
     }
     current.push(classify_recurrence_exception(raw, context));
-}
-
-fn is_valid_calendar_date(year: i64, month: u32, day: u32) -> bool {
-    if !(1..=12).contains(&month) || !(1..=31).contains(&day) || (0..=99).contains(&year) {
-        return false;
-    }
-    i32::try_from(year)
-        .ok()
-        .and_then(|year| NaiveDate::from_ymd_opt(year, month, day))
-        .is_some()
-}
-
-fn normalize_iso_date_year(
-    month: u32,
-    day: u32,
-    explicit_year: Option<i64>,
-    context: &Context,
-) -> Option<NaiveDate> {
-    let reference = context.now.with_timezone(&context.zone).date_naive();
-    let mut year = explicit_year.unwrap_or_else(|| i64::from(reference.year()));
-    if !is_valid_calendar_date(year, month, day) {
-        return None;
-    }
-    let candidate = NaiveDate::from_ymd_opt(i32::try_from(year).ok()?, month, day)?;
-    if explicit_year.is_none() && candidate < reference && is_valid_calendar_date(year + 1, month, day)
-    {
-        year += 1;
-    }
-    NaiveDate::from_ymd_opt(i32::try_from(year).ok()?, month, day)
-}
-
-fn month_number(token: &str) -> Option<u32> {
-    let months = [
-        ("jan", 1),
-        ("january", 1),
-        ("feb", 2),
-        ("february", 2),
-        ("mar", 3),
-        ("march", 3),
-        ("apr", 4),
-        ("april", 4),
-        ("may", 5),
-        ("jun", 6),
-        ("june", 6),
-        ("jul", 7),
-        ("july", 7),
-        ("aug", 8),
-        ("august", 8),
-        ("sep", 9),
-        ("sept", 9),
-        ("september", 9),
-        ("oct", 10),
-        ("october", 10),
-        ("nov", 11),
-        ("november", 11),
-        ("dec", 12),
-        ("december", 12),
-    ];
-    months
-        .iter()
-        .find(|(name, _)| *name == token)
-        .map(|(_, month)| *month)
-}
-
-fn extract_specific_date(raw: &str, context: &Context) -> Option<NaiveDate> {
-    static REGEXES: OnceLock<[Regex; 3]> = OnceLock::new();
-    let [iso, slash, month_name] = REGEXES.get_or_init(|| {
-        [
-            ascii_regex(r"\b(\d{4})-(\d{2})-(\d{2})\b"),
-            ascii_regex(r"\b(\d{1,2})[/-](\d{1,2})(?:[/-](\d{2,4}))?\b"),
-            ascii_regex(&format!(
-                r"(?i)\b{MONTH_TOKEN}\s+(\d{{1,2}})(?:st|nd|rd|th)?(?:,?\s+(\d{{4}}))?\b"
-            )),
-        ]
-    });
-    let number = |captures: &Captures, index: usize| group(captures, index).parse::<i64>().ok();
-
-    if let Some(captures) = iso.captures(raw).ok().flatten() {
-        let year = number(&captures, 1)?;
-        let month = u32::try_from(number(&captures, 2)?).ok()?;
-        let day = u32::try_from(number(&captures, 3)?).ok()?;
-        return is_valid_calendar_date(year, month, day)
-            .then(|| NaiveDate::from_ymd_opt(i32::try_from(year).ok()?, month, day))
-            .flatten();
-    }
-
-    if let Some(captures) = slash.captures(raw).ok().flatten() {
-        let month = u32::try_from(number(&captures, 1)?).ok()?;
-        let day = u32::try_from(number(&captures, 2)?).ok()?;
-        let year_text = group(&captures, 3);
-        let explicit_year = if year_text.is_empty() {
-            None
-        } else if year_text.len() == 2 {
-            Some(2000 + year_text.parse::<i64>().ok()?)
-        } else {
-            Some(year_text.parse::<i64>().ok()?)
-        };
-        return normalize_iso_date_year(month, day, explicit_year, context);
-    }
-
-    let captures = month_name.captures(raw).ok().flatten()?;
-    let month = month_number(&group(&captures, 1).to_lowercase())?;
-    let day = u32::try_from(number(&captures, 2)?).ok()?;
-    let year_text = group(&captures, 3);
-    let explicit_year = if year_text.is_empty() {
-        None
-    } else {
-        Some(year_text.parse::<i64>().ok()?)
-    };
-    normalize_iso_date_year(month, day, explicit_year, context)
-}
-
-fn classify_recurrence_exception_condition(raw: &str, context: &Context) -> Option<&'static str> {
-    static REGEXES: OnceLock<[Regex; 2]> = OnceLock::new();
-    static ORDINALS: OnceLock<Vec<Regex>> = OnceLock::new();
-    let [holiday, weekend] = REGEXES.get_or_init(|| {
-        [
-            ascii_regex(r"(?i)\bholidays?\b"),
-            ascii_regex(r"(?i)\bweekends?\b"),
-        ]
-    });
-    if is_match(holiday, raw) {
-        return Some("holiday");
-    }
-    if is_match(weekend, raw) {
-        return Some("weekend");
-    }
-    let ordinals = ORDINALS.get_or_init(|| {
-        let mut patterns = compile_all(&[
-            r"(?i)\bskip\s+the\s+(first|second|third|last)(?:\s+(?:one|occurrence|instance))?\b",
-            r"(?i)\bbut\s+not\s+the\s+(first|second|third|last)\b",
-            r"(?i)\bnot\s+the\s+(first|second|third|last)\b",
-            r"(?i)\bthe\s+(first|second|third|last)\s+(?:one|occurrence|instance)\b",
-        ]);
-        patterns.push(ascii_regex(&format!(
-            r"(?i)\bthe\s+(first|second|third|last)\s+{WEEKDAY_TOKEN}\s+of\s+(?:the\s+|every\s+)?month\b"
-        )));
-        patterns
-    });
-    if ordinals.iter().any(|pattern| is_match(pattern, raw)) {
-        return Some("ordinal");
-    }
-    extract_specific_date(raw, context).map(|_| "specific_date")
-}
-
-fn classify_recurrence_exception_action(raw: &str) -> Option<&'static str> {
-    static REGEXES: OnceLock<[Regex; 4]> = OnceLock::new();
-    let [shift, replace, skip, but_not] = REGEXES.get_or_init(|| {
-        [
-            ascii_regex(&format!(
-                r"(?i)\b(?:then\s+)?(?:move|shift)?(?:\s+to)?\s*(?:the\s+)?(following|next|preceding|previous|prior)\s+{WEEKDAY_TOKEN}\b"
-            )),
-            ascii_regex(r"(?i)\b(?:replace|replaced)\s+with\s+(.+?)$"),
-            ascii_regex(r"(?i)\bskip\b"),
-            ascii_regex(r"(?i)\bbut\s+not\b"),
-        ]
-    });
-    if is_match(shift, raw) {
-        return Some("shift");
-    }
-    if let Some(captures) = replace.captures(raw).ok().flatten() {
-        let replacement = group(&captures, 1);
-        if !replacement
-            .trim()
-            .trim_end_matches(['.', ',', ';'])
-            .is_empty()
-        {
-            return Some("replace");
-        }
-    }
-    if is_match(skip, raw) || is_match(but_not, raw) {
-        return Some("skip");
-    }
-    None
-}
-
-fn classify_recurrence_exception(raw: &str, context: &Context) -> StructuredRecurrenceException {
-    static LEAD: OnceLock<Regex> = OnceLock::new();
-    let condition = classify_recurrence_exception_condition(raw, context);
-    let mut action = classify_recurrence_exception_action(raw);
-    let lead = LEAD.get_or_init(|| ascii_regex(r"(?i)^(?:unless|except)\b"));
-    if action.is_none() && condition.is_some() && is_match(lead, raw.trim()) {
-        action = Some("skip");
-    }
-    StructuredRecurrenceException {
-        raw: raw.to_string(),
-        condition,
-        action,
-    }
 }
 
 fn build_task_title(input: &str) -> String {

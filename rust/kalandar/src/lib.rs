@@ -7,10 +7,12 @@ mod intent;
 mod intent_manifest;
 mod intent_model;
 mod intent_rules;
+mod js;
 #[cfg(feature = "onnx")]
 mod ort_runtime;
 mod postprocess;
 mod preview_runtime;
+mod recurrence_exceptions;
 mod reminder_lightweight;
 mod schedule;
 mod sequence_decoder;

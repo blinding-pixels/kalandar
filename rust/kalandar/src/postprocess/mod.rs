@@ -2,6 +2,7 @@ mod calendar;
 mod reminder;
 mod task;
 
+use crate::js::{self, normalize_whitespace, replace_all, replace_first};
 use fancy_regex::Regex;
 use std::sync::OnceLock;
 
@@ -9,21 +10,10 @@ pub(crate) use calendar::finalize_calendar_title;
 pub(crate) use reminder::finalize_reminder_title;
 pub(crate) use task::finalize_task_title;
 
-pub(crate) fn normalize_whitespace(text: &str) -> String {
-    text.split_whitespace().collect::<Vec<_>>().join(" ")
-}
-
-pub(crate) fn replace_first(regex: &Regex, text: &str, replacement: &str) -> String {
-    regex.replace(text, replacement).into_owned()
-}
-
-pub(crate) fn replace_all(regex: &Regex, text: &str, replacement: &str) -> String {
-    regex.replace_all(text, replacement).into_owned()
-}
-
-pub(crate) fn js_regex(pattern: &str) -> Regex {
-    Regex::new(pattern).unwrap_or_else(|error| panic!("rule regex should compile: {pattern}: {error}"))
-}
+const TITLE_SMALL_WORDS: [&str; 19] = [
+    "a", "an", "the", "and", "but", "or", "nor", "for", "to", "in", "on", "at", "by", "of", "with",
+    "from", "up", "as", "is",
+];
 
 fn repeat_until_stable(text: &str, regex: &Regex) -> String {
     let mut output = normalize_whitespace(text);
@@ -38,7 +28,7 @@ fn repeat_until_stable(text: &str, regex: &Regex) -> String {
 pub(crate) fn strip_reminder_lead_prefix(text: &str) -> String {
     static REGEX: OnceLock<Regex> = OnceLock::new();
     let regex = REGEX.get_or_init(|| {
-        js_regex(r"(?i)^(?:remind\s+me\s+to|remind\s+me|don['\x{2019}]?t\s+forget\s+to|don['\x{2019}]?t\s+let\s+me\s+forget\s+to)\b[\s,:-]*")
+        js::regex(r"(?i)^(?:remind\s+me\s+to|remind\s+me|don['\x{2019}]?t\s+forget\s+to|don['\x{2019}]?t\s+let\s+me\s+forget\s+to)\b[\s,:-]*")
     });
     repeat_until_stable(text, regex)
 }
@@ -49,14 +39,17 @@ pub(crate) fn strip_trailing_dangling_preposition(text: &str, enabled: bool) -> 
         return normalize_whitespace(text);
     }
     let regex =
-        REGEX.get_or_init(|| js_regex(r"(?i)(?:^|\s)(?:for|to|by|with|at|on|in|from)[.,;:!?-]*$"));
+        REGEX.get_or_init(|| js::regex(r"(?i)(?:^|\s)(?:for|to|by|with|at|on|in|from)[.,;:!?-]*$"));
     repeat_until_stable(text, regex)
 }
 
-pub(crate) fn strip_leading_title_filler(text: &str) -> String {
+fn leading_title_filler() -> &'static Regex {
     static REGEX: OnceLock<Regex> = OnceLock::new();
-    let regex = REGEX.get_or_init(|| js_regex(r"(?i)^(?:to(?:\s+the)?|that(?:\s+i)?|about)\b[\s,:-]*"));
-    repeat_until_stable(text, regex)
+    REGEX.get_or_init(|| js::regex(r"(?i)^(?:to(?:\s+the)?|that(?:\s+i)?|about)\b[\s,:-]*"))
+}
+
+pub(crate) fn strip_leading_title_filler(text: &str) -> String {
+    repeat_until_stable(text, leading_title_filler())
 }
 
 pub(crate) fn strip_residual_temporal_tokens(text: &str) -> String {
@@ -75,11 +68,11 @@ pub(crate) fn strip_residual_temporal_tokens(text: &str) -> String {
             r"(?i)\b(?:today|tomorrow|tonight|yesterday)\b",
         ]
         .into_iter()
-        .map(js_regex)
+        .map(js::regex)
         .collect()
     });
-    let output = regexes
-        .iter()
-        .fold(text.to_string(), |output, regex| replace_all(regex, &output, " "));
+    let output = regexes.iter().fold(text.to_string(), |output, regex| {
+        replace_all(regex, &output, " ")
+    });
     normalize_whitespace(&output)
 }

@@ -1,11 +1,10 @@
-use super::{
-    CapturePreviewRecurrenceException, CapturePreviewReminderRecurrence, CapturePreviewRequest,
-    CapturePreviewWarning,
-};
+use super::{js, CapturePreviewReminderRecurrence, CapturePreviewRequest, CapturePreviewWarning};
+use fancy_regex::Regex;
 use kalandar_dates::capture::{
-    capture_schedule, CaptureKind, Context, Frequency, PreviewSchedule, ScheduleTexts, Settings,
+    CaptureSchedule, Context, Frequency, PreviewSchedule, ScheduleSpan, ScheduleTexts, Settings,
 };
 use kalandar_dates::chrono_tz::Tz;
+use std::sync::OnceLock;
 
 pub struct ScheduleOutput {
     pub remaining: String,
@@ -15,33 +14,21 @@ pub struct ScheduleOutput {
 }
 
 impl ScheduleOutput {
-    pub fn recurrence_exceptions(&self) -> Vec<CapturePreviewRecurrenceException> {
-        let resolved = self
-            .schedule
-            .as_ref()
-            .and_then(|s| s.recurrence.as_ref())
-            .map(|r| r.exceptions.as_slice())
-            .unwrap_or(&[]);
-        let same_count = resolved.len() == self.texts.recurrence_exceptions.len();
-        self.texts
-            .recurrence_exceptions
-            .iter()
-            .enumerate()
-            .map(|(index, raw)| {
-                let matched = if same_count {
-                    resolved.get(index)
-                } else {
-                    resolved
-                        .iter()
-                        .find(|e| e.raw.contains(raw.as_str()) || raw.contains(e.raw.as_str()))
-                };
-                CapturePreviewRecurrenceException {
-                    raw: raw.clone(),
-                    condition: matched.and_then(|e| e.condition.clone()),
-                    action: matched.and_then(|e| e.action.clone()),
-                }
-            })
-            .collect()
+    pub fn new(capture: CaptureSchedule, text: &str) -> Self {
+        Self {
+            remaining: remove_schedule_spans(text, &capture.spans),
+            warnings: capture
+                .warnings
+                .iter()
+                .map(|warning| CapturePreviewWarning {
+                    code: warning.code.to_string(),
+                    severity: "info".to_string(),
+                    message: warning.message.clone(),
+                })
+                .collect(),
+            texts: capture.texts,
+            schedule: capture.schedule,
+        }
     }
 
     pub fn clock_time(&self) -> Option<String> {
@@ -88,18 +75,21 @@ impl ScheduleOutput {
     }
 
     pub fn context_hint(&self) -> Option<String> {
-        static HINT: std::sync::OnceLock<regex::Regex> = std::sync::OnceLock::new();
-        let hint = HINT.get_or_init(|| {
-            regex::Regex::new(
-                r"(?i)\b(end of (?:the )?(?:month|week|day)|next month|morning|noon|afternoon|evening|night)\b",
-            )
-            .expect("context hint regex should compile")
-        });
+        static HINT: OnceLock<Regex> = OnceLock::new();
+        let hint = js::cached(
+            &HINT,
+            r"\b(end of (?:the )?(?:month|week|day)|next month|morning|noon|afternoon|evening|night)\b",
+            "i",
+        );
         [&self.texts.moment, &self.texts.time, &self.texts.recurrence]
             .into_iter()
             .flatten()
-            .find_map(|text| hint.find(text))
-            .map(|m| m.as_str().to_lowercase().replace("end of the ", "end of "))
+            .find_map(|text| hint.find(text).ok().flatten())
+            .map(|m| {
+                m.as_str()
+                    .to_lowercase()
+                    .replacen("end of the ", "end of ", 1)
+            })
     }
 
     pub fn duration_minutes(&self) -> Option<u32> {
@@ -124,59 +114,18 @@ pub fn context_for(request: &CapturePreviewRequest) -> Context {
     Context::new(now, zone).with_settings(settings)
 }
 
-fn normalize_whitespace(text: &str) -> String {
-    text.split_whitespace().collect::<Vec<_>>().join(" ")
-}
-
-fn remove_texts(working: &str, payload: &str, spans: &[(usize, usize)]) -> String {
-    let mut sorted = spans.to_vec();
-    sorted.sort_unstable();
-    let mut regions: Vec<(usize, usize)> = Vec::new();
-    for (start, end) in sorted {
-        match regions.last_mut() {
-            Some(last) if start <= last.1 => last.1 = last.1.max(end),
-            _ => regions.push((start, end)),
+fn remove_schedule_spans(text: &str, spans: &[ScheduleSpan]) -> String {
+    let mut ordered: Vec<&ScheduleSpan> = spans.iter().collect();
+    ordered.sort_by_key(|span| (span.start, span.end));
+    let mut output = String::new();
+    let mut cursor = 0;
+    for span in ordered {
+        if span.start >= cursor {
+            output.push_str(js::slice(text, cursor, span.start));
+            output.push(' ');
         }
+        cursor = cursor.max(span.end);
     }
-    let mut output = working.to_string();
-    for (start, end) in regions {
-        let Some(needle) = payload.get(start..end).map(str::trim) else {
-            continue;
-        };
-        if needle.is_empty() {
-            continue;
-        }
-        let lower = output.to_lowercase();
-        if let Some(found) = lower.find(&needle.to_lowercase()) {
-            if output.is_char_boundary(found) && output.is_char_boundary(found + needle.len()) {
-                output.replace_range(found..found + needle.len(), " ");
-            }
-        }
-    }
-    normalize_whitespace(&output)
-}
-
-pub fn extract_schedule(
-    payload: &str,
-    working: &str,
-    kind: CaptureKind,
-    request: &CapturePreviewRequest,
-) -> ScheduleOutput {
-    let found = capture_schedule(payload, kind, None, &context_for(request));
-    let ranges: Vec<(usize, usize)> = found.spans.iter().map(|s| (s.start, s.end)).collect();
-    let warnings = found
-        .warnings
-        .iter()
-        .map(|w| CapturePreviewWarning {
-            code: w.code.to_string(),
-            severity: "info".to_string(),
-            message: w.message.clone(),
-        })
-        .collect();
-    ScheduleOutput {
-        remaining: remove_texts(working, payload, &ranges),
-        texts: found.texts,
-        schedule: found.schedule,
-        warnings,
-    }
+    output.push_str(js::slice(text, cursor, text.len()));
+    js::normalize_whitespace(&output)
 }

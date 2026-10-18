@@ -201,7 +201,7 @@ fn run_inference_smoke(
 fn strip_prefix_case_insensitive<'a>(text: &'a str, prefix: &str) -> Option<&'a str> {
     text.get(..prefix.len())
         .filter(|candidate| candidate.eq_ignore_ascii_case(prefix))
-        .map(|_| text[prefix.len()..].trim())
+        .map(|_| super::js::trim(&text[prefix.len()..]))
 }
 
 fn unsupported_from_error(error: CaptureParserError) -> CapturePreviewResult {

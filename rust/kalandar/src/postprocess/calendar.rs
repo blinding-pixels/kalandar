@@ -1,19 +1,14 @@
 use super::{
-    replace_all, replace_first, strip_leading_title_filler, strip_reminder_lead_prefix,
-    strip_trailing_dangling_preposition,
+    strip_leading_title_filler, strip_reminder_lead_prefix, strip_trailing_dangling_preposition,
+    TITLE_SMALL_WORDS,
 };
-use crate::calendar_lightweight::js::{cached, compile, test, trim, words};
+use crate::js::{cached, capitalize, compile, replace_all, replace_first, test, trim, words};
 use fancy_regex::Regex;
 use std::sync::OnceLock;
 
 const TITLE_GLUE_WORDS: [&str; 13] = [
     "on", "at", "with", "every", "reminder", "from", "to", "for", "starting", "invite", "w/",
     "the", "and",
-];
-
-const TITLE_SMALL_WORDS: [&str; 19] = [
-    "a", "an", "the", "and", "but", "or", "nor", "for", "to", "in", "on", "at", "by", "of", "with",
-    "from", "up", "as", "is",
 ];
 
 type Steps = Vec<(Regex, bool, &'static str)>;
@@ -128,13 +123,6 @@ fn strip_temporal_noise(input: &str) -> String {
         ])
     });
     trim(&apply(input, steps)).to_string()
-}
-
-fn capitalize(lower: &str) -> String {
-    let mut chars = lower.chars();
-    chars.next().map_or_else(String::new, |first| {
-        first.to_uppercase().chain(chars).collect()
-    })
 }
 
 fn smart_calendar_title_case(input: &str) -> String {

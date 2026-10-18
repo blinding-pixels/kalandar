@@ -1,16 +1,15 @@
 mod attendees;
-pub(crate) mod js;
 mod location;
-mod recurrence_exceptions;
 mod schedule;
 
 use super::{
-    postprocess::finalize_calendar_title, CapturePreviewCalendarEventDraft, CapturePreviewRequest,
-    CapturePreviewResult, CapturePreviewWarning,
+    js,
+    postprocess::finalize_calendar_title,
+    recurrence_exceptions::{to_recurrence_exceptions, StructuredRecurrenceException},
+    CapturePreviewCalendarEventDraft, CapturePreviewRequest, CapturePreviewResult,
+    CapturePreviewWarning,
 };
 use kalandar_dates::capture::PreviewSchedule;
-use kalandar_dates::chrono_tz::Tz;
-use recurrence_exceptions::{ClassifyOptions, StructuredRecurrenceException};
 
 #[derive(Default)]
 pub(crate) struct ParseContext {
@@ -90,21 +89,10 @@ fn finalize_calendar_parse_context(ctx: &mut ParseContext) {
     ctx.warnings = warnings;
 }
 
-fn classify_options(request: &CapturePreviewRequest) -> ClassifyOptions {
-    ClassifyOptions {
-        now: request
-            .now_iso
-            .as_deref()
-            .and_then(|iso| iso.parse::<chrono::DateTime<chrono::Utc>>().ok())
-            .unwrap_or_else(chrono::Utc::now),
-        timezone: request.timezone.parse().unwrap_or(Tz::UTC),
-    }
-}
-
 fn parse_event_input(input: &str, request: &CapturePreviewRequest) -> ParseContext {
     let mut ctx = ParseContext::new(input);
     attendees::attendees_pass(&mut ctx);
-    schedule::schedule_pass(&mut ctx, request, &classify_options(request));
+    schedule::schedule_pass(&mut ctx, request);
     location::location_pass(&mut ctx);
     title_pass(&mut ctx);
     finalize_calendar_parse_context(&mut ctx);
@@ -113,7 +101,7 @@ fn parse_event_input(input: &str, request: &CapturePreviewRequest) -> ParseConte
 
 fn calendar_result(ctx: ParseContext) -> CapturePreviewResult {
     let recurrence_exceptions =
-        schedule::to_recurrence_exceptions(&ctx.recurrence_exception, ctx.schedule.as_ref());
+        to_recurrence_exceptions(&ctx.recurrence_exception, ctx.schedule.as_ref());
     let event = CapturePreviewCalendarEventDraft {
         title: ctx.title,
         date_text: ctx.date,

@@ -1,9 +1,8 @@
 use super::{
-    normalize_whitespace, replace_all, replace_first, strip_leading_title_filler,
-    strip_reminder_lead_prefix, strip_residual_temporal_tokens,
+    strip_leading_title_filler, strip_reminder_lead_prefix, strip_residual_temporal_tokens,
     strip_trailing_dangling_preposition,
 };
-use crate::task_lightweight::ascii_regex;
+use crate::js::{self, normalize_whitespace, replace_all, replace_first};
 use fancy_regex::Regex;
 use std::sync::OnceLock;
 
@@ -15,11 +14,11 @@ fn clean_title_punctuation(input: &str) -> String {
     static REGEXES: OnceLock<[Regex; 5]> = OnceLock::new();
     let [pictographic, repeated, quotes, separators, hyphens] = REGEXES.get_or_init(|| {
         [
-            ascii_regex(r"\p{Extended_Pictographic}+"),
-            ascii_regex(r"[!?.,]{2,}"),
-            ascii_regex("[\u{201C}\u{201D}\"]"),
-            ascii_regex(r"\s*[,;:]\s*"),
-            ascii_regex(r"\s*-\s*"),
+            js::regex(r"\p{Extended_Pictographic}+"),
+            js::regex(r"[!?.,]{2,}"),
+            js::regex("[\u{201C}\u{201D}\"]"),
+            js::regex(r"\s*[,;:]\s*"),
+            js::regex(r"\s*-\s*"),
         ]
     });
     let output = replace_all(pictographic, input, " ");
@@ -45,9 +44,9 @@ fn normalize_title_text(input: &str) -> String {
         output = replace_first(pattern, &output, "");
     }
 
-    let please = PLEASE.get_or_init(|| ascii_regex(r"(?i)\b(?:plz|pls)\b"));
-    let can_u = CAN_U.get_or_init(|| ascii_regex(r"(?i)\bcan u\b"));
-    let priority = PRIORITY.get_or_init(|| ascii_regex(r"(?i)\bpriority\b"));
+    let please = PLEASE.get_or_init(|| js::regex(r"(?i)\b(?:plz|pls)\b"));
+    let can_u = CAN_U.get_or_init(|| js::regex(r"(?i)\bcan u\b"));
+    let priority = PRIORITY.get_or_init(|| js::regex(r"(?i)\bpriority\b"));
     output = replace_all(please, &output, " ");
     output = replace_all(can_u, &output, " ");
     output = replace_all(priority, &output, " ");
@@ -59,10 +58,10 @@ fn normalize_title_text(input: &str) -> String {
 
     let temporal_stripped = strip_residual_temporal_tokens(&output);
     let temporal_content_removed = temporal_stripped != output;
-    let preserve_trailing_in = TRAILING_IN
-        .get_or_init(|| ascii_regex(r"(?i)\b(?:check|log|sign|drop|fill|get)\s+in$"))
-        .is_match(&temporal_stripped)
-        .unwrap_or(false);
+    let preserve_trailing_in = js::test(
+        TRAILING_IN.get_or_init(|| js::regex(r"(?i)\b(?:check|log|sign|drop|fill|get)\s+in$")),
+        &temporal_stripped,
+    );
     output = strip_leading_title_filler(&if preserve_trailing_in {
         temporal_stripped
     } else {
@@ -72,10 +71,10 @@ fn normalize_title_text(input: &str) -> String {
     let [conjunction, preposition, leading_punctuation, trailing_punctuation] =
         TAIL.get_or_init(|| {
             [
-                ascii_regex(r"(?i)\b(?:both|but)\b$"),
-                ascii_regex(r"(?i)\b(?:for|to|with|by|at|on|from)\b$"),
-                ascii_regex(r"^[,.;:-]+\s*"),
-                ascii_regex(r"\s+[,.;:-]\s*$"),
+                js::regex(r"(?i)\b(?:both|but)\b$"),
+                js::regex(r"(?i)\b(?:for|to|with|by|at|on|from)\b$"),
+                js::regex(r"^[,.;:-]+\s*"),
+                js::regex(r"\s+[,.;:-]\s*$"),
             ]
         });
     let output = replace_first(conjunction, &output, " ");
@@ -107,7 +106,7 @@ fn leading_filler_patterns() -> &'static [Regex] {
             r"(?i)^\s*maybe\b[\s,.-]*",
         ]
         .into_iter()
-        .map(ascii_regex)
+        .map(js::regex)
         .collect()
     })
 }
@@ -125,7 +124,7 @@ fn trailing_filler_patterns() -> &'static [Regex] {
             r"(?i)[\s,.-]+\bbut\b\.?$",
         ]
         .into_iter()
-        .map(ascii_regex)
+        .map(js::regex)
         .collect()
     })
 }
@@ -146,7 +145,7 @@ fn phrase_corrections() -> &'static [(Regex, &'static str)] {
             (r"(?i)\bbday\b", "bday"),
         ]
         .into_iter()
-        .map(|(pattern, replacement)| (ascii_regex(pattern), replacement))
+        .map(|(pattern, replacement)| (js::regex(pattern), replacement))
         .collect()
     })
 }
