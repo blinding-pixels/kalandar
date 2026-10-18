@@ -22,7 +22,7 @@ fs.mkdirSync(outDir, { recursive: true });
 fs.writeFileSync(path.join(outDir, 'glue.ts'), `// @ts-nocheck\n${glue.replace(/[ \t]+$/gm, '')}`);
 fs.writeFileSync(
   path.join(outDir, 'bytes.ts'),
-  `export const KALANDAR_DATES_WASM_BASE64 =\n  '${wasm.toString('base64')}';\n`,
+  `export const KALANDAR_DATES_WASM_BASE64: string =\n  '${wasm.toString('base64')}';\n`,
 );
 fs.writeFileSync(
   path.join(outDir, 'source.json'),
