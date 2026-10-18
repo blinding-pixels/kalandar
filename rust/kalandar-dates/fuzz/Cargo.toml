@@ -1,0 +1,35 @@
+[package]
+name = "chrono-english-rs-fuzz"
+version = "0.0.0"
+publish = false
+edition = "2021"
+
+[package.metadata]
+cargo-fuzz = true
+
+[dependencies]
+libfuzzer-sys = "0.4"
+chrono = { version = "0.4", default-features = false, features = ["std"] }
+chrono-tz = "0.10"
+chrono-english-rs = { path = "..", features = ["facets"] }
+
+[[bin]]
+name = "phrase_resolver"
+path = "fuzz_targets/phrase_resolver.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "recurrence_parser"
+path = "fuzz_targets/recurrence_parser.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "chrono_parse"
+path = "fuzz_targets/chrono_parse.rs"
+test = false
+doc = false
+bench = false

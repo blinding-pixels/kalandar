@@ -1,0 +1,120 @@
+{"id": "p4c-repeats-01", "category": "repeats", "kind": "reminder", "text": "remind me to take my meds every day at 8am", "expect": {"start": "2026-10-19T08:00", "recurrence": {"frequency": "daily", "interval": 1}}}
+{"id": "p4c-repeats-02", "category": "repeats", "kind": "task", "text": "water the plants every other day", "expect": {"start": "2026-10-18", "recurrence": {"frequency": "daily", "interval": 2}}}
+{"id": "p4c-repeats-03", "category": "repeats", "kind": "calendar", "text": "standup every weekday at 9:30am", "expect": {"start": "2026-10-19T09:30", "recurrence": {"frequency": "weekly", "weekdays": ["MO", "TU", "WE", "TH", "FR"]}}}
+{"id": "p4c-repeats-04", "category": "repeats", "kind": "reminder", "text": "remind me to stretch hourly from 10am to 4pm on weekdays", "expect": {"start": "2026-10-19T10:00", "recurrence": {"frequency": "hourly", "interval": 1, "window": ["10:00", "16:00"], "hours": [10, 11, 12, 13, 14, 15, 16], "weekdays": ["MO", "TU", "WE", "TH", "FR"]}}}
+{"id": "p4c-repeats-05", "category": "repeats", "kind": "reminder", "text": "remind me to drink water every 30 min between 9 and 5", "expect": {"start": "2026-10-18T10:30", "recurrence": {"frequency": "minutely", "interval": 30, "window": ["09:00", "17:00"], "hours": [9, 10, 11, 12, 13, 14, 15, 16]}}}
+{"id": "p4c-repeats-06", "category": "repeats", "kind": "reminder", "text": "remind me to get up and walk around every hour and a half", "expect": {"start": "2026-10-18T11:30", "recurrence": {"frequency": "minutely", "interval": 90}}}
+{"id": "p4c-repeats-07", "category": "repeats", "kind": "reminder", "text": "remind me to feed the puppy every couple of hours", "expect": {"start": "2026-10-18T12:00", "recurrence": {"frequency": "hourly", "interval": 2}}}
+{"id": "p4c-repeats-08", "category": "repeats", "kind": "reminder", "text": "remind me to pay the water bill on the 2nd Tuesday", "expect": {"start": "2026-11-10", "recurrence": {"frequency": "monthly", "weekdays": ["2TU"]}}}
+{"id": "p4c-repeats-09", "category": "repeats", "kind": "calendar", "text": "book club the last Thursday of every month at 7pm", "expect": {"start": "2026-10-29T19:00", "recurrence": {"frequency": "monthly", "weekdays": ["-1TH"]}}}
+{"id": "p4c-repeats-10", "category": "repeats", "kind": "calendar", "text": "team sync 1st and 3rd Monday at 10am", "expect": {"start": "2026-10-19T10:00", "recurrence": {"frequency": "monthly", "weekdays": ["1MO", "3MO"]}}}
+{"id": "p4c-repeats-11", "category": "repeats", "kind": "task", "text": "submit timesheet every Friday for 6 weeks", "expect": {"start": "2026-10-23", "recurrence": {"frequency": "weekly", "weekdays": ["FR"], "count": 6}}}
+{"id": "p4c-repeats-12", "category": "repeats", "kind": "reminder", "text": "remind me mon to wed at 8am to prep lunches", "expect": {"start": "2026-10-19T08:00", "recurrence": {"frequency": "weekly", "weekdays": ["MO", "TU", "WE"]}}}
+{"id": "p4c-repeats-13", "category": "repeats", "kind": "reminder", "text": "remind me to take the antibiotics the 3rd through the 5th", "expect": {"start": "2026-11-03", "recurrence": {"frequency": "daily", "until": "2026-11-05"}}}
+{"id": "p4c-repeats-14", "category": "repeats", "kind": "reminder", "text": "remind me to take vitamins every day at 7am as of next month", "expect": {"start": "2026-11-01T07:00", "recurrence": {"frequency": "daily", "start_date": "2026-11-01"}}}
+{"id": "p4c-repeats-15", "category": "repeats", "kind": "calendar", "text": "spin class every Monday and Wednesday at 6:30am for 2 weeks", "expect": {"start": "2026-10-19T06:30", "recurrence": {"frequency": "weekly", "weekdays": ["MO", "WE"], "count": 4}}}
+{"id": "p4c-exdates-01", "category": "exdates", "kind": "calendar", "text": "piano lesson every Wednesday at 4pm except in December", "expect": {"start": "2026-10-21T16:00", "recurrence": {"frequency": "weekly", "weekdays": ["WE"], "exdates": ["2026-12-02T16:00", "2026-12-09T16:00", "2026-12-16T16:00", "2026-12-23T16:00", "2026-12-30T16:00"]}}}
+{"id": "p4c-exdates-02", "category": "exdates", "kind": "task", "text": "file expense report every Friday, skip Thanksgiving week", "expect": {"start": "2026-10-23", "recurrence": {"frequency": "weekly", "weekdays": ["FR"], "exdates": ["2026-11-27"]}}}
+{"id": "p4c-exdates-03", "category": "exdates", "kind": "calendar", "text": "staff meeting every Monday at 10am except Christmas week", "expect": {"start": "2026-10-19T10:00", "recurrence": {"frequency": "weekly", "weekdays": ["MO"], "exdates": ["2026-12-21T10:00"]}}}
+{"id": "p4c-exdates-04", "category": "exdates", "kind": "reminder", "text": "remind me to water the lawn every Saturday at 7am except in winter", "expect": {"start": "2026-10-24T07:00", "recurrence": {"frequency": "weekly", "weekdays": ["SA"], "exdates": ["2026-12-05T07:00", "2026-12-12T07:00", "2026-12-19T07:00", "2026-12-26T07:00", "2027-01-02T07:00", "2027-01-09T07:00", "2027-01-16T07:00", "2027-01-23T07:00", "2027-01-30T07:00", "2027-02-06T07:00", "2027-02-13T07:00", "2027-02-20T07:00", "2027-02-27T07:00"]}}}
+{"id": "p4c-exdates-05", "category": "exdates", "kind": "calendar", "text": "1:1 with Dana every Monday at 11am except holidays", "expect": {"start": "2026-10-19T11:00", "recurrence": {"frequency": "weekly", "weekdays": ["MO"], "exdates": ["2027-01-18T11:00", "2027-02-15T11:00", "2027-05-31T11:00", "2027-07-05T11:00", "2027-09-06T11:00", "2027-10-11T11:00"]}}}
+{"id": "p4c-exdates-06", "category": "exdates", "kind": "reminder", "text": "remind me to drop off the rent check on the 25th of every month except Dec 25", "expect": {"start": "2026-10-25", "recurrence": {"frequency": "monthly", "month_days": [25], "exdates": ["2026-12-25"]}}}
+{"id": "p4c-exdates-07", "category": "exdates", "kind": "calendar", "text": "volunteer shift every Tuesday at 5pm except Nov 3", "expect": {"start": "2026-10-20T17:00", "recurrence": {"frequency": "weekly", "weekdays": ["TU"], "exdates": ["2026-11-03T17:00"]}}}
+{"id": "p4c-exdates-08", "category": "exdates", "kind": "calendar", "text": "status call every Monday at 9am except Dec 25", "expect": {"start": "2026-10-19T09:00", "recurrence": {"frequency": "weekly", "weekdays": ["MO"], "exdates": []}}}
+{"id": "p4c-exdates-09", "category": "exdates", "kind": "calendar", "text": "physio every Thursday at 2pm for 6 sessions except Nov 26", "expect": {"start": "2026-10-22T14:00", "recurrence": {"frequency": "weekly", "weekdays": ["TH"], "count": 6, "exdates": ["2026-11-26T14:00"]}}}
+{"id": "p4c-exdates-10", "category": "exdates", "kind": "task", "text": "take the trash out every Tuesday at 7pm except Oct 20", "expect": {"start": "2026-10-27T19:00", "recurrence": {"frequency": "weekly", "weekdays": ["TU"], "exdates": ["2026-10-20T19:00"]}}}
+{"id": "p4c-exdates-11", "category": "exdates", "kind": "calendar", "text": "choir practice every Wednesday at 7pm, skip the week of the 10th", "expect": {"start": "2026-10-21T19:00", "recurrence": {"frequency": "weekly", "weekdays": ["WE"], "exdates": ["2026-11-11T19:00"]}}}
+{"id": "p4c-exdates-12", "category": "exdates", "kind": "calendar", "text": "bins out every Thursday, not the week of Easter", "expect": {"start": "2026-10-22", "recurrence": {"frequency": "weekly", "weekdays": ["TH"], "exdates": ["2027-03-25"]}}}
+{"id": "p4c-exdates-13", "category": "exdates", "kind": "task", "text": "get to inbox zero every weekday except Fridays", "expect": {"start": "2026-10-19", "recurrence": {"frequency": "weekly", "weekdays": ["MO", "TU", "WE", "TH"], "exdates": []}}}
+{"id": "p4c-exdates-14", "category": "exdates", "kind": "task", "text": "pay the cleaner on the 1st of every month, not in December", "expect": {"start": "2026-11-01", "recurrence": {"frequency": "monthly", "month_days": [1], "exdates": ["2026-12-01"]}}}
+{"id": "p4c-exdates-15", "category": "exdates", "kind": "reminder", "text": "remind me to send the weekly update every Monday at 8am until Dec 31 except Thanksgiving week", "expect": {"start": "2026-10-19T08:00", "recurrence": {"frequency": "weekly", "weekdays": ["MO"], "until": "2026-12-31", "exdates": ["2026-11-23T08:00"]}}}
+{"id": "p4c-false_dates-01", "category": "false_dates", "kind": "task", "text": "buy Christmas lights", "expect": {"start": null, "recurrence": null}}
+{"id": "p4c-false_dates-02", "category": "false_dates", "kind": "task", "text": "Halloween costume ideas", "expect": {"start": null, "recurrence": null}}
+{"id": "p4c-false_dates-03", "category": "false_dates", "kind": "task", "text": "buy sun cream", "expect": {"start": null}}
+{"id": "p4c-false_dates-04", "category": "false_dates", "kind": "task", "text": "sat with Ana about the budget, need to follow up", "expect": {"start": null}}
+{"id": "p4c-false_dates-05", "category": "false_dates", "kind": "task", "text": "call April about the lease", "expect": {"start": null}}
+{"id": "p4c-false_dates-06", "category": "false_dates", "kind": "task", "text": "April's birthday gift ideas", "expect": {"start": null, "recurrence": null}}
+{"id": "p4c-false_dates-07", "category": "false_dates", "kind": "task", "text": "Easter egg hunt planning", "expect": {"start": null, "recurrence": null}}
+{"id": "p4c-false_dates-08", "category": "false_dates", "kind": "task", "text": "sign up for sat exam", "expect": {"start": null}}
+{"id": "p4c-false_dates-09", "category": "false_dates", "kind": "calendar", "text": "Halloween party", "expect": {"start": "2026-10-31", "recurrence": null}}
+{"id": "p4c-false_dates-10", "category": "false_dates", "kind": "calendar", "text": "Mother's Day brunch", "expect": {"start": "2027-05-09T11:00", "recurrence": null}}
+{"id": "p4c-false_dates-11", "category": "false_dates", "kind": "task", "text": "buy the turkey before Thanksgiving", "expect": {"start": "2026-11-26"}}
+{"id": "p4c-false_dates-12", "category": "false_dates", "kind": "calendar", "text": "dinner sat at 7", "expect": {"start": "2026-10-24T19:00"}}
+{"id": "p4c-false_dates-13", "category": "false_dates", "kind": "task", "text": "call April 3 about the lease", "expect": {"start": "2027-04-03"}}
+{"id": "p4c-false_dates-14", "category": "false_dates", "kind": "calendar", "text": "meeting with June in June", "expect": {"start": "2027-06-01"}}
+{"id": "p4c-false_dates-15", "category": "false_dates", "kind": "reminder", "text": "remind me on sat to buy sun cream", "expect": {"start": "2026-10-24"}}
+{"id": "p4c-month_relative-01", "category": "month_relative", "kind": "task", "text": "pay rent by eom", "expect": {"start": "2026-10-31"}}
+{"id": "p4c-month_relative-02", "category": "month_relative", "kind": "task", "text": "finish the audit by the end of next month", "expect": {"start": "2026-11-30"}}
+{"id": "p4c-month_relative-03", "category": "month_relative", "kind": "calendar", "text": "team offsite late next month", "expect": {"start": "2026-11-30"}}
+{"id": "p4c-month_relative-04", "category": "month_relative", "kind": "reminder", "text": "remind me mid-month to check the budget", "expect": {"start": "2026-11-15"}}
+{"id": "p4c-month_relative-05", "category": "month_relative", "kind": "task", "text": "invoice the client mid next month", "expect": {"start": "2026-11-15"}}
+{"id": "p4c-month_relative-06", "category": "month_relative", "kind": "calendar", "text": "dentist early next month", "expect": {"start": "2026-11-01"}}
+{"id": "p4c-month_relative-07", "category": "month_relative", "kind": "reminder", "text": "remind me at the beginning of next month to renew the parking permit", "expect": {"start": "2026-11-01"}}
+{"id": "p4c-month_relative-08", "category": "month_relative", "kind": "task", "text": "submit the grant application on the 30th", "expect": {"start": "2026-10-30"}}
+{"id": "p4c-month_relative-09", "category": "month_relative", "kind": "task", "text": "pay the dentist bill by the twenty-third", "expect": {"start": "2026-10-23"}}
+{"id": "p4c-month_relative-10", "category": "month_relative", "kind": "reminder", "text": "remind me on the fifteenth to pay the credit card", "expect": {"start": "2026-11-15"}}
+{"id": "p4c-month_relative-11", "category": "month_relative", "kind": "calendar", "text": "parent-teacher conference the 3rd of next month", "expect": {"start": "2026-11-03"}}
+{"id": "p4c-month_relative-12", "category": "month_relative", "kind": "task", "text": "renew passport by the 2nd of November", "expect": {"start": "2026-11-02"}}
+{"id": "p4c-month_relative-13", "category": "month_relative", "kind": "task", "text": "send the board report on the 30th", "now": "2027-02-10T18:00:00Z", "expect": {"start": "2027-03-30"}}
+{"id": "p4c-month_relative-14", "category": "month_relative", "kind": "task", "text": "pay quarterly tax on the 31st", "now": "2026-11-05T18:00:00Z", "expect": {"start": "2026-12-31"}}
+{"id": "p4c-month_relative-15", "category": "month_relative", "kind": "task", "text": "pay the plumber on the 18th", "expect": {"start": "2026-10-18"}}
+{"id": "p4c-slang-01", "category": "slang", "kind": "task", "text": "call the bank tmrw", "expect": {"start": "2026-10-19"}}
+{"id": "p4c-slang-02", "category": "slang", "kind": "reminder", "text": "remind me 2moro at 8 to call the vet", "expect": {"start": "2026-10-19T08:00"}}
+{"id": "p4c-slang-03", "category": "slang", "kind": "calendar", "text": "dinner w/ Kai thurs", "expect": {"start": "2026-10-22T18:00"}}
+{"id": "p4c-slang-04", "category": "slang", "kind": "task", "text": "send the deck by eow", "expect": {"start": "2026-10-23"}}
+{"id": "p4c-slang-05", "category": "slang", "kind": "task", "text": "finish slides eod", "expect": {"start": "2026-10-18T17:00"}}
+{"id": "p4c-slang-06", "category": "slang", "kind": "calendar", "text": "movie tonite at 9", "expect": {"start": "2026-10-18T21:00"}}
+{"id": "p4c-slang-07", "category": "slang", "kind": "reminder", "text": "remind me this arvo to pick up the dry cleaning", "expect": {"start": "2026-10-18T14:00"}}
+{"id": "p4c-slang-08", "category": "slang", "kind": "task", "text": "expense report due weds", "expect": {"start": "2026-10-21"}}
+{"id": "p4c-slang-09", "category": "slang", "kind": "calendar", "text": "coffee with Priya tues 10am", "expect": {"start": "2026-10-20T10:00"}}
+{"id": "p4c-slang-10", "category": "slang", "kind": "task", "text": "renew the lease by sept 30", "expect": {"start": "2027-09-30"}}
+{"id": "p4c-slang-11", "category": "slang", "kind": "task", "text": "pay the gas bill asap", "expect": {"start": null, "warnings": ["vague_time"]}}
+{"id": "p4c-slang-12", "category": "slang", "kind": "reminder", "text": "remind me nxt mon to book flights", "expect": {"start": "2026-10-19"}}
+{"id": "p4c-slang-13", "category": "slang", "kind": "calendar", "text": "beach day this wknd", "expect": {"start": "2026-10-24"}}
+{"id": "p4c-slang-14", "category": "slang", "kind": "reminder", "text": "remind me 2nite to take the bins out", "expect": {"start": "2026-10-18T20:00"}}
+{"id": "p4c-slang-15", "category": "slang", "kind": "task", "text": "clean the fridge every fortnight on fri", "expect": {"start": "2026-10-23", "recurrence": {"frequency": "weekly", "interval": 2, "weekdays": ["FR"]}}}
+{"id": "p4c-events-01", "category": "events", "kind": "calendar", "text": "design review tomorrow at 2pm for 90 min", "expect": {"start": "2026-10-19T14:00", "end": "2026-10-19T15:30"}}
+{"id": "p4c-events-02", "category": "events", "kind": "calendar", "text": "workshop Friday 10am (2h)", "expect": {"start": "2026-10-23T10:00", "end": "2026-10-23T12:00"}}
+{"id": "p4c-events-03", "category": "events", "kind": "calendar", "text": "offsite Thursday for a full day", "expect": {"start": "2026-10-22"}}
+{"id": "p4c-events-04", "category": "events", "kind": "calendar", "text": "volunteer at the food bank Saturday 9am for half a day", "expect": {"start": "2026-10-24T09:00", "end": "2026-10-24T13:00"}}
+{"id": "p4c-events-05", "category": "events", "kind": "calendar", "text": "lunch with Sam friday", "expect": {"start": "2026-10-23T12:00"}}
+{"id": "p4c-events-06", "category": "events", "kind": "calendar", "text": "family camping Fri to Sun", "expect": {"start": "2026-10-23", "end": "2026-10-25", "recurrence": null}}
+{"id": "p4c-events-07", "category": "events", "kind": "calendar", "text": "conference Nov 3 to Nov 5", "expect": {"start": "2026-11-03", "end": "2026-11-05"}}
+{"id": "p4c-events-08", "category": "events", "kind": "calendar", "text": "visit my parents from the 3rd to the 5th", "expect": {"start": "2026-11-03", "end": "2026-11-05"}}
+{"id": "p4c-events-09", "category": "events", "kind": "calendar", "text": "book fair Oct 27-29", "expect": {"start": "2026-10-27", "end": "2026-10-29"}}
+{"id": "p4c-events-10", "category": "events", "kind": "calendar", "text": "hackathon all day Saturday", "expect": {"start": "2026-10-24"}}
+{"id": "p4c-events-11", "category": "events", "kind": "calendar", "text": "training in Denver mon to wed", "expect": {"start": "2026-10-19", "end": "2026-10-21", "recurrence": null}}
+{"id": "p4c-events-12", "category": "events", "kind": "calendar", "text": "call with the agency Tuesday 4pm 2 hrs", "expect": {"start": "2026-10-20T16:00", "end": "2026-10-20T18:00"}}
+{"id": "p4c-events-13", "category": "events", "kind": "calendar", "text": "dinner with the Lees Saturday", "expect": {"start": "2026-10-24T18:00"}}
+{"id": "p4c-events-14", "category": "events", "kind": "calendar", "text": "brunch Sunday", "expect": {"start": "2026-10-18T11:00"}}
+{"id": "p4c-events-15", "category": "events", "kind": "calendar", "text": "parent-teacher night the second Tuesday in November at 6pm", "expect": {"start": "2026-11-10T18:00", "recurrence": null}}
+{"id": "p4c-reminders-01", "category": "reminders", "kind": "reminder", "text": "remind me tomorrow morning to call the plumber", "expect": {"start": "2026-10-19T09:00"}}
+{"id": "p4c-reminders-02", "category": "reminders", "kind": "reminder", "text": "remind me this evening to water the plants", "expect": {"start": "2026-10-18T19:00"}}
+{"id": "p4c-reminders-03", "category": "reminders", "kind": "reminder", "text": "remind me tonight to charge my laptop", "expect": {"start": "2026-10-18T20:00"}}
+{"id": "p4c-reminders-04", "category": "reminders", "kind": "reminder", "text": "remind me this afternoon to pick up the cake", "expect": {"start": "2026-10-18T14:00"}}
+{"id": "p4c-reminders-05", "category": "reminders", "kind": "reminder", "text": "remind me on Christmas Eve to call grandma", "expect": {"start": "2026-12-24"}}
+{"id": "p4c-reminders-06", "category": "reminders", "kind": "reminder", "text": "remind me Thanksgiving morning to brine the turkey", "expect": {"start": "2026-11-26T09:00"}}
+{"id": "p4c-reminders-07", "category": "reminders", "kind": "reminder", "text": "remind me the day before Halloween to buy candy", "expect": {"start": "2026-10-30"}}
+{"id": "p4c-reminders-08", "category": "reminders", "kind": "reminder", "text": "remind me 30 minutes before my 3pm call", "expect": {"start": "2026-10-18T14:30", "lead_minutes": 30}}
+{"id": "p4c-reminders-09", "category": "reminders", "kind": "reminder", "text": "remind me next Friday to renew the passport 1 week before", "expect": {"start": "2026-10-23", "lead_minutes": 10080}}
+{"id": "p4c-reminders-10", "category": "reminders", "kind": "reminder", "text": "remind me Sunday to call mom", "expect": {"start": "2026-10-18"}}
+{"id": "p4c-reminders-11", "category": "reminders", "kind": "reminder", "text": "remind me at 9 to stretch", "expect": {"start": "2026-10-19T09:00"}}
+{"id": "p4c-reminders-12", "category": "reminders", "kind": "reminder", "text": "remind me Friday at 4 to leave early for the airport", "expect": {"start": "2026-10-23T16:00"}}
+{"id": "p4c-reminders-13", "category": "reminders", "kind": "reminder", "text": "remind me 2 days ahead of Mom's birthday on Nov 12", "expect": {"start": "2026-11-10", "lead_minutes": 2880}}
+{"id": "p4c-reminders-14", "category": "reminders", "kind": "reminder", "text": "remind me in 3 hours to take the bread out", "expect": {"start": "2026-10-18T13:00"}}
+{"id": "p4c-reminders-15", "category": "reminders", "kind": "reminder", "text": "remind me 15 minutes early for the dentist at 2:30 on Tuesday", "expect": {"start": "2026-10-20T14:15", "lead_minutes": 15}}
+{"id": "p4c-warnings-01", "category": "warnings", "kind": "task", "text": "call mom at 5 and pay rent on the 1st", "expect": {"start": "2026-10-18T17:00", "warnings": ["multiple_items"]}}
+{"id": "p4c-warnings-02", "category": "warnings", "kind": "calendar", "text": "dentist Tuesday at 3pm, then haircut Thursday at 5", "expect": {"start": "2026-10-20T15:00", "warnings": ["multiple_items"]}}
+{"id": "p4c-warnings-03", "category": "warnings", "kind": "reminder", "text": "remind me at 8pm to take my pills; water the plants tomorrow morning", "expect": {"start": "2026-10-18T20:00", "warnings": ["multiple_items"]}}
+{"id": "p4c-warnings-04", "category": "warnings", "kind": "task", "text": "send the notes after the meeting", "expect": {"start": null, "warnings": ["unresolved_reference"]}}
+{"id": "p4c-warnings-05", "category": "warnings", "kind": "reminder", "text": "remind me when Sam's back to return his drill", "expect": {"start": null, "warnings": ["unresolved_reference"]}}
+{"id": "p4c-warnings-06", "category": "warnings", "kind": "task", "text": "deploy to prod once the build passes", "expect": {"start": null, "warnings": ["unresolved_reference"]}}
+{"id": "p4c-warnings-07", "category": "warnings", "kind": "calendar", "text": "kids' swim lessons every Saturday at 9am unless it rains", "expect": {"start": "2026-10-24T09:00", "recurrence": {"frequency": "weekly", "weekdays": ["SA"], "exdates": []}, "warnings": ["unresolved_exception"]}}
+{"id": "p4c-warnings-08", "category": "warnings", "kind": "reminder", "text": "remind me to check the tire pressure every few weeks", "expect": {"recurrence": {"frequency": "weekly", "interval": 3}, "warnings": ["underspecified_recurrence"]}}
+{"id": "p4c-warnings-09", "category": "warnings", "kind": "reminder", "text": "remind me every few hours to drink water", "expect": {"start": "2026-10-18T13:00", "recurrence": {"frequency": "hourly", "interval": 3}, "warnings": ["underspecified_recurrence"]}}
+{"id": "p4c-warnings-10", "category": "warnings", "kind": "task", "text": "back up the laptop regularly", "expect": {"warnings": ["underspecified_recurrence"]}}
+{"id": "p4c-warnings-11", "category": "warnings", "kind": "reminder", "text": "remind me to buy milk", "expect": {"start": null, "warnings": ["missing_trigger"]}}
+{"id": "p4c-warnings-12", "category": "warnings", "kind": "calendar", "text": "coffee with Jo", "expect": {"start": null, "warnings": ["missing_date"]}}
+{"id": "p4c-warnings-13", "category": "warnings", "kind": "task", "text": "fix the bike sometime next week", "expect": {"start": "2026-10-19", "warnings": ["vague_time"]}}
+{"id": "p4c-warnings-14", "category": "warnings", "kind": "reminder", "text": "remind me later to call Ben", "expect": {"start": null, "warnings": ["vague_time"]}}
+{"id": "p4c-warnings-15", "category": "warnings", "kind": "task", "text": "reply to the landlord soon", "expect": {"start": null, "warnings": ["vague_time"]}}

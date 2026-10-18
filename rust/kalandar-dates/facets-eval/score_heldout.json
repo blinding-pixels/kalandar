@@ -1,0 +1,719 @@
+{
+ "summary": {
+  "gold_spans": {
+   "calendar": {
+    "lines": 70,
+    "exact": 65,
+    "start_ok": 66,
+    "rec_lines": 39,
+    "rec_ok": 34,
+    "ambiguous": 22
+   },
+   "reminder": {
+    "lines": 70,
+    "exact": 66,
+    "start_ok": 69,
+    "rec_lines": 20,
+    "rec_ok": 20,
+    "ambiguous": 8
+   },
+   "task": {
+    "lines": 70,
+    "exact": 67,
+    "start_ok": 68,
+    "rec_lines": 0,
+    "rec_ok": 0,
+    "ambiguous": 1
+   }
+  },
+  "no_spans": {
+   "calendar": {
+    "lines": 70,
+    "exact": 59,
+    "start_ok": 63,
+    "rec_lines": 39,
+    "rec_ok": 35,
+    "ambiguous": 22
+   },
+   "reminder": {
+    "lines": 70,
+    "exact": 65,
+    "start_ok": 68,
+    "rec_lines": 20,
+    "rec_ok": 19,
+    "ambiguous": 8
+   },
+   "task": {
+    "lines": 70,
+    "exact": 68,
+    "start_ok": 69,
+    "rec_lines": 0,
+    "rec_ok": 0,
+    "ambiguous": 1
+   }
+  }
+ },
+ "failures": {
+  "gold_spans": [
+   {
+    "id": "heldout-calendar-022",
+    "text": "Executive Retreat for budget alignment and next steps every quarter until Friday",
+    "problems": [
+     [
+      "end",
+      "2026-10-18",
+      null
+     ],
+     [
+      "recurrence.end_date",
+      null,
+      "2026-10-23"
+     ]
+    ],
+    "notes": "'until Friday' read as recurrence end (Fri Oct 23, inclusive); could also mean the retreat runs through Friday",
+    "ambiguous": true,
+    "warnings": [
+     "all_day_assumed",
+     "no_time"
+    ]
+   },
+   {
+    "id": "heldout-calendar-024",
+    "text": "Budget sync: every Mon and Thu Thursday 11:30 until 14:00 for 1 hour, Eli at the rooftop, to review launch timing and timelines",
+    "problems": [
+     [
+      "start",
+      "2026-10-19T11:30",
+      "2026-10-22T11:30"
+     ],
+     [
+      "end",
+      "2026-10-19T14:00",
+      "2026-10-22T14:00"
+     ],
+     [
+      "recurrence.start_date",
+      null,
+      "2026-10-22"
+     ]
+    ],
+    "notes": "'Thursday' taken as start date so first occurrence Thu Oct 22 (otherwise Mon Oct 19); 11:30 bare hour, rule 3 ambiguous am/pm; stated end time and duration conflict; used the stated end time (1 hour)",
+    "ambiguous": true,
+    "warnings": []
+   },
+   {
+    "id": "heldout-calendar-025",
+    "text": "Community meetup: every second Tuesday July 1 17:15 until 19:00 for 75 minutes, Omar at Room 12, to review partner follow-up and timelines",
+    "problems": [
+     [
+      "start",
+      "2027-07-06T17:15",
+      "2027-07-13T17:15"
+     ],
+     [
+      "end",
+      "2027-07-06T19:00",
+      "2027-07-13T19:00"
+     ],
+     [
+      "recurrence.frequency",
+      "weekly",
+      "monthly"
+     ],
+     [
+      "recurrence.interval",
+      2,
+      1
+     ],
+     [
+      "recurrence.weekdays",
+      [
+       "TU"
+      ],
+      [
+       "2TU"
+      ]
+     ]
+    ],
+    "notes": "'every second Tuesday' read as 2nd Tuesday of month (could mean every other Tuesday, which would give Jul 6); July 1 2027 taken as start; stated end time and duration conflict; used the stated end time (75 minutes)",
+    "ambiguous": true,
+    "warnings": []
+   },
+   {
+    "id": "heldout-calendar-026",
+    "text": "Community meetup with Omar every second Tuesday on July 1 at 17:15 until 19:00 for 75 minutes at Room 12 to review partner follow-up and handoff details",
+    "problems": [
+     [
+      "start",
+      "2027-07-06T17:15",
+      "2027-07-13T17:15"
+     ],
+     [
+      "end",
+      "2027-07-06T19:00",
+      "2027-07-13T19:00"
+     ],
+     [
+      "recurrence.frequency",
+      "weekly",
+      "monthly"
+     ],
+     [
+      "recurrence.interval",
+      2,
+      1
+     ],
+     [
+      "recurrence.weekdays",
+      [
+       "TU"
+      ],
+      [
+       "2TU"
+      ]
+     ]
+    ],
+    "notes": "'every second Tuesday' read as 2nd Tuesday of month (could mean every other Tuesday, which would give Jul 6); July 1 2027 taken as start; stated end time and duration conflict; used the stated end time (75 minutes)",
+    "ambiguous": true,
+    "warnings": []
+   },
+   {
+    "id": "heldout-calendar-037",
+    "text": "Budget sync with Eli every Mon and Thu on Thursday at 11:30 until 14:00 for 1 hour at the rooftop to review launch timing and next steps",
+    "problems": [
+     [
+      "start",
+      "2026-10-19T11:30",
+      "2026-10-22T11:30"
+     ],
+     [
+      "end",
+      "2026-10-19T14:00",
+      "2026-10-22T14:00"
+     ],
+     [
+      "recurrence.start_date",
+      null,
+      "2026-10-22"
+     ]
+    ],
+    "notes": "'on Thursday' taken as start date so first occurrence Thu Oct 22 (otherwise Mon Oct 19); 11:30 bare hour, rule 3 ambiguous am/pm; stated end time and duration conflict; used the stated end time (1 hour)",
+    "ambiguous": true,
+    "warnings": []
+   },
+   {
+    "id": "heldout-reminder-070",
+    "text": "remind me next Monday to pick up the prescription the night before for the checklist",
+    "problems": [
+     [
+      "lead_minutes",
+      1440,
+      780
+     ]
+    ],
+    "notes": "next Monday default 09:00; 'the night before' = Sunday 20:00, i.e. 780 minutes before; start is the trigger time; lead stored separately",
+    "ambiguous": false,
+    "warnings": [
+     "no_time"
+    ]
+   },
+   {
+    "id": "heldout-reminder-102",
+    "text": "remind me every 15 minutes at the clinic to buy groceries for the family",
+    "problems": [
+     [
+      "recurrence",
+      {
+       "frequency": "minutely",
+       "interval": 15,
+       "weekdays": [],
+       "month_days": [],
+       "months": [],
+       "count": null,
+       "start_date": null,
+       "end_date": null
+      },
+      null
+     ]
+    ],
+    "notes": "every 15 minutes: not representable (no minutely frequency); first ping 15 minutes from now, recurrence left null",
+    "ambiguous": false,
+    "warnings": []
+   },
+   {
+    "id": "heldout-reminder-113",
+    "text": "remind me before bed at the office to call Priya 15 minutes before about the lease",
+    "problems": [
+     [
+      "start",
+      null,
+      "2026-10-18T20:00"
+     ]
+    ],
+    "notes": "'before bed' not in conventions; read as tonight, night = 20:00",
+    "ambiguous": true,
+    "warnings": [
+     "unparsed"
+    ]
+   },
+   {
+    "id": "heldout-reminder-122",
+    "text": "remind me to stretch every 30 mins",
+    "problems": [
+     [
+      "recurrence",
+      {
+       "frequency": "minutely",
+       "interval": 30,
+       "weekdays": [],
+       "month_days": [],
+       "months": [],
+       "count": null,
+       "start_date": null,
+       "end_date": null
+      },
+      null
+     ]
+    ],
+    "notes": "every 30 minutes: not representable (no minutely frequency); first ping 30 minutes from now, recurrence left null",
+    "ambiguous": false,
+    "warnings": []
+   },
+   {
+    "id": "heldout-task-151",
+    "text": "Create the project update for Apollo, take about 1 hour tonight",
+    "problems": [
+     [
+      "start",
+      null,
+      "2026-10-18T20:00"
+     ]
+    ],
+    "notes": "",
+    "ambiguous": false,
+    "warnings": []
+   },
+   {
+    "id": "heldout-task-163",
+    "text": "Vacuum the hall for 20 minutes before guests arrive",
+    "problems": [
+     [
+      "lead_minutes",
+      20,
+      null
+     ]
+    ],
+    "notes": "'before guests arrive' has no resolvable time",
+    "ambiguous": false,
+    "warnings": [
+     "unparsed"
+    ]
+   },
+   {
+    "id": "heldout-task-170",
+    "text": "Paint the fence under Home Renovation, take about 1 hour tonight",
+    "problems": [
+     [
+      "start",
+      null,
+      "2026-10-18T20:00"
+     ]
+    ],
+    "notes": "",
+    "ambiguous": false,
+    "warnings": []
+   }
+  ],
+  "no_spans": [
+   {
+    "id": "heldout-calendar-017",
+    "text": "Audit Prep to review the hiring plan every 15th ending at 1pm",
+    "problems": [
+     [
+      "start",
+      "2026-11-15",
+      "2026-11-15T12:00"
+     ],
+     [
+      "end",
+      null,
+      "2026-11-15T13:00"
+     ]
+    ],
+    "notes": "only an end time given; start = end minus default 60 minutes; Oct 15 passed",
+    "ambiguous": false,
+    "warnings": [
+     "all_day_assumed",
+     "no_time"
+    ]
+   },
+   {
+    "id": "heldout-calendar-024",
+    "text": "Budget sync: every Mon and Thu Thursday 11:30 until 14:00 for 1 hour, Eli at the rooftop, to review launch timing and timelines",
+    "problems": [
+     [
+      "start",
+      "2026-10-19T11:30",
+      "2026-10-22T11:30"
+     ],
+     [
+      "end",
+      "2026-10-19T14:00",
+      "2026-10-22T14:00"
+     ],
+     [
+      "recurrence.start_date",
+      null,
+      "2026-10-22"
+     ]
+    ],
+    "notes": "'Thursday' taken as start date so first occurrence Thu Oct 22 (otherwise Mon Oct 19); 11:30 bare hour, rule 3 ambiguous am/pm; stated end time and duration conflict; used the stated end time (1 hour)",
+    "ambiguous": true,
+    "warnings": []
+   },
+   {
+    "id": "heldout-calendar-025",
+    "text": "Community meetup: every second Tuesday July 1 17:15 until 19:00 for 75 minutes, Omar at Room 12, to review partner follow-up and timelines",
+    "problems": [
+     [
+      "start",
+      "2027-07-06T17:15",
+      "2027-07-13T17:15"
+     ],
+     [
+      "end",
+      "2027-07-06T19:00",
+      "2027-07-13T19:00"
+     ],
+     [
+      "recurrence.frequency",
+      "weekly",
+      "monthly"
+     ],
+     [
+      "recurrence.interval",
+      2,
+      1
+     ],
+     [
+      "recurrence.weekdays",
+      [
+       "TU"
+      ],
+      [
+       "2TU"
+      ]
+     ]
+    ],
+    "notes": "'every second Tuesday' read as 2nd Tuesday of month (could mean every other Tuesday, which would give Jul 6); July 1 2027 taken as start; stated end time and duration conflict; used the stated end time (75 minutes)",
+    "ambiguous": true,
+    "warnings": []
+   },
+   {
+    "id": "heldout-calendar-026",
+    "text": "Community meetup with Omar every second Tuesday on July 1 at 17:15 until 19:00 for 75 minutes at Room 12 to review partner follow-up and handoff details",
+    "problems": [
+     [
+      "start",
+      "2027-07-06T17:15",
+      "2027-07-13T17:15"
+     ],
+     [
+      "end",
+      "2027-07-06T19:00",
+      "2027-07-13T19:00"
+     ],
+     [
+      "recurrence.frequency",
+      "weekly",
+      "monthly"
+     ],
+     [
+      "recurrence.interval",
+      2,
+      1
+     ],
+     [
+      "recurrence.weekdays",
+      [
+       "TU"
+      ],
+      [
+       "2TU"
+      ]
+     ]
+    ],
+    "notes": "'every second Tuesday' read as 2nd Tuesday of month (could mean every other Tuesday, which would give Jul 6); July 1 2027 taken as start; stated end time and duration conflict; used the stated end time (75 minutes)",
+    "ambiguous": true,
+    "warnings": []
+   },
+   {
+    "id": "heldout-calendar-037",
+    "text": "Budget sync with Eli every Mon and Thu on Thursday at 11:30 until 14:00 for 1 hour at the rooftop to review launch timing and next steps",
+    "problems": [
+     [
+      "start",
+      "2026-10-19T11:30",
+      "2026-10-22T11:30"
+     ],
+     [
+      "end",
+      "2026-10-19T14:00",
+      "2026-10-22T14:00"
+     ],
+     [
+      "recurrence.start_date",
+      null,
+      "2026-10-22"
+     ]
+    ],
+    "notes": "'on Thursday' taken as start date so first occurrence Thu Oct 22 (otherwise Mon Oct 19); 11:30 bare hour, rule 3 ambiguous am/pm; stated end time and duration conflict; used the stated end time (1 hour)",
+    "ambiguous": true,
+    "warnings": []
+   },
+   {
+    "id": "heldout-calendar-039",
+    "text": "Product planning every quarter on the 15th at 9:00 for 75 minutes until 11:30 at Conference B; to review roadmap tradeoffs and handoff details with Maya",
+    "problems": [
+     [
+      "end",
+      "2026-11-15T10:15",
+      "2026-11-15T11:30"
+     ]
+    ],
+    "notes": "Oct 15 passed so first is Nov 15; 9:00 bare hour, rule 3 ambiguous am/pm; stated end time and duration conflict; used the stated end time (75 minutes)",
+    "ambiguous": true,
+    "warnings": []
+   },
+   {
+    "id": "heldout-calendar-041",
+    "text": "Audit Call to review the hiring plan every 15th ending at 2pm",
+    "problems": [
+     [
+      "start",
+      "2026-11-15",
+      "2026-11-15T13:00"
+     ],
+     [
+      "end",
+      null,
+      "2026-11-15T14:00"
+     ]
+    ],
+    "notes": "only an end time given; start = end minus default 60 minutes; Oct 15 passed",
+    "ambiguous": false,
+    "warnings": [
+     "all_day_assumed",
+     "no_time"
+    ]
+   },
+   {
+    "id": "heldout-calendar-050",
+    "text": "Scrum Meeting every Mon and Thu to review the hiring plan from 9 to 10:15",
+    "problems": [
+     [
+      "end",
+      "2026-10-19T10:00",
+      "2026-10-19T10:15"
+     ]
+    ],
+    "notes": "bare hour, rule 3 ambiguous am/pm",
+    "ambiguous": true,
+    "warnings": [
+     "end_assumed"
+    ]
+   },
+   {
+    "id": "heldout-calendar-054",
+    "text": "Morning Sync about quarterly planning every Mon and Thu until 12pm",
+    "problems": [
+     [
+      "start",
+      "2026-10-19T09:00",
+      "2026-10-19T11:00"
+     ],
+     [
+      "end",
+      "2026-10-19T10:00",
+      "2026-10-19T12:00"
+     ]
+    ],
+    "notes": "only an end time given; start = end minus default 60 minutes ('Morning' in title not used as start)",
+    "ambiguous": false,
+    "warnings": [
+     "end_assumed"
+    ]
+   },
+   {
+    "id": "heldout-calendar-056",
+    "text": "Onboarding session Tuesday morning to 11 for the new hires",
+    "problems": [
+     [
+      "end",
+      "2026-10-20T10:00",
+      "2026-10-20T11:00"
+     ]
+    ],
+    "notes": "morning = 09:00; 11 am follows from morning",
+    "ambiguous": false,
+    "warnings": [
+     "time_assumed",
+     "end_assumed"
+    ]
+   },
+   {
+    "id": "heldout-calendar-062",
+    "text": "Strategy Call about quarterly planning every quarter from 1 to 2:30",
+    "problems": [
+     [
+      "end",
+      "2026-10-18T14:00",
+      "2026-10-18T14:30"
+     ]
+    ],
+    "notes": "quarterly anchored today; bare hour, rule 3 ambiguous am/pm",
+    "ambiguous": true,
+    "warnings": [
+     "end_assumed"
+    ]
+   },
+   {
+    "id": "heldout-reminder-070",
+    "text": "remind me next Monday to pick up the prescription the night before for the checklist",
+    "problems": [
+     [
+      "lead_minutes",
+      1440,
+      780
+     ]
+    ],
+    "notes": "next Monday default 09:00; 'the night before' = Sunday 20:00, i.e. 780 minutes before; start is the trigger time; lead stored separately",
+    "ambiguous": false,
+    "warnings": [
+     "no_time"
+    ]
+   },
+   {
+    "id": "heldout-reminder-102",
+    "text": "remind me every 15 minutes at the clinic to buy groceries for the family",
+    "problems": [
+     [
+      "recurrence",
+      {
+       "frequency": "minutely",
+       "interval": 15,
+       "weekdays": [],
+       "month_days": [],
+       "months": [],
+       "count": null,
+       "start_date": null,
+       "end_date": null
+      },
+      null
+     ]
+    ],
+    "notes": "every 15 minutes: not representable (no minutely frequency); first ping 15 minutes from now, recurrence left null",
+    "ambiguous": false,
+    "warnings": []
+   },
+   {
+    "id": "heldout-reminder-113",
+    "text": "remind me before bed at the office to call Priya 15 minutes before about the lease",
+    "problems": [
+     [
+      "start",
+      null,
+      "2026-10-18T20:00"
+     ]
+    ],
+    "notes": "'before bed' not in conventions; read as tonight, night = 20:00",
+    "ambiguous": true,
+    "warnings": []
+   },
+   {
+    "id": "heldout-reminder-122",
+    "text": "remind me to stretch every 30 mins",
+    "problems": [
+     [
+      "recurrence",
+      {
+       "frequency": "minutely",
+       "interval": 30,
+       "weekdays": [],
+       "month_days": [],
+       "months": [],
+       "count": null,
+       "start_date": null,
+       "end_date": null
+      },
+      null
+     ]
+    ],
+    "notes": "every 30 minutes: not representable (no minutely frequency); first ping 30 minutes from now, recurrence left null",
+    "ambiguous": false,
+    "warnings": []
+   },
+   {
+    "id": "heldout-reminder-132",
+    "text": "remind me monthly to change the AC filter",
+    "problems": [
+     [
+      "start",
+      null,
+      "2026-11-18"
+     ],
+     [
+      "recurrence",
+      null,
+      {
+       "frequency": "monthly",
+       "interval": 1,
+       "weekdays": [],
+       "month_days": [],
+       "months": [],
+       "count": null,
+       "start_date": null,
+       "end_date": null
+      }
+     ]
+    ],
+    "notes": "monthly on start's day (18th); today's 09:00 passed so next month",
+    "ambiguous": false,
+    "warnings": [
+     "missing_trigger"
+    ]
+   },
+   {
+    "id": "heldout-task-158",
+    "text": "Audit product backlog for Warehouse setup with Ethan, with tags hiring and onboarding, roughly 1.5 hours, not started, low priority by Thursday morning.",
+    "problems": [
+     [
+      "start",
+      "2026-10-22T01:00",
+      "2026-10-22T09:00"
+     ]
+    ],
+    "notes": "",
+    "ambiguous": false,
+    "warnings": [
+     "approximate_time",
+     "ambiguous_date_format"
+    ]
+   },
+   {
+    "id": "heldout-task-163",
+    "text": "Vacuum the hall for 20 minutes before guests arrive",
+    "problems": [
+     [
+      "lead_minutes",
+      20,
+      null
+     ]
+    ],
+    "notes": "'before guests arrive' has no resolvable time",
+    "ambiguous": false,
+    "warnings": []
+   }
+  ]
+ }
+}

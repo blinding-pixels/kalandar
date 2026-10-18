@@ -1,0 +1,4153 @@
+{
+ "note": "Rows changed by the owner decision on date-only dues (phase 5 addendum): a date with no time gives a date-only due/all-day start; no 17:00 or 09:00 default, no time_assumed. Rows marked weekday_today named today's weekday and used to move to next week only because the assumed 09:00 had passed.",
+ "changes": [
+  {
+   "id": "p3-exdates-01",
+   "text": "remind me to take out recycling every Thursday except Thanksgiving",
+   "kind": "reminder",
+   "old": {
+    "start": "2026-10-22T09:00",
+    "recurrence": {
+     "frequency": "weekly",
+     "weekdays": [
+      "TH"
+     ],
+     "exdates": [
+      "2026-11-26T09:00"
+     ]
+    }
+   },
+   "new": {
+    "start": "2026-10-22",
+    "recurrence": {
+     "frequency": "weekly",
+     "weekdays": [
+      "TH"
+     ],
+     "exdates": [
+      "2026-11-26"
+     ]
+    }
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p3-exdates-03",
+   "text": "weekly report every Monday except Dec 25",
+   "kind": "task",
+   "old": {
+    "start": "2026-10-19T17:00",
+    "recurrence": {
+     "weekdays": [
+      "MO"
+     ],
+     "exdates": []
+    }
+   },
+   "new": {
+    "start": "2026-10-19",
+    "recurrence": {
+     "weekdays": [
+      "MO"
+     ],
+     "exdates": []
+    }
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p3-exdates-15",
+   "text": "submit timesheet every Friday until Dec 31 except Christmas",
+   "kind": "task",
+   "old": {
+    "start": "2026-10-23T17:00",
+    "recurrence": {
+     "weekdays": [
+      "FR"
+     ],
+     "until": "2026-12-31",
+     "exdates": [
+      "2026-12-25T17:00"
+     ]
+    }
+   },
+   "new": {
+    "start": "2026-10-23",
+    "recurrence": {
+     "weekdays": [
+      "FR"
+     ],
+     "until": "2026-12-31",
+     "exdates": [
+      "2026-12-25"
+     ]
+    }
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p3-exdates-16",
+   "text": "clean the fridge every Thursday until Nov 20 except Thanksgiving",
+   "kind": "task",
+   "old": {
+    "start": "2026-10-22T17:00",
+    "recurrence": {
+     "weekdays": [
+      "TH"
+     ],
+     "until": "2026-11-20",
+     "exdates": []
+    }
+   },
+   "new": {
+    "start": "2026-10-22",
+    "recurrence": {
+     "weekdays": [
+      "TH"
+     ],
+     "until": "2026-11-20",
+     "exdates": []
+    }
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p3-exdates-17",
+   "text": "pay invoices on the 1st and 15th of every month except Jan 1",
+   "kind": "task",
+   "old": {
+    "start": "2026-11-01T17:00",
+    "recurrence": {
+     "frequency": "monthly",
+     "month_days": [
+      1,
+      15
+     ],
+     "exdates": [
+      "2027-01-01T17:00"
+     ]
+    }
+   },
+   "new": {
+    "start": "2026-11-01",
+    "recurrence": {
+     "frequency": "monthly",
+     "month_days": [
+      1,
+      15
+     ],
+     "exdates": [
+      "2027-01-01"
+     ]
+    }
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p3-exdates-20",
+   "text": "pay rent on the 1st of every month except holidays",
+   "kind": "task",
+   "old": {
+    "start": "2026-11-01T17:00",
+    "recurrence": {
+     "frequency": "monthly",
+     "month_days": [
+      1
+     ],
+     "exdates": [
+      "2027-01-01T17:00",
+      "2027-07-01T17:00"
+     ]
+    }
+   },
+   "new": {
+    "start": "2026-11-01",
+    "recurrence": {
+     "frequency": "monthly",
+     "month_days": [
+      1
+     ],
+     "exdates": [
+      "2027-01-01",
+      "2027-07-01"
+     ]
+    }
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p3-counts-01",
+   "text": "remind me to stretch every Monday for 6 weeks",
+   "kind": "reminder",
+   "old": {
+    "start": "2026-10-19T09:00",
+    "recurrence": {
+     "frequency": "weekly",
+     "weekdays": [
+      "MO"
+     ],
+     "count": 6
+    }
+   },
+   "new": {
+    "start": "2026-10-19",
+    "recurrence": {
+     "frequency": "weekly",
+     "weekdays": [
+      "MO"
+     ],
+     "count": 6
+    }
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p3-counts-03",
+   "text": "remind me to take vitamins daily for 3 weeks",
+   "kind": "reminder",
+   "old": {
+    "start": "2026-10-19T09:00",
+    "recurrence": {
+     "frequency": "daily",
+     "interval": 1,
+     "count": 21
+    }
+   },
+   "new": {
+    "start": "2026-10-19",
+    "recurrence": {
+     "frequency": "daily",
+     "interval": 1,
+     "count": 21
+    }
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p3-counts-10",
+   "text": "submit timesheet every Friday for a month",
+   "kind": "task",
+   "old": {
+    "start": "2026-10-23T17:00",
+    "recurrence": {
+     "frequency": "weekly",
+     "weekdays": [
+      "FR"
+     ],
+     "count": 5
+    }
+   },
+   "new": {
+    "start": "2026-10-23",
+    "recurrence": {
+     "frequency": "weekly",
+     "weekdays": [
+      "FR"
+     ],
+     "count": 5
+    }
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p3-counts-15",
+   "text": "pay the credit card on the 15th of every month for 6 months",
+   "kind": "task",
+   "old": {
+    "start": "2026-11-15T17:00",
+    "recurrence": {
+     "frequency": "monthly",
+     "month_days": [
+      15
+     ],
+     "count": 6
+    }
+   },
+   "new": {
+    "start": "2026-11-15",
+    "recurrence": {
+     "frequency": "monthly",
+     "month_days": [
+      15
+     ],
+     "count": 6
+    }
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p3-missing_repeats-08",
+   "text": "pay the nanny every 1st and 15th",
+   "kind": "task",
+   "old": {
+    "start": "2026-11-01T17:00",
+    "recurrence": {
+     "frequency": "monthly",
+     "month_days": [
+      1,
+      15
+     ]
+    }
+   },
+   "new": {
+    "start": "2026-11-01",
+    "recurrence": {
+     "frequency": "monthly",
+     "month_days": [
+      1,
+      15
+     ]
+    }
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p3-missing_repeats-09",
+   "text": "remind me to review the budget on the 15th of every month",
+   "kind": "reminder",
+   "old": {
+    "start": "2026-11-15T09:00",
+    "recurrence": {
+     "frequency": "monthly",
+     "month_days": [
+      15
+     ]
+    }
+   },
+   "new": {
+    "start": "2026-11-15",
+    "recurrence": {
+     "frequency": "monthly",
+     "month_days": [
+      15
+     ]
+    }
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p3-missing_repeats-16",
+   "text": "file receipts every Monday beginning in January",
+   "kind": "task",
+   "old": {
+    "start": "2027-01-04T17:00",
+    "recurrence": {
+     "frequency": "weekly",
+     "weekdays": [
+      "MO"
+     ],
+     "start_date": "2027-01-01"
+    }
+   },
+   "new": {
+    "start": "2027-01-04",
+    "recurrence": {
+     "frequency": "weekly",
+     "weekdays": [
+      "MO"
+     ],
+     "start_date": "2027-01-01"
+    }
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p3-missing_repeats-17",
+   "text": "remind me to submit my timesheet every Friday starting the 1st",
+   "kind": "reminder",
+   "old": {
+    "start": "2026-11-06T09:00",
+    "recurrence": {
+     "frequency": "weekly",
+     "weekdays": [
+      "FR"
+     ]
+    }
+   },
+   "new": {
+    "start": "2026-11-06",
+    "recurrence": {
+     "frequency": "weekly",
+     "weekdays": [
+      "FR"
+     ]
+    }
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p3-missing_repeats-19",
+   "text": "remind me to call Aunt Jo every Christmas",
+   "kind": "reminder",
+   "old": {
+    "start": "2026-12-25T09:00",
+    "recurrence": {
+     "frequency": "yearly",
+     "months": [
+      12
+     ],
+     "month_days": [
+      25
+     ]
+    }
+   },
+   "new": {
+    "start": "2026-12-25",
+    "recurrence": {
+     "frequency": "yearly",
+     "months": [
+      12
+     ],
+     "month_days": [
+      25
+     ]
+    }
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p3-missing_repeats-20",
+   "text": "order flowers every Mother's Day",
+   "kind": "task",
+   "old": {
+    "start": "2027-05-09T17:00",
+    "recurrence": {
+     "frequency": "yearly",
+     "months": [
+      5
+     ],
+     "weekdays": [
+      "2SU"
+     ]
+    }
+   },
+   "new": {
+    "start": "2027-05-09",
+    "recurrence": {
+     "frequency": "yearly",
+     "months": [
+      5
+     ],
+     "weekdays": [
+      "2SU"
+     ]
+    }
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p3-weekdays-03",
+   "text": "submit expense report next Thursday",
+   "kind": "task",
+   "old": {
+    "start": "2026-10-29T17:00",
+    "warnings": [
+     "ambiguous_next_weekday"
+    ],
+    "alternative": "2026-10-22"
+   },
+   "new": {
+    "start": "2026-10-29",
+    "warnings": [
+     "ambiguous_next_weekday"
+    ],
+    "alternative": "2026-10-22"
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p3-weekdays-04",
+   "text": "remind me to call mom next Monday",
+   "kind": "reminder",
+   "old": {
+    "start": "2026-10-26T09:00",
+    "warnings": [
+     "no_time"
+    ]
+   },
+   "new": {
+    "start": "2026-10-26",
+    "warnings": [
+     "no_time"
+    ]
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p3-weekdays-08",
+   "text": "remind me to take out the trash Sunday",
+   "kind": "reminder",
+   "old": {
+    "start": "2026-10-25T09:00",
+    "warnings": [
+     "moved_to_next_week",
+     "no_time"
+    ]
+   },
+   "new": {
+    "start": "2026-10-18",
+    "warnings": [
+     "no_time"
+    ]
+   },
+   "weekday_today": true
+  },
+  {
+   "id": "p3-weekdays-10",
+   "text": "clean the garage this weekend",
+   "kind": "task",
+   "old": {
+    "start": "2026-10-24T17:00"
+   },
+   "new": {
+    "start": "2026-10-24"
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p3-weekdays-18",
+   "text": "renew passport next Tuesday",
+   "kind": "task",
+   "old": {
+    "start": "2026-10-27T17:00",
+    "warnings": [
+     "ambiguous_next_weekday"
+    ],
+    "alternative": "2026-10-20"
+   },
+   "new": {
+    "start": "2026-10-27",
+    "warnings": [
+     "ambiguous_next_weekday"
+    ],
+    "alternative": "2026-10-20"
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p3-24h-19",
+   "text": "remind me to book room 2460 tomorrow",
+   "kind": "reminder",
+   "old": {
+    "start": "2026-10-19T09:00",
+    "warnings": [
+     "no_time"
+    ]
+   },
+   "new": {
+    "start": "2026-10-19",
+    "warnings": [
+     "no_time"
+    ]
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p3-24h-20",
+   "text": "remind me to call extension 1530 tomorrow",
+   "kind": "reminder",
+   "old": {
+    "start": "2026-10-19T09:00",
+    "warnings": [
+     "no_time"
+    ]
+   },
+   "new": {
+    "start": "2026-10-19",
+    "warnings": [
+     "no_time"
+    ]
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p3-lead_times-03",
+   "text": "remind me the day before Mom's birthday on Friday",
+   "kind": "reminder",
+   "old": {
+    "start": "2026-10-22T09:00",
+    "lead_minutes": 1440
+   },
+   "new": {
+    "start": "2026-10-22",
+    "lead_minutes": 1440
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p3-lead_times-04",
+   "text": "inspection on Nov 5, remind me 2 days ahead",
+   "kind": "reminder",
+   "old": {
+    "start": "2026-11-03T09:00",
+    "lead_minutes": 2880
+   },
+   "new": {
+    "start": "2026-11-03",
+    "lead_minutes": 2880
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p3-lead_times-05",
+   "text": "remind me a week prior to the conference on Dec 10",
+   "kind": "reminder",
+   "old": {
+    "start": "2026-12-03T09:00",
+    "lead_minutes": 10080
+   },
+   "new": {
+    "start": "2026-12-03",
+    "lead_minutes": 10080
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p3-lead_times-12",
+   "text": "remind me 3 days before Halloween",
+   "kind": "reminder",
+   "old": {
+    "start": "2026-10-28T09:00",
+    "lead_minutes": 4320
+   },
+   "new": {
+    "start": "2026-10-28",
+    "lead_minutes": 4320
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p3-lead_times-13",
+   "text": "pay rent on the 14th, remind me the day before",
+   "kind": "reminder",
+   "old": {
+    "start": "2026-11-13T09:00",
+    "lead_minutes": 1440
+   },
+   "new": {
+    "start": "2026-11-13",
+    "lead_minutes": 1440
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p3-lead_times-19",
+   "text": "remind me the day before my dentist appointment next Friday",
+   "kind": "reminder",
+   "old": {
+    "start": "2026-10-29T09:00",
+    "lead_minutes": 1440
+   },
+   "new": {
+    "start": "2026-10-29",
+    "lead_minutes": 1440
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p3-warnings-01",
+   "text": "remind me to renew the registration on Nov 3",
+   "kind": "reminder",
+   "old": {
+    "start": "2026-11-03T09:00",
+    "warnings": [
+     "no_time"
+    ]
+   },
+   "new": {
+    "start": "2026-11-03",
+    "warnings": [
+     "no_time"
+    ]
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p3-warnings-05",
+   "text": "send the report by 11/12",
+   "kind": "task",
+   "old": {
+    "start": "2026-11-12T17:00",
+    "warnings": [
+     "ambiguous_date_format"
+    ]
+   },
+   "new": {
+    "start": "2026-11-12",
+    "warnings": [
+     "ambiguous_date_format"
+    ]
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p3-warnings-06",
+   "text": "send the report by 11/12",
+   "kind": "task",
+   "old": {
+    "start": "2026-12-11T17:00",
+    "warnings": [
+     "ambiguous_date_format"
+    ]
+   },
+   "new": {
+    "start": "2026-12-11",
+    "warnings": [
+     "ambiguous_date_format"
+    ]
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p3-warnings-07",
+   "text": "remind me to pay the cleaner biweekly on Fridays",
+   "kind": "reminder",
+   "old": {
+    "start": "2026-10-23T09:00",
+    "recurrence": {
+     "frequency": "weekly",
+     "interval": 2,
+     "weekdays": [
+      "FR"
+     ]
+    },
+    "warnings": [
+     "ambiguous_biweekly"
+    ]
+   },
+   "new": {
+    "start": "2026-10-23",
+    "recurrence": {
+     "frequency": "weekly",
+     "interval": 2,
+     "weekdays": [
+      "FR"
+     ]
+    },
+    "warnings": [
+     "ambiguous_biweekly"
+    ]
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p3-warnings-10",
+   "text": "remind me to call the plumber next Saturday",
+   "kind": "reminder",
+   "old": {
+    "start": "2026-10-31T09:00",
+    "warnings": [
+     "ambiguous_next_weekday",
+     "no_time"
+    ],
+    "alternative": "2026-10-24"
+   },
+   "new": {
+    "start": "2026-10-31",
+    "warnings": [
+     "ambiguous_next_weekday",
+     "no_time"
+    ],
+    "alternative": "2026-10-24"
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p3-warnings-11",
+   "text": "renew library books Friday",
+   "kind": "task",
+   "old": {
+    "start": "2026-10-23T17:00",
+    "warnings": [
+     "time_assumed"
+    ]
+   },
+   "new": {
+    "start": "2026-10-23",
+    "warnings": []
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p3-warnings-16",
+   "text": "book the summer trip sometime in March",
+   "kind": "task",
+   "old": {
+    "start": "2027-03-01T17:00",
+    "warnings": [
+     "day_assumed"
+    ]
+   },
+   "new": {
+    "start": "2027-03-01",
+    "warnings": [
+     "day_assumed"
+    ]
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p3-warnings-18",
+   "text": "remind me to pay rent 01/02",
+   "kind": "reminder",
+   "old": {
+    "start": "2027-01-02T09:00",
+    "warnings": [
+     "ambiguous_date_format",
+     "no_time"
+    ]
+   },
+   "new": {
+    "start": "2027-01-02",
+    "warnings": [
+     "ambiguous_date_format",
+     "no_time"
+    ]
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p3-slang-01",
+   "text": "call landlord tmrw",
+   "kind": "task",
+   "old": {
+    "start": "2026-10-19T17:00"
+   },
+   "new": {
+    "start": "2026-10-19"
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p3-slang-06",
+   "text": "finish essay 2moro",
+   "kind": "task",
+   "old": {
+    "start": "2026-10-19T17:00"
+   },
+   "new": {
+    "start": "2026-10-19"
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p3-slang-09",
+   "text": "clean bathroom this wkend",
+   "kind": "task",
+   "old": {
+    "start": "2026-10-24T17:00"
+   },
+   "new": {
+    "start": "2026-10-24"
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p3-slang-15",
+   "text": "finish report by eow",
+   "kind": "task",
+   "old": {
+    "start": "2026-10-23T17:00"
+   },
+   "new": {
+    "start": "2026-10-23"
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p3-slang-19",
+   "text": "remind me to log meals every day thru Nov 30",
+   "kind": "reminder",
+   "old": {
+    "start": "2026-10-19T09:00",
+    "recurrence": {
+     "frequency": "daily",
+     "until": "2026-11-30"
+    }
+   },
+   "new": {
+    "start": "2026-10-19",
+    "recurrence": {
+     "frequency": "daily",
+     "until": "2026-11-30"
+    }
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p3-holidays-01",
+   "text": "pay the bills before Christmas",
+   "kind": "task",
+   "old": {
+    "start": "2026-12-25T17:00"
+   },
+   "new": {
+    "start": "2026-12-25"
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p3-holidays-02",
+   "text": "remind me to buy a turkey the day before Thanksgiving",
+   "kind": "reminder",
+   "old": {
+    "start": "2026-11-25T09:00"
+   },
+   "new": {
+    "start": "2026-11-25"
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p3-holidays-03",
+   "text": "return the sweater the day after Thanksgiving",
+   "kind": "task",
+   "old": {
+    "start": "2026-11-27T17:00"
+   },
+   "new": {
+    "start": "2026-11-27"
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p3-holidays-05",
+   "text": "remind me to call Dad on Father's Day",
+   "kind": "reminder",
+   "old": {
+    "start": "2027-06-20T09:00"
+   },
+   "new": {
+    "start": "2027-06-20"
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p3-holidays-06",
+   "text": "book a restaurant before Valentines Day",
+   "kind": "task",
+   "old": {
+    "start": "2027-02-14T17:00"
+   },
+   "new": {
+    "start": "2027-02-14"
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p3-holidays-10",
+   "text": "remind me to buy a green shirt before St. Patrick's",
+   "kind": "reminder",
+   "old": {
+    "start": "2027-03-17T09:00"
+   },
+   "new": {
+    "start": "2027-03-17"
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p3-holidays-12",
+   "text": "send thank-you cards by New Year's Day",
+   "kind": "task",
+   "old": {
+    "start": "2027-01-01T17:00"
+   },
+   "new": {
+    "start": "2027-01-01"
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p3-holidays-15",
+   "text": "file the paperwork before Presidents' Day",
+   "kind": "task",
+   "old": {
+    "start": "2027-02-15T17:00"
+   },
+   "new": {
+    "start": "2027-02-15"
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p3b-exdates-03",
+   "text": "invoice clients the 15th of each month except dec 15",
+   "kind": "task",
+   "old": {
+    "start": "2026-11-15T17:00",
+    "recurrence": {
+     "frequency": "monthly",
+     "month_days": [
+      15
+     ],
+     "exdates": [
+      "2026-12-15T17:00"
+     ]
+    }
+   },
+   "new": {
+    "start": "2026-11-15",
+    "recurrence": {
+     "frequency": "monthly",
+     "month_days": [
+      15
+     ],
+     "exdates": [
+      "2026-12-15"
+     ]
+    }
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p3b-exdates-06",
+   "text": "submit timesheet every fri except holidays",
+   "kind": "task",
+   "old": {
+    "start": "2026-10-23T17:00",
+    "recurrence": {
+     "frequency": "weekly",
+     "weekdays": [
+      "FR"
+     ],
+     "exdates": [
+      "2026-11-27T17:00",
+      "2026-12-25T17:00",
+      "2027-01-01T17:00",
+      "2027-03-26T17:00"
+     ]
+    }
+   },
+   "new": {
+    "start": "2026-10-23",
+    "recurrence": {
+     "frequency": "weekly",
+     "weekdays": [
+      "FR"
+     ],
+     "exdates": [
+      "2026-11-27",
+      "2026-12-25",
+      "2027-01-01",
+      "2027-03-26"
+     ]
+    }
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p3b-counts-01",
+   "text": "remind me to take meds every tues & thurs for 3 wks",
+   "kind": "reminder",
+   "old": {
+    "start": "2026-10-20T09:00",
+    "recurrence": {
+     "frequency": "weekly",
+     "weekdays": [
+      "TU",
+      "TH"
+     ],
+     "count": 6
+    }
+   },
+   "new": {
+    "start": "2026-10-20",
+    "recurrence": {
+     "frequency": "weekly",
+     "weekdays": [
+      "TU",
+      "TH"
+     ],
+     "count": 6
+    }
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p3b-counts-02",
+   "text": "log what i eat every day for 10 days",
+   "kind": "task",
+   "old": {
+    "start": "2026-10-18T17:00",
+    "recurrence": {
+     "frequency": "daily",
+     "interval": 1,
+     "count": 10
+    }
+   },
+   "new": {
+    "start": "2026-10-18",
+    "recurrence": {
+     "frequency": "daily",
+     "interval": 1,
+     "count": 10
+    }
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p3b-counts-04",
+   "text": "remind me to pay the car loan on the 5th every month for the next 6 months",
+   "kind": "reminder",
+   "old": {
+    "start": "2026-11-05T09:00",
+    "recurrence": {
+     "frequency": "monthly",
+     "month_days": [
+      5
+     ],
+     "count": 6
+    }
+   },
+   "new": {
+    "start": "2026-11-05",
+    "recurrence": {
+     "frequency": "monthly",
+     "month_days": [
+      5
+     ],
+     "count": 6
+    }
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p3b-counts-06",
+   "text": "practice scales daily for 2 weeks",
+   "kind": "task",
+   "old": {
+    "start": "2026-10-18T17:00",
+    "recurrence": {
+     "frequency": "daily",
+     "interval": 1,
+     "count": 14
+    }
+   },
+   "new": {
+    "start": "2026-10-18",
+    "recurrence": {
+     "frequency": "daily",
+     "interval": 1,
+     "count": 14
+    }
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p3b-counts-08",
+   "text": "run 5k every mon, wed, fri for 2 weeks",
+   "kind": "task",
+   "old": {
+    "start": "2026-10-21T17:00",
+    "recurrence": {
+     "frequency": "weekly",
+     "weekdays": [
+      "MO",
+      "WE",
+      "FR"
+     ],
+     "count": 6
+    }
+   },
+   "new": {
+    "start": "2026-10-21",
+    "recurrence": {
+     "frequency": "weekly",
+     "weekdays": [
+      "MO",
+      "WE",
+      "FR"
+     ],
+     "count": 6
+    }
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p3b-counts-09",
+   "text": "remind me to clear the inbox every weekday for a month",
+   "kind": "reminder",
+   "old": {
+    "start": "2026-10-20T09:00",
+    "recurrence": {
+     "frequency": "weekly",
+     "weekdays": [
+      "MO",
+      "TU",
+      "WE",
+      "TH",
+      "FR"
+     ],
+     "count": 23
+    }
+   },
+   "new": {
+    "start": "2026-10-20",
+    "recurrence": {
+     "frequency": "weekly",
+     "weekdays": [
+      "MO",
+      "TU",
+      "WE",
+      "TH",
+      "FR"
+     ],
+     "count": 23
+    }
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p3b-missing_repeats-05",
+   "text": "pay the sitter every 1st and 15th",
+   "kind": "task",
+   "old": {
+    "start": "2026-11-01T17:00",
+    "recurrence": {
+     "frequency": "monthly",
+     "month_days": [
+      1,
+      15
+     ]
+    }
+   },
+   "new": {
+    "start": "2026-11-01",
+    "recurrence": {
+     "frequency": "monthly",
+     "month_days": [
+      1,
+      15
+     ]
+    }
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p3b-missing_repeats-08",
+   "text": "remind me to call grandma every mothers day",
+   "kind": "reminder",
+   "old": {
+    "start": "2027-05-09T09:00",
+    "recurrence": {
+     "frequency": "yearly",
+     "months": [
+      5
+     ],
+     "weekdays": [
+      "2SU"
+     ]
+    }
+   },
+   "new": {
+    "start": "2027-05-09",
+    "recurrence": {
+     "frequency": "yearly",
+     "months": [
+      5
+     ],
+     "weekdays": [
+      "2SU"
+     ]
+    }
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p3b-missing_repeats-09",
+   "text": "order lilies for church every easter",
+   "kind": "task",
+   "old": {
+    "start": "2027-03-28T17:00",
+    "recurrence": {
+     "frequency": "yearly"
+    },
+    "warnings": [
+     "holiday_dates"
+    ]
+   },
+   "new": {
+    "start": "2027-03-28",
+    "recurrence": {
+     "frequency": "yearly"
+    },
+    "warnings": [
+     "holiday_dates"
+    ]
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p3b-weekdays-01",
+   "text": "next fri: send the contract back",
+   "kind": "task",
+   "old": {
+    "start": "2026-10-30T17:00",
+    "warnings": [
+     "ambiguous_next_weekday"
+    ],
+    "alternative": "2026-10-23"
+   },
+   "new": {
+    "start": "2026-10-30",
+    "warnings": [
+     "ambiguous_next_weekday"
+    ],
+    "alternative": "2026-10-23"
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p3b-weekdays-03",
+   "text": "remind me next friday about the rent",
+   "kind": "reminder",
+   "old": {
+    "start": "2026-10-30T09:00"
+   },
+   "new": {
+    "start": "2026-10-30"
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p3b-weekdays-05",
+   "text": "remind me wednesday to buy stamps",
+   "kind": "reminder",
+   "old": {
+    "start": "2026-10-28T09:00",
+    "warnings": [
+     "moved_to_next_week"
+    ]
+   },
+   "new": {
+    "start": "2026-10-21",
+    "warnings": []
+   },
+   "weekday_today": true
+  },
+  {
+   "id": "p3b-weekdays-06",
+   "text": "clean out the garage this weekend",
+   "kind": "task",
+   "old": {
+    "start": "2026-10-24T17:00"
+   },
+   "new": {
+    "start": "2026-10-24"
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p3b-weekdays-09",
+   "text": "ping me next tuesday re: the bank call",
+   "kind": "reminder",
+   "old": {
+    "start": "2026-10-27T09:00",
+    "warnings": [
+     "ambiguous_next_weekday"
+    ],
+    "alternative": "2026-10-20"
+   },
+   "new": {
+    "start": "2026-10-27",
+    "warnings": [
+     "ambiguous_next_weekday"
+    ],
+    "alternative": "2026-10-20"
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p3b-weekdays-10",
+   "text": "next thursday, return the rental car",
+   "kind": "task",
+   "old": {
+    "start": "2026-10-29T17:00",
+    "warnings": [
+     "ambiguous_next_weekday"
+    ],
+    "alternative": "2026-10-22"
+   },
+   "new": {
+    "start": "2026-10-29",
+    "warnings": [
+     "ambiguous_next_weekday"
+    ],
+    "alternative": "2026-10-22"
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p3b-24h-07",
+   "text": "renew passport by march 3 2027",
+   "kind": "task",
+   "old": {
+    "start": "2027-03-03T17:00"
+   },
+   "new": {
+    "start": "2027-03-03"
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p3b-lead_times-02",
+   "text": "remind me a day before dad's bday on sat",
+   "kind": "reminder",
+   "old": {
+    "start": "2026-10-23T09:00",
+    "lead_minutes": 1440
+   },
+   "new": {
+    "start": "2026-10-23",
+    "lead_minutes": 1440
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p3b-lead_times-03",
+   "text": "remind me thursday to get flowers for the anniversary, 2 days ahead",
+   "kind": "reminder",
+   "old": {
+    "start": "2026-10-22T09:00",
+    "lead_minutes": 2880
+   },
+   "new": {
+    "start": "2026-10-22",
+    "lead_minutes": 2880
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p3b-lead_times-06",
+   "text": "remind me a week prior to the conference on nov 12",
+   "kind": "reminder",
+   "old": {
+    "start": "2026-11-05T09:00",
+    "lead_minutes": 10080
+   },
+   "new": {
+    "start": "2026-11-05",
+    "lead_minutes": 10080
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p3b-warnings-01",
+   "text": "remind me nov 2 to file the claim",
+   "kind": "reminder",
+   "old": {
+    "start": "2026-11-02T09:00",
+    "warnings": [
+     "no_time"
+    ]
+   },
+   "new": {
+    "start": "2026-11-02",
+    "warnings": [
+     "no_time"
+    ]
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p3b-warnings-03",
+   "text": "pay invoice by 03/04",
+   "kind": "task",
+   "old": {
+    "start": "2027-03-04T17:00",
+    "warnings": [
+     "ambiguous_date_format"
+    ]
+   },
+   "new": {
+    "start": "2027-03-04",
+    "warnings": [
+     "ambiguous_date_format"
+    ]
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p3b-warnings-05",
+   "text": "biweekly payroll run on fridays",
+   "kind": "task",
+   "old": {
+    "start": "2026-10-23T17:00",
+    "recurrence": {
+     "frequency": "weekly",
+     "interval": 2,
+     "weekdays": [
+      "FR"
+     ]
+    },
+    "warnings": [
+     "ambiguous_biweekly"
+    ]
+   },
+   "new": {
+    "start": "2026-10-23",
+    "recurrence": {
+     "frequency": "weekly",
+     "interval": 2,
+     "weekdays": [
+      "FR"
+     ]
+    },
+    "warnings": [
+     "ambiguous_biweekly"
+    ]
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p3b-slang-03",
+   "text": "return library books tommorow",
+   "kind": "task",
+   "old": {
+    "start": "2026-10-19T17:00"
+   },
+   "new": {
+    "start": "2026-10-19"
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p3b-slang-04",
+   "text": "send slides by eow",
+   "kind": "task",
+   "old": {
+    "start": "2026-10-23T17:00"
+   },
+   "new": {
+    "start": "2026-10-23"
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p3b-holidays-01",
+   "text": "pay the cc bill before xmas",
+   "kind": "task",
+   "old": {
+    "start": "2026-12-25T17:00"
+   },
+   "new": {
+    "start": "2026-12-25"
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p3b-holidays-03",
+   "text": "remind me on halloween to grab candy",
+   "kind": "reminder",
+   "old": {
+    "start": "2026-10-31T09:00"
+   },
+   "new": {
+    "start": "2026-10-31"
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p3b-holidays-05",
+   "text": "book flights before good friday",
+   "kind": "task",
+   "old": {
+    "start": "2027-03-26T17:00"
+   },
+   "new": {
+    "start": "2027-03-26"
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p3b-holidays-08",
+   "text": "file q4 taxes by presidents day",
+   "kind": "task",
+   "old": {
+    "start": "2027-02-15T17:00"
+   },
+   "new": {
+    "start": "2027-02-15"
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p3b-holidays-09",
+   "text": "fathers day - remind me to call dad",
+   "kind": "reminder",
+   "old": {
+    "start": "2027-06-20T09:00"
+   },
+   "new": {
+    "start": "2027-06-20"
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p3b-holidays-10",
+   "text": "remind me to call aunt sue every christmas",
+   "kind": "reminder",
+   "old": {
+    "start": "2026-12-25T09:00",
+    "recurrence": {
+     "frequency": "yearly",
+     "months": [
+      12
+     ],
+     "month_days": [
+      25
+     ]
+    }
+   },
+   "new": {
+    "start": "2026-12-25",
+    "recurrence": {
+     "frequency": "yearly",
+     "months": [
+      12
+     ],
+     "month_days": [
+      25
+     ]
+    }
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p4c-repeats-02",
+   "text": "water the plants every other day",
+   "kind": "task",
+   "old": {
+    "start": "2026-10-18T17:00",
+    "recurrence": {
+     "frequency": "daily",
+     "interval": 2
+    }
+   },
+   "new": {
+    "start": "2026-10-18",
+    "recurrence": {
+     "frequency": "daily",
+     "interval": 2
+    }
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p4c-repeats-08",
+   "text": "remind me to pay the water bill on the 2nd Tuesday",
+   "kind": "reminder",
+   "old": {
+    "start": "2026-11-10T09:00",
+    "recurrence": {
+     "frequency": "monthly",
+     "weekdays": [
+      "2TU"
+     ]
+    }
+   },
+   "new": {
+    "start": "2026-11-10",
+    "recurrence": {
+     "frequency": "monthly",
+     "weekdays": [
+      "2TU"
+     ]
+    }
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p4c-repeats-11",
+   "text": "submit timesheet every Friday for 6 weeks",
+   "kind": "task",
+   "old": {
+    "start": "2026-10-23T17:00",
+    "recurrence": {
+     "frequency": "weekly",
+     "weekdays": [
+      "FR"
+     ],
+     "count": 6
+    }
+   },
+   "new": {
+    "start": "2026-10-23",
+    "recurrence": {
+     "frequency": "weekly",
+     "weekdays": [
+      "FR"
+     ],
+     "count": 6
+    }
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p4c-repeats-13",
+   "text": "remind me to take the antibiotics the 3rd through the 5th",
+   "kind": "reminder",
+   "old": {
+    "start": "2026-11-03T09:00",
+    "recurrence": {
+     "frequency": "daily",
+     "until": "2026-11-05"
+    }
+   },
+   "new": {
+    "start": "2026-11-03",
+    "recurrence": {
+     "frequency": "daily",
+     "until": "2026-11-05"
+    }
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p4c-exdates-02",
+   "text": "file expense report every Friday, skip Thanksgiving week",
+   "kind": "task",
+   "old": {
+    "start": "2026-10-23T17:00",
+    "recurrence": {
+     "frequency": "weekly",
+     "weekdays": [
+      "FR"
+     ],
+     "exdates": [
+      "2026-11-27T17:00"
+     ]
+    }
+   },
+   "new": {
+    "start": "2026-10-23",
+    "recurrence": {
+     "frequency": "weekly",
+     "weekdays": [
+      "FR"
+     ],
+     "exdates": [
+      "2026-11-27"
+     ]
+    }
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p4c-exdates-06",
+   "text": "remind me to drop off the rent check on the 25th of every month except Dec 25",
+   "kind": "reminder",
+   "old": {
+    "start": "2026-10-25T09:00",
+    "recurrence": {
+     "frequency": "monthly",
+     "month_days": [
+      25
+     ],
+     "exdates": [
+      "2026-12-25T09:00"
+     ]
+    }
+   },
+   "new": {
+    "start": "2026-10-25",
+    "recurrence": {
+     "frequency": "monthly",
+     "month_days": [
+      25
+     ],
+     "exdates": [
+      "2026-12-25"
+     ]
+    }
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p4c-exdates-13",
+   "text": "get to inbox zero every weekday except Fridays",
+   "kind": "task",
+   "old": {
+    "start": "2026-10-19T17:00",
+    "recurrence": {
+     "frequency": "weekly",
+     "weekdays": [
+      "MO",
+      "TU",
+      "WE",
+      "TH"
+     ],
+     "exdates": []
+    }
+   },
+   "new": {
+    "start": "2026-10-19",
+    "recurrence": {
+     "frequency": "weekly",
+     "weekdays": [
+      "MO",
+      "TU",
+      "WE",
+      "TH"
+     ],
+     "exdates": []
+    }
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p4c-exdates-14",
+   "text": "pay the cleaner on the 1st of every month, not in December",
+   "kind": "task",
+   "old": {
+    "start": "2026-11-01T17:00",
+    "recurrence": {
+     "frequency": "monthly",
+     "month_days": [
+      1
+     ],
+     "exdates": [
+      "2026-12-01T17:00"
+     ]
+    }
+   },
+   "new": {
+    "start": "2026-11-01",
+    "recurrence": {
+     "frequency": "monthly",
+     "month_days": [
+      1
+     ],
+     "exdates": [
+      "2026-12-01"
+     ]
+    }
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p4c-false_dates-11",
+   "text": "buy the turkey before Thanksgiving",
+   "kind": "task",
+   "old": {
+    "start": "2026-11-26T17:00"
+   },
+   "new": {
+    "start": "2026-11-26"
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p4c-false_dates-13",
+   "text": "call April 3 about the lease",
+   "kind": "task",
+   "old": {
+    "start": "2027-04-03T17:00"
+   },
+   "new": {
+    "start": "2027-04-03"
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p4c-false_dates-15",
+   "text": "remind me on sat to buy sun cream",
+   "kind": "reminder",
+   "old": {
+    "start": "2026-10-24T09:00"
+   },
+   "new": {
+    "start": "2026-10-24"
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p4c-month_relative-01",
+   "text": "pay rent by eom",
+   "kind": "task",
+   "old": {
+    "start": "2026-10-31T17:00"
+   },
+   "new": {
+    "start": "2026-10-31"
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p4c-month_relative-02",
+   "text": "finish the audit by the end of next month",
+   "kind": "task",
+   "old": {
+    "start": "2026-11-30T17:00"
+   },
+   "new": {
+    "start": "2026-11-30"
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p4c-month_relative-04",
+   "text": "remind me mid-month to check the budget",
+   "kind": "reminder",
+   "old": {
+    "start": "2026-11-15T09:00"
+   },
+   "new": {
+    "start": "2026-11-15"
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p4c-month_relative-05",
+   "text": "invoice the client mid next month",
+   "kind": "task",
+   "old": {
+    "start": "2026-11-15T17:00"
+   },
+   "new": {
+    "start": "2026-11-15"
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p4c-month_relative-07",
+   "text": "remind me at the beginning of next month to renew the parking permit",
+   "kind": "reminder",
+   "old": {
+    "start": "2026-11-01T09:00"
+   },
+   "new": {
+    "start": "2026-11-01"
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p4c-month_relative-08",
+   "text": "submit the grant application on the 30th",
+   "kind": "task",
+   "old": {
+    "start": "2026-10-30T17:00"
+   },
+   "new": {
+    "start": "2026-10-30"
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p4c-month_relative-09",
+   "text": "pay the dentist bill by the twenty-third",
+   "kind": "task",
+   "old": {
+    "start": "2026-10-23T17:00"
+   },
+   "new": {
+    "start": "2026-10-23"
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p4c-month_relative-10",
+   "text": "remind me on the fifteenth to pay the credit card",
+   "kind": "reminder",
+   "old": {
+    "start": "2026-11-15T09:00"
+   },
+   "new": {
+    "start": "2026-11-15"
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p4c-month_relative-12",
+   "text": "renew passport by the 2nd of November",
+   "kind": "task",
+   "old": {
+    "start": "2026-11-02T17:00"
+   },
+   "new": {
+    "start": "2026-11-02"
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p4c-month_relative-13",
+   "text": "send the board report on the 30th",
+   "kind": "task",
+   "old": {
+    "start": "2027-03-30T17:00"
+   },
+   "new": {
+    "start": "2027-03-30"
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p4c-month_relative-14",
+   "text": "pay quarterly tax on the 31st",
+   "kind": "task",
+   "old": {
+    "start": "2026-12-31T17:00"
+   },
+   "new": {
+    "start": "2026-12-31"
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p4c-month_relative-15",
+   "text": "pay the plumber on the 18th",
+   "kind": "task",
+   "old": {
+    "start": "2026-10-18T17:00"
+   },
+   "new": {
+    "start": "2026-10-18"
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p4c-slang-01",
+   "text": "call the bank tmrw",
+   "kind": "task",
+   "old": {
+    "start": "2026-10-19T17:00"
+   },
+   "new": {
+    "start": "2026-10-19"
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p4c-slang-04",
+   "text": "send the deck by eow",
+   "kind": "task",
+   "old": {
+    "start": "2026-10-23T17:00"
+   },
+   "new": {
+    "start": "2026-10-23"
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p4c-slang-08",
+   "text": "expense report due weds",
+   "kind": "task",
+   "old": {
+    "start": "2026-10-21T17:00"
+   },
+   "new": {
+    "start": "2026-10-21"
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p4c-slang-10",
+   "text": "renew the lease by sept 30",
+   "kind": "task",
+   "old": {
+    "start": "2027-09-30T17:00"
+   },
+   "new": {
+    "start": "2027-09-30"
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p4c-slang-12",
+   "text": "remind me nxt mon to book flights",
+   "kind": "reminder",
+   "old": {
+    "start": "2026-10-19T09:00"
+   },
+   "new": {
+    "start": "2026-10-19"
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p4c-slang-15",
+   "text": "clean the fridge every fortnight on fri",
+   "kind": "task",
+   "old": {
+    "start": "2026-10-23T17:00",
+    "recurrence": {
+     "frequency": "weekly",
+     "interval": 2,
+     "weekdays": [
+      "FR"
+     ]
+    }
+   },
+   "new": {
+    "start": "2026-10-23",
+    "recurrence": {
+     "frequency": "weekly",
+     "interval": 2,
+     "weekdays": [
+      "FR"
+     ]
+    }
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p4c-reminders-05",
+   "text": "remind me on Christmas Eve to call grandma",
+   "kind": "reminder",
+   "old": {
+    "start": "2026-12-24T09:00"
+   },
+   "new": {
+    "start": "2026-12-24"
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p4c-reminders-07",
+   "text": "remind me the day before Halloween to buy candy",
+   "kind": "reminder",
+   "old": {
+    "start": "2026-10-30T09:00"
+   },
+   "new": {
+    "start": "2026-10-30"
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p4c-reminders-09",
+   "text": "remind me next Friday to renew the passport 1 week before",
+   "kind": "reminder",
+   "old": {
+    "start": "2026-10-23T09:00",
+    "lead_minutes": 10080
+   },
+   "new": {
+    "start": "2026-10-23",
+    "lead_minutes": 10080
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p4c-reminders-10",
+   "text": "remind me Sunday to call mom",
+   "kind": "reminder",
+   "old": {
+    "start": "2026-10-25T09:00"
+   },
+   "new": {
+    "start": "2026-10-18"
+   },
+   "weekday_today": true
+  },
+  {
+   "id": "p4c-reminders-13",
+   "text": "remind me 2 days ahead of Mom's birthday on Nov 12",
+   "kind": "reminder",
+   "old": {
+    "start": "2026-11-10T09:00",
+    "lead_minutes": 2880
+   },
+   "new": {
+    "start": "2026-11-10",
+    "lead_minutes": 2880
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p4c-warnings-13",
+   "text": "fix the bike sometime next week",
+   "kind": "task",
+   "old": {
+    "start": "2026-10-19T17:00",
+    "warnings": [
+     "vague_time"
+    ]
+   },
+   "new": {
+    "start": "2026-10-19",
+    "warnings": [
+     "vague_time"
+    ]
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p4d-repeats-08",
+   "text": "payroll report every friday as of next month",
+   "kind": "task",
+   "old": {
+    "start": "2026-11-06T17:00",
+    "recurrence": {
+     "frequency": "weekly",
+     "weekdays": [
+      "FR"
+     ],
+     "start_date": "2026-11-01"
+    }
+   },
+   "new": {
+    "start": "2026-11-06",
+    "recurrence": {
+     "frequency": "weekly",
+     "weekdays": [
+      "FR"
+     ],
+     "start_date": "2026-11-01"
+    }
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p4d-exdates-04",
+   "text": "pay the cleaner every friday except christmas week",
+   "kind": "task",
+   "old": {
+    "start": "2026-10-23T17:00",
+    "recurrence": {
+     "frequency": "weekly",
+     "weekdays": [
+      "FR"
+     ],
+     "exdates": [
+      "2026-12-25T17:00"
+     ]
+    }
+   },
+   "new": {
+    "start": "2026-10-23",
+    "recurrence": {
+     "frequency": "weekly",
+     "weekdays": [
+      "FR"
+     ],
+     "exdates": [
+      "2026-12-25"
+     ]
+    }
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p4d-false_dates-07",
+   "text": "pick up the dry cleaning sat",
+   "kind": "task",
+   "old": {
+    "start": "2026-10-24T17:00",
+    "recurrence": null
+   },
+   "new": {
+    "start": "2026-10-24",
+    "recurrence": null
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p4d-false_dates-09",
+   "text": "call april 3 about the lease renewal",
+   "kind": "task",
+   "old": {
+    "start": "2027-04-03T17:00"
+   },
+   "new": {
+    "start": "2027-04-03"
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p4d-month_relative-01",
+   "text": "send invoices eom",
+   "kind": "task",
+   "old": {
+    "start": "2026-10-31T17:00"
+   },
+   "new": {
+    "start": "2026-10-31"
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p4d-month_relative-02",
+   "text": "finish the audit by the end of next month",
+   "kind": "task",
+   "old": {
+    "start": "2026-11-30T17:00"
+   },
+   "new": {
+    "start": "2026-11-30"
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p4d-month_relative-04",
+   "text": "remind me mid-month to check the budget",
+   "kind": "reminder",
+   "old": {
+    "start": "2026-11-15T09:00"
+   },
+   "new": {
+    "start": "2026-11-15"
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p4d-month_relative-05",
+   "text": "renew parking permit mid next month",
+   "kind": "task",
+   "old": {
+    "start": "2026-11-15T17:00"
+   },
+   "new": {
+    "start": "2026-11-15"
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p4d-month_relative-07",
+   "text": "pay the car insurance on the 30th",
+   "kind": "task",
+   "old": {
+    "start": "2027-03-30T17:00"
+   },
+   "new": {
+    "start": "2027-03-30"
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p4d-month_relative-08",
+   "text": "remind me on the twenty-third to pay the water bill",
+   "kind": "reminder",
+   "old": {
+    "start": "2026-10-23T09:00"
+   },
+   "new": {
+    "start": "2026-10-23"
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p4d-month_relative-09",
+   "text": "file quarterly taxes the 3rd of next month",
+   "kind": "task",
+   "old": {
+    "start": "2026-11-03T17:00"
+   },
+   "new": {
+    "start": "2026-11-03"
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p4d-slang-01",
+   "text": "remind me thurs to book flights",
+   "kind": "reminder",
+   "old": {
+    "start": "2026-10-22T09:00"
+   },
+   "new": {
+    "start": "2026-10-22"
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p4d-slang-03",
+   "text": "submit expense report by tues",
+   "kind": "task",
+   "old": {
+    "start": "2026-10-20T17:00"
+   },
+   "new": {
+    "start": "2026-10-20"
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p4d-slang-05",
+   "text": "renew passport before nov. 20",
+   "kind": "task",
+   "old": {
+    "start": "2026-11-20T17:00"
+   },
+   "new": {
+    "start": "2026-11-20"
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p4d-slang-07",
+   "text": "email the landlord 2day",
+   "kind": "task",
+   "old": {
+    "start": "2026-10-18T17:00"
+   },
+   "new": {
+    "start": "2026-10-18"
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p4d-slang-08",
+   "text": "check on the sourdough starter in a fortnight",
+   "kind": "reminder",
+   "old": {
+    "start": "2026-11-01T09:00"
+   },
+   "new": {
+    "start": "2026-11-01"
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p4d-reminders-03",
+   "text": "remind me on new years eve to book the cab",
+   "kind": "reminder",
+   "old": {
+    "start": "2026-12-31T09:00"
+   },
+   "new": {
+    "start": "2026-12-31"
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p4d-reminders-04",
+   "text": "remind me the day before thanksgiving to brine the turkey",
+   "kind": "reminder",
+   "old": {
+    "start": "2026-11-25T09:00"
+   },
+   "new": {
+    "start": "2026-11-25"
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p4d-reminders-08",
+   "text": "remind me sunday to call dad",
+   "kind": "reminder",
+   "old": {
+    "start": "2026-10-25T09:00",
+    "warnings": [
+     "moved_to_next_week"
+    ]
+   },
+   "new": {
+    "start": "2026-10-18",
+    "warnings": []
+   },
+   "weekday_today": true
+  },
+  {
+   "id": "p4d-reminders-10",
+   "text": "remind me 2 days ahead of mom's birthday on nov 9",
+   "kind": "reminder",
+   "old": {
+    "start": "2026-11-07T09:00",
+    "lead_minutes": 2880
+   },
+   "new": {
+    "start": "2026-11-07",
+    "lead_minutes": 2880
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p4be-holidays-01",
+   "text": "remind me on Christmas Eve to call grandma",
+   "kind": "reminder",
+   "old": {
+    "start": "2026-12-24T09:00"
+   },
+   "new": {
+    "start": "2026-12-24"
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p4be-holidays-02",
+   "text": "remind me to call mom on Mother's Day",
+   "kind": "reminder",
+   "old": {
+    "start": "2027-05-09T09:00"
+   },
+   "new": {
+    "start": "2027-05-09"
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p4be-holidays-05",
+   "text": "remind me the day before Easter to pick up the ham",
+   "kind": "reminder",
+   "old": {
+    "start": "2027-03-27T09:00"
+   },
+   "new": {
+    "start": "2027-03-27"
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p4be-holidays-06",
+   "text": "pay the bills before Christmas",
+   "kind": "task",
+   "old": {
+    "start": "2026-12-25T17:00"
+   },
+   "new": {
+    "start": "2026-12-25"
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p4be-holidays-07",
+   "text": "finish the quarterly report by Thanksgiving",
+   "kind": "task",
+   "old": {
+    "start": "2026-11-26T17:00"
+   },
+   "new": {
+    "start": "2026-11-26"
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p4be-holidays-08",
+   "text": "return library books by Halloween",
+   "kind": "task",
+   "old": {
+    "start": "2026-10-31T17:00"
+   },
+   "new": {
+    "start": "2026-10-31"
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p4be-unresolved_reference-09",
+   "text": "pay rent before the 28th",
+   "kind": "task",
+   "old": {
+    "start": "2026-10-28T17:00",
+    "absent_warnings": [
+     "unresolved_reference"
+    ]
+   },
+   "new": {
+    "start": "2026-10-28",
+    "absent_warnings": [
+     "unresolved_reference"
+    ]
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p4be-vague_time-06",
+   "text": "sort out the insurance sometime next week",
+   "kind": "task",
+   "old": {
+    "start": "2026-10-19T17:00",
+    "warnings": [
+     "vague_time"
+    ]
+   },
+   "new": {
+    "start": "2026-10-19",
+    "warnings": [
+     "vague_time"
+    ]
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p4be-vague_time-11",
+   "text": "renew passport by end of month",
+   "kind": "task",
+   "old": {
+    "start": "2026-10-31T17:00",
+    "absent_warnings": [
+     "vague_time"
+    ]
+   },
+   "new": {
+    "start": "2026-10-31",
+    "absent_warnings": [
+     "vague_time"
+    ]
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p4be-multiple_items-10",
+   "text": "buy milk and eggs tomorrow",
+   "kind": "task",
+   "old": {
+    "start": "2026-10-19T17:00",
+    "absent_warnings": [
+     "multiple_items"
+    ]
+   },
+   "new": {
+    "start": "2026-10-19",
+    "absent_warnings": [
+     "multiple_items"
+    ]
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p4bf-holidays-01",
+   "text": "remind me on halloween to put the porch light on",
+   "kind": "reminder",
+   "old": {
+    "start": "2026-10-31T09:00",
+    "absent_warnings": [
+     "possible_holiday_title"
+    ]
+   },
+   "new": {
+    "start": "2026-10-31",
+    "absent_warnings": [
+     "possible_holiday_title"
+    ]
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p4bf-holidays-05",
+   "text": "remind me the day before easter to dye eggs w/ the kids",
+   "kind": "reminder",
+   "old": {
+    "start": "2027-03-27T09:00"
+   },
+   "new": {
+    "start": "2027-03-27"
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p4bf-holidays-06",
+   "text": "pay the visa bill before thanksgiving",
+   "kind": "task",
+   "old": {
+    "start": "2026-11-26T17:00",
+    "absent_warnings": [
+     "possible_holiday_title"
+    ]
+   },
+   "new": {
+    "start": "2026-11-26",
+    "absent_warnings": [
+     "possible_holiday_title"
+    ]
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p4bf-holidays-14",
+   "text": "remind me on valentines day to pick up flowers",
+   "kind": "reminder",
+   "old": {
+    "start": "2027-02-14T09:00",
+    "absent_warnings": [
+     "possible_holiday_title"
+    ]
+   },
+   "new": {
+    "start": "2027-02-14",
+    "absent_warnings": [
+     "possible_holiday_title"
+    ]
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p4bf-holidays-15",
+   "text": "get the christmas tree up by dec 20",
+   "kind": "task",
+   "old": {
+    "start": "2026-12-20T17:00",
+    "absent_warnings": [
+     "possible_holiday_title"
+    ]
+   },
+   "new": {
+    "start": "2026-12-20",
+    "absent_warnings": [
+     "possible_holiday_title"
+    ]
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p4bf-unresolved_reference-07",
+   "text": "submit expense report before the 28th",
+   "kind": "task",
+   "old": {
+    "start": "2026-10-28T17:00",
+    "absent_warnings": [
+     "unresolved_reference"
+    ]
+   },
+   "new": {
+    "start": "2026-10-28",
+    "absent_warnings": [
+     "unresolved_reference"
+    ]
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p4bf-vague_time-06",
+   "text": "finish the budget sheet by end of week",
+   "kind": "task",
+   "old": {
+    "start": "2026-10-23T17:00",
+    "absent_warnings": [
+     "vague_time"
+    ]
+   },
+   "new": {
+    "start": "2026-10-23",
+    "absent_warnings": [
+     "vague_time"
+    ]
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p4bf-multiple_items-04",
+   "text": "submit timesheet friday plus renew registration by the 30th",
+   "kind": "task",
+   "old": {
+    "start": "2026-10-23T17:00",
+    "warnings": [
+     "multiple_items"
+    ]
+   },
+   "new": {
+    "start": "2026-10-23",
+    "warnings": [
+     "multiple_items"
+    ]
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p4bf-multiple_items-07",
+   "text": "buy bread and eggs tomorrow",
+   "kind": "task",
+   "old": {
+    "start": "2026-10-19T17:00",
+    "absent_warnings": [
+     "multiple_items"
+    ]
+   },
+   "new": {
+    "start": "2026-10-19",
+    "absent_warnings": [
+     "multiple_items"
+    ]
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p4bf-underspecified_recurrence-08",
+   "text": "remind me on the 1st of every month to pay rent",
+   "kind": "reminder",
+   "old": {
+    "start": "2026-11-01T09:00",
+    "absent_warnings": [
+     "underspecified_recurrence"
+    ]
+   },
+   "new": {
+    "start": "2026-11-01",
+    "absent_warnings": [
+     "underspecified_recurrence"
+    ]
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p4bf-precision-03",
+   "text": "submit q3 invoice by friday",
+   "kind": "task",
+   "old": {
+    "start": "2026-10-23T17:00",
+    "absent_warnings": [
+     "missing_trigger",
+     "missing_date",
+     "unresolved_reference",
+     "vague_time",
+     "multiple_items",
+     "underspecified_recurrence",
+     "possible_holiday_title"
+    ]
+   },
+   "new": {
+    "start": "2026-10-23",
+    "absent_warnings": [
+     "missing_trigger",
+     "missing_date",
+     "unresolved_reference",
+     "vague_time",
+     "multiple_items",
+     "underspecified_recurrence",
+     "possible_holiday_title"
+    ]
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p4bf-precision-06",
+   "text": "renew car registration by oct 30",
+   "kind": "task",
+   "old": {
+    "start": "2026-10-30T17:00",
+    "absent_warnings": [
+     "missing_trigger",
+     "missing_date",
+     "unresolved_reference",
+     "vague_time",
+     "multiple_items",
+     "underspecified_recurrence",
+     "possible_holiday_title"
+    ]
+   },
+   "new": {
+    "start": "2026-10-30",
+    "absent_warnings": [
+     "missing_trigger",
+     "missing_date",
+     "unresolved_reference",
+     "vague_time",
+     "multiple_items",
+     "underspecified_recurrence",
+     "possible_holiday_title"
+    ]
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p4bf-precision-09",
+   "text": "send the lease renewal form next monday",
+   "kind": "task",
+   "old": {
+    "start": "2026-10-19T17:00",
+    "absent_warnings": [
+     "missing_trigger",
+     "missing_date",
+     "unresolved_reference",
+     "vague_time",
+     "multiple_items",
+     "underspecified_recurrence",
+     "possible_holiday_title"
+    ]
+   },
+   "new": {
+    "start": "2026-10-19",
+    "absent_warnings": [
+     "missing_trigger",
+     "missing_date",
+     "unresolved_reference",
+     "vague_time",
+     "multiple_items",
+     "underspecified_recurrence",
+     "possible_holiday_title"
+    ]
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p4bf-precision-13",
+   "text": "call the insurance company on wednesday",
+   "kind": "task",
+   "old": {
+    "start": "2026-10-21T17:00",
+    "absent_warnings": [
+     "missing_trigger",
+     "missing_date",
+     "unresolved_reference",
+     "vague_time",
+     "multiple_items",
+     "underspecified_recurrence",
+     "possible_holiday_title"
+    ]
+   },
+   "new": {
+    "start": "2026-10-21",
+    "absent_warnings": [
+     "missing_trigger",
+     "missing_date",
+     "unresolved_reference",
+     "vague_time",
+     "multiple_items",
+     "underspecified_recurrence",
+     "possible_holiday_title"
+    ]
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p4bf-precision-16",
+   "text": "pay water bill eom",
+   "kind": "task",
+   "old": {
+    "start": "2026-10-31T17:00",
+    "absent_warnings": [
+     "missing_trigger",
+     "missing_date",
+     "unresolved_reference",
+     "vague_time",
+     "multiple_items",
+     "underspecified_recurrence",
+     "possible_holiday_title"
+    ]
+   },
+   "new": {
+    "start": "2026-10-31",
+    "absent_warnings": [
+     "missing_trigger",
+     "missing_date",
+     "unresolved_reference",
+     "vague_time",
+     "multiple_items",
+     "underspecified_recurrence",
+     "possible_holiday_title"
+    ]
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p4bf-precision-17",
+   "text": "remind me in 2 days to follow up with the recruiter",
+   "kind": "reminder",
+   "old": {
+    "start": "2026-10-20T09:00",
+    "absent_warnings": [
+     "missing_trigger",
+     "missing_date",
+     "unresolved_reference",
+     "vague_time",
+     "multiple_items",
+     "underspecified_recurrence",
+     "possible_holiday_title"
+    ]
+   },
+   "new": {
+    "start": "2026-10-20",
+    "absent_warnings": [
+     "missing_trigger",
+     "missing_date",
+     "unresolved_reference",
+     "vague_time",
+     "multiple_items",
+     "underspecified_recurrence",
+     "possible_holiday_title"
+    ]
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p4bf-precision-19",
+   "text": "order printer ink this weekend",
+   "kind": "task",
+   "old": {
+    "start": "2026-10-24T17:00",
+    "absent_warnings": [
+     "missing_trigger",
+     "missing_date",
+     "unresolved_reference",
+     "vague_time",
+     "multiple_items",
+     "underspecified_recurrence",
+     "possible_holiday_title"
+    ]
+   },
+   "new": {
+    "start": "2026-10-24",
+    "absent_warnings": [
+     "missing_trigger",
+     "missing_date",
+     "unresolved_reference",
+     "vague_time",
+     "multiple_items",
+     "underspecified_recurrence",
+     "possible_holiday_title"
+    ]
+   },
+   "weekday_today": false
+  },
+  {
+   "id": "p4bf-precision-25",
+   "text": "book flights for the conference by the 15th",
+   "kind": "task",
+   "old": {
+    "start": "2026-11-15T17:00",
+    "absent_warnings": [
+     "missing_trigger",
+     "missing_date",
+     "unresolved_reference",
+     "vague_time",
+     "multiple_items",
+     "underspecified_recurrence",
+     "possible_holiday_title"
+    ]
+   },
+   "new": {
+    "start": "2026-11-15",
+    "absent_warnings": [
+     "missing_trigger",
+     "missing_date",
+     "unresolved_reference",
+     "vague_time",
+     "multiple_items",
+     "underspecified_recurrence",
+     "possible_holiday_title"
+    ]
+   },
+   "weekday_today": false
+  }
+ ],
+ "gold_changes": [
+  {
+   "id": "task-001",
+   "text": "pay rent on the 1st",
+   "old": "2026-11-01T17:00",
+   "new": "2026-11-01"
+  },
+  {
+   "id": "task-002",
+   "text": "call the plumber tomorrow",
+   "old": "2026-10-19T17:00",
+   "new": "2026-10-19"
+  },
+  {
+   "id": "task-005",
+   "text": "email Dana the contract by Thursday",
+   "old": "2026-10-22T17:00",
+   "new": "2026-10-22"
+  },
+  {
+   "id": "task-006",
+   "text": "book flights this weekend",
+   "old": "2026-10-24T17:00",
+   "new": "2026-10-24"
+  },
+  {
+   "id": "task-007",
+   "text": "return library books Sat",
+   "old": "2026-10-24T17:00",
+   "new": "2026-10-24"
+  },
+  {
+   "id": "task-010",
+   "text": "water the ferns in 3 days",
+   "old": "2026-10-21T17:00",
+   "new": "2026-10-21"
+  },
+  {
+   "id": "task-011",
+   "text": "file taxes before April 15",
+   "old": "2027-04-15T17:00",
+   "new": "2027-04-15"
+  },
+  {
+   "id": "task-012",
+   "text": "order new glasses next week",
+   "old": "2026-10-19T17:00",
+   "new": "2026-10-19"
+  },
+  {
+   "id": "task-013",
+   "text": "clean out the garage sometime in March",
+   "old": "2027-03-01T17:00",
+   "new": "2027-03-01"
+  },
+  {
+   "id": "task-014",
+   "text": "update resume by end of month",
+   "old": "2026-10-31T17:00",
+   "new": "2026-10-31"
+  },
+  {
+   "id": "task-015",
+   "text": "cancel gym membership before the 30th",
+   "old": "2026-10-30T17:00",
+   "new": "2026-10-30"
+  },
+  {
+   "id": "task-026",
+   "text": "pay the electric bill this Friday",
+   "old": "2026-10-23T17:00",
+   "new": "2026-10-23"
+  },
+  {
+   "id": "task-027",
+   "text": "schedule vet appointment next Tuesday",
+   "old": "2026-10-20T17:00",
+   "new": "2026-10-20"
+  },
+  {
+   "id": "task-028",
+   "text": "send birthday card to Gran by the 12th",
+   "old": "2026-11-12T17:00",
+   "new": "2026-11-12"
+  },
+  {
+   "id": "task-029",
+   "text": "reconcile credit card at the end of the month",
+   "old": "2026-10-31T17:00",
+   "new": "2026-10-31"
+  },
+  {
+   "id": "task-030",
+   "text": "renew car registration by March 3rd",
+   "old": "2027-03-03T17:00",
+   "new": "2027-03-03"
+  },
+  {
+   "id": "task-031",
+   "text": "submit expense report by the last day of the month",
+   "old": "2026-10-31T17:00",
+   "new": "2026-10-31"
+  },
+  {
+   "id": "task-032",
+   "text": "book dentist cleaning early next month",
+   "old": "2026-11-01T17:00",
+   "new": "2026-11-01"
+  },
+  {
+   "id": "task-033",
+   "text": "pay quarterly estimated tax on the 15th",
+   "old": "2026-11-15T17:00",
+   "new": "2026-11-15"
+  },
+  {
+   "id": "task-034",
+   "text": "finish chapter 4 edits by end of week",
+   "old": "2026-10-23T17:00",
+   "new": "2026-10-23"
+  },
+  {
+   "id": "task-035",
+   "text": "prepare board deck by the 2nd of November",
+   "old": "2026-11-02T17:00",
+   "new": "2026-11-02"
+  },
+  {
+   "id": "task-046",
+   "text": "rotate API keys high priority by Friday",
+   "old": "2026-10-23T17:00",
+   "new": "2026-10-23"
+  },
+  {
+   "id": "task-052",
+   "text": "renew domain name URGENT today",
+   "old": "2026-10-18T17:00",
+   "new": "2026-10-18"
+  },
+  {
+   "id": "task-056",
+   "text": "draft launch email for Marketing Q4 by Monday",
+   "old": "2026-10-19T17:00",
+   "new": "2026-10-19"
+  },
+  {
+   "id": "task-057",
+   "text": "send the slides to Omar by Wednesday",
+   "old": "2026-10-21T17:00",
+   "new": "2026-10-21"
+  },
+  {
+   "id": "task-059",
+   "text": "review contract with Will on Wednesday",
+   "old": "2026-10-21T17:00",
+   "new": "2026-10-21"
+  },
+  {
+   "id": "task-062",
+   "text": "schedule interview for Bo next Friday",
+   "old": "2026-10-23T17:00",
+   "new": "2026-10-23"
+  },
+  {
+   "id": "task-065",
+   "text": "write test plan for Orion with Lee by Thursday",
+   "old": "2026-10-22T17:00",
+   "new": "2026-10-22"
+  },
+  {
+   "id": "task-066",
+   "text": "follow up with April in April",
+   "old": "2027-04-01T17:00",
+   "new": "2027-04-01"
+  },
+  {
+   "id": "task-067",
+   "text": "send notes to Ray after the Friday standup",
+   "old": "2026-10-23T17:00",
+   "new": "2026-10-23"
+  },
+  {
+   "id": "task-071",
+   "text": "prep for SAT tomorrow",
+   "old": "2026-10-19T17:00",
+   "new": "2026-10-19"
+  },
+  {
+   "id": "task-073",
+   "text": "march band uniform fitting Thursday",
+   "old": "2026-10-22T17:00",
+   "new": "2026-10-22"
+  },
+  {
+   "id": "task-075",
+   "text": "read \"The Sun Also Rises\" by Sunday",
+   "old": "2026-10-18T17:00",
+   "new": "2026-10-18"
+  },
+  {
+   "id": "task-079",
+   "text": "plan May's birthday party by next week",
+   "old": "2026-10-19T17:00",
+   "new": "2026-10-19"
+  },
+  {
+   "id": "task-081",
+   "text": "mon call accountant",
+   "old": "2026-10-19T17:00",
+   "new": "2026-10-19"
+  },
+  {
+   "id": "task-082",
+   "text": "call mom tmrw",
+   "old": "2026-10-19T17:00",
+   "new": "2026-10-19"
+  },
+  {
+   "id": "task-084",
+   "text": "pay water bill wednsday",
+   "old": "2026-10-21T17:00",
+   "new": "2026-10-21"
+  },
+  {
+   "id": "task-085",
+   "text": "send report nxt week",
+   "old": "2026-10-19T17:00",
+   "new": "2026-10-19"
+  },
+  {
+   "id": "task-087",
+   "text": "clena the fridge this wknd",
+   "old": "2026-10-24T17:00",
+   "new": "2026-10-24"
+  },
+  {
+   "id": "task-088",
+   "text": "reschedule mtg w/ Ana thurs",
+   "old": "2026-10-22T17:00",
+   "new": "2026-10-22"
+  },
+  {
+   "id": "task-089",
+   "text": "buy milk 2moro",
+   "old": "2026-10-19T17:00",
+   "new": "2026-10-19"
+  },
+  {
+   "id": "task-097",
+   "text": "study Spanish for 45 minutes daily",
+   "old": "2026-10-18T17:00",
+   "new": "2026-10-18"
+  },
+  {
+   "id": "task-099",
+   "text": "audit vendor list for Finance Ops, tagged compliance, takes an hour, high priority, by next Thursday",
+   "old": "2026-10-22T17:00",
+   "new": "2026-10-22"
+  },
+  {
+   "id": "task-100",
+   "text": "take out the trash every Tuesday",
+   "old": "2026-10-20T17:00",
+   "new": "2026-10-20"
+  },
+  {
+   "id": "task-101",
+   "text": "water plants every other day",
+   "old": "2026-10-18T17:00",
+   "new": "2026-10-18"
+  },
+  {
+   "id": "task-102",
+   "text": "pay rent on the 1st of every month",
+   "old": "2026-11-01T17:00",
+   "new": "2026-11-01"
+  },
+  {
+   "id": "task-103",
+   "text": "review finances every first Monday",
+   "old": "2026-11-02T17:00",
+   "new": "2026-11-02"
+  },
+  {
+   "id": "task-104",
+   "text": "team timesheets every Mon and Thu",
+   "old": "2026-10-19T17:00",
+   "new": "2026-10-19"
+  },
+  {
+   "id": "task-106",
+   "text": "backup laptop weekly",
+   "old": "2026-10-18T17:00",
+   "new": "2026-10-18"
+  },
+  {
+   "id": "task-107",
+   "text": "change HVAC filter every 3 months",
+   "old": "2026-10-18T17:00",
+   "new": "2026-10-18"
+  },
+  {
+   "id": "task-108",
+   "text": "pay credit card on the last day of every month",
+   "old": "2026-10-31T17:00",
+   "new": "2026-10-31"
+  },
+  {
+   "id": "task-111",
+   "text": "clean bathroom every weekend",
+   "old": "2026-10-18T17:00",
+   "new": "2026-10-18"
+  },
+  {
+   "id": "task-113",
+   "text": "check smoke detectors twice a year",
+   "old": "2026-10-18T17:00",
+   "new": "2026-10-18"
+  },
+  {
+   "id": "task-114",
+   "text": "send investor update monthly starting next month",
+   "old": "2026-11-01T17:00",
+   "new": "2026-11-01"
+  },
+  {
+   "id": "task-115",
+   "text": "review OKRs every quarter",
+   "old": "2026-10-18T17:00",
+   "new": "2026-10-18"
+  },
+  {
+   "id": "task-116",
+   "text": "mow the lawn every Saturday until October",
+   "old": "2026-10-24T17:00",
+   "new": "2026-10-24"
+  },
+  {
+   "id": "task-117",
+   "text": "log mileage every Friday except holidays",
+   "old": "2026-10-23T17:00",
+   "new": "2026-10-23"
+  },
+  {
+   "id": "task-118",
+   "text": "water garden daily starting tomorrow through August 31",
+   "old": "2026-10-19T17:00",
+   "new": "2026-10-19"
+  },
+  {
+   "id": "task-119",
+   "text": "file invoices every last Friday of the month",
+   "old": "2026-10-30T17:00",
+   "new": "2026-10-30"
+  },
+  {
+   "id": "task-120",
+   "text": "sweep porch every Tue and Sat",
+   "old": "2026-10-20T17:00",
+   "new": "2026-10-20"
+  },
+  {
+   "id": "task-121",
+   "text": "run payroll every 15th",
+   "old": "2026-11-15T17:00",
+   "new": "2026-11-15"
+  },
+  {
+   "id": "task-122",
+   "text": "renew parking permit every year in January",
+   "old": "2027-01-01T17:00",
+   "new": "2027-01-01"
+  },
+  {
+   "id": "task-124",
+   "text": "1:1 prep every Thursday but skip the first one",
+   "old": "2026-10-29T17:00",
+   "new": "2026-10-29"
+  },
+  {
+   "id": "task-126",
+   "text": "go through every expense receipt from the Lisbon trip and enter them into the reimbursement tool before the 28th",
+   "old": "2026-10-28T17:00",
+   "new": "2026-10-28"
+  },
+  {
+   "id": "task-128",
+   "text": "write up the incident review for last Tuesday's outage with Devon for Platform Reliability, about 3 hours, by Friday",
+   "old": "2026-10-23T17:00",
+   "new": "2026-10-23"
+  },
+  {
+   "id": "task-129",
+   "text": "collect quotes from three roofers and compare warranties over the next two weeks, no rush",
+   "old": "2026-11-01T17:00",
+   "new": "2026-11-01"
+  },
+  {
+   "id": "task-131",
+   "text": "research summer camps for the kids that run in July and are close to home #family by end of month",
+   "old": "2026-10-31T17:00",
+   "new": "2026-10-31"
+  },
+  {
+   "id": "task-132",
+   "text": "buy milk tomorrow and call mom on Friday",
+   "old": "2026-10-19T17:00",
+   "new": "2026-10-19"
+  },
+  {
+   "id": "task-133",
+   "text": "email Jo today, book the venue by Monday",
+   "old": "2026-10-18T17:00",
+   "new": "2026-10-18"
+  },
+  {
+   "id": "task-134",
+   "text": "pay rent on the 1st and renew insurance on the 15th",
+   "old": "2026-11-01T17:00",
+   "new": "2026-11-01"
+  },
+  {
+   "id": "task-135",
+   "text": "fix the bike Saturday; wash the car Sunday",
+   "old": "2026-10-24T17:00",
+   "new": "2026-10-24"
+  },
+  {
+   "id": "task-138",
+   "text": "call 555-0134 re: refund Monday",
+   "old": "2026-10-19T17:00",
+   "new": "2026-10-19"
+  },
+  {
+   "id": "task-139",
+   "text": "pick up 2 dozen eggs @ the farmers market Sat",
+   "old": "2026-10-24T17:00",
+   "new": "2026-10-24"
+  },
+  {
+   "id": "task-154",
+   "text": "pay parking ticket within 14 days",
+   "old": "2026-11-01T17:00",
+   "new": "2026-11-01"
+  },
+  {
+   "id": "task-158",
+   "text": "confirm caterer no later than Wednesday",
+   "old": "2026-10-21T17:00",
+   "new": "2026-10-21"
+  },
+  {
+   "id": "task-159",
+   "text": "prep tax docs by Jan 31",
+   "old": "2027-01-31T17:00",
+   "new": "2027-01-31"
+  },
+  {
+   "id": "task-160",
+   "text": "book flu shot this month",
+   "old": "2026-10-31T17:00",
+   "new": "2026-10-31"
+  },
+  {
+   "id": "task-161",
+   "text": "replace wiper blades before winter",
+   "old": "2026-12-01T17:00",
+   "new": "2026-12-01"
+  },
+  {
+   "id": "task-165",
+   "text": "archive Q2 files for Records Cleanup by Oct 31",
+   "old": "2026-10-31T17:00",
+   "new": "2026-10-31"
+  },
+  {
+   "id": "task-167",
+   "text": "pick up prescription later today",
+   "old": "2026-10-18T17:00",
+   "new": "2026-10-18"
+  },
+  {
+   "id": "reminder-002",
+   "text": "remind me to pay rent on the 1st",
+   "old": "2026-11-01T09:00",
+   "new": "2026-11-01"
+  },
+  {
+   "id": "reminder-005",
+   "text": "remind me tomorrow to email Ravi",
+   "old": "2026-10-19T09:00",
+   "new": "2026-10-19"
+  },
+  {
+   "id": "reminder-006",
+   "text": "remind me to book the MOT next week",
+   "old": "2026-10-19T09:00",
+   "new": "2026-10-19"
+  },
+  {
+   "id": "reminder-007",
+   "text": "remind me to buy a gift for Lucy on Friday",
+   "old": "2026-10-23T09:00",
+   "new": "2026-10-23"
+  },
+  {
+   "id": "reminder-010",
+   "text": "remind me to renew the car tax before the 28th",
+   "old": "2026-10-28T09:00",
+   "new": "2026-10-28"
+  },
+  {
+   "id": "reminder-014",
+   "text": "remind me to text Jess happy birthday on the 9th",
+   "old": "2026-11-09T09:00",
+   "new": "2026-11-09"
+  },
+  {
+   "id": "reminder-016",
+   "text": "pay rent on the 1st",
+   "old": "2026-11-01T09:00",
+   "new": "2026-11-01"
+  },
+  {
+   "id": "reminder-019",
+   "text": "don't let me forget to send the RSVP by Friday",
+   "old": "2026-10-23T09:00",
+   "new": "2026-10-23"
+  },
+  {
+   "id": "reminder-036",
+   "text": "remind me to pay the credit card at the end of the month",
+   "old": "2026-10-31T09:00",
+   "new": "2026-10-31"
+  },
+  {
+   "id": "reminder-037",
+   "text": "remind me to book flights this Friday",
+   "old": "2026-10-23T09:00",
+   "new": "2026-10-23"
+  },
+  {
+   "id": "reminder-039",
+   "text": "remind me to renew my passport on March 3rd",
+   "old": "2027-03-03T09:00",
+   "new": "2027-03-03"
+  },
+  {
+   "id": "reminder-040",
+   "text": "remind me to order contacts on the 20th",
+   "old": "2026-10-20T09:00",
+   "new": "2026-10-20"
+  },
+  {
+   "id": "reminder-044",
+   "text": "remind me to change the sheets this weekend",
+   "old": "2026-10-24T09:00",
+   "new": "2026-10-24"
+  },
+  {
+   "id": "reminder-046",
+   "text": "remind me to cancel the free trial on the 30th",
+   "old": "2026-10-30T09:00",
+   "new": "2026-10-30"
+  },
+  {
+   "id": "reminder-047",
+   "text": "remind me to pay the nanny end of week",
+   "old": "2026-10-23T09:00",
+   "new": "2026-10-23"
+  },
+  {
+   "id": "reminder-048",
+   "text": "remind me to submit mileage the last day of the month",
+   "old": "2026-10-31T09:00",
+   "new": "2026-10-31"
+  },
+  {
+   "id": "reminder-059",
+   "text": "remind me to return the drill at Ken's Saturday",
+   "old": "2026-10-24T09:00",
+   "new": "2026-10-24"
+  },
+  {
+   "id": "reminder-062",
+   "text": "remind me to mist the orchids every Monday and Thursday",
+   "old": "2026-10-19T09:00",
+   "new": "2026-10-19"
+  },
+  {
+   "id": "reminder-064",
+   "text": "remind me to pay rent on the 1st of every month",
+   "old": "2026-11-01T09:00",
+   "new": "2026-11-01"
+  },
+  {
+   "id": "reminder-065",
+   "text": "remind me to review the budget every first Monday",
+   "old": "2026-11-02T09:00",
+   "new": "2026-11-02"
+  },
+  {
+   "id": "reminder-069",
+   "text": "remind me to back up the laptop weekly",
+   "old": "2026-10-25T09:00",
+   "new": "2026-10-25"
+  },
+  {
+   "id": "reminder-070",
+   "text": "remind me to pay the credit card on the last day of every month",
+   "old": "2026-10-31T09:00",
+   "new": "2026-10-31"
+  },
+  {
+   "id": "reminder-071",
+   "text": "remind me to change the toothbrush every 3 months",
+   "old": "2027-01-18T09:00",
+   "new": "2027-01-18"
+  },
+  {
+   "id": "reminder-072",
+   "text": "remind me to flea the dog monthly on the 5th",
+   "old": "2026-11-05T09:00",
+   "new": "2026-11-05"
+  },
+  {
+   "id": "reminder-077",
+   "text": "remind me to renew the domain every year on June 1",
+   "old": "2027-06-01T09:00",
+   "new": "2027-06-01"
+  },
+  {
+   "id": "reminder-080",
+   "text": "remind me to pay the gardener every second Friday",
+   "old": "2026-10-23T09:00",
+   "new": "2026-10-23"
+  },
+  {
+   "id": "reminder-081",
+   "text": "remind me to rotate the tyres every 6 months",
+   "old": "2027-04-18T09:00",
+   "new": "2027-04-18"
+  },
+  {
+   "id": "reminder-082",
+   "text": "remind me to call Mum every Sunday starting this week",
+   "old": "2026-10-25T09:00",
+   "new": "2026-10-25"
+  },
+  {
+   "id": "reminder-083",
+   "text": "remind me to take iron tablets daily for 3 weeks",
+   "old": "2026-10-19T09:00",
+   "new": "2026-10-19"
+  },
+  {
+   "id": "reminder-086",
+   "text": "remind me to log my hours every Friday from next month",
+   "old": "2026-11-06T09:00",
+   "new": "2026-11-06"
+  },
+  {
+   "id": "reminder-087",
+   "text": "remind me to do physio exercises every day for 6 weeks starting tomorrow",
+   "old": "2026-10-19T09:00",
+   "new": "2026-10-19"
+  },
+  {
+   "id": "reminder-088",
+   "text": "remind me to check the smoke alarm on the first Saturday of every month",
+   "old": "2026-11-07T09:00",
+   "new": "2026-11-07"
+  },
+  {
+   "id": "reminder-090",
+   "text": "remind me to pay the water bill every quarter",
+   "old": "2027-01-18T09:00",
+   "new": "2027-01-18"
+  },
+  {
+   "id": "reminder-092",
+   "text": "remind me to call June in June",
+   "old": "2027-06-01T09:00",
+   "new": "2027-06-01"
+  },
+  {
+   "id": "reminder-095",
+   "text": "remind me to ask Will about the will Tuesday",
+   "old": "2026-10-20T09:00",
+   "new": "2026-10-20"
+  },
+  {
+   "id": "reminder-100",
+   "text": "remind me to text April on April 2",
+   "old": "2027-04-02T09:00",
+   "new": "2027-04-02"
+  },
+  {
+   "id": "reminder-101",
+   "text": "remind me to send Monday's notes Tuesday",
+   "old": "2026-10-20T09:00",
+   "new": "2026-10-20"
+  },
+  {
+   "id": "reminder-102",
+   "text": "remind me to get May's present by May 10",
+   "old": "2027-05-10T09:00",
+   "new": "2027-05-10"
+  },
+  {
+   "id": "reminder-105",
+   "text": "remind me to pay the bil on teh 1st",
+   "old": "2026-11-01T09:00",
+   "new": "2026-11-01"
+  },
+  {
+   "id": "reminder-107",
+   "text": "remind me to email Joe wednsday",
+   "old": "2026-10-21T09:00",
+   "new": "2026-10-21"
+  },
+  {
+   "id": "reminder-110",
+   "text": "remind me to call the dentist nxt week",
+   "old": "2026-10-19T09:00",
+   "new": "2026-10-19"
+  },
+  {
+   "id": "reminder-118",
+   "text": "remind me to buy bread tomorrow and email Sam on Friday",
+   "old": "2026-10-19T09:00",
+   "new": "2026-10-19"
+  },
+  {
+   "id": "reminder-120",
+   "text": "remind me to book the vet Monday, also renew the parking permit by the 15th",
+   "old": "2026-10-19T09:00",
+   "new": "2026-10-19"
+  },
+  {
+   "id": "reminder-123",
+   "text": "reminder - pay the TV licence Thursday",
+   "old": "2026-10-22T09:00",
+   "new": "2026-10-22"
+  },
+  {
+   "id": "reminder-128",
+   "text": "remind me!! taxes April 15",
+   "old": "2027-04-15T09:00",
+   "new": "2027-04-15"
+  },
+  {
+   "id": "reminder-137",
+   "text": "remind me to pay the speeding fine within 28 days",
+   "old": "2026-11-15T09:00",
+   "new": "2026-11-15"
+  },
+  {
+   "id": "reminder-143",
+   "text": "remind me to call the council on Monday when they open",
+   "old": "2026-10-19T09:00",
+   "new": "2026-10-19"
+  },
+  {
+   "id": "reminder-147",
+   "text": "remind me to put the clocks back on the 26th",
+   "old": "2026-10-26T09:00",
+   "new": "2026-10-26"
+  },
+  {
+   "id": "reminder-148",
+   "text": "remind me to bring the laptop charger on Wednesday at the office",
+   "old": "2026-10-21T09:00",
+   "new": "2026-10-21"
+  },
+  {
+   "id": "reminder-151",
+   "text": "remind me to renew the library books on the 12th",
+   "old": "2026-11-12T09:00",
+   "new": "2026-11-12"
+  },
+  {
+   "id": "reminder-152",
+   "text": "remind me to order more coffee Friday",
+   "old": "2026-10-23T09:00",
+   "new": "2026-10-23"
+  },
+  {
+   "id": "reminder-154",
+   "text": "remind me to book a table for Saturday",
+   "old": "2026-10-24T09:00",
+   "new": "2026-10-24"
+  },
+  {
+   "id": "reminder-155",
+   "text": "remind me to return the jacket before the 14th",
+   "old": "2026-11-14T09:00",
+   "new": "2026-11-14"
+  },
+  {
+   "id": "reminder-156",
+   "text": "remind me to file the expenses at the end of the week",
+   "old": "2026-10-23T09:00",
+   "new": "2026-10-23"
+  },
+  {
+   "id": "reminder-161",
+   "text": "remind me to fill the bird feeder every Saturday",
+   "old": "2026-10-24T09:00",
+   "new": "2026-10-24"
+  },
+  {
+   "id": "reminder-162",
+   "text": "remind me to take the recycling first Tuesday of the month",
+   "old": "2026-11-03T09:00",
+   "new": "2026-11-03"
+  },
+  {
+   "id": "reminder-163",
+   "text": "remind me to pay the gym the 3rd of each month",
+   "old": "2026-11-03T09:00",
+   "new": "2026-11-03"
+  },
+  {
+   "id": "heldout-reminder-072",
+   "text": "remind me next Friday to renew the passport 1 week before for the checklist",
+   "old": "2026-10-23T09:00",
+   "new": "2026-10-23"
+  },
+  {
+   "id": "heldout-reminder-074",
+   "text": "remind me every month on the 1st at the airport to buy groceries for the checklist",
+   "old": "2026-11-01T09:00",
+   "new": "2026-11-01"
+  },
+  {
+   "id": "heldout-reminder-077",
+   "text": "remind me every Monday at the dog park to pack the suitcase for the project",
+   "old": "2026-10-19T09:00",
+   "new": "2026-10-19"
+  },
+  {
+   "id": "heldout-reminder-078",
+   "text": "remind me next week at the ticket counter to submit the expense report 5 minutes before for the apartment",
+   "old": "2026-10-19T09:00",
+   "new": "2026-10-19"
+  },
+  {
+   "id": "heldout-reminder-082",
+   "text": "remind me to call the travel agent on Friday",
+   "old": "2026-10-23T09:00",
+   "new": "2026-10-23"
+  },
+  {
+   "id": "heldout-reminder-087",
+   "text": "remind me every other Friday at the dentist to pack the suitcase for the checklist",
+   "old": "2026-10-23T09:00",
+   "new": "2026-10-23"
+  },
+  {
+   "id": "heldout-reminder-088",
+   "text": "remind me every other Friday to water the plants for the apartment",
+   "old": "2026-10-23T09:00",
+   "new": "2026-10-23"
+  },
+  {
+   "id": "heldout-reminder-090",
+   "text": "remind me this weekend at the station to book the dentist for the client",
+   "old": "2026-10-24T09:00",
+   "new": "2026-10-24"
+  },
+  {
+   "id": "heldout-reminder-096",
+   "text": "remind me on Thursday at the cafe to review the invoice 1 hour before for the family",
+   "old": "2026-10-22T09:00",
+   "new": "2026-10-22"
+  },
+  {
+   "id": "heldout-reminder-098",
+   "text": "remind me next week at the library to pay the rent for the project",
+   "old": "2026-10-19T09:00",
+   "new": "2026-10-19"
+  },
+  {
+   "id": "heldout-reminder-100",
+   "text": "remind me before school tomorrow at the airport to call Priya 3 hours before for the handoff",
+   "old": "2026-10-19T09:00",
+   "new": "2026-10-19"
+  },
+  {
+   "id": "heldout-reminder-103",
+   "text": "don't forget to RSVP by Wednesday",
+   "old": "2026-10-21T09:00",
+   "new": "2026-10-21"
+  },
+  {
+   "id": "heldout-reminder-108",
+   "text": "remind me every Tuesday and Thursday to confirm the reservation 3 hours before for the project",
+   "old": "2026-10-20T09:00",
+   "new": "2026-10-20"
+  },
+  {
+   "id": "heldout-reminder-109",
+   "text": "remind me on Thursday at the studio to pay the rent for the apartment",
+   "old": "2026-10-22T09:00",
+   "new": "2026-10-22"
+  },
+  {
+   "id": "heldout-reminder-115",
+   "text": "remind me every Tuesday and Thursday at the warehouse to pack the suitcase for the family",
+   "old": "2026-10-20T09:00",
+   "new": "2026-10-20"
+  },
+  {
+   "id": "heldout-reminder-116",
+   "text": "remind me to pay the bill every month on the 5th",
+   "old": "2026-11-05T09:00",
+   "new": "2026-11-05"
+  },
+  {
+   "id": "heldout-reminder-124",
+   "text": "remind me to cancel the subscription before it renews on the 15th",
+   "old": "2026-11-15T09:00",
+   "new": "2026-11-15"
+  },
+  {
+   "id": "heldout-reminder-127",
+   "text": "remind me every weekday to drop off the package for the family",
+   "old": "2026-10-19T09:00",
+   "new": "2026-10-19"
+  },
+  {
+   "id": "heldout-reminder-128",
+   "text": "remind me every Sunday to meal prep",
+   "old": "2026-10-25T09:00",
+   "new": "2026-10-25"
+  },
+  {
+   "id": "heldout-reminder-129",
+   "text": "remind me every month on the 1st to clean the kitchen for the apartment",
+   "old": "2026-11-01T09:00",
+   "new": "2026-11-01"
+  },
+  {
+   "id": "heldout-reminder-132",
+   "text": "remind me monthly to change the AC filter",
+   "old": "2026-11-18T09:00",
+   "new": "2026-11-18"
+  },
+  {
+   "id": "heldout-reminder-135",
+   "text": "remind me every year to move the laundry for the family",
+   "old": "2027-10-18T09:00",
+   "new": "2027-10-18"
+  },
+  {
+   "id": "heldout-reminder-136",
+   "text": "remind me to check the mail on the first of the month",
+   "old": "2026-11-01T09:00",
+   "new": "2026-11-01"
+  },
+  {
+   "id": "heldout-reminder-137",
+   "text": "every other day remind me to go for a run",
+   "old": "2026-10-20T09:00",
+   "new": "2026-10-20"
+  },
+  {
+   "id": "heldout-reminder-138",
+   "text": "remind me to pick up the dry cleaning tomorrow",
+   "old": "2026-10-19T09:00",
+   "new": "2026-10-19"
+  },
+  {
+   "id": "heldout-reminder-139",
+   "text": "every Thursday remind me to check the inventory",
+   "old": "2026-10-22T09:00",
+   "new": "2026-10-22"
+  },
+  {
+   "id": "heldout-task-144",
+   "text": "Submit the tax return tagged finance by next Friday",
+   "old": "2026-10-23T17:00",
+   "new": "2026-10-23"
+  },
+  {
+   "id": "heldout-task-147",
+   "text": "File warranty claim by next Friday",
+   "old": "2026-10-23T17:00",
+   "new": "2026-10-23"
+  },
+  {
+   "id": "heldout-task-148",
+   "text": "Prepare the project update for the Q3 launch by end of week",
+   "old": "2026-10-23T17:00",
+   "new": "2026-10-23"
+  },
+  {
+   "id": "heldout-task-149",
+   "text": "prepare the tax documents by April 15",
+   "old": "2027-04-15T17:00",
+   "new": "2027-04-15"
+  },
+  {
+   "id": "heldout-task-150",
+   "text": "Review the API documentation for Atlas, take about 1 hour by end of week",
+   "old": "2026-10-23T17:00",
+   "new": "2026-10-23"
+  },
+  {
+   "id": "heldout-task-165",
+   "text": "Review the code for Atlas, take about 1 hour by next Friday",
+   "old": "2026-10-23T17:00",
+   "new": "2026-10-23"
+  },
+  {
+   "id": "heldout-task-166",
+   "text": "Prepare vendor list for Finance close with Cameron, tags: #release, #hotfix, for 50 minutes, complete, high priority this Friday.",
+   "old": "2026-10-23T17:00",
+   "new": "2026-10-23"
+  },
+  {
+   "id": "heldout-task-167",
+   "text": "Check budget sheet for Hiring push with Jamie, for #sales, for half an hour, at risk, low priority tomorrow.",
+   "old": "2026-10-19T17:00",
+   "new": "2026-10-19"
+  },
+  {
+   "id": "heldout-task-174",
+   "text": "get the car inspected by next Tuesday",
+   "old": "2026-10-20T17:00",
+   "new": "2026-10-20"
+  },
+  {
+   "id": "heldout-task-176",
+   "text": "Replace login bug for Retail pilot with Drew, tags: #mobile, #ui, spend 3 hours, review needed, medium priority today.",
+   "old": "2026-10-18T17:00",
+   "new": "2026-10-18"
+  },
+  {
+   "id": "heldout-task-177",
+   "text": "wash the car sometime today",
+   "old": "2026-10-18T17:00",
+   "new": "2026-10-18"
+  },
+  {
+   "id": "heldout-task-193",
+   "text": "Review the budget for #travel by end of week",
+   "old": "2026-10-23T17:00",
+   "new": "2026-10-23"
+  },
+  {
+   "id": "heldout-task-195",
+   "text": "Review the financial records tagged finance by end of week",
+   "old": "2026-10-23T17:00",
+   "new": "2026-10-23"
+  },
+  {
+   "id": "heldout-task-196",
+   "text": "Order new office chairs for the Q3 launch by next Friday.",
+   "old": "2026-10-23T17:00",
+   "new": "2026-10-23"
+  },
+  {
+   "id": "heldout-task-198",
+   "text": "Order coffee beans this weekend",
+   "old": "2026-10-24T17:00",
+   "new": "2026-10-24"
+  },
+  {
+   "id": "heldout-task-201",
+   "text": "complete onboarding tomorrow",
+   "old": "2026-10-19T17:00",
+   "new": "2026-10-19"
+  },
+  {
+   "id": "heldout-task-203",
+   "text": "Schedule dentist appointment by next Friday, priority: medium.",
+   "old": "2026-10-23T17:00",
+   "new": "2026-10-23"
+  },
+  {
+   "id": "heldout-task-209",
+   "text": "Get gift for Lucia by Saturday",
+   "old": "2026-10-24T17:00",
+   "new": "2026-10-24"
+  },
+  {
+   "id": "task-095",
+   "text": "deep clean kitchen 2h Saturday",
+   "old": "2026-10-24T17:00",
+   "new": "2026-10-24",
+   "reviewed_by_hand": true
+  },
+  {
+   "id": "task-110",
+   "text": "submit payroll every second Friday",
+   "old": "2026-11-13T17:00",
+   "new": "2026-11-13",
+   "reviewed_by_hand": true
+  },
+  {
+   "id": "reminder-023",
+   "text": "call Dad Sunday",
+   "old": "2026-10-25T09:00",
+   "new": "2026-10-18",
+   "reviewed_by_hand": true
+  },
+  {
+   "id": "reminder-093",
+   "text": "remind me to book the SAT this week",
+   "old": "2026-10-19T09:00",
+   "new": "2026-10-19",
+   "reviewed_by_hand": true
+  },
+  {
+   "id": "reminder-094",
+   "text": "remind me to buy sunscreen before Sunday",
+   "old": "2026-10-25T09:00",
+   "new": "2026-10-25",
+   "reviewed_by_hand": true
+  },
+  {
+   "id": "reminder-116",
+   "text": "remind me to book the annual boiler service and ask for the morning slot next Monday",
+   "old": "2026-10-19T09:00",
+   "new": "2026-10-19",
+   "reviewed_by_hand": true
+  },
+  {
+   "id": "heldout-reminder-070",
+   "text": "remind me next Monday to pick up the prescription the night before for the checklist",
+   "old": "2026-10-19T09:00",
+   "new": "2026-10-19",
+   "reviewed_by_hand": true
+  }
+ ]
+}

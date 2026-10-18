@@ -1,0 +1,37 @@
+[
+ {
+  "file": "en_time_exp.test.ts",
+  "test": "Test - Time range's meridiem handling",
+  "reason": "case '1pm-3' uses the French locale (chrono.fr), outside the English-only scope"
+ },
+ {
+  "file": "en_time_exp.test.ts",
+  "test": "Test - Time range's meridiem handling",
+  "reason": "case '1am-3' uses the French locale (chrono.fr), outside the English-only scope"
+ },
+ {
+  "file": "en_time_exp.test.ts",
+  "test": "Test - Time range's meridiem handling",
+  "reason": "case '11pm-3' uses the French locale (chrono.fr), outside the English-only scope"
+ },
+ {
+  "file": "en_time_exp.test.ts",
+  "test": "Test - Time range's meridiem handling",
+  "reason": "case '12-3am' uses the French locale (chrono.fr), outside the English-only scope"
+ },
+ {
+  "file": "en_time_exp.test.ts",
+  "test": "Test - Time range's meridiem handling",
+  "reason": "case '12-3pm' uses the French locale (chrono.fr), outside the English-only scope"
+ },
+ {
+  "file": "en_time_units_within.test.ts",
+  "test": "Test - Single Expression (Implied)",
+  "reason": "expect() on untracked value with toBeNull"
+ },
+ {
+  "file": "system_timezone.test.ts",
+  "test": "Test - Minimize diff because of local timezone (pre-1900)",
+  "reason": "expect() on untracked value with toBeLessThanOrEqual"
+ }
+]

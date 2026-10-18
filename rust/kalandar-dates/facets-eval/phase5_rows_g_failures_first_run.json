@@ -1,0 +1,39 @@
+[
+ {
+  "id": "p5g-region_dates-14",
+  "text": "Boxing Day hockey with the boys",
+  "now": null,
+  "problems": [
+   [
+    "absent_warnings",
+    [
+     "holiday_other_region",
+     "all_day_assumed",
+     "no_time"
+    ],
+    [
+     "holiday_other_region"
+    ]
+   ]
+  ]
+ },
+ {
+  "id": "p5g-except_holidays-01",
+  "text": "team sync every Monday at 10am except holidays until March 1",
+  "now": null,
+  "problems": [
+   [
+    "recurrence.exdates",
+    [
+     "2027-01-18T10:00",
+     "2027-02-15T10:00",
+     "2027-03-01T10:00"
+    ],
+    [
+     "2027-01-18T10:00",
+     "2027-02-15T10:00"
+    ]
+   ]
+  ]
+ }
+]
