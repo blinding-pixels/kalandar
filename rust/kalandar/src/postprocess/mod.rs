@@ -13,15 +13,6 @@ pub(crate) fn normalize_whitespace(text: &str) -> String {
     text.split_whitespace().collect::<Vec<_>>().join(" ")
 }
 
-pub(crate) fn clean_title_punctuation(input: &str) -> String {
-    normalize_whitespace(
-        &input
-            .replace(['“', '”', '"'], "")
-            .replace(['?', '!'], " ")
-            .replace([':', '-', ','], " "),
-    )
-}
-
 pub(crate) fn replace_first(regex: &Regex, text: &str, replacement: &str) -> String {
     regex.replace(text, replacement).into_owned()
 }

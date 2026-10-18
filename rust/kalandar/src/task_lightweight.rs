@@ -1,3 +1,4 @@
+use super::intent::{classify_intent_embedded, IntentKind};
 use super::{
     postprocess::{finalize_task_title, js_regex, normalize_whitespace, replace_all},
     schedule::context_for,
@@ -112,6 +113,7 @@ struct TaskFields {
 }
 
 struct TaskParseContext<'a> {
+    raw_input: String,
     working: String,
     known_assignees: Option<&'a [String]>,
     context: Context,
@@ -188,6 +190,7 @@ fn create_task_parse_context<'a>(
     request: &'a CapturePreviewRequest,
 ) -> TaskParseContext<'a> {
     TaskParseContext {
+        raw_input: normalize_whitespace(input),
         working: normalize_whitespace(input),
         known_assignees: request.known_assignees.as_deref(),
         context: context_for(request),
@@ -285,6 +288,32 @@ fn remove_schedule_spans(text: &str, spans: &[ScheduleSpan]) -> String {
 
 fn build_task_warnings(ctx: &TaskParseContext) -> Vec<CapturePreviewWarning> {
     let mut warnings = Vec::new();
+    let route = classify_intent_embedded(&ctx.raw_input);
+    let mismatch = match route.intent {
+        IntentKind::Calendar => Some((
+            "intent_mismatch_calendar",
+            "warning",
+            "Input looks more like a calendar item than a task.",
+        )),
+        IntentKind::Reminder => Some((
+            "intent_mismatch_reminder",
+            "warning",
+            "Input looks more like a reminder than a task.",
+        )),
+        IntentKind::None if !route.ambiguous => Some((
+            "intent_mismatch_none",
+            "info",
+            "Input did not route cleanly to task or calendar.",
+        )),
+        _ => None,
+    };
+    if let Some((code, severity, message)) = mismatch {
+        warnings.push(CapturePreviewWarning {
+            code: code.to_string(),
+            severity: severity.to_string(),
+            message: message.to_string(),
+        });
+    }
     if let Some(known) = ctx.known_assignees.filter(|known| !known.is_empty()) {
         let known_set = get_known_assignee_set(Some(known));
         let unknown_assignees = ctx
