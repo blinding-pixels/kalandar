@@ -5,12 +5,57 @@ import fs from 'node:fs/promises';
 import { describe, test } from 'node:test';
 
 import { createCalendarParser, eventResultToPlanningObject } from '../index.ts';
-import { createCalendarTestBundle } from '../../runtime/__tests__/helpers.ts';
+import { CALENDAR_LABELS, buildBioSequenceDecoderSidecar, createCalendarTestBundle } from '../../runtime/__tests__/helpers.ts';
 
 const now = '2026-03-27T10:00:00-04:00';
 const timezone = 'America/New_York';
 
 describe('calendar ML parser', () => {
+  test('decodes first pieces with the decoding the artifact declares', async () => {
+    const parseWith = async (decoding: 'argmax' | 'bio') => {
+      const bundle = await createCalendarTestBundle({
+        decoding,
+        ...(decoding === 'bio' ? { sequenceDecoder: buildBioSequenceDecoderSidecar(CALENDAR_LABELS) } : {}),
+      });
+      try {
+        const parser = await createCalendarParser({
+          mode: 'ml',
+          artifact: { kind: 'directory', path: bundle.dir },
+          inference: {
+            kind: 'fake',
+            async run(request) {
+              const labelCount = 21;
+              const sequenceLength = request.inputs.input_ids.shape[1];
+              const logits = new Array<number>(sequenceLength * labelCount).fill(-8);
+              const setLogit = (tokenIndex: number, labelIndex: number, value: number) => {
+                logits[tokenIndex * labelCount + labelIndex] = value;
+              };
+              setLogit(0, 0, 8);
+              setLogit(1, 1, 8);
+              setLogit(2, 2, 8);
+              setLogit(3, 2, 8);
+              setLogit(4, 16, 8);
+              setLogit(4, 3, 6);
+              setLogit(5, 0, 8);
+              return { outputs: { logits: { dtype: 'float32', shape: [1, sequenceLength, labelCount], data: logits } } };
+            },
+          },
+        });
+        return await parser.parse('lunch with sara tomorrow', { now, timezone });
+      } finally {
+        await bundle.cleanup();
+      }
+    };
+
+    const argmax = await parseWith('argmax');
+    assert.equal(argmax.fields.location, 'tomorrow');
+
+    const bio = await parseWith('bio');
+    assert.equal(bio.fields.location, null);
+    assert.equal(bio.fields.title, 'Lunch with Sara');
+    assert.notEqual(bio.fields.date, null);
+  });
+
   test('returns EventParseResult through the app-facing contract with a fake adapter', async () => {
     const bundle = await createCalendarTestBundle();
     try {

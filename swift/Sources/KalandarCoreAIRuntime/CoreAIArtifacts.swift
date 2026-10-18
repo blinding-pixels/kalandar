@@ -66,6 +66,10 @@ public struct CoreAIArtifactManifest: Decodable, Sendable {
     public var labels: [String: String]?
     public var tokenizer: TokenizerSpec
     public var optimization: Optimization?
+    /// First-piece decoding strategy, `argmax` or `bio`. Absent means `argmax`.
+    public var decoding: String?
+    /// Relative path of the `sequence_decoder.json` sidecar, when shipped.
+    public var sequenceDecoder: String?
 
     enum CodingKeys: String, CodingKey {
         case manifestVersion = "manifest_version"
@@ -76,6 +80,8 @@ public struct CoreAIArtifactManifest: Decodable, Sendable {
         case labels
         case tokenizer
         case optimization
+        case decoding
+        case sequenceDecoder = "sequence_decoder"
     }
 }
 
@@ -85,6 +91,8 @@ public struct CoreAIParserArtifact: Sendable {
     public var manifest: CoreAIArtifactManifest
     public var modelURL: URL
     public var tokenizerURL: URL
+    public var decoding: CoreAISequenceDecoding = .argmax
+    public var sequenceDecoderURL: URL?
 
     public static func load(family: String, from artifactRoot: URL) throws -> Self {
         let familyRoot = artifactRoot.appendingPathComponent(family, isDirectory: true)
@@ -114,12 +122,40 @@ public struct CoreAIParserArtifact: Sendable {
             throw KalandarCoreAIError.artifactMissing(tokenizerURL.path)
         }
 
+        let decoding = try manifest.decoding.map { value in
+            guard let decoding = CoreAISequenceDecoding(rawValue: value) else {
+                throw KalandarCoreAIError.invalidManifest("unsupported decoding \(value)")
+            }
+            return decoding
+        } ?? .argmax
+
+        let defaultSidecarURL = familyRoot.appendingPathComponent("sequence_decoder.json")
+        var sequenceDecoderURL: URL?
+        if let sidecarPath = manifest.sequenceDecoder {
+            let sidecarURL = familyRoot.appendingPathComponent(sidecarPath)
+            guard FileManager.default.fileExists(atPath: sidecarURL.path) else {
+                throw KalandarCoreAIError.artifactMissing(sidecarURL.path)
+            }
+            sequenceDecoderURL = sidecarURL
+        } else if FileManager.default.fileExists(atPath: defaultSidecarURL.path) {
+            sequenceDecoderURL = defaultSidecarURL
+        }
+        if decoding == .bio || sequenceDecoderURL != nil, let labels = manifest.labels {
+            let orderedLabels = try CoreAIEntityDecoder.orderedLabels(labels)
+            try CoreAISequenceDecoder.validateLabels(orderedLabels)
+            if let sequenceDecoderURL {
+                try CoreAISequenceDecoder.validateSidecar(Data(contentsOf: sequenceDecoderURL), labels: orderedLabels)
+            }
+        }
+
         return CoreAIParserArtifact(
             family: family,
             root: familyRoot,
             manifest: manifest,
             modelURL: modelURL,
-            tokenizerURL: tokenizerURL
+            tokenizerURL: tokenizerURL,
+            decoding: decoding,
+            sequenceDecoderURL: sequenceDecoderURL
         )
     }
 }

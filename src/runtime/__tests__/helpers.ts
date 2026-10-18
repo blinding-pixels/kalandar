@@ -63,7 +63,7 @@ const DEFAULT_VOCAB = [
   'thursday',
 ];
 
-const CALENDAR_LABELS = [
+export const CALENDAR_LABELS = [
   'O',
   'B-title',
   'I-title',
@@ -294,9 +294,26 @@ const writeFile = async (dir: string, filename: string, content: string | Uint8A
   };
 };
 
+export const buildBioSequenceDecoderSidecar = (labels: string[]) => ({
+  algorithm: 'BIO Viterbi',
+  first_subword_piece_only: true,
+  accumulator: 'float64',
+  start_scores: labels.map((label) => (label.startsWith('I-') ? null : 0)),
+  transition_scores_previous_by_next: labels.map((previous) =>
+    labels.map((next) => (!next.startsWith('I-') || previous === next || previous === `B-${next.slice(2)}` ? 0 : null)),
+  ),
+  end_scores: labels.map(() => 0),
+  null_score_means: 'negative infinity',
+  tie_break: 'lowest predecessor ID, then lowest final ID',
+  labels,
+  runtime_max_tokens: 128,
+});
+
 export const createCalendarTestBundle = async (options?: {
   suiteVersion?: string;
   extraVocab?: string[];
+  decoding?: 'argmax' | 'bio';
+  sequenceDecoder?: unknown;
 }): Promise<{
   dir: string;
   manifestPath: string;
@@ -396,7 +413,15 @@ export const createCalendarTestBundle = async (options?: {
       whitespace_input_behavior: 'return_empty_result' as const,
       oversized_input_behavior: 'truncate' as const,
     },
-    files,
+    ...(options?.decoding ? { decoding: options.decoding } : {}),
+    files: {
+      ...files,
+      ...(options?.sequenceDecoder
+        ? {
+            sequence_decoder: await writeFile(dir, 'sequence_decoder.json', `${JSON.stringify(options.sequenceDecoder, null, 2)}\n`),
+          }
+        : {}),
+    },
   };
 
   const manifest: CalendarArtifactManifest = {

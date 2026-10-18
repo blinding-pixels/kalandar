@@ -1,0 +1,2160 @@
+[
+  {
+    "family": "task",
+    "decoding": "argmax",
+    "text": "finish the quarterly report by friday 5pm #finance high priority",
+    "represented_words": 10,
+    "argmax": [
+      "B-title",
+      "I-title",
+      "I-title",
+      "I-title",
+      "B-due_date",
+      "I-due_date",
+      "I-due_date",
+      "B-priority",
+      "B-priority",
+      "I-priority"
+    ],
+    "bio": [
+      "B-title",
+      "I-title",
+      "I-title",
+      "I-title",
+      "B-due_date",
+      "I-due_date",
+      "I-due_date",
+      "B-priority",
+      "B-priority",
+      "I-priority"
+    ],
+    "spans": [
+      {
+        "label": "title",
+        "start": 0,
+        "end": 27,
+        "text": "finish the quarterly report"
+      },
+      {
+        "label": "due_date",
+        "start": 28,
+        "end": 41,
+        "text": "by friday 5pm"
+      },
+      {
+        "label": "priority",
+        "start": 42,
+        "end": 50,
+        "text": "#finance"
+      },
+      {
+        "label": "priority",
+        "start": 51,
+        "end": 64,
+        "text": "high priority"
+      }
+    ]
+  },
+  {
+    "family": "task",
+    "decoding": "argmax",
+    "text": "email Sara about the Atlas budget tomorrow morning",
+    "represented_words": 8,
+    "argmax": [
+      "B-title",
+      "I-title",
+      "I-title",
+      "I-title",
+      "I-title",
+      "I-title",
+      "B-due_date",
+      "I-due_date"
+    ],
+    "bio": [
+      "B-title",
+      "I-title",
+      "I-title",
+      "I-title",
+      "I-title",
+      "I-title",
+      "B-due_date",
+      "I-due_date"
+    ],
+    "spans": [
+      {
+        "label": "title",
+        "start": 0,
+        "end": 33,
+        "text": "email Sara about the Atlas budget"
+      },
+      {
+        "label": "due_date",
+        "start": 34,
+        "end": 50,
+        "text": "tomorrow morning"
+      }
+    ]
+  },
+  {
+    "family": "task",
+    "decoding": "argmax",
+    "text": "call the plumber every monday at 9am except holidays",
+    "represented_words": 9,
+    "argmax": [
+      "B-title",
+      "I-title",
+      "I-title",
+      "B-recurrence",
+      "I-recurrence",
+      "B-due_time",
+      "I-due_time",
+      "B-recurrence_exception",
+      "I-recurrence_exception"
+    ],
+    "bio": [
+      "B-title",
+      "I-title",
+      "I-title",
+      "B-recurrence",
+      "I-recurrence",
+      "B-due_time",
+      "I-due_time",
+      "B-recurrence_exception",
+      "I-recurrence_exception"
+    ],
+    "spans": [
+      {
+        "label": "title",
+        "start": 0,
+        "end": 16,
+        "text": "call the plumber"
+      },
+      {
+        "label": "recurrence",
+        "start": 17,
+        "end": 29,
+        "text": "every monday"
+      },
+      {
+        "label": "due_time",
+        "start": 30,
+        "end": 36,
+        "text": "at 9am"
+      },
+      {
+        "label": "recurrence_exception",
+        "start": 37,
+        "end": 52,
+        "text": "except holidays"
+      }
+    ]
+  },
+  {
+    "family": "task",
+    "decoding": "argmax",
+    "text": "review PR #42 for project Apollo, assign to Omar",
+    "represented_words": 9,
+    "argmax": [
+      "B-title",
+      "I-title",
+      "I-title",
+      "O",
+      "B-project",
+      "I-project",
+      "O",
+      "O",
+      "B-assignee"
+    ],
+    "bio": [
+      "B-title",
+      "I-title",
+      "I-title",
+      "O",
+      "B-project",
+      "I-project",
+      "O",
+      "O",
+      "B-assignee"
+    ],
+    "spans": [
+      {
+        "label": "title",
+        "start": 0,
+        "end": 13,
+        "text": "review PR #42"
+      },
+      {
+        "label": "project",
+        "start": 18,
+        "end": 33,
+        "text": "project Apollo,"
+      },
+      {
+        "label": "assignee",
+        "start": 44,
+        "end": 48,
+        "text": "Omar"
+      }
+    ]
+  },
+  {
+    "family": "task",
+    "decoding": "argmax",
+    "text": "todo: buy groceries (milk, eggs) tonight",
+    "represented_words": 6,
+    "argmax": [
+      "B-status",
+      "B-title",
+      "I-title",
+      "B-tags",
+      "I-tags",
+      "B-due_date"
+    ],
+    "bio": [
+      "B-status",
+      "B-title",
+      "I-title",
+      "B-tags",
+      "I-tags",
+      "B-due_date"
+    ],
+    "spans": [
+      {
+        "label": "status",
+        "start": 0,
+        "end": 5,
+        "text": "todo:"
+      },
+      {
+        "label": "title",
+        "start": 6,
+        "end": 19,
+        "text": "buy groceries"
+      },
+      {
+        "label": "tags",
+        "start": 20,
+        "end": 32,
+        "text": "(milk, eggs)"
+      },
+      {
+        "label": "due_date",
+        "start": 33,
+        "end": 40,
+        "text": "tonight"
+      }
+    ]
+  },
+  {
+    "family": "task",
+    "decoding": "argmax",
+    "text": "pay rent on the 1st of every month starting next month",
+    "represented_words": 11,
+    "argmax": [
+      "B-title",
+      "I-title",
+      "B-recurrence",
+      "I-recurrence",
+      "I-recurrence",
+      "I-recurrence",
+      "I-recurrence",
+      "I-recurrence",
+      "B-recurrence_start",
+      "I-recurrence_start",
+      "I-recurrence_start"
+    ],
+    "bio": [
+      "B-title",
+      "I-title",
+      "B-recurrence",
+      "I-recurrence",
+      "I-recurrence",
+      "I-recurrence",
+      "I-recurrence",
+      "I-recurrence",
+      "B-recurrence_start",
+      "I-recurrence_start",
+      "I-recurrence_start"
+    ],
+    "spans": [
+      {
+        "label": "title",
+        "start": 0,
+        "end": 8,
+        "text": "pay rent"
+      },
+      {
+        "label": "recurrence",
+        "start": 9,
+        "end": 34,
+        "text": "on the 1st of every month"
+      },
+      {
+        "label": "recurrence_start",
+        "start": 35,
+        "end": 54,
+        "text": "starting next month"
+      }
+    ]
+  },
+  {
+    "family": "task",
+    "decoding": "argmax",
+    "text": "draft launch plan in 90 minutes - status in progress",
+    "represented_words": 10,
+    "argmax": [
+      "B-title",
+      "I-title",
+      "I-title",
+      "B-duration",
+      "I-duration",
+      "I-duration",
+      "O",
+      "O",
+      "B-status",
+      "I-status"
+    ],
+    "bio": [
+      "B-title",
+      "I-title",
+      "I-title",
+      "B-duration",
+      "I-duration",
+      "I-duration",
+      "O",
+      "O",
+      "B-status",
+      "I-status"
+    ],
+    "spans": [
+      {
+        "label": "title",
+        "start": 0,
+        "end": 17,
+        "text": "draft launch plan"
+      },
+      {
+        "label": "duration",
+        "start": 18,
+        "end": 31,
+        "text": "in 90 minutes"
+      },
+      {
+        "label": "status",
+        "start": 41,
+        "end": 52,
+        "text": "in progress"
+      }
+    ]
+  },
+  {
+    "family": "task",
+    "decoding": "argmax",
+    "text": "remember to renew passport before   June 30th",
+    "represented_words": 7,
+    "argmax": [
+      "O",
+      "O",
+      "B-title",
+      "I-title",
+      "B-due_date",
+      "I-due_date",
+      "I-due_date"
+    ],
+    "bio": [
+      "O",
+      "O",
+      "B-title",
+      "I-title",
+      "B-due_date",
+      "I-due_date",
+      "I-due_date"
+    ],
+    "spans": [
+      {
+        "label": "title",
+        "start": 12,
+        "end": 26,
+        "text": "renew passport"
+      },
+      {
+        "label": "due_date",
+        "start": 27,
+        "end": 45,
+        "text": "before   June 30th"
+      }
+    ]
+  },
+  {
+    "family": "task",
+    "decoding": "argmax",
+    "text": "prepare the board deck by monday then sync with the design team about the roadmap and the open questions then sync with the design team about the roadmap and the open questions then sync with the design team about the roadmap and the open questions then sync with the design team about the roadmap and the open questions then sync with the design team about the roadmap and the open questions then sync with the design team about the roadmap and the open questions then sync with the design team about the roadmap and the open questions then sync with the design team about the roadmap and the open questions then sync with the design team about the roadmap and the open questions then sync with the design team about the roadmap and the open questions then sync with the design team about the roadmap and the open questions then sync with the design team about the roadmap and the open questions",
+    "represented_words": 110,
+    "argmax": [
+      "B-title",
+      "I-title",
+      "I-title",
+      "I-title",
+      "B-due_date",
+      "I-due_date",
+      "O",
+      "B-title",
+      "I-title",
+      "I-title",
+      "I-title",
+      "I-title",
+      "O",
+      "I-title",
+      "I-title",
+      "O",
+      "I-tags",
+      "I-tags",
+      "I-tags",
+      "O",
+      "B-title",
+      "I-title",
+      "I-title",
+      "I-title",
+      "I-title",
+      "B-tags",
+      "I-title",
+      "B-tags",
+      "O",
+      "I-tags",
+      "I-tags",
+      "I-tags",
+      "O",
+      "B-title",
+      "I-title",
+      "I-title",
+      "I-title",
+      "I-title",
+      "B-tags",
+      "I-title",
+      "I-title",
+      "O",
+      "I-tags",
+      "I-tags",
+      "I-tags",
+      "O",
+      "B-title",
+      "I-title",
+      "I-title",
+      "I-title",
+      "I-title",
+      "B-tags",
+      "B-tags",
+      "B-tags",
+      "B-tags",
+      "I-tags",
+      "I-tags",
+      "I-tags",
+      "O",
+      "B-title",
+      "I-title",
+      "I-title",
+      "I-title",
+      "I-title",
+      "B-tags",
+      "B-tags",
+      "B-tags",
+      "I-tags",
+      "I-tags",
+      "I-tags",
+      "I-tags",
+      "O",
+      "B-title",
+      "I-title",
+      "I-title",
+      "I-title",
+      "I-title",
+      "B-tags",
+      "I-title",
+      "I-title",
+      "O",
+      "I-tags",
+      "I-tags",
+      "I-tags",
+      "O",
+      "B-title",
+      "I-title",
+      "I-title",
+      "I-title",
+      "I-title",
+      "B-tags",
+      "I-title",
+      "I-title",
+      "O",
+      "I-tags",
+      "I-tags",
+      "I-tags",
+      "O",
+      "B-title",
+      "I-title",
+      "I-title",
+      "I-title",
+      "I-title",
+      "B-tags",
+      "I-title",
+      "B-tags",
+      "O",
+      "I-tags",
+      "I-tags",
+      "I-tags",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O"
+    ],
+    "bio": [
+      "B-title",
+      "I-title",
+      "I-title",
+      "I-title",
+      "B-due_date",
+      "I-due_date",
+      "O",
+      "B-title",
+      "I-title",
+      "I-title",
+      "I-title",
+      "I-title",
+      "I-title",
+      "I-title",
+      "I-title",
+      "B-tags",
+      "I-tags",
+      "I-tags",
+      "I-tags",
+      "O",
+      "B-title",
+      "I-title",
+      "I-title",
+      "I-title",
+      "I-title",
+      "I-title",
+      "I-title",
+      "B-tags",
+      "B-tags",
+      "I-tags",
+      "I-tags",
+      "I-tags",
+      "O",
+      "B-title",
+      "I-title",
+      "I-title",
+      "I-title",
+      "I-title",
+      "I-title",
+      "I-title",
+      "I-title",
+      "B-tags",
+      "I-tags",
+      "I-tags",
+      "I-tags",
+      "O",
+      "B-title",
+      "I-title",
+      "I-title",
+      "I-title",
+      "I-title",
+      "B-tags",
+      "B-tags",
+      "B-tags",
+      "B-tags",
+      "I-tags",
+      "I-tags",
+      "I-tags",
+      "O",
+      "B-title",
+      "I-title",
+      "I-title",
+      "I-title",
+      "I-title",
+      "B-tags",
+      "B-tags",
+      "B-tags",
+      "I-tags",
+      "I-tags",
+      "I-tags",
+      "I-tags",
+      "O",
+      "B-title",
+      "I-title",
+      "I-title",
+      "I-title",
+      "I-title",
+      "I-title",
+      "I-title",
+      "I-title",
+      "B-tags",
+      "I-tags",
+      "I-tags",
+      "I-tags",
+      "O",
+      "B-title",
+      "I-title",
+      "I-title",
+      "I-title",
+      "I-title",
+      "I-title",
+      "I-title",
+      "I-title",
+      "B-tags",
+      "I-tags",
+      "I-tags",
+      "I-tags",
+      "O",
+      "B-title",
+      "I-title",
+      "I-title",
+      "I-title",
+      "I-title",
+      "I-title",
+      "I-title",
+      "B-tags",
+      "I-tags",
+      "I-tags",
+      "I-tags",
+      "I-tags",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O"
+    ],
+    "spans": [
+      {
+        "label": "title",
+        "start": 0,
+        "end": 22,
+        "text": "prepare the board deck"
+      },
+      {
+        "label": "due_date",
+        "start": 23,
+        "end": 32,
+        "text": "by monday"
+      },
+      {
+        "label": "title",
+        "start": 38,
+        "end": 63,
+        "text": "sync with the design team"
+      },
+      {
+        "label": "title",
+        "start": 70,
+        "end": 81,
+        "text": "the roadmap"
+      },
+      {
+        "label": "tags",
+        "start": 86,
+        "end": 104,
+        "text": "the open questions"
+      },
+      {
+        "label": "title",
+        "start": 110,
+        "end": 135,
+        "text": "sync with the design team"
+      },
+      {
+        "label": "tags",
+        "start": 136,
+        "end": 141,
+        "text": "about"
+      },
+      {
+        "label": "title",
+        "start": 142,
+        "end": 145,
+        "text": "the"
+      },
+      {
+        "label": "tags",
+        "start": 146,
+        "end": 153,
+        "text": "roadmap"
+      },
+      {
+        "label": "tags",
+        "start": 158,
+        "end": 176,
+        "text": "the open questions"
+      },
+      {
+        "label": "title",
+        "start": 182,
+        "end": 207,
+        "text": "sync with the design team"
+      },
+      {
+        "label": "tags",
+        "start": 208,
+        "end": 213,
+        "text": "about"
+      },
+      {
+        "label": "title",
+        "start": 214,
+        "end": 225,
+        "text": "the roadmap"
+      },
+      {
+        "label": "tags",
+        "start": 230,
+        "end": 248,
+        "text": "the open questions"
+      },
+      {
+        "label": "title",
+        "start": 254,
+        "end": 279,
+        "text": "sync with the design team"
+      },
+      {
+        "label": "tags",
+        "start": 280,
+        "end": 285,
+        "text": "about"
+      },
+      {
+        "label": "tags",
+        "start": 286,
+        "end": 289,
+        "text": "the"
+      },
+      {
+        "label": "tags",
+        "start": 290,
+        "end": 297,
+        "text": "roadmap"
+      },
+      {
+        "label": "tags",
+        "start": 298,
+        "end": 320,
+        "text": "and the open questions"
+      },
+      {
+        "label": "title",
+        "start": 326,
+        "end": 351,
+        "text": "sync with the design team"
+      },
+      {
+        "label": "tags",
+        "start": 352,
+        "end": 357,
+        "text": "about"
+      },
+      {
+        "label": "tags",
+        "start": 358,
+        "end": 361,
+        "text": "the"
+      },
+      {
+        "label": "tags",
+        "start": 362,
+        "end": 392,
+        "text": "roadmap and the open questions"
+      },
+      {
+        "label": "title",
+        "start": 398,
+        "end": 423,
+        "text": "sync with the design team"
+      },
+      {
+        "label": "tags",
+        "start": 424,
+        "end": 429,
+        "text": "about"
+      },
+      {
+        "label": "title",
+        "start": 430,
+        "end": 441,
+        "text": "the roadmap"
+      },
+      {
+        "label": "tags",
+        "start": 446,
+        "end": 464,
+        "text": "the open questions"
+      },
+      {
+        "label": "title",
+        "start": 470,
+        "end": 495,
+        "text": "sync with the design team"
+      },
+      {
+        "label": "tags",
+        "start": 496,
+        "end": 501,
+        "text": "about"
+      },
+      {
+        "label": "title",
+        "start": 502,
+        "end": 513,
+        "text": "the roadmap"
+      },
+      {
+        "label": "tags",
+        "start": 518,
+        "end": 536,
+        "text": "the open questions"
+      },
+      {
+        "label": "title",
+        "start": 542,
+        "end": 567,
+        "text": "sync with the design team"
+      },
+      {
+        "label": "tags",
+        "start": 568,
+        "end": 573,
+        "text": "about"
+      },
+      {
+        "label": "title",
+        "start": 574,
+        "end": 577,
+        "text": "the"
+      },
+      {
+        "label": "tags",
+        "start": 578,
+        "end": 585,
+        "text": "roadmap"
+      },
+      {
+        "label": "tags",
+        "start": 590,
+        "end": 608,
+        "text": "the open questions"
+      }
+    ]
+  },
+  {
+    "family": "calendar",
+    "decoding": "bio",
+    "text": "lunch with Sara tomorrow at noon at Blue Bottle",
+    "represented_words": 9,
+    "argmax": [
+      "B-title",
+      "O",
+      "O",
+      "B-start_time",
+      "B-start_time",
+      "I-start_time",
+      "B-location",
+      "B-location",
+      "I-location"
+    ],
+    "bio": [
+      "B-title",
+      "O",
+      "O",
+      "B-start_time",
+      "B-start_time",
+      "I-start_time",
+      "B-location",
+      "B-location",
+      "I-location"
+    ],
+    "spans": [
+      {
+        "label": "title",
+        "start": 0,
+        "end": 5,
+        "text": "lunch"
+      },
+      {
+        "label": "start_time",
+        "start": 16,
+        "end": 24,
+        "text": "tomorrow"
+      },
+      {
+        "label": "start_time",
+        "start": 25,
+        "end": 32,
+        "text": "at noon"
+      },
+      {
+        "label": "location",
+        "start": 33,
+        "end": 35,
+        "text": "at"
+      },
+      {
+        "label": "location",
+        "start": 36,
+        "end": 47,
+        "text": "Blue Bottle"
+      }
+    ]
+  },
+  {
+    "family": "calendar",
+    "decoding": "bio",
+    "text": "team standup every weekday 9:30-9:45am on Zoom",
+    "represented_words": 7,
+    "argmax": [
+      "B-title",
+      "I-title",
+      "B-recurrence",
+      "I-recurrence",
+      "B-start_time",
+      "B-location",
+      "I-location"
+    ],
+    "bio": [
+      "B-title",
+      "I-title",
+      "B-recurrence",
+      "I-recurrence",
+      "B-start_time",
+      "B-location",
+      "I-location"
+    ],
+    "spans": [
+      {
+        "label": "title",
+        "start": 0,
+        "end": 12,
+        "text": "team standup"
+      },
+      {
+        "label": "recurrence",
+        "start": 13,
+        "end": 26,
+        "text": "every weekday"
+      },
+      {
+        "label": "start_time",
+        "start": 27,
+        "end": 38,
+        "text": "9:30-9:45am"
+      },
+      {
+        "label": "location",
+        "start": 39,
+        "end": 46,
+        "text": "on Zoom"
+      }
+    ]
+  },
+  {
+    "family": "calendar",
+    "decoding": "bio",
+    "text": "dentist appointment next Tuesday 3pm for an hour",
+    "represented_words": 8,
+    "argmax": [
+      "B-title",
+      "I-title",
+      "B-start_time",
+      "I-start_time",
+      "B-start_time",
+      "B-duration",
+      "I-duration",
+      "I-duration"
+    ],
+    "bio": [
+      "B-title",
+      "I-title",
+      "B-start_time",
+      "I-start_time",
+      "B-start_time",
+      "B-duration",
+      "I-duration",
+      "I-duration"
+    ],
+    "spans": [
+      {
+        "label": "title",
+        "start": 0,
+        "end": 19,
+        "text": "dentist appointment"
+      },
+      {
+        "label": "start_time",
+        "start": 20,
+        "end": 32,
+        "text": "next Tuesday"
+      },
+      {
+        "label": "start_time",
+        "start": 33,
+        "end": 36,
+        "text": "3pm"
+      },
+      {
+        "label": "duration",
+        "start": 37,
+        "end": 48,
+        "text": "for an hour"
+      }
+    ]
+  },
+  {
+    "family": "calendar",
+    "decoding": "bio",
+    "text": "dinner with mom and dad friday 7pm at Luigi's, bring wine",
+    "represented_words": 11,
+    "argmax": [
+      "B-title",
+      "O",
+      "O",
+      "O",
+      "O",
+      "B-start_time",
+      "B-start_time",
+      "O",
+      "I-location",
+      "B-description",
+      "I-description"
+    ],
+    "bio": [
+      "B-title",
+      "O",
+      "O",
+      "O",
+      "O",
+      "B-start_time",
+      "B-start_time",
+      "B-location",
+      "I-location",
+      "B-description",
+      "I-description"
+    ],
+    "spans": [
+      {
+        "label": "title",
+        "start": 0,
+        "end": 6,
+        "text": "dinner"
+      },
+      {
+        "label": "start_time",
+        "start": 24,
+        "end": 30,
+        "text": "friday"
+      },
+      {
+        "label": "start_time",
+        "start": 31,
+        "end": 34,
+        "text": "7pm"
+      },
+      {
+        "label": "location",
+        "start": 35,
+        "end": 46,
+        "text": "at Luigi's,"
+      },
+      {
+        "label": "description",
+        "start": 47,
+        "end": 57,
+        "text": "bring wine"
+      }
+    ]
+  },
+  {
+    "family": "calendar",
+    "decoding": "bio",
+    "text": "quarterly planning offsite Oct 21-23 in Lisbon",
+    "represented_words": 7,
+    "argmax": [
+      "B-title",
+      "I-title",
+      "I-title",
+      "B-start_time",
+      "I-start_time",
+      "B-location",
+      "I-location"
+    ],
+    "bio": [
+      "B-title",
+      "I-title",
+      "I-title",
+      "B-start_time",
+      "I-start_time",
+      "B-location",
+      "I-location"
+    ],
+    "spans": [
+      {
+        "label": "title",
+        "start": 0,
+        "end": 26,
+        "text": "quarterly planning offsite"
+      },
+      {
+        "label": "start_time",
+        "start": 27,
+        "end": 36,
+        "text": "Oct 21-23"
+      },
+      {
+        "label": "location",
+        "start": 37,
+        "end": 46,
+        "text": "in Lisbon"
+      }
+    ]
+  },
+  {
+    "family": "calendar",
+    "decoding": "bio",
+    "text": "yoga class every Wednesday at 6pm until December",
+    "represented_words": 8,
+    "argmax": [
+      "B-title",
+      "I-title",
+      "B-recurrence",
+      "I-recurrence",
+      "O",
+      "B-start_time",
+      "B-recurrence_end",
+      "I-recurrence_end"
+    ],
+    "bio": [
+      "B-title",
+      "I-title",
+      "B-recurrence",
+      "I-recurrence",
+      "O",
+      "B-start_time",
+      "B-recurrence_end",
+      "I-recurrence_end"
+    ],
+    "spans": [
+      {
+        "label": "title",
+        "start": 0,
+        "end": 10,
+        "text": "yoga class"
+      },
+      {
+        "label": "recurrence",
+        "start": 11,
+        "end": 26,
+        "text": "every Wednesday"
+      },
+      {
+        "label": "start_time",
+        "start": 30,
+        "end": 33,
+        "text": "6pm"
+      },
+      {
+        "label": "recurrence_end",
+        "start": 34,
+        "end": 48,
+        "text": "until December"
+      }
+    ]
+  },
+  {
+    "family": "calendar",
+    "decoding": "bio",
+    "text": "1:1 with Priya at 4pm, discuss promotion",
+    "represented_words": 7,
+    "argmax": [
+      "B-title",
+      "O",
+      "O",
+      "B-start_time",
+      "I-start_time",
+      "I-description",
+      "I-description"
+    ],
+    "bio": [
+      "B-title",
+      "O",
+      "O",
+      "B-start_time",
+      "I-start_time",
+      "B-description",
+      "I-description"
+    ],
+    "spans": [
+      {
+        "label": "title",
+        "start": 0,
+        "end": 3,
+        "text": "1:1"
+      },
+      {
+        "label": "start_time",
+        "start": 15,
+        "end": 22,
+        "text": "at 4pm,"
+      },
+      {
+        "label": "description",
+        "start": 23,
+        "end": 40,
+        "text": "discuss promotion"
+      }
+    ]
+  },
+  {
+    "family": "calendar",
+    "decoding": "bio",
+    "text": "flight to NYC on Nov 3 at 7:45am",
+    "represented_words": 8,
+    "argmax": [
+      "B-title",
+      "I-title",
+      "I-title",
+      "B-start_time",
+      "I-start_time",
+      "I-start_time",
+      "B-start_time",
+      "I-start_time"
+    ],
+    "bio": [
+      "B-title",
+      "I-title",
+      "I-title",
+      "B-start_time",
+      "I-start_time",
+      "I-start_time",
+      "B-start_time",
+      "I-start_time"
+    ],
+    "spans": [
+      {
+        "label": "title",
+        "start": 0,
+        "end": 13,
+        "text": "flight to NYC"
+      },
+      {
+        "label": "start_time",
+        "start": 14,
+        "end": 22,
+        "text": "on Nov 3"
+      },
+      {
+        "label": "start_time",
+        "start": 23,
+        "end": 32,
+        "text": "at 7:45am"
+      }
+    ]
+  },
+  {
+    "family": "calendar",
+    "decoding": "bio",
+    "text": "planning session thursday 2pm at the office then sync with the design team about the roadmap and the open questions then sync with the design team about the roadmap and the open questions then sync with the design team about the roadmap and the open questions then sync with the design team about the roadmap and the open questions then sync with the design team about the roadmap and the open questions then sync with the design team about the roadmap and the open questions then sync with the design team about the roadmap and the open questions then sync with the design team about the roadmap and the open questions then sync with the design team about the roadmap and the open questions then sync with the design team about the roadmap and the open questions then sync with the design team about the roadmap and the open questions then sync with the design team about the roadmap and the open questions",
+    "represented_words": 109,
+    "argmax": [
+      "B-title",
+      "I-title",
+      "B-start_time",
+      "B-start_time",
+      "B-location",
+      "I-location",
+      "I-location",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "B-description",
+      "I-description",
+      "I-description",
+      "I-description",
+      "I-description",
+      "I-description",
+      "I-description",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "B-description",
+      "I-description",
+      "I-description",
+      "I-description",
+      "I-description",
+      "I-description",
+      "I-description",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "B-description",
+      "I-description",
+      "I-description",
+      "I-description",
+      "I-description",
+      "I-description",
+      "I-description",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "B-description",
+      "I-description",
+      "I-description",
+      "I-description",
+      "I-description",
+      "I-description",
+      "I-description",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "B-description",
+      "I-description",
+      "I-description",
+      "I-description",
+      "I-description",
+      "I-description",
+      "I-description",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "B-description",
+      "I-description",
+      "I-description",
+      "I-description",
+      "I-description",
+      "I-description",
+      "I-description",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "B-description",
+      "I-description",
+      "I-description",
+      "I-description",
+      "I-description",
+      "I-description",
+      "I-description",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "B-description",
+      "I-description",
+      "I-description",
+      "I-description",
+      "I-description",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O"
+    ],
+    "bio": [
+      "B-title",
+      "I-title",
+      "B-start_time",
+      "B-start_time",
+      "B-location",
+      "I-location",
+      "I-location",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "B-description",
+      "I-description",
+      "I-description",
+      "I-description",
+      "I-description",
+      "I-description",
+      "I-description",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "B-description",
+      "I-description",
+      "I-description",
+      "I-description",
+      "I-description",
+      "I-description",
+      "I-description",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "B-description",
+      "I-description",
+      "I-description",
+      "I-description",
+      "I-description",
+      "I-description",
+      "I-description",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "B-description",
+      "I-description",
+      "I-description",
+      "I-description",
+      "I-description",
+      "I-description",
+      "I-description",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "B-description",
+      "I-description",
+      "I-description",
+      "I-description",
+      "I-description",
+      "I-description",
+      "I-description",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "B-description",
+      "I-description",
+      "I-description",
+      "I-description",
+      "I-description",
+      "I-description",
+      "I-description",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "B-description",
+      "I-description",
+      "I-description",
+      "I-description",
+      "I-description",
+      "I-description",
+      "I-description",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "B-description",
+      "I-description",
+      "I-description",
+      "I-description",
+      "I-description",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O"
+    ],
+    "spans": [
+      {
+        "label": "title",
+        "start": 0,
+        "end": 16,
+        "text": "planning session"
+      },
+      {
+        "label": "start_time",
+        "start": 17,
+        "end": 25,
+        "text": "thursday"
+      },
+      {
+        "label": "start_time",
+        "start": 26,
+        "end": 29,
+        "text": "2pm"
+      },
+      {
+        "label": "location",
+        "start": 30,
+        "end": 43,
+        "text": "at the office"
+      },
+      {
+        "label": "description",
+        "start": 75,
+        "end": 115,
+        "text": "about the roadmap and the open questions"
+      },
+      {
+        "label": "description",
+        "start": 147,
+        "end": 187,
+        "text": "about the roadmap and the open questions"
+      },
+      {
+        "label": "description",
+        "start": 219,
+        "end": 259,
+        "text": "about the roadmap and the open questions"
+      },
+      {
+        "label": "description",
+        "start": 291,
+        "end": 331,
+        "text": "about the roadmap and the open questions"
+      },
+      {
+        "label": "description",
+        "start": 363,
+        "end": 403,
+        "text": "about the roadmap and the open questions"
+      },
+      {
+        "label": "description",
+        "start": 435,
+        "end": 475,
+        "text": "about the roadmap and the open questions"
+      },
+      {
+        "label": "description",
+        "start": 507,
+        "end": 547,
+        "text": "about the roadmap and the open questions"
+      },
+      {
+        "label": "description",
+        "start": 579,
+        "end": 604,
+        "text": "about the roadmap and the"
+      }
+    ]
+  },
+  {
+    "family": "reminder",
+    "decoding": "argmax",
+    "text": "remind me to water the plants tomorrow at 9",
+    "represented_words": 9,
+    "argmax": [
+      "O",
+      "O",
+      "O",
+      "B-title",
+      "I-title",
+      "I-title",
+      "B-trigger_time",
+      "I-trigger_time",
+      "I-trigger_time"
+    ],
+    "bio": [
+      "O",
+      "O",
+      "O",
+      "B-title",
+      "I-title",
+      "I-title",
+      "B-trigger_time",
+      "I-trigger_time",
+      "I-trigger_time"
+    ],
+    "spans": [
+      {
+        "label": "title",
+        "start": 13,
+        "end": 29,
+        "text": "water the plants"
+      },
+      {
+        "label": "trigger_time",
+        "start": 30,
+        "end": 43,
+        "text": "tomorrow at 9"
+      }
+    ]
+  },
+  {
+    "family": "reminder",
+    "decoding": "argmax",
+    "text": "remind me to take my meds every day at 8am and 8pm",
+    "represented_words": 12,
+    "argmax": [
+      "O",
+      "O",
+      "O",
+      "B-title",
+      "I-title",
+      "I-title",
+      "B-recurrence",
+      "I-recurrence",
+      "B-trigger_time",
+      "I-trigger_time",
+      "B-trigger_time",
+      "I-trigger_time"
+    ],
+    "bio": [
+      "O",
+      "O",
+      "O",
+      "B-title",
+      "I-title",
+      "I-title",
+      "B-recurrence",
+      "I-recurrence",
+      "B-trigger_time",
+      "I-trigger_time",
+      "B-trigger_time",
+      "I-trigger_time"
+    ],
+    "spans": [
+      {
+        "label": "title",
+        "start": 13,
+        "end": 25,
+        "text": "take my meds"
+      },
+      {
+        "label": "recurrence",
+        "start": 26,
+        "end": 35,
+        "text": "every day"
+      },
+      {
+        "label": "trigger_time",
+        "start": 36,
+        "end": 42,
+        "text": "at 8am"
+      },
+      {
+        "label": "trigger_time",
+        "start": 43,
+        "end": 50,
+        "text": "and 8pm"
+      }
+    ]
+  },
+  {
+    "family": "reminder",
+    "decoding": "argmax",
+    "text": "remind me when I get to the office to call Phil",
+    "represented_words": 11,
+    "argmax": [
+      "O",
+      "O",
+      "B-location",
+      "I-location",
+      "I-location",
+      "I-location",
+      "I-location",
+      "I-location",
+      "O",
+      "B-title",
+      "I-title"
+    ],
+    "bio": [
+      "O",
+      "O",
+      "B-location",
+      "I-location",
+      "I-location",
+      "I-location",
+      "I-location",
+      "I-location",
+      "O",
+      "B-title",
+      "I-title"
+    ],
+    "spans": [
+      {
+        "label": "location",
+        "start": 10,
+        "end": 34,
+        "text": "when I get to the office"
+      },
+      {
+        "label": "title",
+        "start": 38,
+        "end": 47,
+        "text": "call Phil"
+      }
+    ]
+  },
+  {
+    "family": "reminder",
+    "decoding": "argmax",
+    "text": "remind me 15 minutes before the meeting to print slides",
+    "represented_words": 10,
+    "argmax": [
+      "O",
+      "O",
+      "B-lead_time",
+      "I-lead_time",
+      "I-lead_time",
+      "I-trigger_time",
+      "I-trigger_time",
+      "O",
+      "B-title",
+      "I-title"
+    ],
+    "bio": [
+      "O",
+      "O",
+      "B-lead_time",
+      "I-lead_time",
+      "B-trigger_time",
+      "I-trigger_time",
+      "I-trigger_time",
+      "O",
+      "B-title",
+      "I-title"
+    ],
+    "spans": [
+      {
+        "label": "lead_time",
+        "start": 10,
+        "end": 27,
+        "text": "15 minutes before"
+      },
+      {
+        "label": "trigger_time",
+        "start": 28,
+        "end": 39,
+        "text": "the meeting"
+      },
+      {
+        "label": "title",
+        "start": 43,
+        "end": 55,
+        "text": "print slides"
+      }
+    ]
+  },
+  {
+    "family": "reminder",
+    "decoding": "argmax",
+    "text": "ping me every other saturday to clean the gutters except in winter",
+    "represented_words": 12,
+    "argmax": [
+      "O",
+      "O",
+      "B-recurrence",
+      "I-recurrence",
+      "I-recurrence",
+      "O",
+      "B-title",
+      "I-title",
+      "I-title",
+      "B-recurrence_exception",
+      "I-recurrence_exception",
+      "I-recurrence_exception"
+    ],
+    "bio": [
+      "O",
+      "O",
+      "B-recurrence",
+      "I-recurrence",
+      "I-recurrence",
+      "O",
+      "B-title",
+      "I-title",
+      "I-title",
+      "B-recurrence_exception",
+      "I-recurrence_exception",
+      "I-recurrence_exception"
+    ],
+    "spans": [
+      {
+        "label": "recurrence",
+        "start": 8,
+        "end": 28,
+        "text": "every other saturday"
+      },
+      {
+        "label": "title",
+        "start": 32,
+        "end": 49,
+        "text": "clean the gutters"
+      },
+      {
+        "label": "recurrence_exception",
+        "start": 50,
+        "end": 66,
+        "text": "except in winter"
+      }
+    ]
+  },
+  {
+    "family": "reminder",
+    "decoding": "argmax",
+    "text": "remind me to submit timesheet every friday at 4pm for 3 months",
+    "represented_words": 12,
+    "argmax": [
+      "O",
+      "O",
+      "O",
+      "B-title",
+      "I-title",
+      "B-recurrence",
+      "I-recurrence",
+      "B-trigger_time",
+      "I-trigger_time",
+      "B-recurrence_window",
+      "I-recurrence_window",
+      "I-recurrence_window"
+    ],
+    "bio": [
+      "O",
+      "O",
+      "O",
+      "B-title",
+      "I-title",
+      "B-recurrence",
+      "I-recurrence",
+      "B-trigger_time",
+      "I-trigger_time",
+      "B-recurrence_window",
+      "I-recurrence_window",
+      "I-recurrence_window"
+    ],
+    "spans": [
+      {
+        "label": "title",
+        "start": 13,
+        "end": 29,
+        "text": "submit timesheet"
+      },
+      {
+        "label": "recurrence",
+        "start": 30,
+        "end": 42,
+        "text": "every friday"
+      },
+      {
+        "label": "trigger_time",
+        "start": 43,
+        "end": 49,
+        "text": "at 4pm"
+      },
+      {
+        "label": "recurrence_window",
+        "start": 50,
+        "end": 62,
+        "text": "for 3 months"
+      }
+    ]
+  },
+  {
+    "family": "reminder",
+    "decoding": "argmax",
+    "text": "remember to pick up dry cleaning at 6",
+    "represented_words": 8,
+    "argmax": [
+      "O",
+      "O",
+      "B-title",
+      "I-title",
+      "I-title",
+      "I-title",
+      "B-trigger_time",
+      "I-trigger_time"
+    ],
+    "bio": [
+      "O",
+      "O",
+      "B-title",
+      "I-title",
+      "I-title",
+      "I-title",
+      "B-trigger_time",
+      "I-trigger_time"
+    ],
+    "spans": [
+      {
+        "label": "title",
+        "start": 12,
+        "end": 32,
+        "text": "pick up dry cleaning"
+      },
+      {
+        "label": "trigger_time",
+        "start": 33,
+        "end": 37,
+        "text": "at 6"
+      }
+    ]
+  },
+  {
+    "family": "reminder",
+    "decoding": "argmax",
+    "text": "remind me tonight to text Jess happy birthday",
+    "represented_words": 8,
+    "argmax": [
+      "O",
+      "O",
+      "B-trigger_time",
+      "O",
+      "B-title",
+      "I-title",
+      "B-trigger_time",
+      "I-trigger_time"
+    ],
+    "bio": [
+      "O",
+      "O",
+      "B-trigger_time",
+      "O",
+      "B-title",
+      "I-title",
+      "B-trigger_time",
+      "I-trigger_time"
+    ],
+    "spans": [
+      {
+        "label": "trigger_time",
+        "start": 10,
+        "end": 17,
+        "text": "tonight"
+      },
+      {
+        "label": "title",
+        "start": 21,
+        "end": 30,
+        "text": "text Jess"
+      },
+      {
+        "label": "trigger_time",
+        "start": 31,
+        "end": 45,
+        "text": "happy birthday"
+      }
+    ]
+  }
+]

@@ -24,6 +24,8 @@ export type {
   TaskArtifactManifest,
   TaskDecompositionArtifactManifest,
   RuntimeTokenizer,
+  SequenceDecoderSidecar,
+  SequenceDecoding,
   TensorContract,
   TensorRequest,
   TensorResponse,
@@ -50,6 +52,19 @@ export {
   loadMlArtifact,
 } from './artifacts.ts';
 export { createLocalCoreAiInferenceAdapter } from './coreai/index.ts';
+export type { DecodedSpan, FirstPieceDecodeInput, WhitespaceWord } from './sequence-decoder.ts';
+export {
+  SEQUENCE_DECODINGS,
+  alignFirstPieces,
+  decodeArgmax,
+  decodeBioViterbi,
+  decodeFirstPieceSpans,
+  decodeSequence,
+  rebuildWordSpans,
+  splitWhitespaceWords,
+  validateBioLabels,
+  validateSequenceDecoderSidecar,
+} from './sequence-decoder.ts';
 
 export const createRemoteInferenceAdapter = (options: RemoteInferenceAdapterOptions): InferenceAdapter => ({
   kind: options.kind || 'remote',

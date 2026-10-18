@@ -20,6 +20,7 @@ public struct CoreAIModelInfo: Equatable, Sendable {
     public let modelKind: String
     public let labelCount: Int
     public let weightQuantization: String?
+    public let decoding: CoreAISequenceDecoding
 }
 
 public struct CoreAIParsed<Value: Sendable>: Sendable {
@@ -108,7 +109,8 @@ public struct CoreAIParserSuite: Sendable {
             output: output,
             tokenized: tokenized,
             labels: artifact.manifest.labels ?? [:],
-            sourceText: input
+            sourceText: input,
+            decoding: artifact.decoding
         )
         return CoreAIParsed(
             value: CoreAIEntityMerger.resolveSchedule(
@@ -134,7 +136,8 @@ public struct CoreAIParserSuite: Sendable {
             manifestVersion: artifact.manifest.manifestVersion,
             modelKind: artifact.manifest.modelKind,
             labelCount: labels.count,
-            weightQuantization: artifact.manifest.optimization?.weightQuantization
+            weightQuantization: artifact.manifest.optimization?.weightQuantization,
+            decoding: artifact.decoding
         )
     }
 

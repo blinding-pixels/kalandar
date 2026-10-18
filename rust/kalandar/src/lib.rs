@@ -10,6 +10,7 @@ mod postprocess;
 mod preview_runtime;
 mod reminder_lightweight;
 mod schedule;
+mod sequence_decoder;
 mod shadow_text;
 mod task_lightweight;
 mod tokenizer;
@@ -19,6 +20,7 @@ pub use artifacts::*;
 pub use errors::*;
 pub use inference::*;
 pub use ort_runtime::*;
+pub use sequence_decoder::*;
 pub use tokenizer::*;
 pub use types::*;
 

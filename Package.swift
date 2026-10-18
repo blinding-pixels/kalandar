@@ -75,7 +75,10 @@ let package = Package(
         .testTarget(
             name: "KalandarCoreAIRuntimeTests",
             dependencies: ["KalandarCoreAIRuntime", "KalandarDates"],
-            path: "swift/Tests/KalandarCoreAIRuntimeTests"
+            path: "swift/Tests/KalandarCoreAIRuntimeTests",
+            resources: [
+                .copy("Fixtures"),
+            ]
         ),
     ]
 )

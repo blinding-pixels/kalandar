@@ -1,6 +1,6 @@
 {
   "manifestVersion": "kalandar-artifacts-v1",
-  "suiteVersion": "kalandar-capture-parser-onnx-v1",
+  "suiteVersion": "kalandar-capture-parser-onnx-v2",
   "bundles": [
     {
       "parser": "intent",
@@ -27,10 +27,11 @@
     {
       "parser": "task",
       "runtimeKind": "bert-token-classifier",
-      "artifactId": "sha256:79441f02cad7783979fd3f750d699854ae555a09bab06232b65271a99de5ea1d",
+      "artifactId": "sha256:30d589dff6b4203514026fa15684e51d977e7c4cbf605ff19c29b78222165d51",
       "tensorContractVersion": "task-bert-token-classification-v1",
       "normalizationVersion": "task-bert-uncased-v1",
-      "postprocessVersion": "task-postprocess-v1",
+      "postprocessVersion": "task-postprocess-v2",
+      "decoding": "argmax",
       "tokenizer": {
         "kind": "bert_wordpiece",
         "doLowerCase": true,
@@ -73,8 +74,8 @@
         {
           "logicalName": "model",
           "path": "task/model.onnx",
-          "sha256": "4627afb3667739cb8ec65808c5d0d83f7cfbfd14772840c1769fd20872e120d2",
-          "sizeBytes": 33762211
+          "sha256": "04ca949185347b6e5038ee81605461f860c14824024da4f60533e2f58ce81c55",
+          "sizeBytes": 33802000
         },
         {
           "logicalName": "config",
@@ -105,10 +106,11 @@
     {
       "parser": "calendar",
       "runtimeKind": "bert-token-classifier",
-      "artifactId": "sha256:6a4e69597fe1955246e5eb6213afe311299645712e7897959f630b3473a22ddf",
+      "artifactId": "sha256:5f9350b9fcf3a3fea1493b7f8b7e0269894911178d166f39775a0cc976cc3d14",
       "tensorContractVersion": "calendar-bert-token-classification-v1",
       "normalizationVersion": "calendar-bert-uncased-v1",
-      "postprocessVersion": "calendar-event-postprocess-v1",
+      "postprocessVersion": "calendar-event-postprocess-v2",
+      "decoding": "bio",
       "tokenizer": {
         "kind": "bert_wordpiece",
         "doLowerCase": true,
@@ -145,8 +147,8 @@
         {
           "logicalName": "model",
           "path": "calendar/model.onnx",
-          "sha256": "9b05cedd7b95535d2df1bbdd25265161c0b83420622bd4ed21994b96e2a171f0",
-          "sizeBytes": 33759851
+          "sha256": "a070de00923d9a25fd47ae3aa5cc5df139da5dfc594af7425895f5c0c81381a4",
+          "sizeBytes": 33799669
         },
         {
           "logicalName": "config",
@@ -171,16 +173,23 @@
           "path": "calendar/vocab.txt",
           "sha256": "07eced375cec144d27c900241f3e339478dec958f92fddbc551f295c992038a3",
           "sizeBytes": 231508
+        },
+        {
+          "logicalName": "sequence_decoder",
+          "path": "calendar/sequence_decoder.json",
+          "sha256": "e04a2a6f624724f81b8f3521c153a810cef79deef3fe6f65fd12f959323a8df9",
+          "sizeBytes": 6451
         }
       ]
     },
     {
       "parser": "reminder",
       "runtimeKind": "bert-token-classifier",
-      "artifactId": "sha256:4a8861068c72120ae3d957332cd60deb024eed9b60811d22ab4ca10cc6563d6d",
+      "artifactId": "sha256:befafd553adf9f69b2375648acb67bb56ced8b5c7f290832dcce52487b65f8f1",
       "tensorContractVersion": "reminder-bert-token-classification-v1",
       "normalizationVersion": "reminder-bert-uncased-v1",
-      "postprocessVersion": "reminder-postprocess-v1",
+      "postprocessVersion": "reminder-postprocess-v2",
+      "decoding": "argmax",
       "tokenizer": {
         "kind": "bert_wordpiece",
         "doLowerCase": true,
@@ -215,8 +224,8 @@
         {
           "logicalName": "model",
           "path": "reminder/model.onnx",
-          "sha256": "7b8a0092df0dcdbd1a262f8b2d2024c049f878bb212e2f1e7bfe18630b46c13c",
-          "sizeBytes": 33759065
+          "sha256": "a0619d400c1d09df061b87151633d0cf40cecffde66e134da66db61241a5eb3a",
+          "sizeBytes": 33798892
         },
         {
           "logicalName": "config",

@@ -1,11 +1,12 @@
 {
   "manifest_version": "kalandar-ml-artifact-v1",
   "parser": "task",
-  "suite_version": "kalandar-capture-parser-onnx-v1",
-  "artifact_id": "sha256:99551b9cd5fb09266f1cbbc569f1fa45adbd85c511f264145bbb46b977687616",
+  "suite_version": "kalandar-capture-parser-onnx-v2",
+  "artifact_id": "sha256:6ab4a728da0eed746b2317b92d0ce5fbb7d5404ea14151e20818df95f96c8a66",
   "tensor_contract_version": "task-bert-token-classification-v1",
   "normalization_version": "task-bert-uncased-v1",
-  "postprocess_version": "task-postprocess-v1",
+  "postprocess_version": "task-postprocess-v2",
+  "decoding": "argmax",
   "tokenizer": {
     "kind": "bert_wordpiece",
     "do_lower_case": true,
@@ -29,7 +30,7 @@
     "oversized_input_behavior": "truncate"
   },
   "files": {
-    "model": { "path": "model.onnx", "sha256": "4627afb3667739cb8ec65808c5d0d83f7cfbfd14772840c1769fd20872e120d2", "size_bytes": 33762211 },
+    "model": { "path": "model.onnx", "sha256": "04ca949185347b6e5038ee81605461f860c14824024da4f60533e2f58ce81c55", "size_bytes": 33802000 },
     "config": { "path": "config.json", "sha256": "4699f9f7d1ac744411ceb9e988daf7896e18e3c2bbe80f4ebfc4a9e78013bccd", "size_bytes": 1910 },
     "tokenizer_config": { "path": "tokenizer_config.json", "sha256": "e711904cac23112776b678356ccf702cf934babaa01125f698ac43bf9ad38e73", "size_bytes": 1300 },
     "special_tokens_map": { "path": "special_tokens_map.json", "sha256": "b6d346be366a7d1d48332dbc9fdf3bf8960b5d879522b7799ddba59e76237ee3", "size_bytes": 125 },

@@ -126,6 +126,13 @@ Each `manifest.json` must use `manifest_version: "kalandar-coreai-model-v1"`,
 `runtime_kind: "coreai"`, `tokenizer.kind: "bert_wordpiece"`, and the tensor
 names `input_ids`, `attention_mask`, and `logits`.
 
+The runtime decodes the first subword piece of each whitespace word. An optional
+`decoding` field selects `argmax` (the default) or `bio`, which runs constrained
+BIO Viterbi. A family may also ship `sequence_decoder.json` beside its manifest,
+named by the optional `sequence_decoder` field; the runtime checks that it matches
+the BIO rules before use. `scripts/build-capture-parser-resources.mjs
+--coreai-artifacts <artifact-root>` adds these fields to exported artifacts.
+
 ## Exporting Parser Artifacts
 
 The package does not ship model assets. From a Kalandar training workspace (the

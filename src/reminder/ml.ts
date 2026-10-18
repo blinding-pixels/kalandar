@@ -5,7 +5,8 @@ import { titlePass } from './passes/titlePass.ts';
 import { applyReminderSchedule } from './schedule.ts';
 import type { ReminderFields, ReminderParseContext, ReminderParseOptions, ReminderParseResult } from './types.ts';
 import { createReminderParseContext, extractTitle } from './utils.ts';
-import type { InferenceAdapter, LoadedMlArtifact, MlArtifactSource, RuntimeTensor } from '../runtime/types.ts';
+import { decodeFirstPieceSpans } from '../runtime/sequence-decoder.ts';
+import type { InferenceAdapter, LoadedMlArtifact, MlArtifactSource, RuntimeTensor, SequenceDecoding } from '../runtime/types.ts';
 
 const EXCEPTION_FRAGMENT_LABELS = new Set(['recurrence_exception', 'trigger_time']);
 const EXCEPTION_START_REGEX = /^(?:except|unless|but skip|but not|skip\b)/i;
@@ -67,125 +68,31 @@ const buildTensor = (shape: number[], dtype: RuntimeTensor['dtype'], data: numbe
   data,
 });
 
-const softmaxConfidence = (row: number[], selectedIndex: number): number => {
-  const max = Math.max(...row);
-  const exps = row.map((value) => Math.exp(value - max));
-  const sum = exps.reduce((total, value) => total + value, 0);
-  if (!Number.isFinite(sum) || sum <= 0) {
-    return 0;
-  }
-  return exps[selectedIndex] / sum;
-};
-
-const finalizeEntity = (
-  text: string,
-  current: {
-    label: string;
-    start: number;
-    end: number;
-    confidenceSum: number;
-    confidenceCount: number;
-  },
-): ReminderMlEntity => ({
-  label: current.label,
-  text: text.slice(current.start, current.end),
-  start: current.start,
-  end: current.end,
-  confidence: Number((current.confidenceSum / Math.max(current.confidenceCount, 1)).toFixed(4)),
-});
-
 export const decodeReminderMlEntities = (
   text: string,
-  inputIds: number[],
   offsets: Array<[number, number]>,
   logits: RuntimeTensor,
-  idToLabel: Record<number, string>,
-  specialTokenIds: Set<number>,
+  labels: string[],
+  decoding: SequenceDecoding,
 ): ReminderMlEntity[] => {
   const [batch, sequenceLength, labelCount] = logits.shape;
   if (batch !== 1) {
     throw new Error(`Reminder logits tensor must have batch size 1, received ${batch}`);
   }
-  if (sequenceLength !== inputIds.length) {
-    throw new Error(`Reminder logits sequence length mismatch: expected ${inputIds.length}, received ${sequenceLength}`);
+  if (sequenceLength !== offsets.length) {
+    throw new Error(`Reminder logits sequence length mismatch: expected ${offsets.length}, received ${sequenceLength}`);
   }
-  if (!Number.isInteger(labelCount) || labelCount <= 0) {
-    throw new Error('Reminder logits tensor is missing a valid label dimension');
-  }
-
-  const entities: ReminderMlEntity[] = [];
-  let current:
-    | {
-        label: string;
-        start: number;
-        end: number;
-        confidenceSum: number;
-        confidenceCount: number;
-      }
-    | null = null;
-
-  for (let index = 0; index < sequenceLength; index += 1) {
-    if (specialTokenIds.has(inputIds[index])) {
-      continue;
-    }
-
-    const [start, end] = offsets[index] || [0, 0];
-    if (end <= start) {
-      continue;
-    }
-
-    const rowOffset = index * labelCount;
-    const row = logits.data.slice(rowOffset, rowOffset + labelCount);
-    let bestIndex = 0;
-    for (let labelIndex = 1; labelIndex < row.length; labelIndex += 1) {
-      if (row[labelIndex] > row[bestIndex]) {
-        bestIndex = labelIndex;
-      }
-    }
-
-    const rawLabel = idToLabel[bestIndex];
-    if (!rawLabel || rawLabel === 'O') {
-      if (current) {
-        entities.push(finalizeEntity(text, current));
-        current = null;
-      }
-      continue;
-    }
-
-    const [prefix, label] = rawLabel.split('-', 2);
-    if (!prefix || !label) {
-      if (current) {
-        entities.push(finalizeEntity(text, current));
-        current = null;
-      }
-      continue;
-    }
-
-    const confidence = softmaxConfidence(row, bestIndex);
-    if (prefix === 'B' || !current || current.label !== label) {
-      if (current) {
-        entities.push(finalizeEntity(text, current));
-      }
-      current = {
-        label,
-        start,
-        end,
-        confidenceSum: confidence,
-        confidenceCount: 1,
-      };
-      continue;
-    }
-
-    current.end = end;
-    current.confidenceSum += confidence;
-    current.confidenceCount += 1;
+  if (labelCount !== labels.length) {
+    throw new Error(`Reminder logits label dimension mismatch: expected ${labels.length}, received ${labelCount}`);
   }
 
-  if (current) {
-    entities.push(finalizeEntity(text, current));
-  }
-
-  return entities;
+  return decodeFirstPieceSpans({ text, offsets, logits: logits.data, labels, decoding }).map(({ label, text: spanText, start, end, confidence }) => ({
+    label,
+    text: spanText,
+    start,
+    end,
+    confidence,
+  }));
 };
 
 const trimReminderEntity = (entity: ReminderMlEntity): ReminderMlEntity | null => {
@@ -588,14 +495,7 @@ export const parseReminderInputWithMl = async (
   }
   validateLogitsTensor(artifact, encoding.inputIds.length, logits);
 
-  const decoded = decodeReminderMlEntities(
-    ctx.rawInput,
-    encoding.inputIds,
-    encoding.offsets,
-    logits,
-    artifact.idToLabel,
-    artifact.tokenizer.specialTokenIds,
-  );
+  const decoded = decodeReminderMlEntities(ctx.rawInput, encoding.offsets, logits, artifact.labels, artifact.decoding);
   const entities = postprocessReminderMlEntities(ctx.rawInput, decoded);
 
   applyScheduleEntities(ctx, entities.filter((entity) => SCHEDULE_LABELS.has(entity.label)));

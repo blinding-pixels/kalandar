@@ -1,4 +1,7 @@
-use crate::CaptureParserError;
+use crate::{
+    validate_bio_labels, validate_sequence_decoder_sidecar, CaptureParserError, SequenceDecoding,
+    SEQUENCE_DECODER_LOGICAL_NAME,
+};
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 use std::{
@@ -16,7 +19,7 @@ pub const BERT_TOKEN_CLASSIFIER_RUNTIME_KIND: &str = "bert-token-classifier";
 pub const TINY_LINEAR_RUNTIME_KIND: &str = "tiny-linear";
 pub const CAPTURE_PARSER_MANIFEST_SHA256_ENV: &str = "KALANDAR_CAPTURE_MANIFEST_SHA256";
 pub const TRUSTED_CAPTURE_PARSER_MANIFEST_SHA256: &str =
-    "4e78b1d57985bc61e614372edc436ae8b832d7cef8fbc974ce6d947dace176b3";
+    "c90dd12c907a20419ceae7029a6bae58f38c1f53d9f4038f8af77c8518030d9b";
 const INTENT_TINY_LINEAR_LABELS: [&str; 3] = ["calendar", "none", "task"];
 
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize)]
@@ -38,6 +41,8 @@ pub struct CaptureParserArtifactBundle {
     pub tensor_contract_version: Option<String>,
     pub normalization_version: String,
     pub postprocess_version: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub decoding: Option<String>,
     pub tokenizer: Option<CaptureParserTokenizerManifest>,
     pub labels: Vec<String>,
     pub files: Vec<CaptureParserArtifactFile>,
@@ -75,6 +80,19 @@ struct ArtifactIdFingerprint<'a> {
     tokenizer: &'a Option<CaptureParserTokenizerManifest>,
     labels: Vec<&'a str>,
     files: Vec<&'a CaptureParserArtifactFile>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    decoding: Option<&'a str>,
+}
+
+impl CaptureParserArtifactBundle {
+    pub fn sequence_decoding(&self) -> Result<SequenceDecoding, CaptureParserError> {
+        match self.decoding.as_deref() {
+            None => Ok(SequenceDecoding::Argmax),
+            Some(value) => {
+                SequenceDecoding::parse(value).ok_or(CaptureParserError::ManifestInvalid)
+            }
+        }
+    }
 }
 
 impl CaptureParserArtifactManifest {
@@ -154,6 +172,9 @@ fn validate_bundle_shape(bundle: &CaptureParserArtifactBundle) -> Result<(), Cap
         || bundle.files.is_empty()
     {
         return Err(CaptureParserError::ManifestInvalid);
+    }
+    if bundle.sequence_decoding()? == SequenceDecoding::Bio {
+        validate_bio_labels(&bundle.labels).map_err(|_| CaptureParserError::ManifestInvalid)?;
     }
 
     let mut logical_names = BTreeSet::new();
@@ -237,6 +258,7 @@ fn validate_bundle_artifact_id(
         tokenizer: &bundle.tokenizer,
         labels,
         files,
+        decoding: bundle.decoding.as_deref(),
     };
 
     let payload =
@@ -268,6 +290,10 @@ fn validate_bundle_files(
 
         if file.logical_name == "config" {
             validate_config_labels(bundle, &bytes)?;
+        }
+        if file.logical_name == SEQUENCE_DECODER_LOGICAL_NAME {
+            validate_sequence_decoder_sidecar(&bytes, &bundle.labels)
+                .map_err(|_| CaptureParserError::ManifestInvalid)?;
         }
     }
 

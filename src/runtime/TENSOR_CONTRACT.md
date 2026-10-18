@@ -28,11 +28,27 @@ Every artifact bundle must declare one of these parser-specific tensor contract 
 
 | Parser | `tensor_contract_version` | `normalization_version` | `postprocess_version` |
 | --- | --- | --- | --- |
-| `calendar` | `calendar-bert-token-classification-v1` | `calendar-bert-uncased-v1` | `calendar-event-postprocess-v1` |
-| `task` | `task-bert-token-classification-v1` | `task-bert-uncased-v1` | `task-postprocess-v1` |
-| `reminder` | `reminder-bert-token-classification-v1` | `reminder-bert-uncased-v1` | `reminder-postprocess-v1` |
+| `calendar` | `calendar-bert-token-classification-v1` | `calendar-bert-uncased-v1` | `calendar-event-postprocess-v2` |
+| `task` | `task-bert-token-classification-v1` | `task-bert-uncased-v1` | `task-postprocess-v2` |
+| `reminder` | `reminder-bert-token-classification-v1` | `reminder-bert-uncased-v1` | `reminder-postprocess-v2` |
 
-The runtime validates these values during artifact load before any adapter is used.
+The runtime validates these values during artifact load before any adapter is used. The `v2` postprocess versions mark the switch to first-piece word decoding described below.
+
+## Decoding
+
+The tensors are unchanged, but the runtime reads the logits per whitespace word, not per token:
+
+1. Split the input into whitespace words (Python `str.split()` whitespace).
+2. Keep only the first subword piece of each word that the tokenizer represented. Special tokens and later pieces are ignored. Words past truncation are labeled `O`.
+3. Decode the resulting `[words, labels]` matrix with the artifact's `decoding` strategy.
+4. Rebuild spans from the whitespace word offsets. `O` ends a span, `B-` always starts one, and `I-` extends the current span only when the previous word has the same field.
+
+The optional top-level manifest field `decoding` selects the strategy; when absent it is `argmax`.
+
+- `argmax`: the highest logit per word, ties to the lowest label id.
+- `bio`: constrained BIO Viterbi over the raw word logits. `O` or any `B-` label can start; an `I-` label can only follow `B-` or `I-` of the same field; every label can end. Legal moves score zero and illegal ones negative infinity, with no other weights. Scores accumulate in float64; exact ties choose the lowest predecessor id, then the lowest final id.
+
+A BIO artifact may ship `sequence_decoder.json` as the optional `files.sequence_decoder` entry. The runtime checks that its labels and start/transition/end matrices match the rules above and rejects the artifact otherwise. The shared implementation lives in `runtime/sequence-decoder.ts`; the Rust crate (`kalandar::decode_bio_viterbi`) and the Swift runtime (`CoreAISequenceDecoder`) implement the same contract.
 
 ## Tensor inputs
 

@@ -2,6 +2,7 @@ import { createHash } from 'node:crypto';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 
+import { isSequenceDecoding, orderedLabels, validateBioLabels, validateSequenceDecoderSidecar } from './sequence-decoder.ts';
 import { createBertWordPieceTokenizer } from './tokenizer.ts';
 import type {
   ArtifactManifestByParser,
@@ -18,16 +19,16 @@ const textDecoder = new TextDecoder();
 export const ARTIFACT_MANIFEST_VERSION = 'kalandar-ml-artifact-v1';
 export const CALENDAR_TENSOR_CONTRACT_VERSION = 'calendar-bert-token-classification-v1';
 export const CALENDAR_NORMALIZATION_VERSION = 'calendar-bert-uncased-v1';
-export const CALENDAR_POSTPROCESS_VERSION = 'calendar-event-postprocess-v1';
+export const CALENDAR_POSTPROCESS_VERSION = 'calendar-event-postprocess-v2';
 export const TASK_TENSOR_CONTRACT_VERSION = 'task-bert-token-classification-v1';
 export const TASK_NORMALIZATION_VERSION = 'task-bert-uncased-v1';
-export const TASK_POSTPROCESS_VERSION = 'task-postprocess-v1';
+export const TASK_POSTPROCESS_VERSION = 'task-postprocess-v2';
 export const TASK_DECOMPOSITION_TENSOR_CONTRACT_VERSION = 'task-decomposition-bert-token-classification-v1';
 export const TASK_DECOMPOSITION_NORMALIZATION_VERSION = 'task-decomposition-bert-uncased-v1';
 export const TASK_DECOMPOSITION_POSTPROCESS_VERSION = 'task-decomposition-postprocess-v1';
 export const REMINDER_TENSOR_CONTRACT_VERSION = 'reminder-bert-token-classification-v1';
 export const REMINDER_NORMALIZATION_VERSION = 'reminder-bert-uncased-v1';
-export const REMINDER_POSTPROCESS_VERSION = 'reminder-postprocess-v1';
+export const REMINDER_POSTPROCESS_VERSION = 'reminder-postprocess-v2';
 
 const CALENDAR_REQUIRED_LABELS = [
   'O',
@@ -241,6 +242,10 @@ const parseManifest = (payload: string): MlArtifactManifest => {
   assert(manifest.files?.tokenizer_config, 'Artifact manifest is missing tokenizer_config file metadata');
   assert(manifest.files?.special_tokens_map, 'Artifact manifest is missing special_tokens_map file metadata');
   assert(manifest.files?.vocab, 'Artifact manifest is missing vocab file metadata');
+  assert(
+    manifest.decoding === undefined || isSequenceDecoding(manifest.decoding),
+    `Artifact manifest decoding must be "argmax" or "bio", received ${JSON.stringify(manifest.decoding)}`,
+  );
   return manifest;
 };
 
@@ -339,6 +344,14 @@ const loadArtifactFiles = async (
   files.vocab.text = textDecoder.decode(files.vocab.bytes);
   if (files.tokenizer_json) {
     files.tokenizer_json.text = textDecoder.decode(files.tokenizer_json.bytes);
+  }
+  if (manifest.files.sequence_decoder) {
+    files.sequence_decoder = await loadFile(
+      manifest.files.sequence_decoder.path,
+      manifest.files.sequence_decoder.sha256,
+      manifest.files.sequence_decoder.size_bytes,
+    );
+    files.sequence_decoder.text = textDecoder.decode(files.sequence_decoder.bytes);
   }
 
   return files;
@@ -468,6 +481,12 @@ export async function loadMlArtifact(
   const files = await loadArtifactFiles(source, root, manifest);
   const { idToLabel, labelToId } = parseConfigLabels(files.config.text || '', PARSER_RUNTIME_SPECS[parser].requiredLabels);
   const tokenizer = createBertWordPieceTokenizer(manifest.tokenizer, files);
+  const labels = orderedLabels(idToLabel);
+  const decoding = manifest.decoding ?? 'argmax';
+  validateBioLabels(labels);
+  const sequenceDecoder = files.sequence_decoder
+    ? validateSequenceDecoderSidecar(JSON.parse(files.sequence_decoder.text || ''), labels)
+    : undefined;
 
   return {
     parser,
@@ -478,5 +497,8 @@ export async function loadMlArtifact(
     files,
     idToLabel,
     labelToId,
+    labels,
+    decoding,
+    ...(sequenceDecoder ? { sequenceDecoder } : {}),
   };
 }

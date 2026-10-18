@@ -1,3 +1,7 @@
+import type { SequenceDecoderSidecar, SequenceDecoding } from './sequence-decoder.ts';
+
+export type { SequenceDecoderSidecar, SequenceDecoding } from './sequence-decoder.ts';
+
 export type MlParserName = 'calendar' | 'task' | 'reminder' | 'task_decomposition';
 export type SupportedMlArtifactParser = MlParserName;
 
@@ -52,6 +56,8 @@ export interface MlArtifactManifest {
   postprocess_version: string;
   tokenizer: BertWordPieceTokenizerManifest;
   tensor_contract: TensorContract;
+  /** First-piece decoding strategy. Absent means `argmax`. */
+  decoding?: SequenceDecoding;
   files: {
     model: ArtifactFileSpec;
     config: ArtifactFileSpec;
@@ -59,6 +65,7 @@ export interface MlArtifactManifest {
     special_tokens_map: ArtifactFileSpec;
     vocab: ArtifactFileSpec;
     tokenizer_json?: ArtifactFileSpec;
+    sequence_decoder?: ArtifactFileSpec;
   };
 }
 
@@ -116,6 +123,7 @@ export interface LoadedArtifactFiles {
   special_tokens_map: LoadedArtifactFile;
   vocab: LoadedArtifactFile;
   tokenizer_json?: LoadedArtifactFile;
+  sequence_decoder?: LoadedArtifactFile;
 }
 
 export interface LoadedMlArtifact<TParser extends SupportedMlArtifactParser = SupportedMlArtifactParser> {
@@ -127,6 +135,11 @@ export interface LoadedMlArtifact<TParser extends SupportedMlArtifactParser = Su
   files: LoadedArtifactFiles;
   idToLabel: Record<number, string>;
   labelToId: Record<string, number>;
+  /** Labels ordered by id. */
+  labels: string[];
+  /** Resolved decoding strategy; `argmax` when the manifest omits it. */
+  decoding: SequenceDecoding;
+  sequenceDecoder?: SequenceDecoderSidecar;
 }
 
 export type MlArtifactSource =

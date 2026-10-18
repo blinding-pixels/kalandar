@@ -6,7 +6,17 @@ import path from 'node:path';
 import { describe, test } from 'node:test';
 
 import { loadMlArtifact } from '../index.ts';
-import { createCalendarTestBundle, createReminderTestBundle, createTaskTestBundle } from './helpers.ts';
+import { fileURLToPath } from 'node:url';
+
+import {
+  CALENDAR_LABELS,
+  buildBioSequenceDecoderSidecar,
+  createCalendarTestBundle,
+  createReminderTestBundle,
+  createTaskTestBundle,
+} from './helpers.ts';
+
+const resourceRoot = fileURLToPath(new URL('../../../resources/capture-parser/', import.meta.url));
 
 describe('runtime artifact loader', () => {
   test('accepts a valid calendar artifact manifest', async () => {
@@ -289,6 +299,70 @@ describe('runtime artifact loader for reminder', () => {
       await assert.rejects(() => loadMlArtifact({ kind: 'directory', path: bundle.dir }, 'reminder'), /model/i);
     } finally {
       await bundle.cleanup();
+    }
+  });
+});
+
+describe('runtime artifact decoding metadata', () => {
+  test('defaults decoding to argmax when the manifest omits it', async () => {
+    const bundle = await createCalendarTestBundle();
+    try {
+      const artifact = await loadMlArtifact({ kind: 'directory', path: bundle.dir });
+      assert.equal(artifact.decoding, 'argmax');
+      assert.equal(artifact.sequenceDecoder, undefined);
+      assert.equal(artifact.labels.length, 21);
+    } finally {
+      await bundle.cleanup();
+    }
+  });
+
+  test('accepts BIO decoding with a matching sequence_decoder.json', async () => {
+    const bundle = await createCalendarTestBundle({
+      decoding: 'bio',
+      sequenceDecoder: buildBioSequenceDecoderSidecar(CALENDAR_LABELS),
+    });
+    try {
+      const artifact = await loadMlArtifact({ kind: 'directory', path: bundle.dir }, 'calendar');
+      assert.equal(artifact.decoding, 'bio');
+      assert.deepEqual(artifact.sequenceDecoder?.labels, CALENDAR_LABELS);
+    } finally {
+      await bundle.cleanup();
+    }
+  });
+
+  test('rejects an unknown decoding strategy', async () => {
+    const bundle = await createCalendarTestBundle();
+    try {
+      const manifest = JSON.parse(await fs.readFile(bundle.manifestPath, 'utf8'));
+      manifest.decoding = 'viterbi';
+      await fs.writeFile(bundle.manifestPath, `${JSON.stringify(manifest, null, 2)}\n`, 'utf8');
+      await assert.rejects(() => loadMlArtifact({ kind: 'directory', path: bundle.dir }), /decoding must be/);
+    } finally {
+      await bundle.cleanup();
+    }
+  });
+
+  test('rejects a sequence_decoder.json that does not match the BIO rules', async () => {
+    const sidecar = buildBioSequenceDecoderSidecar(CALENDAR_LABELS);
+    sidecar.start_scores[2] = 0;
+    const bundle = await createCalendarTestBundle({ decoding: 'bio', sequenceDecoder: sidecar });
+    try {
+      await assert.rejects(() => loadMlArtifact({ kind: 'directory', path: bundle.dir }), /sequence_decoder\.json/);
+    } finally {
+      await bundle.cleanup();
+    }
+  });
+
+  test('loads the shipped capture parser artifacts with their decodings', async () => {
+    for (const [parser, decoding] of [
+      ['task', 'argmax'],
+      ['calendar', 'bio'],
+      ['reminder', 'argmax'],
+    ] as const) {
+      const artifact = await loadMlArtifact({ kind: 'directory', path: path.join(resourceRoot, parser) }, parser);
+      assert.equal(artifact.suite_version, 'kalandar-capture-parser-onnx-v2');
+      assert.equal(artifact.decoding, decoding);
+      assert.equal(Boolean(artifact.sequenceDecoder), decoding === 'bio');
     }
   });
 });

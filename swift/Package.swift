@@ -70,7 +70,10 @@ let package = Package(
         ),
         .testTarget(
             name: "KalandarCoreAIRuntimeTests",
-            dependencies: ["KalandarCoreAIRuntime", "KalandarDates"]
+            dependencies: ["KalandarCoreAIRuntime", "KalandarDates"],
+            resources: [
+                .copy("Fixtures"),
+            ]
         ),
     ]
 )
