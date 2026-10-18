@@ -53,6 +53,16 @@ public struct CoreAIParserSuite: Sendable {
         try info(for: store.artifact(family: family.rawValue), family: family)
     }
 
+    func parsePreviewResult(for kind: String, request: CapturePreviewRequest) async throws -> CapturePreviewResult {
+        let family: CoreAIParserFamily
+        switch kind {
+        case "task": family = .task
+        case "reminder": family = .reminder
+        default: family = .calendar
+        }
+        return try await parsePreview(family, request: request).value
+    }
+
     public func parseTask(_ request: CapturePreviewRequest) async throws -> CoreAIParsed<CapturePreviewTaskDraft> {
         let parsed = try await parsePreview(.task, request: request)
         guard let value = parsed.value.task else {
@@ -101,7 +111,12 @@ public struct CoreAIParserSuite: Sendable {
             sourceText: input
         )
         return CoreAIParsed(
-            value: CoreAIEntityMerger.apply(entities, to: fallback),
+            value: CoreAIEntityMerger.resolveSchedule(
+                CoreAIEntityMerger.apply(entities, to: fallback),
+                entities: entities,
+                input: input,
+                request: request
+            ),
             entities: entities,
             model: model
         )

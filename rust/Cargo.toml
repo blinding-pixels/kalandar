@@ -1,4 +1,4 @@
 [workspace]
 resolver = "2"
-members = ["kalandar", "kalandar-dates"]
+members = ["kalandar", "kalandar-dates", "kalandar-dates-ffi"]
 exclude = ["kalandar-dates/wasm", "kalandar-dates/fuzz"]

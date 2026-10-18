@@ -1,4 +1,5 @@
 import Foundation
+import KalandarDates
 
 /// A contiguous source span emitted by a token-classification Core AI model.
 public struct CoreAIEntity: Equatable, Sendable {
@@ -165,7 +166,6 @@ enum CoreAIEntityMerger {
             reminder.title = first("title") ?? reminder.title
             reminder.remindAtText = first("trigger_time") ?? reminder.remindAtText
             reminder.leadTimeText = first("lead_time") ?? reminder.leadTimeText
-            reminder.recurrence = recurrence(first("recurrence")) ?? reminder.recurrence
             reminder.recurrenceStartText = first("recurrence_start") ?? reminder.recurrenceStartText
             reminder.recurrenceEndText = first("recurrence_end") ?? reminder.recurrenceEndText
             reminder.recurrenceWindowText = first("recurrence_window") ?? reminder.recurrenceWindowText
@@ -179,7 +179,6 @@ enum CoreAIEntityMerger {
             event.descriptionText = first("description") ?? event.descriptionText
             event.timeText = first("start_time") ?? event.timeText
             event.endTimeText = first("end_time") ?? event.endTimeText
-            event.durationMinutes = durationMinutes(first("duration")) ?? event.durationMinutes
             event.location = first("location") ?? event.location
             event.recurrenceText = first("recurrence") ?? event.recurrenceText
             event.recurrenceStartText = first("recurrence_start") ?? event.recurrenceStartText
@@ -191,6 +190,54 @@ enum CoreAIEntityMerger {
             break
         }
 
+        return result
+    }
+
+    static func resolveSchedule(
+        _ base: CapturePreviewResult,
+        entities: [CoreAIEntity],
+        input: String,
+        request: CapturePreviewRequest
+    ) -> CapturePreviewResult {
+        let dateFields: Set<String> = [
+            "due_date", "due_time", "duration", "trigger_time", "lead_time", "start_time", "end_time",
+            "recurrence", "recurrence_start", "recurrence_end", "recurrence_exception", "recurrence_window",
+        ]
+        let kind: String
+        switch base.kind {
+        case "task": kind = "task"
+        case "reminder": kind = "reminder"
+        case "calendar-event": kind = "calendar"
+        default: return base
+        }
+        let labels = entities.filter { dateFields.contains($0.field) }.compactMap { entity -> ScheduleLabel? in
+            let characters = input.count
+            guard entity.startOffset >= 0, entity.endOffset <= characters, entity.startOffset < entity.endOffset else {
+                return nil
+            }
+            let start = input.index(input.startIndex, offsetBy: entity.startOffset)
+            let end = input.index(input.startIndex, offsetBy: entity.endOffset)
+            return ScheduleLabel(
+                label: entity.field,
+                start: input.utf16.distance(from: input.utf16.startIndex, to: start),
+                end: input.utf16.distance(from: input.utf16.startIndex, to: end)
+            )
+        }
+        guard !labels.isEmpty else { return base }
+        let schedule = ScheduleExtraction(input, kind: kind, request: request, labels: labels)
+        var result = base
+        result.schedule = schedule.schedule
+        result.warnings = result.warnings.filter { $0.severity != "info" } + schedule.warnings
+        if var reminder = result.reminder {
+            reminder.recurrence = schedule.reminderRecurrence ?? reminder.recurrence
+            result.reminder = reminder
+        }
+        if var event = result.event {
+            event.durationMinutes = schedule.schedule?.durationMinutes ?? event.durationMinutes
+            let offsets = schedule.alertOffsets
+            event.alertOffsetMinutes = offsets.isEmpty ? event.alertOffsetMinutes : offsets
+            result.event = event
+        }
         return result
     }
 
@@ -213,34 +260,5 @@ enum CoreAIEntityMerger {
         return (existing + extras).filter { seen.insert($0.raw).inserted }
     }
 
-    private static func recurrence(_ raw: String?) -> ReminderRecurrence? {
-        guard let raw else { return nil }
-        let value = TextUtilities.shadow(raw)
-        let interval = value.contains("every other") ? 2 : 1
-        if value.contains("daily") || value.contains("every day") {
-            return ReminderRecurrence(frequency: "daily", interval: interval)
-        }
-        let days = TextUtilities.weekdays.filter { value.contains($0) }
-        if value.contains("week") || !days.isEmpty {
-            return ReminderRecurrence(frequency: "weekly", interval: interval, days: days.isEmpty ? nil : days)
-        }
-        if value.contains("month") {
-            return ReminderRecurrence(frequency: "monthly", interval: interval)
-        }
-        if value.contains("year") || value.contains("annual") {
-            return ReminderRecurrence(frequency: "yearly", interval: interval)
-        }
-        return nil
-    }
 
-    private static func durationMinutes(_ raw: String?) -> Int? {
-        guard let raw else { return nil }
-        let value = TextUtilities.shadow(raw)
-        let number = value.split(whereSeparator: { !$0.isNumber }).first.flatMap { Int($0) }
-        guard let number else { return nil }
-        if value.contains("hour") || value.contains("hr") {
-            return number * 60
-        }
-        return value.contains("min") ? number : nil
-    }
 }

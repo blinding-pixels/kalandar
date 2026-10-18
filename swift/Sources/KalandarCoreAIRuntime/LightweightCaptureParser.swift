@@ -1,4 +1,5 @@
 import Foundation
+import KalandarDates
 
 public struct LightweightCaptureParser: Sendable {
     public init() {}
@@ -53,11 +54,14 @@ public struct LightweightCaptureParser: Sendable {
         _ confidence: Double,
         _ candidates: [CapturePreviewCandidate]
     ) -> CapturePreviewResult {
-        CapturePreviewResult(
+        let parsed = TaskLightweightParser.parse(text, request: request)
+        return CapturePreviewResult(
             kind: "task",
             confidence: confidence,
             candidates: candidates,
-            task: TaskLightweightParser.parse(text, request: request)
+            task: parsed.draft,
+            warnings: parsed.schedule.warnings,
+            schedule: parsed.schedule.schedule
         )
     }
 
@@ -67,11 +71,14 @@ public struct LightweightCaptureParser: Sendable {
         _ confidence: Double,
         _ candidates: [CapturePreviewCandidate]
     ) -> CapturePreviewResult {
-        CapturePreviewResult(
+        let parsed = ReminderLightweightParser.parse(text, request: request)
+        return CapturePreviewResult(
             kind: "reminder",
             confidence: confidence,
             candidates: candidates,
-            reminder: ReminderLightweightParser.parse(text, request: request)
+            reminder: parsed.draft,
+            warnings: parsed.schedule.warnings,
+            schedule: parsed.schedule.schedule
         )
     }
 
@@ -81,11 +88,14 @@ public struct LightweightCaptureParser: Sendable {
         _ confidence: Double,
         _ candidates: [CapturePreviewCandidate]
     ) -> CapturePreviewResult {
-        CapturePreviewResult(
+        let parsed = CalendarLightweightParser.parse(text, request: request)
+        return CapturePreviewResult(
             kind: "calendar-event",
             confidence: confidence,
             candidates: candidates,
-            event: CalendarLightweightParser.parse(text, request: request)
+            event: parsed.draft,
+            warnings: parsed.schedule.warnings,
+            schedule: parsed.schedule.schedule
         )
     }
 }
@@ -142,42 +152,34 @@ enum IntentRouter {
 }
 
 enum TaskLightweightParser {
-    static func parse(_ input: String, request: CapturePreviewRequest) -> CapturePreviewTaskDraft {
-        var working = applyDateCorrections(TextUtilities.shadow(input))
+    static func parse(_ input: String, request: CapturePreviewRequest) -> (draft: CapturePreviewTaskDraft, schedule: ScheduleExtraction) {
+        var working = TextUtilities.shadow(input)
         let priority = extractFirst(["\\bhigh\\s+priority\\b", "\\burgent\\b"], value: "high", from: &working)
             ?? extractFirst(["\\bmedium\\s+priority\\b"], value: "medium", from: &working)
             ?? extractFirst(["\\blow\\s+priority\\b"], value: "low", from: &working)
         let status = extractStatus(from: &working)
-        let duration = extractGroup("\\b(\\d+\\s*(?:minutes?|mins?|hours?|hrs?))\\b", from: &working)
         let tags = extractTags(from: &working)
         let project = extractProject(from: &working)
         let assignees = extractAssignees(from: &working, knownAssignees: request.knownAssignees)
-        let dueTime = extractDueTime(from: &working)
-        let dueDate = extractDueDate(from: &working)
-        let title = TextUtilities.cleanTitle(working, fallback: "task")
+        let schedule = ScheduleExtraction(working, kind: "task", request: request)
+        let title = TextUtilities.cleanTitle(schedule.remaining, fallback: "task")
 
-        return CapturePreviewTaskDraft(
+        let draft = CapturePreviewTaskDraft(
             title: title,
             assignees: assignees,
             projectHint: project,
             tags: tags,
             priority: priority,
             status: status,
-            dueDateText: dueDate,
-            dueTimeText: dueTime,
-            durationText: duration
+            dueDateText: schedule.texts.date,
+            dueTimeText: schedule.texts.time,
+            durationText: schedule.texts.duration,
+            recurrenceText: schedule.texts.recurrence,
+            recurrenceStartText: schedule.texts.recurrenceStart,
+            recurrenceEndText: schedule.texts.recurrenceEnd,
+            recurrenceExceptions: schedule.recurrenceExceptions
         )
-    }
-
-    private static func applyDateCorrections(_ input: String) -> String {
-        var output = input
-        for (from, to) in [
-            ("tmrw", "tomorrow"), ("tmr", "tomorrow"), ("tomorow", "tomorrow"),
-            ("tonite", "tonight"), ("eod", "end of day"), ("cob", "end of day"),
-        ] {
-            output = TextUtilities.replacingMatches("\\b\(from)\\b", in: output, with: to)
-        }
-        return output
+        return (draft, schedule)
     }
 
     private static func extractFirst(_ patterns: [String], value: String, from working: inout String) -> String? {
@@ -206,14 +208,6 @@ enum TaskLightweightParser {
         return nil
     }
 
-    private static func extractGroup(_ pattern: String, from working: inout String) -> String? {
-        guard let match = TextUtilities.firstMatch(pattern, in: working),
-              let value = TextUtilities.group(1, from: match, in: working) else {
-            return nil
-        }
-        TextUtilities.removeMatch(match, from: &working)
-        return TextUtilities.shadow(value)
-    }
 
     private static func extractTags(from working: inout String) -> [String] {
         var tags: [String] = []
@@ -262,211 +256,59 @@ enum TaskLightweightParser {
         return TextUtilities.uniqueSorted(found)
     }
 
-    private static func extractDueTime(from working: inout String) -> String? {
-        for pattern in ["\\bat\\s+(\\d{1,2}\\s*(?:am|pm))\\b", "\\b(\\d{1,2}\\s*(?:am|pm))\\b"] {
-            if let value = extractGroup(pattern, from: &working) {
-                return value.replacingOccurrences(of: " ", with: "")
-            }
-        }
-        return nil
-    }
 
-    private static func extractDueDate(from working: inout String) -> String? {
-        for pattern in [
-            "\\b(by\\s+the\\s+first\\s+business\\s+day\\s+next\\s+month)\\b",
-            "\\b(tomorrow)\\b",
-            "\\b(end\\s+of\\s+month)\\b",
-        ] {
-            if let value = extractGroup(pattern, from: &working) {
-                return value
-            }
-        }
-        return nil
-    }
 }
 
 enum ReminderLightweightParser {
-    static func parse(_ input: String, request _: CapturePreviewRequest) -> CapturePreviewReminderDraft {
+    static func parse(_ input: String, request: CapturePreviewRequest) -> (draft: CapturePreviewReminderDraft, schedule: ScheduleExtraction) {
         var working = TextUtilities.shadow(input)
         working = TextUtilities.replacingMatches("^remind\\s+me\\s+(?:to\\s+)?", in: working)
         working = TextUtilities.replacingMatches("^don't\\s+forget\\s+(?:to\\s+)?", in: working)
         working = TextUtilities.replacingMatches("^dont\\s+forget\\s+(?:to\\s+)?", in: working)
-        let original = working
 
-        let exceptions = extractExceptions(from: &working)
-        let recurrenceStart = extractGroup("\\b(starting\\s+next\\s+month)\\b", from: &working)
-        let recurrenceEnd = extractGroup("\\b(till\\s+[^,.;]+)$", from: &working)
-        let recurrenceWindow = extractGroup("\\b(for\\s+\\d+\\s+months?)\\b", from: &working)
-        let recurrence = extractRecurrence(from: &working)
-        let contextHint = extractContext(from: &working, recurrence: recurrence, original: original)
-        let remindAt = extractRemindAt(from: &working, recurrence: recurrence)
-        working = TextUtilities.replacingMatches("^to\\s+", in: working)
-        let title = TextUtilities.cleanTitle(working, fallback: "reminder")
+        let schedule = ScheduleExtraction(working, kind: "reminder", request: request)
+        var remaining = schedule.remaining
+        remaining = TextUtilities.replacingMatches("^to\\s+", in: remaining)
+        let title = TextUtilities.cleanTitle(remaining, fallback: "reminder")
 
-        return CapturePreviewReminderDraft(
+        let draft = CapturePreviewReminderDraft(
             title: title,
-            remindAtText: remindAt,
-            recurrence: recurrence,
-            recurrenceStartText: recurrenceStart,
-            recurrenceEndText: recurrenceEnd,
-            recurrenceExceptions: exceptions,
-            recurrenceWindowText: recurrenceWindow,
-            contextHint: contextHint
+            remindAtText: schedule.texts.moment ?? schedule.clockTime,
+            recurrence: schedule.reminderRecurrence,
+            recurrenceStartText: schedule.texts.recurrenceStart,
+            recurrenceEndText: schedule.texts.recurrenceEnd,
+            recurrenceExceptions: schedule.recurrenceExceptions,
+            recurrenceWindowText: schedule.texts.recurrenceWindow,
+            contextHint: schedule.contextHint
         )
-    }
-
-    private static func extractGroup(_ pattern: String, from working: inout String) -> String? {
-        guard let match = TextUtilities.firstMatch(pattern, in: working),
-              let value = TextUtilities.group(1, from: match, in: working) else {
-            return nil
-        }
-        TextUtilities.removeMatch(match, from: &working)
-        return TextUtilities.shadow(value)
-    }
-
-    private static func extractRecurrence(from working: inout String) -> ReminderRecurrence? {
-        if let match = TextUtilities.firstMatch("\\bevery\\s+other\\s+day\\b", in: working) {
-            TextUtilities.removeMatch(match, from: &working)
-            return ReminderRecurrence(frequency: "daily", interval: 2)
-        }
-        for day in TextUtilities.weekdays {
-            if let match = TextUtilities.firstMatch("\\bevery\\s+other\\s+\(day)\\b", in: working) {
-                TextUtilities.removeMatch(match, from: &working)
-                return ReminderRecurrence(frequency: "weekly", interval: 2, days: [day])
-            }
-            if let match = TextUtilities.firstMatch("\\bevery\\s+\(day)\\b", in: working) {
-                TextUtilities.removeMatch(match, from: &working)
-                return ReminderRecurrence(frequency: "weekly", interval: 1, days: [day])
-            }
-        }
-        return nil
-    }
-
-    private static func extractExceptions(from working: inout String) -> [CapturePreviewRecurrenceException] {
-        var exceptions: [CapturePreviewRecurrenceException] = []
-        if let match = TextUtilities.firstMatch("\\b(unless\\s+.+?)(?=\\s+starting\\b|\\s+but\\b|$)", in: working),
-           let raw = TextUtilities.group(1, from: match, in: working) {
-            exceptions.append(CapturePreviewRecurrenceException(raw: TextUtilities.shadow(raw)))
-            TextUtilities.removeMatch(match, from: &working)
-        }
-        if let match = TextUtilities.firstMatch("\\b(but\\s+skip\\s+[^,.;]+)$", in: working),
-           let raw = TextUtilities.group(1, from: match, in: working) {
-            exceptions.append(CapturePreviewRecurrenceException(raw: TextUtilities.shadow(raw)))
-            TextUtilities.removeMatch(match, from: &working)
-        }
-        if let match = TextUtilities.firstMatch("\\b(except\\s+the\\s+week\\s+of\\s+the\\s+\\d+(?:st|nd|rd|th)?)\\b", in: working),
-           let raw = TextUtilities.group(1, from: match, in: working) {
-            exceptions.append(CapturePreviewRecurrenceException(raw: TextUtilities.shadow(raw)))
-            TextUtilities.removeMatch(match, from: &working)
-        }
-        return exceptions
-    }
-
-    private static func extractContext(from working: inout String, recurrence: ReminderRecurrence?, original: String) -> String? {
-        let nightIsTemporal = TextUtilities.firstMatch("\\bevery\\s+(?:other\\s+)?[a-z]+\\s+(?:at\\s+)?night\\b", in: original) != nil
-            || TextUtilities.firstMatch("\\bat\\s+night\\b", in: original) != nil
-        if recurrence != nil, nightIsTemporal, let match = TextUtilities.firstMatch("\\b(?:at\\s+)?night\\b", in: working) {
-            TextUtilities.removeMatch(match, from: &working)
-            return "night"
-        }
-        if let match = TextUtilities.firstMatch("\\bend\\s+of\\s+month\\b", in: working) {
-            _ = match
-            return "end of month"
-        }
-        return nil
-    }
-
-    private static func extractRemindAt(from working: inout String, recurrence: ReminderRecurrence?) -> String? {
-        if recurrence != nil {
-            if let match = TextUtilities.firstMatch("\\bat\\s+(\\d{1,2}\\s*(?:am|pm))\\b", in: working),
-               let value = TextUtilities.group(1, from: match, in: working) {
-                TextUtilities.removeMatch(match, from: &working)
-                return value.replacingOccurrences(of: " ", with: "")
-            }
-            return nil
-        }
-        for pattern in [
-            "\\b(tomorrow)\\b",
-            "\\b(end\\s+of\\s+month)\\b",
-            "\\bat\\s+(\\d{1,2}\\s*(?:am|pm))\\b",
-        ] {
-            if let value = extractGroup(pattern, from: &working) {
-                return value.contains("am") || value.contains("pm")
-                    ? value.replacingOccurrences(of: " ", with: "")
-                    : value
-            }
-        }
-        return nil
+        return (draft, schedule)
     }
 }
 
 enum CalendarLightweightParser {
-    static func parse(_ input: String, request _: CapturePreviewRequest) -> CapturePreviewCalendarEventDraft {
-        var working = TextUtilities.shadow(input)
-        let exceptions = extractExceptions(from: &working)
-        let recurrenceStart = extractGroup("\\b(starting\\s+next\\s+month)\\b", from: &working)
-        let recurrenceEnd = extractGroup("\\b(till\\s+[^,.;]+)$", from: &working)
-        let recurrence = extractRecurrence(from: &working)
+    static func parse(_ input: String, request: CapturePreviewRequest) -> (draft: CapturePreviewCalendarEventDraft, schedule: ScheduleExtraction) {
+        let original = TextUtilities.shadow(input)
+        let attendees = extractAttendees(from: original)
+        let schedule = ScheduleExtraction(original, kind: "calendar", request: request)
+        var working = schedule.remaining
         let location = extractLocation(from: &working)
-        let (time, endTime) = extractTimeRange(from: &working)
-        let date = extractGroup("\\b(tomorrow)\\b", from: &working)
-        let attendees = extractAttendees(from: working)
         let title = TextUtilities.cleanTitle(working, fallback: "event")
-        let duration = time == nil ? nil : 60
 
-        return CapturePreviewCalendarEventDraft(
+        let draft = CapturePreviewCalendarEventDraft(
             title: title,
-            dateText: date,
-            timeText: time,
-            endTimeText: endTime,
-            durationMinutes: duration,
+            dateText: schedule.texts.date,
+            timeText: schedule.texts.time,
+            endTimeText: schedule.texts.endTime,
+            durationMinutes: schedule.schedule?.durationMinutes,
             location: location,
-            recurrenceText: recurrence,
-            recurrenceStartText: recurrenceStart,
-            recurrenceEndText: recurrenceEnd,
-            recurrenceExceptions: exceptions,
+            recurrenceText: schedule.texts.recurrence,
+            recurrenceStartText: schedule.texts.recurrenceStart,
+            recurrenceEndText: schedule.texts.recurrenceEnd,
+            recurrenceExceptions: schedule.recurrenceExceptions,
+            alertOffsetMinutes: schedule.alertOffsets,
             attendees: attendees
         )
-    }
-
-    private static func extractGroup(_ pattern: String, from working: inout String) -> String? {
-        guard let match = TextUtilities.firstMatch(pattern, in: working),
-              let value = TextUtilities.group(1, from: match, in: working) else {
-            return nil
-        }
-        TextUtilities.removeMatch(match, from: &working)
-        return TextUtilities.shadow(value)
-    }
-
-    private static func extractRecurrence(from working: inout String) -> String? {
-        for day in TextUtilities.weekdays {
-            if let match = TextUtilities.firstMatch("\\bevery\\s+other\\s+\(day)\\b", in: working),
-               let raw = TextUtilities.group(0, from: match, in: working) {
-                TextUtilities.removeMatch(match, from: &working)
-                return TextUtilities.shadow(raw)
-            }
-            if let match = TextUtilities.firstMatch("\\bevery\\s+\(day)\\b", in: working),
-               let raw = TextUtilities.group(0, from: match, in: working) {
-                TextUtilities.removeMatch(match, from: &working)
-                return TextUtilities.shadow(raw)
-            }
-        }
-        return nil
-    }
-
-    private static func extractExceptions(from working: inout String) -> [CapturePreviewRecurrenceException] {
-        var exceptions: [CapturePreviewRecurrenceException] = []
-        if let match = TextUtilities.firstMatch("\\b(unless\\s+.+?)(?=\\s+starting\\b|\\s+but\\b|$)", in: working),
-           let raw = TextUtilities.group(1, from: match, in: working) {
-            exceptions.append(CapturePreviewRecurrenceException(raw: TextUtilities.shadow(raw)))
-            TextUtilities.removeMatch(match, from: &working)
-        }
-        if let match = TextUtilities.firstMatch("\\b(but\\s+skip\\s+[^,.;]+)$", in: working),
-           let raw = TextUtilities.group(1, from: match, in: working) {
-            exceptions.append(CapturePreviewRecurrenceException(raw: TextUtilities.shadow(raw)))
-            TextUtilities.removeMatch(match, from: &working)
-        }
-        return exceptions
+        return (draft, schedule)
     }
 
     private static func extractLocation(from working: inout String) -> String? {
@@ -479,24 +321,7 @@ enum CalendarLightweightParser {
         return TextUtilities.cleanTitle(value, fallback: "location")
     }
 
-    private static func extractTimeRange(from working: inout String) -> (String?, String?) {
-        if let match = TextUtilities.firstMatch("\\b(\\d{1,2}\\s*(?:am|pm))\\s+to\\s+(\\d{1,2}\\s*(?:am|pm))\\b", in: working),
-           let start = TextUtilities.group(1, from: match, in: working),
-           let end = TextUtilities.group(2, from: match, in: working) {
-            TextUtilities.removeMatch(match, from: &working)
-            return (normalizeTime(start), normalizeTime(end))
-        }
-        if let match = TextUtilities.firstMatch("\\bat\\s+(\\d{1,2}\\s*(?:am|pm))\\b", in: working),
-           let start = TextUtilities.group(1, from: match, in: working) {
-            TextUtilities.removeMatch(match, from: &working)
-            return (normalizeTime(start), nil)
-        }
-        return (nil, nil)
-    }
 
-    private static func normalizeTime(_ value: String) -> String {
-        value.replacingOccurrences(of: " ", with: "")
-    }
 
     private static func extractAttendees(from working: String) -> [String] {
         guard let match = TextUtilities.firstMatch("\\bwith\\s+([a-z][a-z0-9-]*)\\b", in: working),
@@ -504,5 +329,73 @@ enum CalendarLightweightParser {
             return []
         }
         return [TextUtilities.shadow(value)]
+    }
+}
+
+struct ScheduleExtraction {
+    let remaining: String
+    let texts: ScheduleTexts
+    let schedule: PreviewSchedule?
+    let warnings: [CapturePreviewWarning]
+
+    init(_ text: String, kind: String, request: CapturePreviewRequest, labels: [ScheduleLabel]? = nil) {
+        let found = try? KalandarDates.captureSchedule(
+            text: text,
+            kind: kind,
+            nowISO: request.nowIso,
+            timezone: request.timezone,
+            locale: request.locale,
+            spans: labels
+        )
+        if let found {
+            remaining = KalandarDates.removeSpans(found.spans, from: text)
+            texts = found.texts
+            schedule = found.schedule
+            warnings = found.warnings.map { CapturePreviewWarning(code: $0.code, severity: "info", message: $0.message) }
+        } else {
+            remaining = text
+            texts = .empty
+            schedule = nil
+            warnings = []
+        }
+    }
+
+    var recurrenceExceptions: [CapturePreviewRecurrenceException] {
+        let resolved = schedule?.recurrence?.exceptions ?? []
+        let sameCount = resolved.count == texts.recurrenceExceptions.count
+        return texts.recurrenceExceptions.enumerated().map { index, raw in
+            let matched = sameCount
+                ? resolved[index]
+                : resolved.first { $0.raw.contains(raw) || raw.contains($0.raw) }
+            return CapturePreviewRecurrenceException(raw: raw, condition: matched?.condition, action: matched?.action)
+        }
+    }
+
+    var reminderRecurrence: ReminderRecurrence? {
+        guard let recurrence = schedule?.recurrence else { return nil }
+        let unpositioned = recurrence.weekdays.filter { $0.position == nil }.map(\.weekday)
+        let days = recurrence.days ?? (unpositioned.isEmpty ? nil : unpositioned)
+        return ReminderRecurrence(frequency: recurrence.frequency, interval: recurrence.interval, days: days)
+    }
+
+    var clockTime: String? {
+        guard let time = texts.time else { return nil }
+        let lower = time.lowercased()
+        return time.contains(where: \.isNumber) || lower == "noon" || lower == "midnight" ? time : nil
+    }
+
+    var contextHint: String? {
+        for text in [texts.moment, texts.time, texts.recurrence].compactMap({ $0 }) {
+            if let match = TextUtilities.firstMatch("\\b(end of (?:the )?(?:month|week|day)|next month|morning|noon|afternoon|evening|night)\\b", in: text),
+               let value = TextUtilities.group(0, from: match, in: text) {
+                return value.lowercased().replacingOccurrences(of: "end of the ", with: "end of ")
+            }
+        }
+        return nil
+    }
+
+    var alertOffsets: [Int] {
+        guard let minutes = schedule?.alertMinutesBefore ?? schedule?.leadMinutes, minutes >= 0 else { return [] }
+        return [minutes]
     }
 }

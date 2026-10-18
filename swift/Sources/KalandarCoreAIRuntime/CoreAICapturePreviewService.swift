@@ -29,17 +29,10 @@ public struct CoreAICapturePreviewService: Sendable {
             return fallback
         }
         switch fallback.kind {
-        case "task":
-            var result = fallback
-            result.task = try await suite.parseTask(request).value
-            return result
-        case "reminder":
-            var result = fallback
-            result.reminder = try await suite.parseReminder(request).value
-            return result
-        case "calendar-event":
-            var result = fallback
-            result.event = try await suite.parseCalendar(request).value
+        case "task", "reminder", "calendar-event":
+            var result = try await suite.parsePreviewResult(for: fallback.kind, request: request)
+            result.confidence = fallback.confidence
+            result.candidates = fallback.candidates
             return result
         default:
             return fallback

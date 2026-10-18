@@ -1,4 +1,5 @@
 import Foundation
+import KalandarDates
 
 public struct CapturePreviewRequest: Codable, Sendable {
     public var text: String
@@ -268,6 +269,7 @@ public struct CapturePreviewResult: Codable, Equatable, Sendable {
     public var thought: CapturePreviewThoughtDraft?
     public var unavailableReason: String?
     public var warnings: [CapturePreviewWarning]
+    public var schedule: PreviewSchedule?
 
     public init(
         kind: String,
@@ -278,7 +280,8 @@ public struct CapturePreviewResult: Codable, Equatable, Sendable {
         reminder: CapturePreviewReminderDraft? = nil,
         thought: CapturePreviewThoughtDraft? = nil,
         unavailableReason: String? = nil,
-        warnings: [CapturePreviewWarning] = []
+        warnings: [CapturePreviewWarning] = [],
+        schedule: PreviewSchedule? = nil
     ) {
         self.kind = kind
         self.confidence = confidence
@@ -289,6 +292,7 @@ public struct CapturePreviewResult: Codable, Equatable, Sendable {
         self.thought = thought
         self.unavailableReason = unavailableReason
         self.warnings = warnings
+        self.schedule = schedule
     }
 
     enum CodingKeys: String, CodingKey {
@@ -301,5 +305,6 @@ public struct CapturePreviewResult: Codable, Equatable, Sendable {
         case thought
         case unavailableReason = "unavailable_reason"
         case warnings
+        case schedule
     }
 }

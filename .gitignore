@@ -6,3 +6,4 @@ rust/target/
 .DS_Store
 CONTEXT.md
 PLAN.md
+swift/Binaries/

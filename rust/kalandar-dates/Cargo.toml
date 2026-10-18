@@ -54,3 +54,7 @@ required-features = ["capture"]
 [[example]]
 name = "schedule_probe"
 required-features = ["json"]
+
+[[example]]
+name = "schedule_lines"
+required-features = ["json"]
