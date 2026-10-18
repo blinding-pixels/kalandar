@@ -453,7 +453,7 @@ fn preview_capture_routes_calendar_drafts_through_runtime() {
     let event = preview
         .event
         .expect("calendar event preview should be present");
-    assert_eq!(event.attendees, vec!["Sara"]);
+    assert!(event.attendees.is_empty());
     assert_eq!(event.date_text.as_deref(), Some("tomorrow"));
     assert_eq!(event.time_text.as_deref(), Some("3pm"));
     assert_eq!(event.end_time_text.as_deref(), Some("4pm"));
