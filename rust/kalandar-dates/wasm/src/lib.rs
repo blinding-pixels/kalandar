@@ -1,140 +1,13 @@
-use chrono::{DateTime, NaiveTime, Utc, Weekday};
+use chrono::{DateTime, Utc};
 use kalandar_dates::capture::{
-    holiday_data_info, resolve_capture, resolve_line, resolve_unlabelled, CaptureKind, Clock, Context, HolidaySetting,
-    LabelledSpan, Role, Settings,
+    holiday_data_info, resolve_capture, resolve_line, resolve_unlabelled, CaptureKind, Context, LabelledSpan,
+};
+use kalandar_dates::json::{
+    byte_to_utf16, capture_schedule_json, context_of, error, kind_of, spans_of,
 };
 use kalandar_dates::{Component, ParsedComponents, ParsingOption, ParsingReference, SystemZone};
 use serde_json::{json, Map, Value};
 use wasm_bindgen::prelude::wasm_bindgen;
-
-fn error(message: impl std::fmt::Display) -> String {
-    json!({ "error": message.to_string() }).to_string()
-}
-
-fn utf16_to_byte(text: &str, units: usize) -> usize {
-    let mut count = 0;
-    for (index, c) in text.char_indices() {
-        if count >= units {
-            return index;
-        }
-        count += c.len_utf16();
-    }
-    text.len()
-}
-
-fn byte_to_utf16(text: &str, byte: usize) -> usize {
-    text[..byte.min(text.len())].encode_utf16().count()
-}
-
-fn kind_of(value: &Value) -> CaptureKind {
-    match value.as_str() {
-        Some("task") => CaptureKind::Task,
-        Some("reminder") => CaptureKind::Reminder,
-        _ => CaptureKind::CalendarEvent,
-    }
-}
-
-fn time_of(value: &Value) -> Option<NaiveTime> {
-    NaiveTime::parse_from_str(value.as_str()?, "%H:%M").ok()
-}
-
-fn weekday_of(value: &Value) -> Option<Weekday> {
-    value.as_str()?.parse().ok()
-}
-
-fn settings_of(value: &Value) -> Settings {
-    let mut s = Settings::default();
-    if value.is_null() {
-        return s;
-    }
-    if value["clock"].as_str() == Some("24h") || value["clock"].as_str() == Some("twenty-four-hour") {
-        s.clock = Clock::TwentyFourHour;
-    }
-    if let Some(day) = weekday_of(&value["weekStart"]) {
-        s.week_start = day;
-    }
-    if let Some(days) = value["weekend"].as_array() {
-        let parsed: Vec<Weekday> = days.iter().filter_map(weekday_of).collect();
-        if !parsed.is_empty() {
-            s.weekend = parsed;
-        }
-    }
-    let times: [(&str, &mut NaiveTime); 15] = [
-        ("dayStart", &mut s.day_start),
-        ("morning", &mut s.morning),
-        ("afternoon", &mut s.afternoon),
-        ("evening", &mut s.evening),
-        ("tonight", &mut s.tonight),
-        ("afterWork", &mut s.after_work),
-        ("endOfDay", &mut s.end_of_day),
-        ("reminderDefault", &mut s.reminder_default),
-        ("defaultNotificationTime", &mut s.default_notification_time),
-        ("breakfast", &mut s.breakfast),
-        ("brunch", &mut s.brunch),
-        ("lunch", &mut s.lunch),
-        ("afternoonTea", &mut s.afternoon_tea),
-        ("dinner", &mut s.dinner),
-        ("drinks", &mut s.drinks),
-    ];
-    for (key, slot) in times {
-        if let Some(t) = time_of(&value[key]) {
-            *slot = t;
-        }
-    }
-    if let Some(day_first) = value["dayFirst"].as_bool() {
-        s.day_first = day_first;
-    }
-    if let Some(minutes) = value["defaultEventMinutes"].as_u64() {
-        s.default_event_minutes = u32::try_from(minutes).unwrap_or(60);
-    }
-    match &value["holidays"] {
-        Value::String(mode) if mode == "off" => s.holidays = HolidaySetting::Off,
-        Value::Object(region) => {
-            if let Some(country) = region.get("country").and_then(Value::as_str) {
-                s.holidays = HolidaySetting::Region {
-                    country: country.to_string(),
-                    region: region.get("region").and_then(Value::as_str).map(str::to_string),
-                };
-            }
-        }
-        _ => {}
-    }
-    if let Some(locale) = value["locale"].as_str() {
-        s.locale = Some(locale.to_string());
-    }
-    s
-}
-
-fn context_of(request: &Value) -> Result<Context, String> {
-    let now: DateTime<Utc> = request["now"]
-        .as_str()
-        .ok_or("missing now")?
-        .parse()
-        .map_err(|e| format!("bad now: {e}"))?;
-    let zone: chrono_tz::Tz = request["zone"]
-        .as_str()
-        .unwrap_or("UTC")
-        .parse()
-        .map_err(|e| format!("bad zone: {e}"))?;
-    Ok(Context::new(now, zone).with_settings(settings_of(&request["settings"])))
-}
-
-fn spans_of(line: &str, request: &Value) -> Vec<LabelledSpan> {
-    request["spans"]
-        .as_array()
-        .map(|spans| {
-            spans
-                .iter()
-                .filter_map(|span| {
-                    let role = Role::from_label(span["label"].as_str().or(span["role"].as_str())?)?;
-                    let start = utf16_to_byte(line, usize::try_from(span["start"].as_u64()?).ok()?);
-                    let end = utf16_to_byte(line, usize::try_from(span["end"].as_u64()?).ok()?);
-                    Some(LabelledSpan::new(role, start, end))
-                })
-                .collect()
-        })
-        .unwrap_or_default()
-}
 
 fn run(request: &str, mode: fn(&str, CaptureKind, &[LabelledSpan], &Context) -> String) -> String {
     let request: Value = match serde_json::from_str(request) {
@@ -179,6 +52,11 @@ fn components_json(components: &ParsedComponents) -> Value {
         }
     }
     json!({ "known": known, "implied": implied, "date": components.date().map(|d| d.timestamp_millis()) })
+}
+
+#[wasm_bindgen(js_name = captureSchedule)]
+pub fn capture_schedule_wasm(request: &str) -> String {
+    capture_schedule_json(request)
 }
 
 #[wasm_bindgen(js_name = holidayData)]

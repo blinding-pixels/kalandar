@@ -198,11 +198,8 @@ fn independent_phase3_rows() {
         text.push('\n');
     }
     let superseded: Value = serde_json::from_str(
-        &std::fs::read_to_string(concat!(
-            env!("CARGO_MANIFEST_DIR"),
-            "/eval/superseded.json"
-        ))
-        .expect("superseded"),
+        &std::fs::read_to_string(concat!(env!("CARGO_MANIFEST_DIR"), "/eval/superseded.json"))
+            .expect("superseded"),
     )
     .expect("superseded json");
     let mut failures = BTreeMap::new();

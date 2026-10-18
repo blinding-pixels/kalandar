@@ -11,7 +11,7 @@ use crate::capture::lexicon::{
 };
 use crate::capture::recurrence::{
     add_span, exceptions_in, find_recurrence_phrases, first_occurrence, ignoring_interval,
-    ReminderRecurrence, PhraseKind, RecurrenceException, Rule,
+    PhraseKind, RecurrenceException, ReminderRecurrence, Rule,
 };
 use crate::capture::settings::Clock;
 use crate::capture::warning::{Warning, WarningCode};
@@ -2578,6 +2578,59 @@ pub fn resolve_phrase(
 ) -> LineResolution {
     let spans = [LabelledSpan::new(role, 0, phrase.len())];
     resolve_line(phrase, kind, &spans, ctx)
+}
+
+pub struct ScheduleParts {
+    pub spans: Vec<LabelledSpan>,
+    pub alerts: Vec<(usize, usize)>,
+    pub resolution: LineResolution,
+}
+
+pub fn schedule_parts(
+    line: &str,
+    kind: CaptureKind,
+    labelled: Option<&[LabelledSpan]>,
+    ctx: &Context,
+) -> ScheduleParts {
+    let analysis = analyse(line, ctx);
+    let alerts = analysis
+        .pieces
+        .iter()
+        .filter(|p| matches!(p.token, Token::AlertOff | Token::AlertAt))
+        .map(|p| {
+            (
+                analysis.norm.to_original(p.start),
+                analysis.norm.to_original(p.end),
+            )
+        })
+        .collect();
+    match labelled {
+        Some(spans) => ScheduleParts {
+            spans: spans.to_vec(),
+            alerts,
+            resolution: resolve_capture(line, kind, spans, ctx),
+        },
+        None => {
+            let text = analysis.norm.text.clone();
+            let detected = detect_with(&text, kind, &analysis);
+            let resolution = resolve_with(&text, kind, &detected, &analysis, ctx);
+            let spans = detected
+                .into_iter()
+                .map(|s| {
+                    LabelledSpan::new(
+                        s.role,
+                        analysis.norm.to_original(s.start),
+                        analysis.norm.to_original(s.end),
+                    )
+                })
+                .collect();
+            ScheduleParts {
+                spans,
+                alerts,
+                resolution,
+            }
+        }
+    }
 }
 
 pub fn detect_spans(line: &str, kind: CaptureKind, ctx: &Context) -> Vec<LabelledSpan> {

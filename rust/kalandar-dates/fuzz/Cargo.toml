@@ -33,3 +33,5 @@ path = "fuzz_targets/chrono_parse.rs"
 test = false
 doc = false
 bench = false
+
+[workspace]

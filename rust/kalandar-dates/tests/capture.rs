@@ -835,3 +835,39 @@ fn date_only_dues() {
         "2026-11-01"
     );
 }
+
+#[test]
+fn capture_schedule_texts_and_schedule() {
+    use kalandar_dates::capture::{capture_schedule, Role};
+    let s = capture_schedule("finish report tomorrow at 3pm", Task, None, &ctx());
+    assert_eq!(s.texts.date.as_deref(), Some("tomorrow"));
+    assert_eq!(s.texts.time.as_deref(), Some("at 3pm"));
+    assert_eq!(s.spans.len(), 1);
+    assert_eq!(s.spans[0].role, Role::DueDate);
+    let start = s.schedule.and_then(|x| x.start).expect("start");
+    assert_eq!(start.local.as_deref(), Some("2026-10-19T15:00:00"));
+
+    let s = capture_schedule(
+        "remind me to water plants every other saturday at 9am",
+        Rem,
+        None,
+        &ctx(),
+    );
+    assert_eq!(
+        s.texts.recurrence.as_deref(),
+        Some("every other saturday at 9am")
+    );
+    let rec = s.schedule.and_then(|x| x.recurrence).expect("recurrence");
+    assert_eq!(rec.interval, 2);
+    assert_eq!(rec.days, Some(vec!["saturday"]));
+
+    let s = capture_schedule("standup at 9 alert 10 minutes before", Cal, None, &ctx());
+    assert_eq!(s.texts.lead.as_deref(), Some("alert 10 minutes before"));
+    let schedule = s.schedule.expect("schedule");
+    assert_eq!(schedule.alert_minutes_before, Some(10));
+    assert_eq!(schedule.duration_minutes, None);
+
+    let s = capture_schedule("buy milk", Task, None, &ctx());
+    assert!(s.spans.is_empty());
+    assert!(s.schedule.is_none());
+}

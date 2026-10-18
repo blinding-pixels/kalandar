@@ -28,7 +28,10 @@ impl Context {
     }
 
     pub fn holiday_scope(&self) -> crate::capture::holidays::HolidayScope {
-        crate::capture::holidays::HolidayScope::from_settings(&self.settings, Some(self.zone.name()))
+        crate::capture::holidays::HolidayScope::from_settings(
+            &self.settings,
+            Some(self.zone.name()),
+        )
     }
 
     pub fn local_now(&self) -> NaiveDateTime {

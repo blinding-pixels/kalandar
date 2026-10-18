@@ -1,14 +1,16 @@
 #![forbid(unsafe_code)]
 
 mod calculation;
+#[cfg(feature = "capture")]
+pub mod capture;
 mod casual_references;
 mod chrono;
 mod common_parsers;
 mod en;
-#[cfg(feature = "capture")]
-pub mod capture;
 mod js_regex;
 mod jsdate;
+#[cfg(feature = "json")]
+pub mod json;
 mod refiners;
 mod results;
 mod text;

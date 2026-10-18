@@ -1,6 +1,7 @@
 mod context;
 mod holidays;
 mod lexicon;
+mod preview;
 mod recurrence;
 mod resolve;
 mod settings;
@@ -13,10 +14,15 @@ pub use holidays::{
     YearlyShape,
 };
 pub use lexicon::task_signal;
-pub use recurrence::{ByDay, ReminderRecurrence, Frequency, RecurrenceException, Rule};
+pub use preview::{
+    capture_schedule, CaptureSchedule, PreviewMoment, PreviewRecurrence, PreviewSchedule,
+    PreviewWarning, PreviewWeekday, ScheduleSpan, ScheduleTexts,
+};
+pub use recurrence::{ByDay, Frequency, RecurrenceException, ReminderRecurrence, Rule};
 pub use resolve::{
-    detect_spans, resolve_capture, resolve_line, resolve_phrase, resolve_unlabelled, Alert,
-    CaptureKind, LabelledSpan, LineResolution, Moment, ResolvedRecurrence, Role,
+    detect_spans, resolve_capture, resolve_line, resolve_phrase, resolve_unlabelled,
+    schedule_parts, Alert, CaptureKind, LabelledSpan, LineResolution, Moment, ResolvedRecurrence,
+    Role, ScheduleParts,
 };
 pub use settings::{Clock, HolidaySetting, Settings};
 pub use warning::{Warning, WarningCode};
