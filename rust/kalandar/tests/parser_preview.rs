@@ -360,7 +360,7 @@ fn preview_capture_routes_task_drafts_through_runtime() {
     let task = preview.task.expect("task preview should be present");
     assert_eq!(task.title, "finish report");
     assert_eq!(task.assignees, vec!["Sara"]);
-    assert_eq!(task.tags, vec!["finance"]);
+    assert_eq!(task.tags, vec!["#finance"]);
     assert_eq!(task.priority.as_deref(), Some("high"));
     assert_eq!(task.due_date_text.as_deref(), Some("tomorrow"));
     assert_eq!(task.due_time_text.as_deref(), Some("3pm"));

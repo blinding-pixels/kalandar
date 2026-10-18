@@ -14,7 +14,7 @@
       ],
       "projectHint": null,
       "tags": [
-        "finance"
+        "#finance"
       ],
       "priority": "high",
       "status": null,
@@ -39,8 +39,8 @@
       ],
       "projectHint": "project atlas",
       "tags": [
-        "board",
-        "finance"
+        "#board",
+        "#finance"
       ],
       "priority": "high",
       "status": "in progress",
