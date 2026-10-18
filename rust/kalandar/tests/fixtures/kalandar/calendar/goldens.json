@@ -105,5 +105,25 @@
       "recurrenceExceptions": [],
       "attendees": []
     }
+  },
+  {
+    "id": "calendar-site-check-in-title",
+    "input": "event: client check-in every 15th at 10am",
+    "timezone": "America/New_York",
+    "locale": "en-US",
+    "oracle": {
+      "kind": "calendar-event",
+      "title": "Client Check-in",
+      "dateText": null,
+      "timeText": "10am",
+      "endTimeText": null,
+      "durationMinutes": 60,
+      "location": null,
+      "recurrenceText": "every 15th",
+      "recurrenceStartText": null,
+      "recurrenceEndText": null,
+      "recurrenceExceptions": [],
+      "attendees": []
+    }
   }
 ]
