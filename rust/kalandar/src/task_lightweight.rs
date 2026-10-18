@@ -13,7 +13,6 @@ use std::sync::OnceLock;
 pub struct TaskParseOutput {
     pub draft: CapturePreviewTaskDraft,
     pub warnings: Vec<CapturePreviewWarning>,
-    pub confidence: f64,
     pub schedule: Option<PreviewSchedule>,
 }
 
@@ -117,7 +116,6 @@ struct TaskParseContext<'a> {
     known_assignees: Option<&'a [String]>,
     context: Context,
     fields: TaskFields,
-    title_confidence: f64,
     warnings: Vec<CapturePreviewWarning>,
     schedule: Option<PreviewSchedule>,
 }
@@ -194,7 +192,6 @@ fn create_task_parse_context<'a>(
         known_assignees: request.known_assignees.as_deref(),
         context: context_for(request),
         fields: TaskFields::default(),
-        title_confidence: 0.0,
         warnings: Vec::new(),
         schedule: None,
     }
@@ -267,9 +264,7 @@ fn assignee_pass(ctx: &mut TaskParseContext) {
 }
 
 fn title_pass(ctx: &mut TaskParseContext) {
-    let (title, confidence) = build_task_title(&ctx.working);
-    ctx.fields.title = title;
-    ctx.title_confidence = confidence;
+    ctx.fields.title = build_task_title(&ctx.working);
 }
 
 fn remove_schedule_spans(text: &str, spans: &[ScheduleSpan]) -> String {
@@ -349,7 +344,6 @@ fn finalize_task_parse_context(ctx: TaskParseContext) -> TaskParseOutput {
             recurrence_exceptions,
         },
         warnings,
-        confidence: ctx.title_confidence,
         schedule: ctx.schedule,
     }
 }
@@ -1039,17 +1033,10 @@ fn classify_recurrence_exception(raw: &str, context: &Context) -> StructuredRecu
     }
 }
 
-fn build_task_title(input: &str) -> (String, f64) {
+fn build_task_title(input: &str) -> String {
     let cleaned = finalize_task_title(input);
     if cleaned.is_empty() {
-        return ("Task".to_string(), 0.3);
+        return "Task".to_string();
     }
-    let token_count = whitespace_tokens(&cleaned).len();
-    let confidence = match token_count {
-        5.. => 0.98,
-        3..=4 => 0.9,
-        2 => 0.75,
-        _ => 0.55,
-    };
-    (cleaned, confidence)
+    cleaned
 }
