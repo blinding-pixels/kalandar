@@ -23,6 +23,18 @@ cargo build --manifest-path Cargo.toml
 cargo build --manifest-path Cargo.toml
 ```
 
+## Cargo features
+
+`ort-download` (on by default) turns on ONNX Runtime's `download-binaries`, `copy-dylibs` and `tls-native` features. With them, the `ort` build script downloads a prebuilt ONNX Runtime at build time over TLS.
+
+A host that provides ONNX Runtime itself, and must not download anything at build time, depends on the crate without default features:
+
+```toml
+kalandar = { version = "0.2", default-features = false }
+```
+
+`cargo tree -e features -p kalandar --no-default-features` then shows none of those features, and no TLS crate is built.
+
 ## CLI
 
 ```sh
