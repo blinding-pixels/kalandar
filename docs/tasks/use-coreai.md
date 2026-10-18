@@ -17,11 +17,19 @@ Actual `.aimodel` execution requires an Apple SDK that provides the `CoreAI` fra
 
 The root `Package.swift` exposes the Swift products for Git-based Swift Package Manager dependencies.
 
-Build from a source checkout:
+The `KalandarDates` target links the Rust date resolver as the `KalandarDatesFFI` XCFramework. In a source checkout, build it first. This needs Rust with the `aarch64-apple-darwin`, `x86_64-apple-darwin`, `aarch64-apple-ios`, `aarch64-apple-ios-sim` and `x86_64-apple-ios` targets:
+
+```sh
+npm run dates:xcframework
+```
+
+Then build from a source checkout:
 
 ```sh
 swift build --package-path .
 ```
+
+Tagged releases don't need this step: Swift Package Manager downloads the matching XCFramework from the release.
 
 ## Add The SwiftPM Dependency
 

@@ -1,6 +1,6 @@
 # Implementation Paths
 
-Kalandar supports JavaScript, Rust, and Swift/Core AI implementation paths behind one app-facing capture contract.
+Kalandar supports JavaScript, Rust, and Swift/Core AI implementation paths behind one app-facing capture contract. All three resolve dates, times, repeats, lead times and holidays with the same Rust library; see [Date resolution](./date-resolution.md).
 
 ## Implementations
 

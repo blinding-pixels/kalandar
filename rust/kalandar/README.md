@@ -7,7 +7,7 @@ The crate exposes:
 - the `kalandar` library
 - the `kalandar-capture-preview` JSON CLI
 
-Both surfaces use the same `capture-preview-v1` app-facing contract as the JavaScript and Swift/Core AI implementation paths.
+Both surfaces use the same `capture-preview-v1` app-facing contract as the JavaScript and Swift/Core AI implementation paths. Dates, times, repeats, lead times and holidays come from the `kalandar-dates` crate in this workspace, and each result carries the resolved `schedule`.
 
 ## Install
 

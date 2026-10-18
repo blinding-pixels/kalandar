@@ -1,12 +1,12 @@
 {
   "name": "kalandar",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "Natural-language capture parsing for tasks, reminders, and calendar events across JavaScript, Rust, and Apple-native runtimes.",
   "type": "module",
   "main": "./dist/capture/index.js",
   "types": "./dist/capture/index.d.ts",
   "sideEffects": false,
-  "license": "MIT",
+  "license": "(MIT AND CC-BY-SA-3.0)",
   "author": "Eshaan Sood",
   "repository": {
     "type": "git",
@@ -50,6 +50,15 @@
     "rust/kalandar/Cargo.toml",
     "rust/kalandar/README.md",
     "rust/kalandar/src/",
+    "rust/kalandar-dates/Cargo.toml",
+    "rust/kalandar-dates/README.md",
+    "rust/kalandar-dates/LICENSE",
+    "rust/kalandar-dates/LICENSES/",
+    "rust/kalandar-dates/docs/",
+    "rust/kalandar-dates/src/",
+    "rust/kalandar-dates-ffi/Cargo.toml",
+    "rust/kalandar-dates-ffi/src/",
+    "CHANGELOG.md",
     "swift/Package.swift",
     "swift/Sources/",
     "swift/Tests/"
@@ -74,6 +83,10 @@
     "./calendar/*": {
       "types": "./dist/calendar/*.d.ts",
       "import": "./dist/calendar/*.js"
+    },
+    "./dates": {
+      "types": "./dist/dates/index.d.ts",
+      "import": "./dist/dates/index.js"
     },
     "./core/*": {
       "types": "./dist/core/*.d.ts",

@@ -1,6 +1,10 @@
 # Kalandar Rust Workspace
 
-This workspace contains the Rust capture-preview implementation for Kalandar.
+This workspace contains the Rust capture-preview implementation for Kalandar:
+
+- `kalandar`: the capture parser and the `kalandar-capture-preview` CLI.
+- `kalandar-dates`: the date, time, repeat, lead-time and holiday resolver that every Kalandar implementation uses.
+- `kalandar-dates-ffi`: the UniFFI binding the Swift package links.
 
 The Git repository exposes this implementation through `createCapturePreviewParser({ implementation: "rust-cli", ... })` and as source under `rust/`.
 

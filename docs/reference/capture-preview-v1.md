@@ -48,10 +48,13 @@ interface CapturePreviewResult {
   thought: CapturePreviewThoughtDraft | null;
   unavailable_reason: string | null;
   warnings: CapturePreviewWarning[];
+  schedule?: PreviewSchedule | null;
 }
 ```
 
 Exactly one draft field should be populated for `task`, `calendar-event`, `reminder`, or `thought` results.
+
+The draft fields that end in `_text` hold the phrase from the capture, such as `tomorrow`, `3pm` or `every other Tuesday`. The resolved dates, times and repeat rule are in `schedule`. All three implementations compute the date fields and `schedule` with the same Rust resolver, `kalandar-dates`; see [Date resolution](../concepts/date-resolution.md). `schedule` was added in 0.2.0. Swift encodes a missing value by leaving the key out, while JavaScript and Rust emit `null`.
 
 ## Direct Swift Extensions
 
@@ -148,7 +151,65 @@ interface CapturePreviewWarning {
 }
 ```
 
-Warnings do not always mean parsing failed. They can also describe ambiguity or partial extraction.
+Warnings do not always mean parsing failed. They can also describe ambiguity or partial extraction. Warnings from the date resolver use severity `info` and the resolver's codes, such as `time_assumed`, `no_time`, `ambiguous_next_weekday`, `converted_timezone` or `holiday_other_region`. [Resolution conventions](../../rust/kalandar-dates/docs/resolution-conventions.md) lists every code.
+
+## Schedule
+
+```ts
+interface PreviewSchedule {
+  start: PreviewMoment | null;
+  end: PreviewMoment | null;
+  duration_minutes: number | null;
+  recurrence: PreviewRecurrence | null;
+  lead_minutes: number | null;
+  alert_minutes_before: number | null;
+  alert_at: PreviewMoment | null;
+  alerts_off: boolean;
+  notify_at: string | null;
+  task_signal: string | null;
+}
+
+interface PreviewMoment {
+  date: string;
+  time: string | null;
+  local: string | null;
+  instant: string | null;
+  all_day: boolean;
+  implied: string[];
+  alternative_date: string | null;
+}
+
+interface PreviewRecurrence {
+  rrule: string;
+  frequency: 'minutely' | 'hourly' | 'daily' | 'weekly' | 'monthly' | 'yearly';
+  interval: number;
+  days: string[] | null;
+  weekdays: { position: number | null; weekday: string }[];
+  month_days: number[];
+  months: number[];
+  time: string | null;
+  count: number | null;
+  start_date: string | null;
+  end_date: string | null;
+  until: string | null;
+  exdates: string[];
+  exceptions: CapturePreviewRecurrenceException[];
+}
+```
+
+| Field | Description |
+| --- | --- |
+| `start` | Event start, task due, or reminder trigger. A date with no time is all-day: `all_day` is `true`, and `time`, `local` and `instant` are `null`. |
+| `end` | Event end. An end the capture didn't state lists `end` in `implied`. |
+| `duration_minutes` | End minus start, or a stated duration. |
+| `recurrence` | The repeat as an RFC 5545 `RRULE`, the `{frequency, interval, days}` shape the reminder draft also uses, and the resolved exception dates. |
+| `lead_minutes`, `alert_minutes_before`, `alert_at`, `alerts_off` | Lead time and alert instructions. |
+| `notify_at` | For an all-day task or reminder, the date at the default notification time, 09:00. It is a display hint and doesn't change the due date. |
+| `date`, `time` | Local date `YYYY-MM-DD` and time `HH:MM` in the request time zone. |
+| `local` | Local date and time `YYYY-MM-DDTHH:MM:SS`. |
+| `instant` | The same moment with its UTC offset, in RFC 3339. |
+| `implied` | Parts the resolver assumed, such as `time`, `date`, `year`, `meridiem` or `end`. |
+| `alternative_date` | Another reading of an ambiguous phrase, such as `next Friday` said on a Wednesday. |
 
 ## Parser Factory
 

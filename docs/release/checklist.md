@@ -17,6 +17,9 @@ Use this checklist before creating a Git release of Kalandar.
 - `npm pack --dry-run` includes `dist/`, `docs/`, selected source docs, Rust source, Swift source, the ONNX suite in `resources/capture-parser`, and license files, while excluding Core AI model artifacts.
 - The GitHub release attaches `kalandar-onnx-<version>.tar.gz`, extracted with a top-level `capture-parser/` directory, for crates.io Rust consumers.
 - SwiftPM root and nested manifests both build.
+- The GitHub release attaches `KalandarDatesFFI-<version>.xcframework.zip`, and `kalandarDatesChecksum` in both Swift manifests matches it.
+- `src/dates/wasm/source.json` matches the WebAssembly built from the tagged `rust/kalandar-dates`.
+- `rust/kalandar-dates/tools/holidays/check.sh` shows whether a newer date-holidays release exists.
 
 ## Tests
 

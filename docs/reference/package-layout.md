@@ -13,9 +13,12 @@ It includes:
 - compiled JavaScript in `dist/`
 - TypeScript declaration files in `dist/`
 - public documentation in `README.md`, `docs/`, `coreai/README.md`, and selected source docs
-- Swift source in `swift/`
-- Rust source in `rust/kalandar/src/`
+- Swift source in `swift/`, including the generated `KalandarDates` UniFFI binding
+- Rust source in `rust/kalandar/src/`, `rust/kalandar-dates/src/` and `rust/kalandar-dates-ffi/src/`
 - Rust workspace manifests
+- the `kalandar-dates` WebAssembly build, embedded in `dist/dates/wasm/`
+- the date-holidays table `rust/kalandar-dates/src/capture/holidays.bin`, a separate data file under CC BY-SA 3.0, with its licence and attribution in `rust/kalandar-dates/LICENSES/date-holidays.txt`
+- the computed festival table `rust/kalandar-dates/src/capture/festivals.bin`, under the MIT licence
 - Core AI parity fixtures
 - ONNX task, reminder, calendar, tokenizer, manifest, and routing artifacts in `resources/capture-parser/`
 
@@ -26,10 +29,17 @@ It excludes:
 - generated build directories
 - Core AI model artifacts
 - checkpoints
+- the `KalandarDatesFFI` XCFramework, which is a release asset
 
 ## Rust Source Package
 
-The Rust package identifier is `kalandar`, with publishing disabled.
+The Rust workspace has three packages:
+
+- `kalandar`, the capture parser.
+- `kalandar-dates`, the date resolver it depends on. Its code is MIT licensed; `holidays.bin` is CC BY-SA 3.0 data.
+- `kalandar-dates-ffi`, the UniFFI binding the Swift package links. It is not published.
+
+The `kalandar` package identifier is `kalandar`, with publishing disabled.
 
 It includes:
 
@@ -45,7 +55,11 @@ It does not include the ONNX suite because crates.io has a package-size limit. C
 The root `Package.swift` exposes Swift Package Manager products for Git revision or tag consumption:
 
 - `KalandarCoreAIRuntime`
+- `KalandarDates`
 - `kalandar-coreai-capture-preview`
+- `kalandar-dates-schedule`
+
+`KalandarDates` links the `KalandarDatesFFI` binary target. When `swift/Binaries/KalandarDatesFFI.xcframework` exists, which `npm run dates:xcframework` creates, the manifest uses it. Otherwise it downloads the version-matched `KalandarDatesFFI-<version>.xcframework.zip` release asset and verifies the checksum written in `Package.swift`.
 
 The nested `swift/Package.swift` remains available for npm users who build from `node_modules/kalandar/swift`.
 

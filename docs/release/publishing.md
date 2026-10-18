@@ -18,7 +18,31 @@ Run the release check:
 npm run release:check
 ```
 
-This command runs TypeScript checks, builds the package, runs Swift tests, runs Rust tests, checks Swift app-output parity, and performs an npm pack dry run. It does not validate separately distributed Core AI artifacts.
+This command:
+
+- runs the TypeScript checks and lint, and builds the package;
+- builds the `KalandarDatesFFI` XCFramework;
+- runs the Swift and Rust tests;
+- checks app-output parity;
+- checks that the WebAssembly and Swift date resolution match native Rust on every evaluation row;
+- performs an npm pack dry run.
+
+It does not validate separately distributed Core AI artifacts.
+
+## Rebuild The Date Resolver Artifacts
+
+After changing `rust/kalandar-dates`, rebuild what the other platforms embed:
+
+```sh
+TOOLS=<directory-with-bin/wasm-bindgen> npm run dates:wasm
+npm run dates:xcframework
+```
+
+`<directory-with-bin/wasm-bindgen>` is a directory whose `bin/` holds `wasm-bindgen` 0.2.121. The first command regenerates `src/dates/wasm/`. The second writes `swift/Binaries/KalandarDatesFFI.xcframework`, the release asset `swift/Binaries/KalandarDatesFFI-<version>.xcframework.zip` and its checksum, and regenerates `swift/Sources/KalandarDates/KalandarDatesFFI.swift`.
+
+Before tagging, copy the checksum into `kalandarDatesChecksum` in both `Package.swift` and `swift/Package.swift`, and attach the zip to the GitHub release for the tag. SwiftPM consumers without a local XCFramework download it from that release.
+
+To update the holiday data, follow `rust/kalandar-dates/README.md` (`tools/holidays/regenerate.sh`).
 
 Before tagging a model-backed release, validate each Core AI artifact suite with the Python Core AI runtime and compare optimized model outputs against the approved parser baseline.
 

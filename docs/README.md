@@ -8,6 +8,7 @@ Use this documentation by goal:
 | --- | --- |
 | Install Kalandar from private Git or parse text in JavaScript. | [Getting started](./getting-started.md) |
 | Choose JavaScript, Rust, or Swift/Core AI. | [Implementation paths](./concepts/implementation-paths.md) |
+| Understand how dates, repeats and holidays are resolved. | [Date resolution](./concepts/date-resolution.md) |
 | Understand model artifacts and inference adapters. | [Artifacts and inference](./concepts/artifacts-and-inference.md) |
 | Use the default JavaScript parser. | [Use the JavaScript parser](./tasks/use-typescript.md) |
 | Use the Rust CLI from a host app. | [Use the Rust CLI](./tasks/use-rust-cli.md) |
@@ -25,6 +26,7 @@ Concept pages explain how Kalandar is designed. Read these before making integra
 
 - [Overview](./concepts/overview.md)
 - [Implementation paths](./concepts/implementation-paths.md)
+- [Date resolution](./concepts/date-resolution.md)
 - [Artifacts and inference](./concepts/artifacts-and-inference.md)
 
 ### Tasks

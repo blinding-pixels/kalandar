@@ -63,7 +63,7 @@ Start with [the docs index](./docs/README.md).
 | Rust | `rust/` source and `kalandar-capture-preview` CLI | Native desktop apps and cross-platform hosts. |
 | Swift/Core AI | `KalandarCoreAIRuntime` SwiftPM product | Apple-native apps that use `CoreAIParserSuite` directly or expose a JavaScript bridge. |
 
-All three paths return the same `capture-preview-v1` result shape.
+All three paths return the same `capture-preview-v1` result shape. They resolve dates, times, repeats, lead times and holidays with the same Rust library, `kalandar-dates`, so the resolved `schedule` is identical on every platform. See [Date resolution](./docs/concepts/date-resolution.md).
 
 ## Runtime Adapters
 
@@ -91,4 +91,6 @@ That command type-checks, builds, tests Swift and Rust, runs app-output parity, 
 
 ## License
 
-[MIT](./LICENSE)
+Kalandar's code is [MIT](./LICENSE) licensed. `rust/kalandar-dates` also keeps chrono-node's MIT notice.
+
+One data file has a different licence. `rust/kalandar-dates/src/capture/holidays.bin`, generated from [date-holidays](https://github.com/commenthol/date-holidays), is available under CC BY-SA 3.0. Its licence text and the required attribution are in [`rust/kalandar-dates/LICENSES/date-holidays.txt`](./rust/kalandar-dates/LICENSES/date-holidays.txt). The computed festival table `festivals.bin` is MIT.
