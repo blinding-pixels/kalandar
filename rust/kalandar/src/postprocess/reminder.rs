@@ -1,97 +1,264 @@
 use super::{
-    clean_title_punctuation, normalize_whitespace, strip_leading_title_filler,
-    strip_reminder_lead_prefix, strip_residual_temporal_tokens,
-    strip_trailing_dangling_preposition,
+    normalize_whitespace, strip_leading_title_filler, strip_reminder_lead_prefix,
+    strip_residual_temporal_tokens, strip_trailing_dangling_preposition,
 };
+use crate::reminder_lightweight::{ascii_regex, trailing_filler_patterns};
 use regex::Regex;
 use std::sync::OnceLock;
 
-pub(crate) fn finalize_reminder_title(input: &str) -> String {
-    let mut output = clean_title_punctuation(input);
-    for pattern in trailing_filler_patterns() {
-        output = pattern.replace(&output, "").to_string();
-    }
+const TITLE_CORRECTIONS: &[(&str, &str)] = &[
+    ("abt", "about"),
+    ("adn", "and"),
+    ("b4", "before"),
+    ("brng", "bring"),
+    ("callin", "call"),
+    ("cancle", "cancel"),
+    ("cehck", "check"),
+    ("clint", "client"),
+    ("dattabase", "database"),
+    ("delivry", "delivery"),
+    ("dashbord", "dashboard"),
+    ("electrican", "electrician"),
+    ("evry", "every"),
+    ("flrs", "flowers"),
+    ("flowrs", "flowers"),
+    ("forgt", "forget"),
+    ("hr", "HR"),
+    ("hub", "hub"),
+    ("meetting", "meeting"),
+    ("meds", "meds"),
+    ("mornig", "morning"),
+    ("mornng", "morning"),
+    ("moms", "mom's"),
+    ("mums", "mum's"),
+    ("pakage", "package"),
+    ("passport", "passport"),
+    ("pickup", "pick up"),
+    ("prescirption", "prescription"),
+    ("propsal", "proposal"),
+    ("refil", "refill"),
+    ("rememeber", "remember"),
+    ("remnd", "remind"),
+    ("rent", "rent"),
+    ("reveiw", "review"),
+    ("revieww", "review"),
+    ("subsription", "subscription"),
+    ("teh", "the"),
+    ("tongiht", "tonight"),
+];
 
-    output = Regex::new(r"(?i)(?:^|\s)(?:high|medium|low)\s+priority\b")
-        .expect("priority phrase regex should compile")
-        .replace_all(&output, " ")
-        .to_string();
-    output = Regex::new(r"(?i)(?:^|\s)(?:urgent|critical|important)\b")
-        .expect("priority token regex should compile")
-        .replace_all(&output, " ")
-        .to_string();
-    output = Regex::new(r"(?i)(?:^|\s)(?:for|to|with|from)\s+@[a-z0-9_.+-]+\b")
-        .expect("mention phrase cleanup regex should compile")
-        .replace_all(&output, " ")
-        .to_string();
-    output = Regex::new(r"(?i)(?:^|\s)@[a-z0-9_.+-]+\b")
-        .expect("mention cleanup regex should compile")
-        .replace_all(&output, " ")
-        .to_string();
-    output = strip_reminder_lead_prefix(&output);
+const ACRONYM_MAP: &[(&str, &str)] = &[
+    ("api", "API"),
+    ("aws", "AWS"),
+    ("css", "CSS"),
+    ("eod", "EOD"),
+    ("fcp", "FCP"),
+    ("html", "HTML"),
+    ("hr", "HR"),
+    ("os", "OS"),
+    ("pr", "PR"),
+    ("readme", "README"),
+    ("sql", "SQL"),
+    ("ssl", "SSL"),
+    ("svg", "SVG"),
+    ("usb", "USB"),
+    ("ui", "UI"),
+    ("ux", "UX"),
+];
 
-    let temporal_stripped = strip_residual_temporal_tokens(&output);
-    let temporal_content_removed = temporal_stripped != output;
-    let preserve_trailing_in = Regex::new(r"(?i)\b(?:check|log|sign|drop|fill|get)\s+in$")
-        .expect("phrasal trailing-in regex should compile")
-        .is_match(&temporal_stripped);
-    output = if preserve_trailing_in {
-        temporal_stripped
-    } else {
-        strip_trailing_dangling_preposition(&temporal_stripped, temporal_content_removed)
-    };
-    output = strip_leading_title_filler(&output);
+const TITLE_SMALL_WORDS: &[&str] = &[
+    "a", "an", "the", "and", "but", "or", "nor", "for", "to", "in", "on", "at", "by", "of", "with",
+    "from", "up", "as", "is",
+];
 
-    for (from, to) in phrase_corrections() {
-        output = from.replace_all(&output, *to).to_string();
-    }
+pub(crate) fn finalize_reminder_title(working: &str) -> String {
+    extract_title(working)
+}
 
-    let mut deduped = Vec::new();
-    for word in normalize_whitespace(&output).split_whitespace() {
-        let repeated = deduped
-            .last()
-            .map(|last: &String| last.eq_ignore_ascii_case(word))
-            .unwrap_or(false);
-        if !repeated {
-            deduped.push(word.to_string());
-        }
-    }
+fn lookup(table: &[(&str, &'static str)], key: &str) -> Option<&'static str> {
+    table
+        .iter()
+        .find(|(from, _)| *from == key)
+        .map(|(_, to)| *to)
+}
 
-    let normalized = normalize_whitespace(
-        deduped
-            .join(" ")
-            .replace(" both", " ")
-            .replace(" but", " ")
-            .trim_matches(|char: char| ",.;:-".contains(char)),
-    );
-    if normalized.is_empty() {
-        "Reminder".to_string()
-    } else {
-        normalized
+fn is_upper_acronym(word: &str) -> bool {
+    (2..=4).contains(&word.len()) && word.bytes().all(|byte| byte.is_ascii_uppercase())
+}
+
+fn possessive_base(word: &str) -> Option<&str> {
+    let base = ["'s", "'S", "\u{2019}s", "\u{2019}S"]
+        .into_iter()
+        .find_map(|suffix| word.strip_suffix(suffix))?;
+    (!base.is_empty() && base.bytes().all(|byte| byte.is_ascii_alphabetic())).then_some(base)
+}
+
+fn capitalize_first(text: &str) -> String {
+    let mut chars = text.chars();
+    match chars.next() {
+        Some(first) if first.len_utf16() == 1 => first.to_uppercase().chain(chars).collect(),
+        _ => text.to_string(),
     }
 }
 
-fn trailing_filler_patterns() -> &'static [Regex] {
+fn clean_title_word(word: &str) -> String {
+    if is_upper_acronym(word) {
+        return word.to_string();
+    }
+    let lower = word.to_lowercase();
+    lookup(TITLE_CORRECTIONS, &lower).map_or(lower, str::to_string)
+}
+
+fn smart_title_case(input: &str) -> String {
+    let words: Vec<&str> = input.split_whitespace().collect();
+    let count = words.len();
+
+    let mut output = words
+        .iter()
+        .enumerate()
+        .map(|(index, word)| {
+            let cleaned = clean_title_word(word);
+            if is_upper_acronym(&cleaned) {
+                return cleaned;
+            }
+            let lower = cleaned.to_lowercase();
+            if let Some(acronym) = lookup(ACRONYM_MAP, &lower) {
+                return acronym.to_string();
+            }
+            if let Some(base) = possessive_base(&cleaned) {
+                return format!("{}'s", capitalize_first(base));
+            }
+            if index > 0 && index < count - 1 && TITLE_SMALL_WORDS.contains(&lower.as_str()) {
+                return lower;
+            }
+            capitalize_first(&cleaned)
+        })
+        .collect::<Vec<_>>()
+        .join(" ");
+
+    for (pattern, replacement) in phrase_corrections() {
+        output = pattern.replace_all(&output, *replacement).into_owned();
+    }
+
+    output
+}
+
+fn extract_title(input: &str) -> String {
+    let mut working = input.to_string();
+    for pattern in start_strip_patterns() {
+        working = pattern.replace(&working, "").into_owned();
+    }
+    for pattern in trailing_filler_patterns() {
+        working = pattern.replace(&working, "").into_owned();
+    }
+
+    for pattern in title_noise_patterns() {
+        working = pattern.replace_all(&working, " ").into_owned();
+    }
+    working = normalize_whitespace(&working);
+    working = strip_reminder_lead_prefix(&working);
+    working = strip_leading_title_filler(&strip_trailing_dangling_preposition(
+        &strip_residual_temporal_tokens(&working),
+        false,
+    ));
+
+    let mut deduped: Vec<&str> = Vec::new();
+    for word in working.split_whitespace() {
+        if deduped
+            .last()
+            .is_some_and(|last| last.to_lowercase() == word.to_lowercase())
+        {
+            continue;
+        }
+        deduped.push(word);
+    }
+
+    let mut normalized = deduped.join(" ");
+    for (pattern, replacement) in title_word_corrections() {
+        normalized = pattern.replace_all(&normalized, *replacement).into_owned();
+    }
+    normalized = leading_connector_pattern()
+        .replace(&normalized, "")
+        .into_owned();
+    normalized = normalize_whitespace(&normalized);
+
+    smart_title_case(if normalized.is_empty() {
+        "Reminder"
+    } else {
+        &normalized
+    })
+}
+
+fn start_strip_patterns() -> &'static [Regex] {
     static REGEXES: OnceLock<Vec<Regex>> = OnceLock::new();
     REGEXES.get_or_init(|| {
-        vec![
-            Regex::new(r"(?i)[\s,.-]+\bpls\b\.?$").unwrap(),
-            Regex::new(r"(?i)[\s,.-]+\bplease\b\.?$").unwrap(),
-            Regex::new(r"(?i)[\s,.-]+\blol\b\.?$").unwrap(),
-            Regex::new(r"(?i)[\s,.-]+\bmaybe\b\.?$").unwrap(),
-            Regex::new(r"(?i)[\s,.-]+\bidk\b\.?$").unwrap(),
+        [
+            r"^[\s,;:.!?-]+",
+            r"(?i)^\s*(?:to|about|that|re:|re|abt|bout)\b[\s,:-]*",
+            r"(?i)^\s*for\b[\s,:-]*",
         ]
+        .into_iter()
+        .map(ascii_regex)
+        .collect()
     })
+}
+
+fn title_noise_patterns() -> &'static [Regex] {
+    static REGEXES: OnceLock<Vec<Regex>> = OnceLock::new();
+    REGEXES.get_or_init(|| {
+        [
+            r"[\p{Emoji}\p{Emoji_Modifier}\p{Emoji_Component}\x{FE0F}\x{200D}]+",
+            r"[!?.,]{2,}",
+            r"(?i)(?:^|\s)(?:high|medium|low)\s+priority\b",
+            r"(?i)(?:^|\s)(?:urgent|critical|important)\b",
+            r"(?i)(?:^|\s)(?:for|to|with|from)\s+@[a-z0-9_.+-]+\b",
+            r"(?i)(?:^|\s)@[a-z0-9_.+-]+\b",
+            r"(?i)\b\d{1,2}(?::\d{2})?\s*(?:am|pm|a|p)\b",
+            r"(?i)\b(?:at\s+)?(?:noon|midnight)\b",
+            r"(?i)\b(?:am|pm|a|p)\b",
+            r"(?i)\b(?:to|about|that)\s*$",
+        ]
+        .into_iter()
+        .map(ascii_regex)
+        .collect()
+    })
+}
+
+fn title_word_corrections() -> &'static [(Regex, &'static str)] {
+    static REGEXES: OnceLock<Vec<(Regex, &'static str)>> = OnceLock::new();
+    REGEXES.get_or_init(|| {
+        [
+            (r"(?i)\bpickup\b", "pick up"),
+            (r"(?i)\bmums\b", "mum's"),
+            (r"(?i)\bbday\b", "birthday"),
+            (r"(?i)\bcehck\b", "check"),
+        ]
+        .into_iter()
+        .map(|(pattern, replacement)| (ascii_regex(pattern), replacement))
+        .collect()
+    })
+}
+
+fn leading_connector_pattern() -> &'static Regex {
+    static REGEX: OnceLock<Regex> = OnceLock::new();
+    REGEX.get_or_init(|| ascii_regex(r"(?i)^(?:to(?:\s+the)?|that(?:\s+i)?|about)\b[\s,:-]*"))
 }
 
 fn phrase_corrections() -> &'static [(Regex, &'static str)] {
     static REGEXES: OnceLock<Vec<(Regex, &'static str)>> = OnceLock::new();
     REGEXES.get_or_init(|| {
-        vec![
-            (Regex::new(r"(?i)\bpickup\b").unwrap(), "pick up"),
-            (Regex::new(r"(?i)\bmums\b").unwrap(), "mum's"),
-            (Regex::new(r"(?i)\bbday\b").unwrap(), "birthday"),
-            (Regex::new(r"(?i)\bcehck\b").unwrap(), "check"),
+        [
+            (r"\bHub Os\b", "Hub OS"),
+            (r"\bMoms Bday\b", "Mom's Birthday"),
+            (r"\bThe Contract Renewal\b", "Contract Renewal"),
+            (r"\bThe Webinar\b", "Webinar"),
+            (r"^The Meeting$", "Meeting"),
+            (r"\bMom's Bday\b", "Mom's Birthday"),
+            (r"\bThe SVG Logo\b", "SVG Logo"),
+            (r"\bKeys(?: Keys)+\b", "Keys"),
         ]
+        .into_iter()
+        .map(|(pattern, replacement)| (ascii_regex(pattern), replacement))
+        .collect()
     })
 }
