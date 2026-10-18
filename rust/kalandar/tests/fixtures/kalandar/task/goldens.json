@@ -67,5 +67,107 @@
       "dueDateText": null,
       "dueTimeText": null
     }
+  },
+  {
+    "id": "task-site-double-bang-priority",
+    "input": "pay rent by Friday 5pm !!",
+    "timezone": "America/New_York",
+    "oracle": {
+      "kind": "task",
+      "title": "pay rent",
+      "assignees": [],
+      "projectHint": null,
+      "tags": [],
+      "priority": "high",
+      "status": null,
+      "dueDateText": "by Friday",
+      "dueTimeText": "5pm"
+    }
+  },
+  {
+    "id": "task-site-not-urgent",
+    "input": "Not urgent rename exported files",
+    "timezone": "America/New_York",
+    "oracle": {
+      "kind": "task",
+      "title": "rename exported files",
+      "assignees": [],
+      "projectHint": null,
+      "tags": [],
+      "priority": "low",
+      "status": null,
+      "dueDateText": null,
+      "dueTimeText": null
+    }
+  },
+  {
+    "id": "task-site-non-urgent",
+    "input": "non-urgent archive old emails",
+    "timezone": "America/New_York",
+    "oracle": {
+      "kind": "task",
+      "title": "archive old emails",
+      "assignees": [],
+      "projectHint": null,
+      "tags": [],
+      "priority": "low",
+      "status": null,
+      "dueDateText": null,
+      "dueTimeText": null
+    }
+  },
+  {
+    "id": "task-site-project-stops-at-due",
+    "input": "Finalize the Q3 marketing budget for Apollo by Friday morning",
+    "timezone": "America/New_York",
+    "oracle": {
+      "kind": "task",
+      "title": "Finalize the Q3 marketing budget",
+      "assignees": [],
+      "projectHint": "Apollo",
+      "tags": [],
+      "priority": null,
+      "status": null,
+      "dueDateText": "by Friday",
+      "dueTimeText": "morning"
+    }
+  },
+  {
+    "id": "task-site-project-stops-at-assignee",
+    "input": "Replace login bug for Retail pilot with Drew, tags: #mobile, for 20 minutes, blocked.",
+    "timezone": "America/New_York",
+    "oracle": {
+      "kind": "task",
+      "title": "Replace login bug",
+      "assignees": [
+        "Drew"
+      ],
+      "projectHint": "Retail pilot",
+      "tags": [
+        "#mobile"
+      ],
+      "priority": null,
+      "status": "blocked",
+      "dueDateText": null,
+      "dueTimeText": null
+    }
+  },
+  {
+    "id": "task-site-weekday-not-assignee",
+    "input": "Prep teaching materials for Thursday, tagged teaching, 1 hour",
+    "timezone": "America/New_York",
+    "oracle": {
+      "kind": "task",
+      "title": "Prep teaching materials",
+      "assignees": [],
+      "projectHint": null,
+      "tags": [
+        "teaching"
+      ],
+      "priority": null,
+      "status": null,
+      "dueDateText": "Thursday",
+      "dueTimeText": null
+    }
   }
 ]

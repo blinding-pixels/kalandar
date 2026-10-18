@@ -215,5 +215,21 @@
         "days": null
       }
     }
+  },
+  {
+    "id": "reminder-site-in-the-morning",
+    "input": "remind me to water the ferns in the morning",
+    "timezone": "America/New_York",
+    "oracle": {
+      "kind": "reminder",
+      "title": "Water the Ferns",
+      "remindAtText": "in the morning",
+      "recurrenceStartText": null,
+      "recurrenceEndText": null,
+      "recurrenceWindowText": null,
+      "contextHint": "morning",
+      "recurrenceExceptions": [],
+      "recurrence": null
+    }
   }
 ]
