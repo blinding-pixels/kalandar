@@ -15,6 +15,13 @@
   - `npm test` runs the JavaScript tests.
 - **`ort-download` cargo feature, on by default.** It holds ONNX Runtime's `download-binaries`, `copy-dylibs` and `tls-native` features. With `default-features = false`, `kalandar` downloads nothing at build time and builds no TLS stack.
 
+### Models
+
+- **Retrained models.** Task, calendar and reminder ship the round-two "repair" bundles. The labels and vocabulary are unchanged. The suite is `kalandar-capture-parser-onnx-v2`, and the postprocess versions are v2.
+- **Decoding** reads the first subword piece of each whitespace word, as the models were evaluated. Task and reminder take the argmax. Calendar uses the constrained BIO Viterbi decoder from the round-two tensor contract, whose rules ship as `calendar/sequence_decoder.json`. JavaScript, Rust (`kalandar::sequence_decoder`) and Swift decode identically.
+- **Manifests** carry a `decoding` field. Manifests that still say v1 are rejected.
+- **Release status.** These models are marked experimental pending a blind evaluation. The training report flags field regressions for task (project 7/10 against 8/10 shipped, assignee 8/13 against 9/13) and reminder (trigger phrases 107/124 against 110/124, location 5/8 against 6/8).
+
 ### Changed
 
 - **Draft `_text` fields hold the phrase from the capture**, such as `tomorrow`, `3pm` or `every other Tuesday`, in all three implementations. In the JavaScript parsers, fields that used to hold resolved ISO dates or `RRULE` strings (`date`, `time`, `remind_at`, `recurrence`) now hold the phrase too; the resolved values are in `schedule`.

@@ -4,7 +4,7 @@ import Foundation
 import PackageDescription
 
 let kalandarDatesVersion = "0.2.0"
-let kalandarDatesChecksum = "0000000000000000000000000000000000000000000000000000000000000000"
+let kalandarDatesChecksum = "c6da8f9d84285c360ee9bc067f019dbbe6f90ff406b4448412eaeb5ef58af168"
 let localKalandarDatesFFI = "swift/Binaries/KalandarDatesFFI.xcframework"
 let kalandarDatesFFI: Target = FileManager.default.fileExists(atPath: "\(Context.packageDirectory)/\(localKalandarDatesFFI)")
     ? .binaryTarget(name: "KalandarDatesFFI", path: localKalandarDatesFFI)
