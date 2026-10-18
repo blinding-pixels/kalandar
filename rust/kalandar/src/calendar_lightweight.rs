@@ -11,7 +11,7 @@ pub fn parse_calendar_preview(text: &str, request: &CapturePreviewRequest) -> Ca
     let working = normalize_whitespace(text);
 
     let attendees = extract_attendees(text);
-    let schedule = extract_schedule(&working, CaptureKind::CalendarEvent, request);
+    let schedule = extract_schedule(text, &working, CaptureKind::CalendarEvent, request);
     let mut working = schedule.remaining.clone();
     let location = extract_location(&mut working);
     let title = build_calendar_title(&working, text);

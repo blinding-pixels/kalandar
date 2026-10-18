@@ -30,6 +30,7 @@ pub fn preview_capture(
     request: CapturePreviewRequest,
 ) -> CapturePreviewResult {
     let shadow = normalize_shadow_text(request.text.trim());
+    let original = request.text.split_whitespace().collect::<Vec<_>>().join(" ");
     if shadow.is_empty() {
         return CapturePreviewResult::unsupported(
             "capture-text-required",
@@ -37,7 +38,8 @@ pub fn preview_capture(
         );
     }
 
-    if let Some(payload) = strip_prefix_case_insensitive(&shadow, "task:") {
+    if strip_prefix_case_insensitive(&shadow, "task:").is_some() {
+        let payload = strip_prefix_case_insensitive(&original, "task:").unwrap_or("");
         if payload.is_empty() {
             return CapturePreviewResult::unsupported(
                 "capture-text-required",
@@ -46,7 +48,8 @@ pub fn preview_capture(
         }
         return build_task_result(manifest, payload, &request, 0.99, Vec::new());
     }
-    if let Some(payload) = strip_prefix_case_insensitive(&shadow, "reminder:") {
+    if strip_prefix_case_insensitive(&shadow, "reminder:").is_some() {
+        let payload = strip_prefix_case_insensitive(&original, "reminder:").unwrap_or("");
         if payload.is_empty() {
             return CapturePreviewResult::unsupported(
                 "capture-text-required",
@@ -55,7 +58,8 @@ pub fn preview_capture(
         }
         return build_reminder_result(manifest, payload, &request, 0.99, Vec::new());
     }
-    if let Some(payload) = strip_prefix_case_insensitive(&shadow, "event:") {
+    if strip_prefix_case_insensitive(&shadow, "event:").is_some() {
+        let payload = strip_prefix_case_insensitive(&original, "event:").unwrap_or("");
         if payload.is_empty() {
             return CapturePreviewResult::unsupported(
                 "capture-text-required",
@@ -75,7 +79,7 @@ pub fn preview_capture(
         IntentKind::Task => {
             build_task_result(
                 manifest,
-                &shadow,
+                &original,
                 &request,
                 route.primary_score(),
                 candidates,
@@ -85,7 +89,7 @@ pub fn preview_capture(
         IntentKind::Calendar => {
             build_calendar_result(
                 manifest,
-                &shadow,
+                &original,
                 &request,
                 route.primary_score(),
                 candidates,
@@ -95,7 +99,7 @@ pub fn preview_capture(
         IntentKind::Reminder => {
             build_reminder_result(
                 manifest,
-                &shadow,
+                &original,
                 &request,
                 route.primary_score(),
                 candidates,

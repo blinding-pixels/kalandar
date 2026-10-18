@@ -3,6 +3,7 @@ use crate::{
     BERT_TOKEN_CLASSIFIER_RUNTIME_KIND,
 };
 use std::collections::{BTreeSet, HashMap};
+use unicode_normalization::{char::is_combining_mark, UnicodeNormalization};
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct TokenizedCaptureInput {
@@ -187,21 +188,22 @@ fn normalize_input(input: &str, do_lower_case: bool) -> Vec<TokenChar> {
             continue;
         }
 
-        if do_lower_case {
-            for lowered in raw_char.to_lowercase() {
+        let lowered: Vec<char> = if do_lower_case {
+            raw_char.to_lowercase().collect()
+        } else {
+            vec![raw_char]
+        };
+        lowered
+            .into_iter()
+            .flat_map(|value| std::iter::once(value).nfd())
+            .filter(|value| !is_combining_mark(*value))
+            .for_each(|value| {
                 output.push(TokenChar {
-                    value: lowered,
+                    value,
                     source_start: start,
                     source_end: end,
-                });
-            }
-        } else {
-            output.push(TokenChar {
-                value: raw_char,
-                source_start: start,
-                source_end: end,
+                })
             });
-        }
     }
 
     output
@@ -324,7 +326,34 @@ fn parse_vocab(text: &str) -> HashMap<String, u32> {
 }
 
 fn is_control(value: char) -> bool {
-    !matches!(value, '\n' | '\r' | '\t') && value.is_control()
+    !matches!(value, '\n' | '\r' | '\t') && (value.is_control() || is_format(value))
+}
+
+fn is_format(value: char) -> bool {
+    matches!(
+        value as u32,
+        0x00AD
+            | 0x0600..=0x0605
+            | 0x061C
+            | 0x06DD
+            | 0x070F
+            | 0x0890..=0x0891
+            | 0x08E2
+            | 0x180E
+            | 0x200B..=0x200F
+            | 0x202A..=0x202E
+            | 0x2060..=0x2064
+            | 0x2066..=0x206F
+            | 0xFEFF
+            | 0xFFF9..=0xFFFB
+            | 0x110BD
+            | 0x110CD
+            | 0x13430..=0x1343F
+            | 0x1BCA0..=0x1BCA3
+            | 0x1D173..=0x1D17A
+            | 0xE0001
+            | 0xE0020..=0xE007F
+    )
 }
 
 fn is_punctuation_or_symbol(value: char) -> bool {

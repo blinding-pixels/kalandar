@@ -72,46 +72,104 @@ public struct BertWordPieceTokenizer: Sendable {
         return TokenizedText(inputIds: ids, attentionMask: mask, offsets: offsets, truncated: truncated)
     }
 
-    private func basicTokenize(_ input: String) -> [(String, [(Character, Int, Int)])] {
-        var tokens: [(String, [(Character, Int, Int)])] = []
-        var current: [(Character, Int, Int)] = []
+    private typealias BasicToken = (String, [(Unicode.Scalar, Int, Int)])
+
+    private static func isMark(_ scalar: Unicode.Scalar) -> Bool {
+        switch scalar.properties.generalCategory {
+        case .nonspacingMark, .spacingMark, .enclosingMark:
+            return true
+        default:
+            return false
+        }
+    }
+
+    private static func isControl(_ scalar: Unicode.Scalar) -> Bool {
+        if scalar == "\t" || scalar == "\n" || scalar == "\r" {
+            return false
+        }
+        switch scalar.properties.generalCategory {
+        case .control, .format:
+            return true
+        default:
+            return false
+        }
+    }
+
+    private static func isPunctuationOrSymbol(_ scalar: Unicode.Scalar) -> Bool {
+        switch scalar.properties.generalCategory {
+        case .connectorPunctuation, .dashPunctuation, .openPunctuation, .closePunctuation,
+             .initialPunctuation, .finalPunctuation, .otherPunctuation,
+             .mathSymbol, .currencySymbol, .modifierSymbol, .otherSymbol:
+            return true
+        default:
+            return false
+        }
+    }
+
+    private static func isChinese(_ scalar: Unicode.Scalar) -> Bool {
+        switch scalar.value {
+        case 0x4E00...0x9FFF, 0x3400...0x4DBF, 0x20000...0x2A6DF, 0x2A700...0x2B73F,
+             0x2B740...0x2B81F, 0x2B820...0x2CEAF, 0xF900...0xFAFF:
+            return true
+        default:
+            return false
+        }
+    }
+
+    private func basicTokenize(_ input: String) -> [BasicToken] {
+        var tokens: [BasicToken] = []
+        var current: [(Unicode.Scalar, Int, Int)] = []
 
         func flush() {
             if current.isEmpty { return }
-            tokens.append((String(current.map(\.0)), current))
+            tokens.append((String(String.UnicodeScalarView(current.map(\.0))), current))
             current.removeAll()
         }
 
-        let lower = input.lowercased()
-        for (offset, char) in lower.enumerated() {
-            if char.isWhitespace {
-                flush()
-                continue
+        for (offset, character) in input.enumerated() {
+            for raw in character.unicodeScalars {
+                if Self.isControl(raw) {
+                    continue
+                }
+                if raw.properties.isWhitespace {
+                    flush()
+                    continue
+                }
+                if Self.isChinese(raw) {
+                    flush()
+                    tokens.append((String(raw), [(raw, offset, offset + 1)]))
+                    continue
+                }
+                let pieces = String(raw).lowercased().decomposedStringWithCanonicalMapping.unicodeScalars
+                for scalar in pieces where !Self.isMark(scalar) {
+                    if scalar.properties.isWhitespace {
+                        flush()
+                    } else if Self.isPunctuationOrSymbol(scalar) {
+                        flush()
+                        tokens.append((String(scalar), [(scalar, offset, offset + 1)]))
+                    } else {
+                        current.append((scalar, offset, offset + 1))
+                    }
+                }
             }
-            if char.isPunctuation || char.isSymbol {
-                flush()
-                tokens.append((String(char), [(char, offset, offset + 1)]))
-                continue
-            }
-            current.append((char, offset, offset + 1))
         }
         flush()
         return tokens
     }
 
-    private func encodeWordPiece(_ token: (String, [(Character, Int, Int)])) -> [(Int32, Int, Int)] {
+    private func encodeWordPiece(_ token: BasicToken) -> [(Int32, Int, Int)] {
         if let id = vocab[token.0] {
             return [(id, token.1.first?.1 ?? 0, token.1.last?.2 ?? 0)]
         }
 
-        let chars = Array(token.0)
+        let scalars = token.1.map(\.0)
         var start = 0
         var pieces: [(Int32, Int, Int)] = []
-        while start < chars.count {
-            var end = chars.count
+        while start < scalars.count {
+            var end = scalars.count
             var best: (String, Int)? = nil
             while end > start {
-                let fragment = String(chars[start..<end])
+                let fragment = String(String.UnicodeScalarView(scalars[start..<end]))
                 let candidate = start == 0 ? fragment : "##\(fragment)"
                 if vocab[candidate] != nil {
                     best = (candidate, end)

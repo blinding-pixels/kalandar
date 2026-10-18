@@ -17,7 +17,7 @@ pub fn parse_reminder_preview(text: &str, request: &CapturePreviewRequest) -> Re
     let mut working = normalize_whitespace(text);
     working = strip_prefix_filler(&working);
 
-    let schedule = extract_schedule(&working, CaptureKind::Reminder, request);
+    let schedule = extract_schedule(text, &working, CaptureKind::Reminder, request);
     let recurrence = schedule.reminder_recurrence();
     let recurrence_exceptions = schedule.recurrence_exceptions();
     let recurrence_start_text = schedule.texts.recurrence_start.clone();

@@ -128,24 +128,42 @@ fn normalize_whitespace(text: &str) -> String {
     text.split_whitespace().collect::<Vec<_>>().join(" ")
 }
 
+fn remove_texts(working: &str, payload: &str, spans: &[(usize, usize)]) -> String {
+    let mut sorted = spans.to_vec();
+    sorted.sort_unstable();
+    let mut regions: Vec<(usize, usize)> = Vec::new();
+    for (start, end) in sorted {
+        match regions.last_mut() {
+            Some(last) if start <= last.1 => last.1 = last.1.max(end),
+            _ => regions.push((start, end)),
+        }
+    }
+    let mut output = working.to_string();
+    for (start, end) in regions {
+        let Some(needle) = payload.get(start..end).map(str::trim) else {
+            continue;
+        };
+        if needle.is_empty() {
+            continue;
+        }
+        let lower = output.to_lowercase();
+        if let Some(found) = lower.find(&needle.to_lowercase()) {
+            if output.is_char_boundary(found) && output.is_char_boundary(found + needle.len()) {
+                output.replace_range(found..found + needle.len(), " ");
+            }
+        }
+    }
+    normalize_whitespace(&output)
+}
+
 pub fn extract_schedule(
-    text: &str,
+    payload: &str,
+    working: &str,
     kind: CaptureKind,
     request: &CapturePreviewRequest,
 ) -> ScheduleOutput {
-    let found = capture_schedule(text, kind, None, &context_for(request));
-    let mut ranges: Vec<(usize, usize)> = found.spans.iter().map(|s| (s.start, s.end)).collect();
-    ranges.sort_unstable();
-    let mut remaining = String::new();
-    let mut cursor = 0;
-    for (start, end) in ranges {
-        if start >= cursor {
-            remaining.push_str(&text[cursor..start]);
-            remaining.push(' ');
-        }
-        cursor = cursor.max(end);
-    }
-    remaining.push_str(&text[cursor..]);
+    let found = capture_schedule(payload, kind, None, &context_for(request));
+    let ranges: Vec<(usize, usize)> = found.spans.iter().map(|s| (s.start, s.end)).collect();
     let warnings = found
         .warnings
         .iter()
@@ -156,7 +174,7 @@ pub fn extract_schedule(
         })
         .collect();
     ScheduleOutput {
-        remaining: normalize_whitespace(&remaining),
+        remaining: remove_texts(working, payload, &ranges),
         texts: found.texts,
         schedule: found.schedule,
         warnings,

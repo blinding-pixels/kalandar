@@ -22,7 +22,7 @@ pub fn parse_task_preview(text: &str, request: &CapturePreviewRequest) -> TaskPa
     let tags = extract_tags(&mut working);
     let project = extract_project(&mut working);
     let assignees = extract_assignees(&mut working, request.known_assignees.as_deref());
-    let schedule = extract_schedule(&working, CaptureKind::Task, request);
+    let schedule = extract_schedule(text, &working, CaptureKind::Task, request);
     let title = build_task_title(&schedule.remaining);
 
     let mut warnings = Vec::new();
