@@ -20,7 +20,6 @@ pub(crate) struct TinyIntentClass {
     pub(crate) values: Vec<f64>,
 }
 
-
 pub(crate) fn embedded_tiny_intent_model() -> &'static TinyIntentModel {
     static MODEL: OnceLock<TinyIntentModel> = OnceLock::new();
     MODEL.get_or_init(|| {
@@ -165,7 +164,6 @@ fn softmax(logits: &[f64]) -> Vec<f64> {
     let sum = if sum == 0.0 || sum.is_nan() { 1.0 } else { sum };
     exps.into_iter().map(|value| value / sum).collect()
 }
-
 
 #[cfg(test)]
 mod tests {

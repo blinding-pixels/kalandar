@@ -1,15 +1,11 @@
-use super::intent_model::{
-    classify_probabilities, embedded_tiny_intent_model, TinyIntentModel,
-};
+use super::intent_model::{classify_probabilities, embedded_tiny_intent_model, TinyIntentModel};
 use super::intent_rules::{
     has_date_signal, has_recurrence_signal, has_time_signal, is_explicit_reminder,
     is_short_appointment_ambiguous, looks_like_dated_task, looks_like_reflective_note,
     looks_like_soft_action_idea, looks_like_time_blocked_task, normalize_intent_input,
     normalize_js_whitespace, starts_with_task_lead, tokens,
 };
-use super::{
-    CapturePreviewCandidate, CapturePreviewWarning,
-};
+use super::{CapturePreviewCandidate, CapturePreviewWarning};
 
 const DEFAULT_INTENT_THRESHOLD: f64 = 0.55;
 const GAP_THRESHOLD: f64 = 0.15;
@@ -109,7 +105,6 @@ pub struct CaptureIntent {
     pub warnings: Vec<CapturePreviewWarning>,
     pub route: IntentRoute,
 }
-
 
 pub fn classify_intent_embedded(input: &str) -> IntentRoute {
     classify_intent_with_model(embedded_tiny_intent_model(), input)

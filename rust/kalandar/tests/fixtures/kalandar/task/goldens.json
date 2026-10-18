@@ -80,7 +80,7 @@
       "tags": [],
       "priority": "high",
       "status": null,
-      "dueDateText": "by Friday",
+      "dueDateText": "by friday",
       "dueTimeText": "5pm"
     }
   },
@@ -122,13 +122,13 @@
     "timezone": "America/New_York",
     "oracle": {
       "kind": "task",
-      "title": "Finalize the Q3 marketing budget",
+      "title": "finalize the q3 marketing budget",
       "assignees": [],
-      "projectHint": "Apollo",
+      "projectHint": "apollo",
       "tags": [],
       "priority": null,
       "status": null,
-      "dueDateText": "by Friday",
+      "dueDateText": "by friday",
       "dueTimeText": "morning"
     }
   },
@@ -138,11 +138,11 @@
     "timezone": "America/New_York",
     "oracle": {
       "kind": "task",
-      "title": "Replace login bug",
+      "title": "replace login bug",
       "assignees": [
-        "Drew"
+        "drew"
       ],
-      "projectHint": "Retail pilot",
+      "projectHint": "retail pilot",
       "tags": [
         "#mobile"
       ],
@@ -158,7 +158,7 @@
     "timezone": "America/New_York",
     "oracle": {
       "kind": "task",
-      "title": "Prep teaching materials",
+      "title": "prep teaching materials",
       "assignees": [],
       "projectHint": null,
       "tags": [
@@ -166,7 +166,7 @@
       ],
       "priority": null,
       "status": null,
-      "dueDateText": "Thursday",
+      "dueDateText": "thursday",
       "dueTimeText": null
     }
   }

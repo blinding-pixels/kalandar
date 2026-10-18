@@ -8,6 +8,10 @@ fn main() {
         if line.trim().is_empty() {
             continue;
         }
-        let _ = writeln!(out, "{}", kalandar_dates::json::capture_schedule_json(&line));
+        let _ = writeln!(
+            out,
+            "{}",
+            kalandar_dates::json::capture_schedule_json(&line)
+        );
     }
 }

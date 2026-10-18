@@ -49,7 +49,9 @@ fn main() {
             &encoded.offsets,
             logits,
             &bundle.labels,
-            bundle.sequence_decoding().unwrap_or(SequenceDecoding::Argmax),
+            bundle
+                .sequence_decoding()
+                .unwrap_or(SequenceDecoding::Argmax),
         )
         .unwrap_or_default();
         let _ = writeln!(

@@ -13,7 +13,7 @@ struct LightweightCaptureParserTests {
         #expect(result.kind == "task")
         #expect(result.task?.title == "finish report")
         #expect(result.task?.assignees == ["Sara"])
-        #expect(result.task?.tags == ["finance"])
+        #expect(result.task?.tags == ["#finance"])
         #expect(result.task?.priority == "high")
     }
 

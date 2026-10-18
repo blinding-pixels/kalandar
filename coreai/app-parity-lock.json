@@ -180,7 +180,7 @@
         "tags": [],
         "priority": "high",
         "status": null,
-        "dueDateText": "by Friday",
+        "dueDateText": "by friday",
         "dueTimeText": "5pm"
       }
     },
@@ -231,13 +231,13 @@
       "knownAssignees": null,
       "expected": {
         "kind": "task",
-        "title": "Finalize the Q3 marketing budget",
+        "title": "finalize the q3 marketing budget",
         "assignees": [],
-        "projectHint": "Apollo",
+        "projectHint": "apollo",
         "tags": [],
         "priority": null,
         "status": null,
-        "dueDateText": "by Friday",
+        "dueDateText": "by friday",
         "dueTimeText": "morning"
       }
     },
@@ -250,11 +250,11 @@
       "knownAssignees": null,
       "expected": {
         "kind": "task",
-        "title": "Replace login bug",
+        "title": "replace login bug",
         "assignees": [
-          "Drew"
+          "drew"
         ],
-        "projectHint": "Retail pilot",
+        "projectHint": "retail pilot",
         "tags": [
           "#mobile"
         ],
@@ -273,7 +273,7 @@
       "knownAssignees": null,
       "expected": {
         "kind": "task",
-        "title": "Prep teaching materials",
+        "title": "prep teaching materials",
         "assignees": [],
         "projectHint": null,
         "tags": [
@@ -281,7 +281,7 @@
         ],
         "priority": null,
         "status": null,
-        "dueDateText": "Thursday",
+        "dueDateText": "thursday",
         "dueTimeText": null
       }
     },
@@ -294,7 +294,7 @@
       "knownAssignees": null,
       "expected": {
         "kind": "reminder",
-        "title": "Water the Ferns",
+        "title": "water the ferns",
         "remindAtText": "in the morning",
         "recurrenceStartText": null,
         "recurrenceEndText": null,
@@ -313,7 +313,7 @@
       "knownAssignees": null,
       "expected": {
         "kind": "calendar-event",
-        "title": "Client Check-in",
+        "title": "client check-in",
         "dateText": null,
         "timeText": "10am",
         "endTimeText": null,

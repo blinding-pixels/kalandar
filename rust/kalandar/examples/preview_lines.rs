@@ -12,6 +12,10 @@ fn main() {
             continue;
         };
         let result = parser.preview_capture(request);
-        let _ = writeln!(out, "{}", serde_json::to_string(&result).unwrap_or_default());
+        let _ = writeln!(
+            out,
+            "{}",
+            serde_json::to_string(&result).unwrap_or_default()
+        );
     }
 }

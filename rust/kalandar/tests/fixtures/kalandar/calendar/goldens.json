@@ -113,7 +113,7 @@
     "locale": "en-US",
     "oracle": {
       "kind": "calendar-event",
-      "title": "Client Check-in",
+      "title": "client check-in",
       "dateText": null,
       "timeText": "10am",
       "endTimeText": null,

@@ -272,7 +272,11 @@ fn encode_word_piece(
         }];
     }
 
-    let token_chars = token.chars.iter().map(|entry| entry.value).collect::<Vec<_>>();
+    let token_chars = token
+        .chars
+        .iter()
+        .map(|entry| entry.value)
+        .collect::<Vec<_>>();
     let mut pieces = Vec::new();
     let mut start = 0;
 

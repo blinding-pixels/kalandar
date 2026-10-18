@@ -3,14 +3,14 @@ use super::intent::{classify_intent_embedded, CaptureIntent, IntentKind, IntentR
 use super::intent_rules::normalize_js_whitespace;
 use super::reminder_lightweight::parse_reminder_preview;
 use super::task_lightweight::parse_task_preview;
-use super::{
-    CaptureParserError, CapturePreviewCandidate, CapturePreviewRequest, CapturePreviewResult,
-    CapturePreviewWarning,
-};
 #[cfg(feature = "onnx")]
 use super::{
     build_token_classification_request, intent_manifest::classify_intent, load_ort_session,
     CaptureParserArtifactBundle, CaptureParserArtifactManifest, CaptureWordPieceTokenizer,
+};
+use super::{
+    CaptureParserError, CapturePreviewCandidate, CapturePreviewRequest, CapturePreviewResult,
+    CapturePreviewWarning,
 };
 #[cfg(feature = "onnx")]
 use std::{
@@ -65,7 +65,11 @@ pub fn preview_capture(
 }
 
 pub fn preview_capture_rules(request: CapturePreviewRequest) -> CapturePreviewResult {
-    preview_with(request, |text| Ok(classify_intent_embedded(text)), |_| Ok(()))
+    preview_with(
+        request,
+        |text| Ok(classify_intent_embedded(text)),
+        |_| Ok(()),
+    )
 }
 
 fn preview_with(
@@ -87,7 +91,15 @@ fn preview_with(
             if payload.is_empty() {
                 return text_required();
             }
-            return family_result(family, payload, &request, 0.99, Vec::new(), Vec::new(), &verify);
+            return family_result(
+                family,
+                payload,
+                &request,
+                0.99,
+                Vec::new(),
+                Vec::new(),
+                &verify,
+            );
         }
     }
 
@@ -111,7 +123,9 @@ fn preview_with(
             return result;
         }
     };
-    family_result(family, &text, &request, confidence, candidates, warnings, &verify)
+    family_result(
+        family, &text, &request, confidence, candidates, warnings, &verify,
+    )
 }
 
 fn family_result(

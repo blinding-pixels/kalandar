@@ -3,8 +3,8 @@ use kalandar::{
     decode_first_piece_labels, decode_first_piece_spans,
     load_capture_parser_artifact_manifest_from_root, load_ort_session, rebuild_word_spans,
     validate_sequence_decoder_sidecar, whitespace_words, CaptureParserError,
-    CaptureTokenizerConfig, CaptureWordPieceTokenizer, DecodedSpan, RuntimeTensorData, SequenceDecoderError,
-    SequenceDecoding, WhitespaceWord, LOGITS_OUTPUT_TENSOR_NAME,
+    CaptureTokenizerConfig, CaptureWordPieceTokenizer, DecodedSpan, RuntimeTensorData,
+    SequenceDecoderError, SequenceDecoding, WhitespaceWord, LOGITS_OUTPUT_TENSOR_NAME,
 };
 use serde::Deserialize;
 use std::{
@@ -520,7 +520,10 @@ fn tokenizer_matches_hugging_face_ids() {
         .join("..")
         .join(&fixture.vocab);
     let Ok(vocab_text) = fs::read_to_string(&vocab_path) else {
-        eprintln!("skipping tokenizer parity test: {} is missing", vocab_path.display());
+        eprintln!(
+            "skipping tokenizer parity test: {} is missing",
+            vocab_path.display()
+        );
         return;
     };
     let tokenizer = CaptureWordPieceTokenizer::from_vocab(

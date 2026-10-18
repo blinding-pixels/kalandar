@@ -109,12 +109,12 @@ static CONNECTOR: LazyLock<Regex> = LazyLock::new(|| {
 });
 
 static DAYPART: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"(?i)^(?:morning|afternoon|evening|night)\b").unwrap_or_else(|e| panic!("daypart: {e}"))
+    Regex::new(r"(?i)^(?:morning|afternoon|evening|night)\b")
+        .unwrap_or_else(|e| panic!("daypart: {e}"))
 });
 
-static IN_THE: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"(?i)\bin\s+the\s+$").unwrap_or_else(|e| panic!("in the: {e}"))
-});
+static IN_THE: LazyLock<Regex> =
+    LazyLock::new(|| Regex::new(r"(?i)\bin\s+the\s+$").unwrap_or_else(|e| panic!("in the: {e}")));
 
 static ALERT_WORD: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r"(?i)\b(?:with\s+an?\s+)?(?:alert|alarm|reminder|notification|notify(?:\s+me)?|ping(?:\s+me)?|remind\s+me)\s*:?\s*$")
@@ -362,11 +362,23 @@ pub fn capture_schedule(
             .map(|(a, b)| LabelledSpan::new(Role::Alert, *a, *b)),
     );
     for span in &mut all {
-        if matches!(span.role, Role::EventStart | Role::DueDate | Role::DueTime | Role::Trigger) {
-            if let Some(m) = line.get(..span.start).and_then(|before| CONNECTOR.find(before)) {
+        if matches!(
+            span.role,
+            Role::EventStart | Role::DueDate | Role::DueTime | Role::Trigger
+        ) {
+            if let Some(m) = line
+                .get(..span.start)
+                .and_then(|before| CONNECTOR.find(before))
+            {
                 span.start = m.start();
-            } else if line.get(span.start..span.end).is_some_and(|t| DAYPART.is_match(t)) {
-                if let Some(m) = line.get(..span.start).and_then(|before| IN_THE.find(before)) {
+            } else if line
+                .get(span.start..span.end)
+                .is_some_and(|t| DAYPART.is_match(t))
+            {
+                if let Some(m) = line
+                    .get(..span.start)
+                    .and_then(|before| IN_THE.find(before))
+                {
                     span.start = m.start();
                 }
             }

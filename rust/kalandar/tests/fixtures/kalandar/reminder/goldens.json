@@ -222,7 +222,7 @@
     "timezone": "America/New_York",
     "oracle": {
       "kind": "reminder",
-      "title": "Water the Ferns",
+      "title": "water the ferns",
       "remindAtText": "in the morning",
       "recurrenceStartText": null,
       "recurrenceEndText": null,

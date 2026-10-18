@@ -10,6 +10,10 @@ fn main() {
             continue;
         };
         let result = preview_capture_rules(request);
-        let _ = writeln!(out, "{}", serde_json::to_string(&result).unwrap_or_default());
+        let _ = writeln!(
+            out,
+            "{}",
+            serde_json::to_string(&result).unwrap_or_default()
+        );
     }
 }
