@@ -15,7 +15,6 @@ use std::sync::OnceLock;
 pub struct ReminderParseOutput {
     pub draft: CapturePreviewReminderDraft,
     pub warnings: Vec<CapturePreviewWarning>,
-    pub confidence: f64,
     pub schedule: Option<PreviewSchedule>,
 }
 
@@ -83,7 +82,6 @@ pub fn parse_reminder_preview(text: &str, request: &CapturePreviewRequest) -> Re
             context_hint,
         },
         warnings,
-        confidence: 0.0,
         schedule: found.schedule,
     }
 }
