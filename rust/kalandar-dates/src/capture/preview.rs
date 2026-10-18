@@ -132,14 +132,35 @@ fn trim_connectors(text: &str) -> Option<String> {
     (!t.is_empty()).then(|| t.to_string())
 }
 
-fn split_moment(text: &str) -> (Option<String>, Option<String>) {
+fn strip_time_prefix(t: String) -> String {
+    let lower = t.to_lowercase();
+    ["at ", "by ", "from ", "@"]
+        .iter()
+        .find(|p| lower.starts_with(*p))
+        .map_or(t.clone(), |p| t[p.len()..].trim().to_string())
+}
+
+static TIME_RANGE: LazyLock<Regex> = LazyLock::new(|| {
+    Regex::new(r"(?i)^\s*(?:-|–|to|until|till)\s*").unwrap_or_else(|e| panic!("time range: {e}"))
+});
+
+fn split_moment(text: &str) -> (Option<String>, Option<String>, Option<String>) {
     let Some(m) = TIME_PHRASE.find(text) else {
-        return (trim_connectors(text), None);
+        return (trim_connectors(text), None, None);
     };
-    let time = trim_connectors(m.as_str());
-    let rest = format!("{} {}", &text[..m.start()], &text[m.end()..]);
+    let time = trim_connectors(m.as_str()).map(strip_time_prefix);
+    let mut end_time = None;
+    let mut rest_end = m.end();
+    if let Some(sep) = TIME_RANGE.find(&text[m.end()..]) {
+        let tail = &text[m.end() + sep.end()..];
+        if let Some(second) = TIME_PHRASE.find(tail).filter(|x| x.start() == 0) {
+            end_time = trim_connectors(second.as_str()).map(strip_time_prefix);
+            rest_end = m.end() + sep.end() + second.end();
+        }
+    }
+    let rest = format!("{} {}", &text[..m.start()], &text[rest_end..]);
     let date = trim_connectors(&rest.split_whitespace().collect::<Vec<_>>().join(" "));
-    (date, time)
+    (date, time, end_time)
 }
 
 fn joinable(gap: &str) -> bool {
@@ -270,7 +291,7 @@ fn schedule_of(r: &LineResolution) -> Option<PreviewSchedule> {
         None => (None, None, false),
     };
     let duration_minutes = match (&r.start, &r.end) {
-        (Some(s), Some(e)) if !e.implied.contains(&"end") => match (s.local, e.local) {
+        (Some(s), Some(e)) => match (s.local, e.local) {
             (Some(a), Some(b)) if b > a => Some((b - a).num_minutes()),
             _ => None,
         },
@@ -337,20 +358,96 @@ pub fn capture_schedule(
         Role::DueTime,
         Role::Trigger,
     ];
-    let moment_text = role_text(line, &all, &moment_roles);
-    let (date, time) = moment_text
+    let others: Vec<(usize, usize)> = all
+        .iter()
+        .filter(|x| !moment_roles.contains(&x.role))
+        .map(|x| (x.start, x.end))
+        .collect();
+    let recurrences: Vec<(usize, usize)> = all
+        .iter()
+        .filter(|x| x.role == Role::Recurrence)
+        .map(|x| (x.start, x.end))
+        .collect();
+    let mut moments: Vec<LabelledSpan> = Vec::new();
+    let mut attached: Vec<LabelledSpan> = Vec::new();
+    for span in all.iter().filter(|x| moment_roles.contains(&x.role)) {
+        let mut pieces = vec![(span.start, span.end)];
+        for (a, b) in &others {
+            pieces = pieces
+                .into_iter()
+                .flat_map(|(s0, e0)| {
+                    if *b <= s0 || e0 <= *a {
+                        vec![(s0, e0)]
+                    } else {
+                        vec![(s0, (*a).max(s0)), ((*b).min(e0), e0)]
+                    }
+                })
+                .filter(|(s0, e0)| {
+                    s0 < e0
+                        && line
+                            .get(*s0..*e0)
+                            .is_some_and(|t| t.chars().any(char::is_alphanumeric))
+                })
+                .collect();
+        }
+        for (s0, e0) in pieces {
+            let piece = LabelledSpan::new(span.role, s0, e0);
+            let near_recurrence = recurrences.iter().any(|(a, b)| {
+                let (gap_start, gap_end) = if *b <= s0 { (*b, s0) } else { (e0, *a) };
+                gap_start <= gap_end && joinable(line.get(gap_start..gap_end).unwrap_or("x"))
+            });
+            if near_recurrence {
+                attached.push(piece);
+            } else {
+                moments.push(piece);
+            }
+        }
+    }
+    let moment_refs: Vec<&LabelledSpan> = moments.iter().collect();
+    let moment_text = regions(line, &moment_refs)
+        .into_iter()
+        .find_map(|r| text_of(line, r));
+    let (date, mut time, range_end) = moment_text
         .as_deref()
         .map(split_moment)
-        .unwrap_or((None, None));
+        .unwrap_or((None, None, None));
+    let mut recurrence_spans: Vec<LabelledSpan> = all
+        .iter()
+        .filter(|x| x.role == Role::Recurrence)
+        .copied()
+        .collect();
+    recurrence_spans.extend(
+        attached
+            .iter()
+            .map(|x| LabelledSpan::new(Role::Recurrence, x.start, x.end)),
+    );
+    let mut recurrence_text = role_text(line, &recurrence_spans, &[Role::Recurrence]);
+    if time.is_none() {
+        if let Some(text) = recurrence_text.clone() {
+            let (rule, rule_time, _) = split_moment(&text);
+            if rule_time.is_some() {
+                time = rule_time;
+                recurrence_text = rule;
+            }
+        }
+    }
     let texts = ScheduleTexts {
         date,
         time,
         moment: moment_text,
-        end_time: role_text(line, &all, &[Role::EventEnd]),
+        end_time: role_text(line, &all, &[Role::EventEnd])
+            .map(|t| {
+                let lower = t.to_lowercase();
+                ["to ", "until ", "till ", "- ", "– "]
+                    .iter()
+                    .find(|p| lower.starts_with(*p))
+                    .map_or(t.clone(), |p| t[p.len()..].trim().to_string())
+            })
+            .or(range_end),
         duration: role_text(line, &all, &[Role::Duration]),
         lead: role_text(line, &all, &[Role::LeadTime]),
         alert: role_text(line, &all, &[Role::Alert]),
-        recurrence: role_text(line, &all, &[Role::Recurrence]),
+        recurrence: recurrence_text,
         recurrence_start: role_text(line, &all, &[Role::RecurrenceStart]),
         recurrence_end: role_text(line, &all, &[Role::RecurrenceEnd]),
         recurrence_window: role_text(line, &all, &[Role::RecurrenceWindow]),

@@ -1,1 +1,14 @@
-[]
+[
+ {
+  "id": "p4c-reminders-06",
+  "text": "remind me Thanksgiving morning to brine the turkey",
+  "now": null,
+  "problems": [
+   [
+    "start",
+    "2026-11-26",
+    "2026-11-26T09:00"
+   ]
+  ]
+ }
+]

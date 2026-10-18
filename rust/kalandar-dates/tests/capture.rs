@@ -841,7 +841,7 @@ fn capture_schedule_texts_and_schedule() {
     use kalandar_dates::capture::{capture_schedule, Role};
     let s = capture_schedule("finish report tomorrow at 3pm", Task, None, &ctx());
     assert_eq!(s.texts.date.as_deref(), Some("tomorrow"));
-    assert_eq!(s.texts.time.as_deref(), Some("at 3pm"));
+    assert_eq!(s.texts.time.as_deref(), Some("3pm"));
     assert_eq!(s.spans.len(), 1);
     assert_eq!(s.spans[0].role, Role::DueDate);
     let start = s.schedule.and_then(|x| x.start).expect("start");
@@ -853,10 +853,8 @@ fn capture_schedule_texts_and_schedule() {
         None,
         &ctx(),
     );
-    assert_eq!(
-        s.texts.recurrence.as_deref(),
-        Some("every other saturday at 9am")
-    );
+    assert_eq!(s.texts.recurrence.as_deref(), Some("every other saturday"));
+    assert_eq!(s.texts.time.as_deref(), Some("9am"));
     let rec = s.schedule.and_then(|x| x.recurrence).expect("recurrence");
     assert_eq!(rec.interval, 2);
     assert_eq!(rec.days, Some(vec!["saturday"]));
@@ -865,7 +863,7 @@ fn capture_schedule_texts_and_schedule() {
     assert_eq!(s.texts.lead.as_deref(), Some("alert 10 minutes before"));
     let schedule = s.schedule.expect("schedule");
     assert_eq!(schedule.alert_minutes_before, Some(10));
-    assert_eq!(schedule.duration_minutes, None);
+    assert_eq!(schedule.duration_minutes, Some(60));
 
     let s = capture_schedule("buy milk", Task, None, &ctx());
     assert!(s.spans.is_empty());

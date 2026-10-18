@@ -616,6 +616,41 @@ fn apply_piece(draft: &mut Draft, piece: &Piece, line: &str, ctx: &Context) {
                 draft.date = exact(last_day_of_month(d));
             }
         }
+        Token::BusinessDayOfMonth { last, next } => {
+            let scope = ctx.holiday_scope();
+            let working = |d: &NaiveDate| {
+                !s.weekend.contains(&d.weekday())
+                    && !crate::capture::holidays::is_day_off(scope, *d)
+            };
+            let pick = |first: NaiveDate| -> Option<NaiveDate> {
+                if *last {
+                    let mut d = last_day_of_month(first);
+                    while !working(&d) {
+                        d = d.pred_opt()?;
+                    }
+                    Some(d)
+                } else {
+                    let mut d = first;
+                    while !working(&d) {
+                        d = d.succ_opt()?;
+                    }
+                    Some(d)
+                }
+            };
+            let this_first =
+                NaiveDate::from_ymd_opt(today.year(), today.month(), 1).unwrap_or(today);
+            let next_first = this_first.checked_add_months(Months::new(1));
+            let chosen = if *next {
+                next_first.and_then(pick)
+            } else {
+                pick(this_first)
+                    .filter(|d| *d >= today)
+                    .or_else(|| next_first.and_then(pick))
+            };
+            if let Some(date) = chosen {
+                draft.date = exact(date);
+            }
+        }
         Token::MidMonth(next) => {
             let first = NaiveDate::from_ymd_opt(today.year(), today.month(), 1).unwrap_or(today);
             let this_month =
@@ -2933,6 +2968,58 @@ fn keep_result(text: &str, result: &ParsedResult) -> bool {
     let end = result.index + raw.len();
     if matches!(word, "sat" | "sun") {
         return crate::capture::lexicon::lookalike_is_day(text, start, end);
+    }
+    if matches!(word, "night" | "morning" | "evening" | "afternoon") {
+        let before = text[..start].trim_end().to_lowercase();
+        let previous = before
+            .rsplit(|c: char| !c.is_alphanumeric())
+            .next()
+            .unwrap_or("");
+        let temporal = previous.is_empty()
+            || previous.chars().all(|c| c.is_ascii_digit())
+            || crate::capture::recurrence::parse_weekday(previous).is_some()
+            || matches!(
+                previous,
+                "at" | "in"
+                    | "the"
+                    | "this"
+                    | "every"
+                    | "each"
+                    | "tomorrow"
+                    | "tonight"
+                    | "last"
+                    | "next"
+                    | "today"
+                    | "on"
+                    | "by"
+                    | "until"
+                    | "till"
+                    | "early"
+                    | "late"
+                    | "mid"
+                    | "of"
+                    | "a"
+                    | "one"
+                    | "that"
+                    | "same"
+                    | "pm"
+                    | "am"
+                    | "weekday"
+                    | "weekend"
+                    | "sunday"
+                    | "saturday"
+                    | "and"
+                    | "or"
+            );
+        let after_holiday = crate::capture::holidays::find_holidays(
+            &before,
+            crate::capture::holidays::HolidayScope::Region(None),
+        )
+        .last()
+        .is_some_and(|h| h.end == before.len());
+        if !temporal && !after_holiday {
+            return false;
+        }
     }
     let months = [
         "january",

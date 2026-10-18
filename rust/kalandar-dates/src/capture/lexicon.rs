@@ -71,6 +71,10 @@ pub enum Token {
     NextWeek,
     EarlyNextMonth,
     EndOfNextMonth,
+    BusinessDayOfMonth {
+        last: bool,
+        next: bool,
+    },
     MidMonth(bool),
     OrdinalNextMonth(u32),
     NthWeekdayInMonth(i8, chrono::Weekday, u32),
@@ -887,6 +891,19 @@ pub fn scan(text: &str, scope: HolidayScope) -> Vec<Piece> {
     for m in re!(r"(?i)\b(?:(?:by|before|until|at|on)\s+)?(?:the\s+)?(?:end\s+of\s+next\s+month|late\s+next\s+month)\b").find_iter(text) {
         push(m.start(), m.end(), Token::EndOfNextMonth);
     }
+    for c in re!(r"(?i)\b(?:(?:by|before|on|until|till)\s+)?(?:the\s+)?(first|last)\s+(?:business|working|work|week)\s*day\s+(?:of\s+)?(?:the\s+)?(next|this|the)\s+month\b").captures_iter(text) {
+        let (Some(whole), Some(which), Some(month)) = (c.get(0), c.get(1), c.get(2)) else {
+            continue;
+        };
+        push(
+            whole.start(),
+            whole.end(),
+            Token::BusinessDayOfMonth {
+                last: which.as_str().eq_ignore_ascii_case("last"),
+                next: month.as_str().eq_ignore_ascii_case("next"),
+            },
+        );
+    }
     for c in re!(r"(?i)\b(?:mid-?\s?month|(?:the\s+)?middle\s+of\s+(?:the|this)\s+month|mid-?\s?(next)\s+month|(?:the\s+)?middle\s+of\s+(next)\s+month)\b").captures_iter(text) {
         let Some(whole) = c.get(0) else { continue };
         let next = c.get(1).is_some() || c.get(2).is_some();
@@ -981,6 +998,61 @@ pub fn scan(text: &str, scope: HolidayScope) -> Vec<Piece> {
         }
         let (Ok(n), Some(per)) = (n.as_str().parse::<f64>(), unit_minutes(unit.as_str())) else { continue };
         push(whole.start() + lead_len, whole.end(), Token::Duration(bounded_minutes(n * per)));
+    }
+
+    for c in
+        re!(r"(?i)(?:^|[\s,;])(\d+(?:\.\d+)?)\s*(hours?|hrs?|minutes?|mins?)\b").captures_iter(text)
+    {
+        let (Some(n), Some(unit)) = (c.get(1), c.get(2)) else {
+            continue;
+        };
+        let before = text[..n.start()].trim_end().to_lowercase();
+        let previous = before
+            .rsplit(|ch: char| !ch.is_alphanumeric())
+            .next()
+            .unwrap_or("");
+        if matches!(
+            previous,
+            "in" | "within"
+                | "after"
+                | "every"
+                | "for"
+                | "next"
+                | "last"
+                | "each"
+                | "about"
+                | "around"
+                | "take"
+                | "spend"
+        ) {
+            continue;
+        }
+        let after = &text[unit.end()..];
+        if re!(
+            r"^\s*(?:before|ahead|prior|earlier|early|ago|later|from|after|long|each|every|a\s+day)"
+        )
+        .is_match(after)
+        {
+            continue;
+        }
+        if previous
+            .chars()
+            .last()
+            .is_some_and(|ch| ch.is_ascii_digit())
+            || matches!(previous, "am" | "pm" | "m")
+            || before.ends_with('(')
+        {
+            continue;
+        }
+        let (Ok(value), Some(per)) = (n.as_str().parse::<f64>(), unit_minutes(unit.as_str()))
+        else {
+            continue;
+        };
+        push(
+            n.start(),
+            unit.end(),
+            Token::Duration(bounded_minutes(value * per)),
+        );
     }
 
     let shifted: Vec<(usize, usize)> = pieces

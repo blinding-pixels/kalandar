@@ -1210,15 +1210,20 @@ pub fn find_recurrence_phrases(line: &str, scope: HolidayScope) -> Vec<(PhraseKi
         PhraseKind::End,
         &mut out,
     );
-    for m in re_fmt!(
+    let exception = re_fmt!(
         r"(?i)\b(?:except(?:\s+for|\s+on)?|unless|but\s+(?:skip|not)|skip(?:ping)?\s+(?:the\s+)?(?:week|\d|\w+\s+(?:week|\d)|holidays|first)|excluding|not\s+(?:on|in|during|the\s+week)|no\s+\w+\s+in|apart\s+from|other\s+than)\b[^,;.]*"
-    )
-    .find_iter(line)
-    {
-        let end = re!(r"(?i)\s(?:until|till|through|thru)\s")
-            .find(m.as_str())
-            .map_or(m.end(), |cut| m.start() + cut.start());
+    );
+    let mut position = 0;
+    while let Some(m) = exception.find_at(line, position) {
+        let end = exception_end(line, m.start(), m.end());
         out.push((PhraseKind::Exception, m.start(), end));
+        position = end.max(m.start() + 1);
+        while position < line.len() && !line.is_char_boundary(position) {
+            position += 1;
+        }
+        if position >= line.len() {
+            break;
+        }
     }
     let sub_daily = out.iter().any(|(k, s, e)| {
         *k == PhraseKind::Rule
@@ -1236,6 +1241,43 @@ pub fn find_recurrence_phrases(line: &str, scope: HolidayScope) -> Vec<(PhraseKi
         out.push((PhraseKind::Window, m.start(), m.end()));
     }
     out
+}
+
+fn exception_end(line: &str, start: usize, end: usize) -> usize {
+    let text = &line[start..end];
+    let mut cut = text.len();
+    if let Some(m) = re!(r"(?i)\s(?:until|till|through|thru|starting|beginning)\s").find(text) {
+        cut = cut.min(m.start());
+    }
+    if let Some(m) = re!(r"(?i)\s(?:but|unless)\s").find(&text[1.min(text.len())..]) {
+        cut = cut.min(m.start() + 1);
+    }
+    for m in re!(r"(?i)\s(?:and|then\s+also)\s+([a-z']+)").captures_iter(text) {
+        let (Some(whole), Some(word)) = (m.get(0), m.get(1)) else {
+            continue;
+        };
+        let w = word.as_str().to_lowercase();
+        let datey = w.chars().next().is_some_and(|c| c.is_ascii_digit())
+            || parse_weekday(&w).is_some()
+            || matches!(
+                w.as_str(),
+                "the"
+                    | "on"
+                    | "every"
+                    | "weekends"
+                    | "holidays"
+                    | "christmas"
+                    | "thanksgiving"
+                    | "easter"
+                    | "new"
+            )
+            || re_fmt!(r"(?i)^(?:{MONTH})$").is_match(&w);
+        if !datey {
+            cut = cut.min(whole.start());
+            break;
+        }
+    }
+    start + text[..cut].trim_end().len()
 }
 
 pub fn occurrence_dates(
