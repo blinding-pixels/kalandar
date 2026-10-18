@@ -1,6 +1,4 @@
-import { createHash } from 'node:crypto';
-import fs from 'node:fs/promises';
-import path from 'node:path';
+import { sha256Hex } from './sha256.ts';
 
 import { isSequenceDecoding, orderedLabels, validateBioLabels, validateSequenceDecoderSidecar } from './sequence-decoder.ts';
 import { createBertWordPieceTokenizer } from './tokenizer.ts';
@@ -183,11 +181,33 @@ const stableValue = (value: unknown): unknown => {
 
 export const computeArtifactId = (manifest: Omit<MlArtifactManifest, 'artifact_id'>): string => {
   const normalized = JSON.stringify(stableValue(manifest));
-  const hash = createHash('sha256').update(normalized).digest('hex');
-  return `sha256:${hash}`;
+  return `sha256:${sha256Hex(normalized)}`;
 };
 
-const sha256Hex = (bytes: Uint8Array): string => createHash('sha256').update(bytes).digest('hex');
+interface NodeFileSystem {
+  fs: { readFile(path: string): Promise<Uint8Array>; readFile(path: string, encoding: 'utf8'): Promise<string> };
+  path: { resolve(...segments: string[]): string; join(...segments: string[]): string; sep: string };
+}
+
+let nodeFileSystem: Promise<NodeFileSystem> | null = null;
+
+const loadNodeFileSystem = (): Promise<NodeFileSystem> => {
+  nodeFileSystem ??= (async () => {
+    const dynamicImport = new Function('specifier', 'return import(specifier)') as (specifier: string) => Promise<unknown>;
+    try {
+      const [fs, path] = await Promise.all([dynamicImport('node:fs/promises'), dynamicImport('node:path')]);
+      return {
+        fs: ((fs as { default?: unknown }).default ?? fs) as NodeFileSystem['fs'],
+        path: ((path as { default?: unknown }).default ?? path) as NodeFileSystem['path'],
+      };
+    } catch (error) {
+      nodeFileSystem = null;
+      const message = error instanceof Error ? error.message : String(error);
+      throw new Error(`Loading artifacts from a directory requires Node.js file system access: ${message}`);
+    }
+  })();
+  return nodeFileSystem;
+};
 
 function assert(condition: unknown, message: string): asserts condition {
   if (!condition) {
@@ -264,6 +284,7 @@ const loadDirectoryFile = async (
   expectedSha: string,
   expectedSize: number,
 ): Promise<LoadedArtifactFile> => {
+  const { fs, path } = await loadNodeFileSystem();
   const absolutePath = path.resolve(root, filePath);
   const normalizedRoot = `${path.resolve(root)}${path.sep}`;
   assert(
@@ -443,6 +464,7 @@ const readManifest = async (
   root: string;
 }> => {
   if (source.kind === 'directory') {
+    const { fs, path } = await loadNodeFileSystem();
     const manifestPath = path.join(source.path, 'manifest.json');
     const payload = await fs.readFile(manifestPath, 'utf8');
     return {

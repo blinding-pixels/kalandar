@@ -507,6 +507,9 @@ const createCoreAiCapturePreviewParser = (config: CoreAiCapturePreviewConfig): C
   };
 };
 
+export { initKalandarDates, initKalandarDatesAsync } from '../dates/index.ts';
+export type { KalandarDatesWasmSource } from '../dates/index.ts';
+
 export {
   CAPTURE_PREVIEW_CONTRACT_VERSION,
   CAPTURE_PREVIEW_IMPLEMENTATIONS,

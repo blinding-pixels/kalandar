@@ -19,11 +19,12 @@ pub fn parse_task_preview(text: &str, request: &CapturePreviewRequest) -> TaskPa
 
     let priority = detect_priority(&mut working);
     let status = detect_status(&mut working);
+    let schedule = extract_schedule(&working, &working, CaptureKind::Task, request);
+    working = schedule.remaining.clone();
     let tags = extract_tags(&mut working);
     let project = extract_project(&mut working);
     let assignees = extract_assignees(&mut working, request.known_assignees.as_deref());
-    let schedule = extract_schedule(text, &working, CaptureKind::Task, request);
-    let title = build_task_title(&schedule.remaining);
+    let title = build_task_title(&working);
 
     let mut warnings = Vec::new();
     if schedule.texts.moment.is_none() && schedule.texts.recurrence.is_none() {
@@ -115,23 +116,23 @@ fn capture(text: &str, regex: &Regex) -> Option<(usize, usize, String)> {
 }
 
 fn detect_priority(working: &mut String) -> Option<String> {
+    let negated = Regex::new(r"(?i)\b(?:not|non)[\s-]*(?:urgent|important|critical)\b")
+        .expect("negated priority regex should compile");
+    let mut priority = negated.is_match(working).then(|| "low".to_string());
+    *working = normalize_whitespace(&negated.replace_all(working, " "));
     for (patterns, value) in [
         (high_priority_patterns(), "high"),
         (medium_priority_patterns(), "medium"),
         (low_priority_patterns(), "low"),
     ] {
-        let mut matched = false;
         for pattern in patterns {
-            if pattern.is_match(working) {
-                matched = true;
+            if priority.is_none() && pattern.is_match(working) {
+                priority = Some(value.to_string());
             }
             *working = normalize_whitespace(&pattern.replace_all(working, " "));
         }
-        if matched {
-            return Some(value.to_string());
-        }
     }
-    None
+    priority
 }
 
 fn detect_status(working: &mut String) -> Option<String> {
@@ -159,7 +160,8 @@ fn extract_tags(working: &mut String) -> Vec<String> {
     let mut seen = BTreeSet::new();
 
     let trailing_clause_regex =
-        Regex::new(r"(?i)\b(?:with\s+)?tags?\s*:?\s*([^.;]+)$").expect("tags regex should compile");
+        Regex::new(r"(?i)\b(?:with\s+)?(?:tags?\b\s*:?\s*|tagged\s+)([^.;]+)$")
+            .expect("tags regex should compile");
     if let Some(captures) = trailing_clause_regex.captures(working.as_str()) {
         if let Some(full) = captures.get(0) {
             if let Some(group) = captures.get(1) {
@@ -245,48 +247,89 @@ fn parse_tag_list(value: &str) -> Vec<String> {
 
 fn extract_project(working: &mut String) -> Option<String> {
     let patterns = [
-        (
-            Regex::new(r"(?i)\b(?:in|under)\s+project\s+(.+?)(?:\s+(?:with|to|every|daily|weekly|monthly|yearly|starting|beginning|from|until|till|through|ending|except|unless|by|before|at|high\b|medium\b|low\b|urgent\b|in\s+progress\b|blocked\b|waiting\b|done\b|completed?\b|not\s+started\b|todo\b|tags?\b|\d+\s*(?:minutes?|mins?|hours?|hrs?)\b)|\s*[,.;]|$)")
-                .expect("project explicit regex should compile"),
-            true,
-            false,
-        ),
-        (
-            Regex::new(r"(?i)\bfor\s+project\s+(.+?)(?:\s+(?:with|to|every|daily|weekly|monthly|yearly|starting|beginning|from|until|till|through|ending|except|unless|by|before|at|high\b|medium\b|low\b|urgent\b|in\s+progress\b|blocked\b|waiting\b|done\b|completed?\b|not\s+started\b|todo\b|tags?\b|\d+\s*(?:minutes?|mins?|hours?|hrs?)\b)|\s*[,.;]|$)")
-                .expect("project for-project regex should compile"),
-            true,
-            false,
-        ),
-        (
-            Regex::new(r"(?i)\bfor\s+([A-Z][A-Za-z0-9-]*(?:\s+[A-Z][A-Za-z0-9-]*){1,3})(?:\s+(?:with|to|every|daily|weekly|monthly|yearly|starting|beginning|from|until|till|through|ending|except|unless|by|before|at|high\b|medium\b|low\b|urgent\b|in\s+progress\b|blocked\b|waiting\b|done\b|completed?\b|not\s+started\b|todo\b|tags?\b|\d+\s*(?:minutes?|mins?|hours?|hrs?)\b)|\s*[,.;]|$)")
-                .expect("project titlecase regex should compile"),
-            false,
-            true,
-        ),
+        Regex::new(r"(?i)\b(?:in|under)\s+project\s+(.+?)(?:\s+(?:with|to|every|daily|weekly|monthly|yearly|starting|beginning|from|until|till|through|ending|except|unless|by|before|at|high\b|medium\b|low\b|urgent\b|in\s+progress\b|blocked\b|waiting\b|done\b|completed?\b|not\s+started\b|todo\b|tags?\b|\d+\s*(?:minutes?|mins?|hours?|hrs?)\b)|\s*[,.;]|$)")
+            .expect("project explicit regex should compile"),
+        Regex::new(r"(?i)\bfor\s+project\s+(.+?)(?:\s+(?:with|to|every|daily|weekly|monthly|yearly|starting|beginning|from|until|till|through|ending|except|unless|by|before|at|high\b|medium\b|low\b|urgent\b|in\s+progress\b|blocked\b|waiting\b|done\b|completed?\b|not\s+started\b|todo\b|tags?\b|\d+\s*(?:minutes?|mins?|hours?|hrs?)\b)|\s*[,.;]|$)")
+            .expect("project for-project regex should compile"),
     ];
 
-    for (regex, project_prefix, title_case_only) in patterns {
+    for regex in patterns {
         if let Some(captures) = regex.captures(working.as_str()) {
             let full = captures.get(0).expect("project full match should exist");
             let group = captures.get(1).expect("project capture group should exist");
             let candidate = clean_named_value(group.as_str());
-            let valid = if title_case_only {
-                is_likely_project(&candidate)
-            } else {
-                !candidate.is_empty()
-            };
-            if valid {
+            if !candidate.is_empty() {
                 remove_segment(working, full.start(), group.end());
-                return Some(if project_prefix {
-                    format!("Project {}", candidate)
-                } else {
-                    candidate
-                });
+                return Some(format!("Project {}", candidate));
             }
         }
     }
 
+    let (phrase_start, start, end) = titlecase_project_phrase(working)?;
+    let candidate = clean_named_value(&working[start..end]);
+    if !is_likely_project(&candidate) {
+        return None;
+    }
+    remove_segment(working, phrase_start, end);
+    Some(candidate)
+}
+
+fn titlecase_project_phrase(working: &str) -> Option<(usize, usize, usize)> {
+    static FOR: OnceLock<Regex> = OnceLock::new();
+    static FIRST: OnceLock<Regex> = OnceLock::new();
+    static NEXT: OnceLock<Regex> = OnceLock::new();
+    static BOUNDARY: OnceLock<Regex> = OnceLock::new();
+    let for_regex = FOR.get_or_init(|| {
+        Regex::new(r"\b[Ff][Oo][Rr]\s+").expect("project for regex should compile")
+    });
+    let first = FIRST.get_or_init(|| {
+        Regex::new(r"^[A-Z][a-z0-9-]*").expect("project first word regex should compile")
+    });
+    let next = NEXT.get_or_init(|| {
+        Regex::new(r"^\s+([A-Za-z][A-Za-z0-9-]*)").expect("project next word regex should compile")
+    });
+    let boundary = BOUNDARY.get_or_init(|| {
+        Regex::new(r"(?i)^(?:\s+(?:with|to|every|daily|weekly|monthly|yearly|starting|beginning|from|until|till|through|ending|except|unless|by|before|at|high\b|medium\b|low\b|urgent\b|in\s+progress\b|blocked\b|waiting\b|done\b|completed?\b|not\s+started\b|todo\b|tags?\b|\d+\s*(?:minutes?|mins?|hours?|hrs?)\b)|\s*[,.;]|$)")
+            .expect("project boundary regex should compile")
+    });
+    for found in for_regex.find_iter(working) {
+        let start = found.end();
+        let Some(word) = first.find(&working[start..]) else {
+            continue;
+        };
+        let mut ends = vec![start + word.end()];
+        while ends.len() < 4 {
+            let cursor = *ends.last().unwrap_or(&start);
+            let Some(captures) = next.captures(&working[cursor..]) else {
+                break;
+            };
+            let (Some(whole), Some(word)) = (captures.get(0), captures.get(1)) else {
+                break;
+            };
+            if is_project_chain_reserved(&working[cursor + word.start()..]) {
+                break;
+            }
+            ends.push(cursor + whole.end());
+        }
+        if let Some(end) = ends
+            .iter()
+            .rev()
+            .find(|end| boundary.is_match(&working[**end..]))
+        {
+            return Some((found.start(), start, *end));
+        }
+    }
     None
+}
+
+fn is_project_chain_reserved(rest: &str) -> bool {
+    static REGEX: OnceLock<Regex> = OnceLock::new();
+    REGEX
+        .get_or_init(|| {
+            Regex::new(r"^(?:with|to|every|daily|weekly|monthly|yearly|starting|beginning|from|until|till|through|ending|except|unless|by|before|at|on|in\s+progress|blocked|waiting|done|completed|not\s+started|todo)\b")
+                .expect("project reserved regex should compile")
+        })
+        .is_match(rest)
 }
 
 fn clean_named_value(value: &str) -> String {
@@ -346,6 +389,9 @@ fn is_likely_person(value: &str, known_assignees: &BTreeSet<String>) -> bool {
         return false;
     }
     let tokens = value.split_whitespace().collect::<Vec<_>>();
+    if tokens.iter().any(|token| is_weekday_or_month(token)) {
+        return false;
+    }
     if tokens.len() > 2 {
         return false;
     }
@@ -477,12 +523,25 @@ fn is_likely_project(value: &str) -> bool {
         return false;
     }
     let tokens = value.split_whitespace().collect::<Vec<_>>();
+    if tokens.iter().any(|token| is_weekday_or_month(token)) {
+        return false;
+    }
     if tokens.len() >= 2 {
         return true;
     }
-    Regex::new(r"^(?:[A-Z][a-z]+[A-Z][A-Za-z]*|[A-Z]{2,}|[A-Z][a-z]+\d+)$")
+    Regex::new(r"^(?:[A-Z][a-z]+[A-Z][A-Za-z]*|[A-Z]{2,}|[A-Z][a-z]+\d+|[A-Z][a-z]+)$")
         .expect("project token regex should compile")
         .is_match(value)
+}
+
+fn is_weekday_or_month(token: &str) -> bool {
+    static REGEX: OnceLock<Regex> = OnceLock::new();
+    REGEX
+        .get_or_init(|| {
+            Regex::new(r"(?i)^(?:mon(?:day)?|tue(?:s|sday)?|wed(?:nesday)?|thu(?:r|rs|rsday)?|fri(?:day)?|sat(?:urday)?|sun(?:day)?|january|february|march|april|may|june|july|august|september|october|november|december|jan|feb|mar|apr|jun|jul|aug|sep|sept|oct|nov|dec)$")
+                .expect("weekday or month regex should compile")
+        })
+        .is_match(token)
 }
 
 fn extract_prefixed_clause(working: &str, prefix: &str) -> Option<(usize, usize, String)> {
@@ -552,6 +611,7 @@ fn high_priority_patterns() -> &'static [Regex] {
             Regex::new(r"(?i)\bhighpri\w*\b").unwrap(),
             Regex::new(r"(?i)\bhigh\s+pri(?:o)?\b").unwrap(),
             Regex::new(r"(?i)!{3,}\s*urgent!*").unwrap(),
+            Regex::new(r"!{2,}").unwrap(),
             Regex::new("🚨").unwrap(),
             Regex::new(r"\bNOW\b").unwrap(),
         ]

@@ -99,13 +99,21 @@ pub struct CaptureSchedule {
 
 static TIME_PHRASE: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(
-        r"(?i)(?:\b(?:at|by|@|around|from)\s*)?(?:\b\d{1,2}(?::\d{2})?\s*(?:a\.?m\.?|p\.?m\.?|am|pm)(?:\W|$)|\b\d{1,2}:\d{2}\b|\b\d{3,4}\s*h(?:rs)?\b|\b\d{1,2}\s*h\b|\b(?:noon|midday|midnight|eod|cob|end\s+of\s+(?:the\s+)?day|close\s+of\s+business)\b|\b(?:this\s+)?(?:morning|afternoon|evening|night|tonight|tonite)\b)",
+        r"(?i)(?:\b(?:at|by|@|around|from)\s*)?(?:\b\d{1,2}(?::\d{2})?\s*(?:a\.?m\.?|p\.?m\.?|am|pm)(?:\W|$)|\b\d{1,2}:\d{2}\b|\b\d{3,4}\s*h(?:rs)?\b|\b\d{1,2}\s*h\b|\b(?:noon|midday|midnight|eod|cob|end\s+of\s+(?:the\s+)?day|close\s+of\s+business)\b|\b(?:this\s+|in\s+the\s+)?(?:morning|afternoon|evening|night|tonight|tonite)\b)",
     )
     .unwrap_or_else(|e| panic!("time phrase: {e}"))
 });
 
 static CONNECTOR: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r"(?i)\b(?:by|before|on)\s+$").unwrap_or_else(|e| panic!("connector: {e}"))
+});
+
+static DAYPART: LazyLock<Regex> = LazyLock::new(|| {
+    Regex::new(r"(?i)^(?:morning|afternoon|evening|night)\b").unwrap_or_else(|e| panic!("daypart: {e}"))
+});
+
+static IN_THE: LazyLock<Regex> = LazyLock::new(|| {
+    Regex::new(r"(?i)\bin\s+the\s+$").unwrap_or_else(|e| panic!("in the: {e}"))
 });
 
 static ALERT_WORD: LazyLock<Regex> = LazyLock::new(|| {
@@ -138,7 +146,7 @@ fn trim_connectors(text: &str) -> Option<String> {
 
 fn strip_time_prefix(t: String) -> String {
     let lower = t.to_lowercase();
-    ["at ", "by ", "from ", "@"]
+    ["at ", "by ", "from ", "in the ", "@"]
         .iter()
         .find(|p| lower.starts_with(*p))
         .map_or(t.clone(), |p| t[p.len()..].trim().to_string())
@@ -357,6 +365,10 @@ pub fn capture_schedule(
         if matches!(span.role, Role::EventStart | Role::DueDate | Role::DueTime | Role::Trigger) {
             if let Some(m) = line.get(..span.start).and_then(|before| CONNECTOR.find(before)) {
                 span.start = m.start();
+            } else if line.get(span.start..span.end).is_some_and(|t| DAYPART.is_match(t)) {
+                if let Some(m) = line.get(..span.start).and_then(|before| IN_THE.find(before)) {
+                    span.start = m.start();
+                }
             }
         }
         if matches!(span.role, Role::LeadTime | Role::Alert) {

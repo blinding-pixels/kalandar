@@ -23,6 +23,7 @@ chrono = { version = "0.4", default-features = false, features = ["std", "clock"
 kalandar-dates = { path = "../kalandar-dates", version = "0.2.0" }
 ndarray = "0.17.2"
 ort = { version = "2.0.0-rc.12", default-features = false, features = ["std", "ndarray", "api-24"] }
+fancy-regex = "0.14"
 regex = "1"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"

@@ -15,7 +15,18 @@ if (!process.argv.includes('--skip-cargo')) {
   }
 }
 
-const glue = fs.readFileSync(path.join(crate, 'pkg-web', 'kalandar_dates_wasm.js'), 'utf8');
+const DEFAULT_URL = `    if (module_or_path === undefined) {
+        module_or_path = new URL('kalandar_dates_wasm_bg.wasm', import.meta.url);
+    }`;
+const NO_DEFAULT_URL = `    if (module_or_path === undefined) {
+        throw new Error('kalandar-dates: pass the WebAssembly module, its bytes, its URL or a Response');
+    }`;
+const generated = fs.readFileSync(path.join(crate, 'pkg-web', 'kalandar_dates_wasm.js'), 'utf8');
+if (!generated.includes(DEFAULT_URL)) {
+  console.error('kalandar-dates wasm: the wasm-bindgen glue no longer has the expected default URL block');
+  process.exit(1);
+}
+const glue = generated.replace(DEFAULT_URL, NO_DEFAULT_URL);
 const wasm = fs.readFileSync(path.join(crate, 'pkg-web', 'kalandar_dates_wasm_bg.wasm'));
 
 fs.mkdirSync(outDir, { recursive: true });

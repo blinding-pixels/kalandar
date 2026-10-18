@@ -24,7 +24,7 @@ export const stripTrailingDanglingPreposition = (input: string, enabled = false)
   let previous = '';
   while (output !== previous) {
     previous = output;
-    output = normalizeWhitespace(output.replace(/\b(?:for|to|by|with|at|on|in|from)\b[.,;:!?-]*$/i, ' '));
+    output = normalizeWhitespace(output.replace(/(?:^|\s)(?:for|to|by|with|at|on|in|from)[.,;:!?-]*$/i, ' '));
   }
   return output;
 };

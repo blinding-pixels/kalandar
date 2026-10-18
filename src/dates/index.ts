@@ -1,5 +1,5 @@
 import { KALANDAR_DATES_WASM_BASE64 } from './wasm/bytes.ts';
-import {
+import initAsync, {
   captureSchedule as wasmCaptureSchedule,
   holidayData as wasmHolidayData,
   initSync,
@@ -136,11 +136,44 @@ const decodeBase64 = (value: string): Uint8Array => {
   return bytes;
 };
 
+export type KalandarDatesWasmSource =
+  | string
+  | URL
+  | Request
+  | Response
+  | Promise<Response>
+  | ArrayBuffer
+  | ArrayBufferView
+  | object;
+
+const embeddedBytes = (): Uint8Array => {
+  if (!KALANDAR_DATES_WASM_BASE64) {
+    throw new Error(
+      'kalandar-dates: this build leaves out the embedded WebAssembly; await initKalandarDatesAsync(url) before parsing',
+    );
+  }
+  return decodeBase64(KALANDAR_DATES_WASM_BASE64);
+};
+
+/** Compiles the embedded WebAssembly synchronously. Every resolver call does this on first use. */
 export const initKalandarDates = (): void => {
   if (ready) {
     return;
   }
-  initSync({ module: decodeBase64(KALANDAR_DATES_WASM_BASE64) });
+  initSync({ module: embeddedBytes() });
+  ready = true;
+};
+
+/**
+ * Compiles the WebAssembly asynchronously. Pass the URL of `kalandar/dates/kalandar_dates_wasm_bg.wasm`,
+ * a `fetch` Response or its promise to use `WebAssembly.instantiateStreaming`; with no argument it
+ * uses the embedded copy. Once it resolves, the synchronous parsers run without the embedded copy.
+ */
+export const initKalandarDatesAsync = async (source?: KalandarDatesWasmSource): Promise<void> => {
+  if (ready) {
+    return;
+  }
+  await initAsync({ module_or_path: source ?? embeddedBytes() });
   ready = true;
 };
 

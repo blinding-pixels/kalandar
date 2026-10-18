@@ -16,10 +16,10 @@ import type { LoadedMlArtifact, MlArtifactSource } from '../runtime/types.ts';
 const PIPELINE: TaskParsePass[] = [
   priorityPass,
   statusPass,
+  schedulePass,
   tagsPass,
   projectPass,
   assigneePass,
-  schedulePass,
   titlePass,
 ];
 

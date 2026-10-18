@@ -286,7 +286,7 @@ async function __wbg_init(module_or_path) {
     }
 
     if (module_or_path === undefined) {
-        module_or_path = new URL('kalandar_dates_wasm_bg.wasm', import.meta.url);
+        throw new Error('kalandar-dates: pass the WebAssembly module, its bytes, its URL or a Response');
     }
     const imports = __wbg_get_imports();
 

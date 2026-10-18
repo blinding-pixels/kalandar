@@ -55,6 +55,11 @@ const TEMPORAL_BOUNDARY =
   '(?=\\s+(?:with|to|every|daily|weekly|monthly|yearly|starting|beginning|from|until|till|through|ending|except|unless|by|before|at|high\\b|medium\\b|low\\b|urgent\\b|in\\s+progress\\b|blocked\\b|waiting\\b|done\\b|completed?\\b|not\\s+started\\b|todo\\b|tags?\\b|' +
   DURATION_TOKEN +
   '\\b)|\\s*[,.;]|$)';
+const PROJECT_CHAIN_RESERVED =
+  'with|to|every|daily|weekly|monthly|yearly|starting|beginning|from|until|till|through|ending|except|unless|by|before|at|on|in\\s+progress|blocked|waiting|done|completed|not\\s+started|todo';
+const WEEKDAY_OR_MONTH_REGEX =
+  /^(?:mon(?:day)?|tue(?:s|sday)?|wed(?:nesday)?|thu(?:r|rs|rsday)?|fri(?:day)?|sat(?:urday)?|sun(?:day)?|january|february|march|april|may|june|july|august|september|october|november|december|jan|feb|mar|apr|jun|jul|aug|sep|sept|oct|nov|dec)$/i;
+const NEGATED_PRIORITY_REGEX = /\b(?:not|non)[\s-]*(?:urgent|important|critical)\b/gi;
 const CONTEXTUAL_WITH_LEAD_REGEX = /^\s*(?:meeting|meet(?:ing)?|sync|chat|coffee|lunch|dinner|breakfast|call|review)\s+with\b/i;
 
 const normalizeTokenWhitespace = (input: string): string => input.replace(/\s+/g, ' ').trim();
@@ -284,6 +289,14 @@ export const detectPriority = (
     }
   };
 
+  const negated = collectPatternMatches(working, NEGATED_PRIORITY_REGEX, 'priority.low.negated', 0.95, 'negated priority signal');
+  NEGATED_PRIORITY_REGEX.lastIndex = 0;
+  if (negated.length > 0) {
+    matches.push(...negated);
+    working = working.replace(NEGATED_PRIORITY_REGEX, ' ');
+    NEGATED_PRIORITY_REGEX.lastIndex = 0;
+    priority = 'low';
+  }
   applyPatterns(HIGH_PRIORITY_PATTERNS, 'high', 1, 'priority.high');
   if (priority === null) {
     applyPatterns(MEDIUM_PRIORITY_PATTERNS, 'medium', 0.95, 'priority.medium');
@@ -408,7 +421,7 @@ export const extractTags = (
 
   const clauseExtraction = findBestRegexExtraction(working, [
     {
-      regex: /\b(?:with\s+)?tags?\s*:?\s*([^.;]+)$/i,
+      regex: /\b(?:with\s+)?(?:tags?\b\s*:?\s*|tagged\s+)([^.;]+)$/i,
       value: (match) => match[1] || '',
       confidence: 0.98,
       ruleId: 'tags.trailing_clause',
@@ -480,6 +493,9 @@ const isLikelyPerson = (value: string, knownAssignees: Set<string>): boolean => 
   if (/^(?:project|tag|tags|today|tomorrow|tonight|next|this|every|daily|weekly|monthly)$/i.test(cleaned)) {
     return false;
   }
+  if (cleaned.split(/\s+/).some((token) => WEEKDAY_OR_MONTH_REGEX.test(token))) {
+    return false;
+  }
   if (/\d/.test(cleaned)) {
     return false;
   }
@@ -510,10 +526,13 @@ const isLikelyProject = (value: string): boolean => {
     return false;
   }
   const tokens = cleaned.split(/\s+/);
+  if (tokens.some((token) => WEEKDAY_OR_MONTH_REGEX.test(token))) {
+    return false;
+  }
   if (tokens.length >= 2) {
     return true;
   }
-  return /^(?:[A-Z][a-z]+[A-Z][A-Za-z]*|[A-Z]{2,}|[A-Z][a-z]+\d+)$/.test(cleaned);
+  return /^(?:[A-Z][a-z]+[A-Z][A-Za-z]*|[A-Z]{2,}|[A-Z][a-z]+\d+|[A-Z][a-z]+)$/.test(cleaned);
 };
 
 export const extractProject = (
@@ -548,7 +567,9 @@ export const extractProject = (
       note: 'captured project from for project phrase',
     },
     {
-      regex: new RegExp(`\\bfor\\s+([A-Z][A-Za-z0-9-]*(?:\\s+[A-Z][A-Za-z0-9-]*){1,3})${TEMPORAL_BOUNDARY}`, 'i'),
+      regex: new RegExp(
+        `\\b[Ff][Oo][Rr]\\s+([A-Z][a-z0-9-]*(?:\\s+(?!(?:${PROJECT_CHAIN_RESERVED})\\b)[A-Za-z][A-Za-z0-9-]*){0,3})${TEMPORAL_BOUNDARY}`,
+      ),
       value: (match) => {
         const candidate = cleanNamedValue(match[1] || '');
         return isLikelyProject(candidate) ? candidate : null;

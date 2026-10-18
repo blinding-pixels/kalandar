@@ -2,7 +2,7 @@ mod calendar;
 mod reminder;
 mod task;
 
-use regex::Regex;
+use fancy_regex::Regex;
 use std::sync::OnceLock;
 
 pub(crate) use calendar::finalize_calendar_title;
@@ -22,106 +22,73 @@ pub(crate) fn clean_title_punctuation(input: &str) -> String {
     )
 }
 
-pub(crate) fn strip_reminder_lead_prefix(text: &str) -> String {
+pub(crate) fn replace_first(regex: &Regex, text: &str, replacement: &str) -> String {
+    regex.replace(text, replacement).into_owned()
+}
+
+pub(crate) fn replace_all(regex: &Regex, text: &str, replacement: &str) -> String {
+    regex.replace_all(text, replacement).into_owned()
+}
+
+pub(crate) fn js_regex(pattern: &str) -> Regex {
+    Regex::new(pattern).unwrap_or_else(|error| panic!("rule regex should compile: {pattern}: {error}"))
+}
+
+fn repeat_until_stable(text: &str, regex: &Regex) -> String {
     let mut output = normalize_whitespace(text);
     let mut previous = String::new();
     while output != previous {
         previous = output.clone();
-        output = normalize_whitespace(&reminder_prefix_regex().replace(&output, " "));
+        output = normalize_whitespace(&replace_first(regex, &output, " "));
     }
     output
 }
 
-pub(crate) fn strip_residual_temporal_tokens(text: &str) -> String {
-    let output = text
-        .replace("eod", " ")
-        .replace("eow", " ")
-        .replace("tmr", " ");
-    let output = Regex::new(r"(?i)\bin\s+\d+\s+(?:minutes?|hours?|days?|weeks?|months?)\b")
-        .expect("relative temporal cleanup regex should compile")
-        .replace_all(&output, " ")
-        .to_string();
-    let output = Regex::new(
-        r"(?i)\bevery\s+other\s+(?:day|week|month|mon(?:day)?|tue(?:s|sday)?|wed(?:nesday)?|thu(?:r|rs|rsday|ursday)?|fri(?:day)?|sat(?:urday)?|sun(?:day)?)\b",
-    )
-    .expect("every-other temporal cleanup regex should compile")
-    .replace_all(&output, " ")
-    .to_string();
-    let output = Regex::new(r"(?i)\bevery\s+\d+\s+(?:days?|weeks?|months?)\b")
-        .expect("interval temporal cleanup regex should compile")
-        .replace_all(&output, " ")
-        .to_string();
-    let output = Regex::new(r"(?i)\b(?:next|this|last)\s+(?:month|week|year)\b")
-        .expect("named period cleanup regex should compile")
-        .replace_all(&output, " ")
-        .to_string();
-    let output = Regex::new(
-        r"(?i)\b(?:next|this|last)\s+(?:mon(?:day)?|tue(?:s|sday)?|wed(?:nesday)?|thu(?:r|rs|rsday|ursday)?|fri(?:day)?|sat(?:urday)?|sun(?:day)?)\b",
-    )
-    .expect("named weekday cleanup regex should compile")
-    .replace_all(&output, " ")
-    .to_string();
-    let output = Regex::new(r"(?i)\bend of (?:the )?(?:month|week|day)\b")
-        .expect("end-of period cleanup regex should compile")
-        .replace_all(&output, " ")
-        .to_string();
-    let output = Regex::new(r"(?i)\b(?:today|tomorrow|tonight|yesterday)\b")
-        .expect("named temporal cleanup regex should compile")
-        .replace_all(&output, " ")
-        .to_string();
-    let output = Regex::new(r"(?i)\b\d{1,2}(?::\d{2})?\s*(?:am|pm|a|p)\b")
-        .expect("clock cleanup regex should compile")
-        .replace_all(&output, " ")
-        .to_string();
-    normalize_whitespace(&output)
+pub(crate) fn strip_reminder_lead_prefix(text: &str) -> String {
+    static REGEX: OnceLock<Regex> = OnceLock::new();
+    let regex = REGEX.get_or_init(|| {
+        js_regex(r"(?i)^(?:remind\s+me\s+to|remind\s+me|don['\x{2019}]?t\s+forget\s+to|don['\x{2019}]?t\s+let\s+me\s+forget\s+to)\b[\s,:-]*")
+    });
+    repeat_until_stable(text, regex)
 }
 
 pub(crate) fn strip_trailing_dangling_preposition(text: &str, enabled: bool) -> String {
+    static REGEX: OnceLock<Regex> = OnceLock::new();
     if !enabled {
         return normalize_whitespace(text);
     }
-
-    let mut output = normalize_whitespace(text);
-    let mut previous = String::new();
-    while output != previous {
-        previous = output.clone();
-        output = normalize_whitespace(&trailing_preposition_regex().replace(&output, " "));
-    }
-    output
+    let regex =
+        REGEX.get_or_init(|| js_regex(r"(?i)(?:^|\s)(?:for|to|by|with|at|on|in|from)[.,;:!?-]*$"));
+    repeat_until_stable(text, regex)
 }
 
 pub(crate) fn strip_leading_title_filler(text: &str) -> String {
-    let mut output = normalize_whitespace(text);
-    let mut previous = String::new();
-    while output != previous {
-        previous = output.clone();
-        output = normalize_whitespace(&leading_title_filler_regex().replace(&output, " "));
-    }
-    output
+    static REGEX: OnceLock<Regex> = OnceLock::new();
+    let regex = REGEX.get_or_init(|| js_regex(r"(?i)^(?:to(?:\s+the)?|that(?:\s+i)?|about)\b[\s,:-]*"));
+    repeat_until_stable(text, regex)
 }
 
-fn reminder_prefix_regex() -> &'static Regex {
-    static REGEX: OnceLock<Regex> = OnceLock::new();
-    REGEX.get_or_init(|| {
-        Regex::new(
-            r"(?i)^(?:remind\s+me\s+to|remind\s+me|don't\s+forget\s+to|dont\s+forget\s+to|don't\s+let\s+me\s+forget\s+to|don’t\s+forget\s+to)\b[\s,:-]*",
-        )
-        .expect("reminder prefix regex should compile")
-    })
-}
-
-fn trailing_preposition_regex() -> &'static Regex {
-    static REGEX: OnceLock<Regex> = OnceLock::new();
-    REGEX.get_or_init(|| {
-        Regex::new(r"(?i)\b(?:for|to|by|with|at|on|in|from)\b[.,;:!?-]*$")
-            .expect("trailing preposition regex should compile")
-    })
-}
-
-fn leading_title_filler_regex() -> &'static Regex {
-    static REGEX: OnceLock<Regex> = OnceLock::new();
-    REGEX.get_or_init(|| {
-        Regex::new(r"(?i)^(?:to(?:\s+the)?|that(?:\s+i)?|about)\b[\s,:-]*")
-            .expect("leading title filler regex should compile")
-    })
+pub(crate) fn strip_residual_temporal_tokens(text: &str) -> String {
+    static REGEXES: OnceLock<Vec<Regex>> = OnceLock::new();
+    let regexes = REGEXES.get_or_init(|| {
+        [
+            r"(?i)\b(?:eod|eow|tmr)\b",
+            r"(?i)\bin\s+\d+\s+(?:day|days|week|weeks|month|months)\b",
+            r"(?i)\bevery\s+other\s+(?:day|week)\b",
+            r"(?i)\bevery\s+\d+\s+(?:days|weeks|months)\b",
+            r"(?i)\b(?:next|this|last)\s+(?:month|week)\b",
+            r"(?i)\b(?:next|this|last)\s+(?:mon(?:day)?|tue(?:s|sday)?|wed(?:nesday)?|thu(?:r|rs|rsday|ursday)?|fri(?:day)?|sat(?:urday)?|sun(?:day)?)\b",
+            r"(?i)\bend of (?:the )?month\b",
+            r"(?i)\bend of (?:the )?week\b",
+            r"(?i)\bend of (?:the )?day\b",
+            r"(?i)\b(?:today|tomorrow|tonight|yesterday)\b",
+        ]
+        .into_iter()
+        .map(js_regex)
+        .collect()
+    });
+    let output = regexes
+        .iter()
+        .fold(text.to_string(), |output, regex| replace_all(regex, &output, " "));
+    normalize_whitespace(&output)
 }

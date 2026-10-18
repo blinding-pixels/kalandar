@@ -87,6 +87,7 @@ export const HIGH_PRIORITY_PATTERNS: RegExp[] = [
   /\bhighpri\w*\b/gi,
   /\bhigh\s+pri(?:o)?\b/gi,
   /!{3,}\s*urgent!*/gi,
+  /!{2,}/g,
   /🚨/g,
   /\bNOW\b/g,
 ];

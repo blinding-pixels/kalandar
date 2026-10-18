@@ -88,6 +88,15 @@
       "types": "./dist/dates/index.d.ts",
       "import": "./dist/dates/index.js"
     },
+    "./dates/kalandar_dates_wasm_bg.wasm": "./dist/dates/wasm/kalandar_dates_wasm_bg.wasm",
+    "./dates/wasm/bytes": {
+      "types": "./dist/dates/wasm/bytes.d.ts",
+      "import": "./dist/dates/wasm/bytes.js"
+    },
+    "./dates/wasm/no-bytes": {
+      "types": "./dist/dates/wasm/no-bytes.d.ts",
+      "import": "./dist/dates/wasm/no-bytes.js"
+    },
     "./core/*": {
       "types": "./dist/core/*.d.ts",
       "import": "./dist/core/*.js"
@@ -159,7 +168,7 @@
     "./package.json": "./package.json"
   },
   "scripts": {
-    "build": "node ./scripts/tsc.mjs -p tsconfig.build.json",
+    "build": "node ./scripts/tsc.mjs -p tsconfig.build.json && node ./scripts/emit-dates-wasm.mjs",
     "typecheck": "node ./scripts/typecheck.mjs",
     "lint": "node ./scripts/lint.mjs",
     "coreai:parity": "node --experimental-strip-types ./scripts/coreai-parity.mjs",
