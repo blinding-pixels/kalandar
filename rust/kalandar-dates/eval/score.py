@@ -2,7 +2,7 @@ import json, os, subprocess, sys, collections
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 CRATE = os.path.dirname(HERE)
-EVAL = "/Users/eshaansood/runtime-split/model-eval"
+EVAL = os.environ.get("KALANDAR_MODEL_EVAL", "")
 TIME_LABELS = {"start_time", "end_time", "duration", "due_date", "due_time", "trigger_time", "lead_time", "recurrence", "recurrence_start", "recurrence_end", "recurrence_exception", "recurrence_window"}
 REC_FIELDS = ["frequency", "interval", "weekdays", "month_days", "months", "count", "start_date", "end_date"]
 

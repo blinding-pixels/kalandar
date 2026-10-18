@@ -1,6 +1,6 @@
-import json, sys
+import json, os, sys
 
-EVAL = "/Users/eshaansood/runtime-split/model-eval"
+EVAL = os.environ.get("KALANDAR_MODEL_EVAL", "")
 HERE = sys.argv[1]
 calls = []
 settings_variants = [None, {"clock": "24h", "weekStart": "sun", "weekend": ["fri", "sat"], "morning": "07:30", "dinner": "19:30", "defaultEventMinutes": 30, "dayFirst": True, "defaultNotificationTime": "07:45", "locale": "en-GB"}, {"holidays": "off"}, {"holidays": {"country": "IN"}}]

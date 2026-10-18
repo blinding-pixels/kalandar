@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 HERE="$(cd "$(dirname "$0")" && pwd)"
-UPSTREAM="${UPSTREAM:-/Users/eshaansood/runtime-split/chrono-port/chrono-upstream}"
+UPSTREAM="${UPSTREAM:?set UPSTREAM to a chrono-node v2.10.1 checkout}"
 WORK="${WORK:-$HERE/work}"
 rm -rf "$WORK" && mkdir -p "$WORK"
 for f in "$UPSTREAM"/test/en/*.test.ts "$UPSTREAM"/test/system_timezone.test.ts; do
