@@ -519,10 +519,13 @@ fn end_of_week(today: NaiveDate, ctx: &Context) -> NaiveDate {
     }
 }
 
-fn holiday_warnings(holiday: crate::facets::Holiday, foreign: bool) -> Vec<Warning> {
+fn holiday_warnings(
+    holiday: crate::facets::Holiday,
+    reach: crate::facets::HolidayReach,
+) -> Vec<Warning> {
     let mut out = Vec::new();
     let name = holiday.name();
-    if foreign {
+    if reach == crate::facets::HolidayReach::Elsewhere {
         out.push(Warning::new(
             WarningCode::HolidayOtherRegion,
             format!(
@@ -554,7 +557,7 @@ fn apply_piece(draft: &mut Draft, piece: &Piece, line: &str, ctx: &Context) {
     let s = &ctx.settings;
     let exact = |d: NaiveDate| Some((d, DateKind::Exact));
     match &piece.token {
-        Token::Holiday(holiday, year, shift, foreign) => {
+        Token::Holiday(holiday, year, shift, reach) => {
             let date = match year {
                 Some(y) => holiday.date_in(*y),
                 None => holiday.next_on_or_after(today - Duration::days(*shift)),
@@ -565,7 +568,7 @@ fn apply_piece(draft: &mut Draft, piece: &Piece, line: &str, ctx: &Context) {
                 if year.is_none() {
                     draft.implied.push("year");
                 }
-                for w in holiday_warnings(*holiday, *foreign) {
+                for w in holiday_warnings(*holiday, *reach) {
                     if !draft.warnings.iter().any(|x| x.code == w.code) {
                         draft.warnings.push(w);
                     }

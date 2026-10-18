@@ -2,7 +2,7 @@ use std::sync::LazyLock;
 
 use regex::Regex;
 
-use crate::facets::holidays::{find_holidays, Holiday, HolidayScope};
+use crate::facets::holidays::{find_holidays, Holiday, HolidayReach, HolidayScope};
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Daypart {
@@ -62,7 +62,7 @@ pub enum Token {
         end: (u32, u32, Option<Meridiem>),
         contextual: bool,
     },
-    Holiday(Holiday, Option<i32>, i64, bool),
+    Holiday(Holiday, Option<i32>, i64, HolidayReach),
     Zone(chrono_tz::Tz, String),
     OrdinalDay(u32),
     OrdinalRange(u32, u32),
@@ -241,13 +241,13 @@ pub fn scan(text: &str, scope: HolidayScope) -> Vec<Piece> {
                 push(
                     start,
                     h.end,
-                    Token::Holiday(h.holiday, h.year, shift, h.foreign),
+                    Token::Holiday(h.holiday, h.year, shift, h.reach),
                 );
             }
             None => push(
                 h.start,
                 h.end,
-                Token::Holiday(h.holiday, h.year, 0, h.foreign),
+                Token::Holiday(h.holiday, h.year, 0, h.reach),
             ),
         }
     }

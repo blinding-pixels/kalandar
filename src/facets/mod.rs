@@ -9,7 +9,8 @@ mod warning;
 pub use context::{to_instant, Context};
 pub use holidays::{
     data as holiday_data, festival_data_info, find_holidays, holiday_data_info, is_day_off,
-    Holiday, HolidayDataInfo, HolidayKind, HolidayMatch, HolidayScope, HolidaySource, YearlyShape,
+    Holiday, HolidayDataInfo, HolidayKind, HolidayMatch, HolidayReach, HolidayScope, HolidaySource,
+    YearlyShape,
 };
 pub use lexicon::task_signal;
 pub use recurrence::{ByDay, FacetsRecurrence, Frequency, RecurrenceException, Rule};

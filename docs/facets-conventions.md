@@ -361,7 +361,10 @@ This replaces the hand-rolled list from phase 4b. The phase 4b rule still holds:
   - Indian variants: Deepavali, Vijayadashami, Bakrid, Eid ul-Fitr, Rakshabandhan, Thiruvonam, and others.
   - Apostrophes, dots and case don't matter.
 - **The date is the home region's.** Thanksgiving is the 4th Thursday of November in the US and the 2nd Monday of October in Canada. Mother's Day in the UK is Mothering Sunday.
-- **A holiday the home region doesn't have** uses the best-known region that has it, in the same country order, and adds `holiday_other_region`. Boxing Day in the US uses the UK date.
+- **A holiday the home region doesn't list at its own level, but at least half of its country's states or provinces do** (Thanksgiving in Canada, for example), uses the date most of them share, with no warning.
+- **A holiday found in fewer than half of the country's states or provinces, or only outside the country,** uses the best-known region that has it and adds `holiday_other_region`.
+  - The best-known region is searched first among the home country's other regions, then in the country order above, picking the one whose data covers the most years.
+  - Boxing Day for a US user comes from a US state that lists it. Canada Day for a US user comes from Canada.
 - **Warnings:**
   - `holiday_computed`: a festival whose date was computed (the Indian lunisolar festivals).
   - `holiday_moon_sighting`: an Islamic holiday in India, whose observed date can move by a day.

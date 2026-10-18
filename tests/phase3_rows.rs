@@ -191,6 +191,7 @@ fn independent_phase3_rows() {
         "phase4_rows_d.jsonl",
         "phase4b_rows_e.jsonl",
         "phase4b_rows_f.jsonl",
+        "phase5_rows_g.jsonl",
     ] {
         let path = format!("{}/facets-eval/{name}", env!("CARGO_MANIFEST_DIR"));
         text.push_str(&std::fs::read_to_string(path).expect("rows"));
@@ -224,7 +225,7 @@ fn independent_phase3_rows() {
             failures.insert(format!("{id}: {}", row["text"]), p);
         }
     }
-    assert!(total > 630, "too few rows: {total}");
+    assert!(total > 700, "too few rows: {total}");
     assert!(
         failures.is_empty(),
         "{} of {total} rows failed: {failures:#?}",

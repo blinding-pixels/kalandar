@@ -117,6 +117,7 @@ pub struct HolidayData {
     series: Vec<Vec<Occurrence>>,
     index: HashMap<String, Vec<IndexEntry>>,
     codes: HashMap<String, usize>,
+    order: Vec<usize>,
 }
 
 struct Reader<'a> {
@@ -298,6 +299,7 @@ fn decode(bytes: &[u8]) -> Option<HolidayData> {
         series,
         index: HashMap::new(),
         codes,
+        order: Vec::new(),
     })
 }
 
@@ -348,6 +350,7 @@ fn load() -> HolidayData {
         merge_festivals(&mut data, festivals);
     }
     data.build_index();
+    data.order = data.compute_order();
     data
 }
 
@@ -462,7 +465,11 @@ const ALIASES: &[(&[&str], &[&str])] = &[
         &["Thanksgiving Day", "Thanksgiving"],
     ),
     (
-        &["black friday", "day after thanksgiving", "day after thanksgiving day"],
+        &[
+            "black friday",
+            "day after thanksgiving",
+            "day after thanksgiving day",
+        ],
         &[
             "Day after Thanksgiving Day",
             "Day after Thanksgiving",
@@ -632,7 +639,11 @@ impl HolidayData {
         self.series.get(entry.series).map_or(&[], Vec::as_slice)
     }
 
-    fn country_order(&self) -> Vec<usize> {
+    fn country_order(&self) -> std::iter::Copied<std::slice::Iter<'_, usize>> {
+        self.order.iter().copied()
+    }
+
+    fn compute_order(&self) -> Vec<usize> {
         let mut order: Vec<usize> = PRIORITY.iter().filter_map(|c| self.region(c)).collect();
         let mut rest: Vec<usize> = (0..self.regions.len())
             .filter(|i| !order.contains(i))
@@ -648,7 +659,7 @@ impl HolidayData {
     }
 
     pub fn region_for_zone(&self, zone: &str) -> Option<usize> {
-        let country = self.country_order().into_iter().find(|i| {
+        let country = self.country_order().find(|i| {
             self.regions[*i].parent.is_none() && self.regions[*i].zones.iter().any(|z| z == zone)
         })?;
         let children: Vec<usize> = (0..self.regions.len())
@@ -671,7 +682,7 @@ impl HolidayData {
             .filter(|i| self.regions[*i].parent.is_none())
     }
 
-    fn within_country(&self, region: usize, definitions: &[usize]) -> Option<(usize, usize)> {
+    fn within_country(&self, region: usize, definitions: &[usize]) -> Option<(usize, usize, bool)> {
         let mut root = region;
         while let Some(p) = self.regions[root].parent {
             root = p;
@@ -689,13 +700,14 @@ impl HolidayData {
             }
         }
         let having: usize = counts.values().map(|c| c.0).sum();
-        if having * 2 < children.len() || having == 0 {
+        if having == 0 {
             return None;
         }
+        let majority = having * 2 >= children.len();
         counts
             .into_values()
             .max_by_key(|(count, i, _)| (*count, std::cmp::Reverse(*i)))
-            .map(|(_, i, e)| (i, e))
+            .map(|(_, i, e)| (i, e, majority))
     }
 
     fn root_of(&self, region: usize) -> usize {
@@ -733,7 +745,7 @@ impl HolidayData {
                 return Some(found);
             }
         }
-        best_in(&mut self.country_order().into_iter())
+        best_in(&mut self.country_order())
     }
 
     fn entry_for(&self, region: usize, definitions: &[usize]) -> Option<usize> {
@@ -791,12 +803,19 @@ pub struct Holiday {
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum HolidayReach {
+    Home,
+    Elsewhere,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct HolidayMatch {
     pub holiday: Holiday,
     pub year: Option<i32>,
     pub start: usize,
     pub end: usize,
     pub foreign: bool,
+    pub reach: HolidayReach,
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -947,18 +966,28 @@ pub fn find_holidays(text: &str, scope: HolidayScope) -> Vec<HolidayMatch> {
         let start = words[i].1;
         let mut end = words[i + length - 1].2;
         let found = region
-            .and_then(|r| data.entry_for(r, &best.definitions).map(|e| (r, e, false)))
+            .and_then(|r| {
+                data.entry_for(r, &best.definitions)
+                    .map(|e| (r, e, HolidayReach::Home))
+            })
             .or_else(|| {
                 region.and_then(|r| {
                     data.within_country(r, &best.definitions)
-                        .map(|(g, e)| (g, e, false))
+                        .map(|(g, e, majority)| {
+                            let reach = if majority {
+                                HolidayReach::Home
+                            } else {
+                                HolidayReach::Elsewhere
+                            };
+                            (g, e, reach)
+                        })
                 })
             })
             .or_else(|| {
                 data.elsewhere(region, &best.definitions)
-                    .map(|(g, e)| (g, e, true))
+                    .map(|(g, e)| (g, e, HolidayReach::Elsewhere))
             });
-        let Some((r, e, foreign)) = found else {
+        let Some((r, e, reach)) = found else {
             i += length;
             continue;
         };
@@ -980,9 +1009,10 @@ pub fn find_holidays(text: &str, scope: HolidayScope) -> Vec<HolidayMatch> {
                 entry: e,
             },
             year,
+            reach,
+            foreign: reach == HolidayReach::Elsewhere,
             start,
             end,
-            foreign,
         });
         i += length + usize::from(year.is_some());
     }

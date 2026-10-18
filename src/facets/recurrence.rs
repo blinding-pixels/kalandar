@@ -1172,7 +1172,7 @@ pub fn find_recurrence_phrases(line: &str, scope: HolidayScope) -> Vec<(PhraseKi
         }
     }
     let delimiter = re!(
-        r"(?i)[,;]|\s(?:except|unless|starting|beginning|from|every|but|and\s+(?:then|also)|at\s+\d)\b"
+        r"(?i)[,;]|\s(?:except|unless|starting|beginning|from|every|but|until|till|through|thru|and\s+(?:then|also)|at\s+\d)\b"
     );
     let keyword = |pattern: &Regex, kind: PhraseKind, out: &mut Vec<(PhraseKind, usize, usize)>| {
         for m in pattern.find_iter(line) {
@@ -1215,7 +1215,10 @@ pub fn find_recurrence_phrases(line: &str, scope: HolidayScope) -> Vec<(PhraseKi
     )
     .find_iter(line)
     {
-        out.push((PhraseKind::Exception, m.start(), m.end()));
+        let end = re!(r"(?i)\s(?:until|till|through|thru)\s")
+            .find(m.as_str())
+            .map_or(m.end(), |cut| m.start() + cut.start());
+        out.push((PhraseKind::Exception, m.start(), end));
     }
     let sub_daily = out.iter().any(|(k, s, e)| {
         *k == PhraseKind::Rule

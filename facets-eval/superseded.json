@@ -20,5 +20,6 @@
  "p4c-false_dates-02": "owner override in phase 4b: a holiday from the fixed list is always a date, with no title heuristic and no possible_holiday_title warning",
  "p4c-false_dates-07": "owner override in phase 4b: a holiday from the fixed list is always a date, with no title heuristic and no possible_holiday_title warning",
  "p4d-false_dates-01": "owner override in phase 4b: a holiday from the fixed list is always a date, with no title heuristic and no possible_holiday_title warning",
- "p4d-false_dates-02": "owner override in phase 4b: a holiday from the fixed list is always a date, with no title heuristic and no possible_holiday_title warning"
+ "p4d-false_dates-02": "owner override in phase 4b: a holiday from the fixed list is always a date, with no title heuristic and no possible_holiday_title warning",
+ "p5g-region_dates-14": "row assumed Boxing Day is a national Canadian holiday; date-holidays 3.37.0 lists it only for Ontario and the Northwest Territories (2 of 13 provinces and territories), so the phase 5 conventions resolve it with holiday_other_region"
 }
