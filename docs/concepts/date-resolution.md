@@ -37,6 +37,19 @@ Holidays come from two embedded tables:
 
 - The resolver reads English. Other languages are left unresolved.
 - The JavaScript build adds about 4.3 MB of WebAssembly to the package, embedded as about 5.7 MB of base64. It is compiled synchronously on first use, so the parsers stay synchronous. Recent Chrome versions allow synchronous compilation of modules up to 8 MB on the main thread; on older browsers, run the parser in a worker.
+
+## Loading The WebAssembly In A Browser
+
+The package also ships the module as a file, `dist/dates/wasm/kalandar_dates_wasm_bg.wasm`, exported as `kalandar/dates/kalandar_dates_wasm_bg.wasm`. Serve it as a static asset, then compile it before the first parse with `initKalandarDatesAsync`, which takes a URL, a `Response`, a promise of one, or the bytes:
+
+```ts
+import { initKalandarDatesAsync, parseCapturePreviewInput } from 'kalandar/capture';
+
+await initKalandarDatesAsync(fetch('/assets/kalandar_dates_wasm_bg.wasm'));
+parseCapturePreviewInput('pay rent by Friday 5pm');
+```
+
+A served `.wasm` file with the `application/wasm` content type compiles with `WebAssembly.instantiateStreaming` and caches like any other asset, at about 0.67 MB with brotli. Once the async init resolves, the parsers never touch the embedded copy, so a bundler can drop it: alias `kalandar/dates/wasm/bytes` to `kalandar/dates/wasm/no-bytes`. Without the alias, calling a parser before the async init resolves compiles the embedded copy; with it, that call throws.
 - The Swift binding needs the `KalandarDatesFFI` XCFramework. A source checkout builds it with `npm run dates:xcframework`; tagged releases attach it as a release asset.
 
 ## What's Next

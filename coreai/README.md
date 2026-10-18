@@ -32,13 +32,15 @@ swift build --package-path node_modules/kalandar/swift
 The Swift products are:
 
 - `KalandarCoreAIRuntime`: library product for Apple-native hosts.
-- `kalandar-coreai-capture-preview`: JSON-line CLI used by parity checks and host smoke tests.
+- `kalandar-coreai-capture-preview`: JSON-lines CLI used by parity checks and host smoke tests. It answers each request line with one result line.
 
 With an artifact root, `CoreAICapturePreviewService` runs the routed task,
 reminder, or calendar token-classification model. It decodes BIO logits into
 source entities and overlays them onto the capture draft; the rule parser remains
 responsible for intent routing and temporal normalization. Without an artifact
-root, the service uses the lightweight parser only.
+root, the service uses the lightweight parser only. The lightweight parser is the
+shared Rust rule parser, called through the `KalandarDatesFFI` binding, so its
+results match the JavaScript and Rust rules.
 
 For explicit model selection, use `CoreAIParserSuite` directly:
 

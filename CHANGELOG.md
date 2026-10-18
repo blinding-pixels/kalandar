@@ -1,5 +1,36 @@
 # Changelog
 
+## 0.2.1
+
+### Fixed
+
+- **Task rules the marketing site relies on.**
+  - `!!` reads as high priority.
+  - `not urgent`, `non-urgent`, `not important` and `non-critical` read as low priority and leave the title.
+  - The date resolver runs before the tag, project and assignee rules, so a project never swallows a date or time phrase. A weekday or month is never an assignee or a project.
+  - A `for <Name>` project stops at a reserved word such as `with` or `by`, and a single capitalised word can be a project (`for Apollo by Friday morning`).
+  - `tagged <list>` is a tag clause.
+- **Titles keep whole words.** Trailing prepositions are stripped only as whole words, so `check-in` keeps its `in`. `in the` before a daypart belongs to the time phrase, so `water the ferns in the morning` leaves `water the ferns`.
+- **The tokenizer matches the one the models were trained with**, in JavaScript, Rust and Swift:
+  - only nonspacing marks are stripped, so Devanagari vowel signs stay;
+  - control, format, private-use and unassigned characters are dropped;
+  - only punctuation splits words, so symbols and emoji stay inside a word;
+  - the CJK ranges match, and words over 100 characters become `[UNK]`.
+
+  A fixture of Hugging Face token ids is checked in all three test suites.
+
+### Changed
+
+- **One set of capture rules.** The Rust rules are now a function-by-function port of the JavaScript rules, and Swift's lightweight parser calls them through the `KalandarDatesFFI` binding (`capture_preview_json`) instead of its own regular expressions. On 6,805 training and dev lines, JavaScript and Rust agree on every field, prefixed and unprefixed, including intent routing. `npm run rules:parity` checks JavaScript, Rust and Swift on the evaluation rows.
+- **Rust routes intent without model files.** The tiny intent classifier's weights are embedded, and `kalandar::preview_capture_rules` previews with the rules alone. The `ort` and `ndarray` dependencies sit behind a new default `onnx` feature.
+- **Swift results follow JavaScript**: assignees keep their case (`Sara`), reminder and calendar titles are title-cased, and calendar attendees are email addresses only.
+
+### Packaging
+
+- **The WebAssembly ships as a file.** `kalandar/dates/kalandar_dates_wasm_bg.wasm` is in the package, and the glue no longer builds a URL to a file that wasn't there.
+- **`initKalandarDatesAsync(source)`** compiles the WebAssembly from a URL, a `Response` or bytes, so browsers can use `WebAssembly.instantiateStreaming`. After it resolves, the parsers need no embedded copy: alias `kalandar/dates/wasm/bytes` to `kalandar/dates/wasm/no-bytes` to leave the base64 copy out of a bundle.
+- **No `node:` imports in browser bundles.** The ONNX artifact loader loads `node:fs` and `node:path` only when it reads a directory, and hashes with a built-in SHA-256.
+
 ## 0.2.0
 
 ### Added
@@ -20,7 +51,7 @@
 - **Retrained models.** Task, calendar and reminder ship the round-two "repair" bundles. The labels and vocabulary are unchanged. The suite is `kalandar-capture-parser-onnx-v2`, and the postprocess versions are v2.
 - **Decoding** reads the first subword piece of each whitespace word, as the models were evaluated. Task and reminder take the argmax. Calendar uses the constrained BIO Viterbi decoder from the round-two tensor contract, whose rules ship as `calendar/sequence_decoder.json`. JavaScript, Rust (`kalandar::sequence_decoder`) and Swift decode identically.
 - **Manifests** carry a `decoding` field. Manifests that still say v1 are rejected.
-- **Release status.** These models are marked experimental pending a blind evaluation. The training report flags field regressions for task (project 7/10 against 8/10 shipped, assignee 8/13 against 9/13) and reminder (trigger phrases 107/124 against 110/124, location 5/8 against 6/8).
+- **Release status.** On the sealed blind test, whole-line accuracy rose from 15.2% to 31.2% (strict) for task and from 26.9% to 35.0% for reminder; calendar gained 5 lines, within noise. No core field (title, main time field, repeat) fell by more than 2 points. Task project and reminder lead time and location fell.
 
 ### Changed
 

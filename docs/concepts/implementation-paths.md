@@ -47,6 +47,12 @@ Use `CoreAIParserSuite` to select the task, reminder, or calendar model directly
 
 The JavaScript `coreai` implementation remains a bridge contract for JavaScript hosts. The Apple host owns the Swift runtime and returns a `capture-preview-v1` result through that bridge.
 
+## One Set Of Rules
+
+The rule-based capture parsers exist once in behaviour. The JavaScript rules in `src/task`, `src/reminder`, `src/calendar` and `src/intent` are the reference. The Rust rules in `rust/kalandar` are a function-by-function port of them, and the Swift lightweight parser calls the Rust rules through the `KalandarDatesFFI` binding instead of carrying its own. `npm run rules:parity` runs the evaluation rows, prefixed and unprefixed, through all three and fails on any difference.
+
+The model paths are separate: JavaScript runs the ONNX models through an adapter you supply, Rust loads them with ONNX Runtime, and Swift runs the Core AI models. They share the tokenizer and the first-piece decoder, which are checked against the training tokenizer and the reference decoder.
+
 ## Choosing An Implementation
 
 Start with `typescript` unless you already know you need a native host boundary.

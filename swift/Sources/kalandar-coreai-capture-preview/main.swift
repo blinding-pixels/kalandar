@@ -42,16 +42,20 @@ enum Main {
                 requireCoreAISmoke: cli.requireCoreAISmoke
             )
             let input = FileHandle.standardInput.readDataToEndOfFile()
-            guard let line = String(data: input, encoding: .utf8)?.split(separator: "\n").first else {
-                throw KalandarCoreAIError.invalidManifest("stdin must contain one capture request JSON line")
+            let lines = (String(data: input, encoding: .utf8) ?? "")
+                .split(separator: "\n")
+                .filter { !$0.allSatisfy(\.isWhitespace) }
+            guard !lines.isEmpty else {
+                throw KalandarCoreAIError.invalidManifest("stdin must contain capture request JSON lines")
             }
-            let request = try JSONDecoder().decode(CapturePreviewRequest.self, from: Data(line.utf8))
-            let result = try await service.preview(request)
             let encoder = JSONEncoder()
             encoder.outputFormatting = [.sortedKeys]
-            let payload = try encoder.encode(result)
-            FileHandle.standardOutput.write(payload)
-            FileHandle.standardOutput.write(Data("\n".utf8))
+            for line in lines {
+                let request = try JSONDecoder().decode(CapturePreviewRequest.self, from: Data(line.utf8))
+                let result = try await service.preview(request)
+                FileHandle.standardOutput.write(try encoder.encode(result))
+                FileHandle.standardOutput.write(Data("\n".utf8))
+            }
         } catch {
             let message = (error as? LocalizedError)?.errorDescription ?? String(describing: error)
             FileHandle.standardError.write(Data("\(message)\n".utf8))
