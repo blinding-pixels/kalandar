@@ -1,5 +1,3 @@
-import * as chrono from 'chrono-node';
-
 import { classifyRecurrenceException } from '../calendar/recurrenceExceptions.ts';
 import type { StructuredRecurrenceException } from '../calendar/types.ts';
 import { normalizeWhitespace, parseReferenceDate } from '../shared/utils.ts';
@@ -10,7 +8,6 @@ import {
   stripTrailingDanglingPreposition,
 } from '../shared/title-utils.ts';
 import {
-  DATE_TYPO_CORRECTIONS,
   DEFAULT_KNOWN_ASSIGNEES,
   HIGH_PRIORITY_PATTERNS,
   LEADING_FILLER_PATTERNS,
@@ -51,24 +48,6 @@ interface RegexExtraction<T> {
   working: string;
 }
 
-interface ScheduleExtraction {
-  field: Extract<
-    FieldName,
-    'due_date' | 'due_time' | 'recurrence' | 'recurrence_start' | 'recurrence_end' | 'recurrence_exception'
-  >;
-  value: string;
-  span: SpanLike;
-  confidence: number;
-  ruleId: string;
-  note: string;
-}
-
-const WEEKDAY =
-  '(?:monday|tuesday|wednesday|thursday|friday|saturday|sunday|mon|tues?|wed(?:nesday)?|thu(?:rs?|rsday|ursday)?|fri|sat|sun)';
-const MONTH =
-  '(?:january|jan|february|feb|march|mar|april|apr|may|june|jun|july|jul|august|aug|september|sep(?:t)?|october|oct|november|nov|december|dec)';
-const ORDINAL = '(?:first|1st|second|2nd|third|3rd|fourth|4th|last)';
-const CLOCK_TOKEN = '(?:[1-9]|1[0-2])(?::[0-5]\\d)?\\s*(?:am|pm)|noon|midnight';
 const DURATION_TOKEN = '\\d+\\s*(?:minutes?|mins?|hours?|hrs?)';
 const PERSON_TOKEN = "(?:@[a-z0-9_.+-]+|[A-Z][a-z]+(?:[-'][A-Z][a-z]+)?(?:\\s+[A-Z][a-z]+(?:[-'][A-Z][a-z]+)?)?|[a-z]+)";
 const PERSON_LIST = `${PERSON_TOKEN}(?:\\s*(?:,|and|&)\\s*${PERSON_TOKEN})*`;
@@ -77,70 +56,6 @@ const TEMPORAL_BOUNDARY =
   DURATION_TOKEN +
   '\\b)|\\s*[,.;]|$)';
 const CONTEXTUAL_WITH_LEAD_REGEX = /^\s*(?:meeting|meet(?:ing)?|sync|chat|coffee|lunch|dinner|breakfast|call|review)\s+with\b/i;
-const RECURRENCE_SIGNAL_REGEX = /\b(?:every|daily|weekly|monthly|yearly|weekdays?|weekends?|every\s+other)\b/i;
-const DATE_FRAGMENT =
-  '(?:the\\s+first\\s+business\\s+day\\s+next\\s+month|end of (?:the )?(?:day|week|month)|(?:today|tomorrow|tonight)(?:\\s+(?:morning|afternoon|evening|night|noon))?|next\\s+(?:week|month|' +
-  WEEKDAY +
-  ')|this\\s+(?:week|month|' +
-  WEEKDAY +
-  ')|' +
-  WEEKDAY +
-  '(?:\\s+(?:morning|afternoon|evening|night|noon))?|\\d{1,2}(?:st|nd|rd|th)?\\s+' +
-  MONTH +
-  '|' +
-  MONTH +
-  '\\s+\\d{1,2}(?:st|nd|rd|th)?|before\\s+lunch|after\\s+dinner|before\\s+guests\\s+arrive)';
-const RECURRENCE_ANCHOR_FRAGMENT =
-  '(?:today|tomorrow|tonight|next\\s+(?:week|month|' +
-  WEEKDAY +
-  ')|this\\s+(?:week|month|' +
-  WEEKDAY +
-  ')|\\d{1,2}(?:st|nd|rd|th)?\\s+' +
-  MONTH +
-  '|' +
-  MONTH +
-  '\\s+\\d{1,2}(?:st|nd|rd|th)?|\\d{1,2}[/-]\\d{1,2})';
-const EXCEPTION_BOUNDARY_PATTERNS: RegExp[] = [
-  /\s+(?=(?:but\s+(?:skip|not)\b|unless\b|except(?:\s+for)?\b))/i,
-  /\s+(?=(?:starting|beginning|from)\b)/i,
-  /\s+(?=(?:until|till|through|ending(?:\s+on)?)\b)/i,
-  /\s+(?=(?:by|at|before)\b)/i,
-  new RegExp(`\\s+(?=for\\s+${DURATION_TOKEN}\\b)`, 'i'),
-  /\s+(?=(?:with\s+(?:high|medium|low|urgent)\b|in\s+progress\b|blocked\b|waiting\b|done\b|completed?\b|not\s+started\b|todo\b|tags?\b))/i,
-  /\s*[.,;:!?](?=\s|$)/i,
-];
-const EXCEPTION_RULES: Array<{ ruleId: string; regex: RegExp; note: string; confidence: number }> = [
-  {
-    ruleId: 'schedule.recurrence_exception.unless',
-    regex: /\bunless\b/i,
-    note: 'captured recurrence exception from unless clause',
-    confidence: 0.95,
-  },
-  {
-    ruleId: 'schedule.recurrence_exception.except',
-    regex: /\bexcept(?:\s+for)?\b/i,
-    note: 'captured recurrence exception from except clause',
-    confidence: 0.95,
-  },
-  {
-    ruleId: 'schedule.recurrence_exception.but_skip',
-    regex: /\bbut\s+skip\b/i,
-    note: 'captured recurrence exception from but-skip clause',
-    confidence: 0.94,
-  },
-  {
-    ruleId: 'schedule.recurrence_exception.but_not',
-    regex: /\bbut\s+not\b/i,
-    note: 'captured recurrence exception from but-not clause',
-    confidence: 0.94,
-  },
-  {
-    ruleId: 'schedule.recurrence_exception.skip_first',
-    regex: /\bskip\s+the\s+first\s+one\b/i,
-    note: 'captured explicit skip-the-first recurrence exception',
-    confidence: 0.93,
-  },
-];
 
 const normalizeTokenWhitespace = (input: string): string => input.replace(/\s+/g, ' ').trim();
 
@@ -202,6 +117,7 @@ export const createTaskParseResult = (maskedInput: string): TaskParseResult => (
     maskedInput,
   },
   warnings: null,
+  schedule: null,
 });
 
 export const createTaskParseContext = (input: string, opts?: TaskParseOptions): TaskParseContext => {
@@ -214,6 +130,7 @@ export const createTaskParseContext = (input: string, opts?: TaskParseOptions): 
     now: parseReferenceDate(opts?.now),
     options: {
       timezone: opts?.timezone || 'UTC',
+      locale: opts?.locale,
       knownAssignees: opts?.knownAssignees,
       debug: Boolean(opts?.debug),
     },
@@ -287,37 +204,6 @@ const collectPatternMatches = (
 
 const removeSegment = (working: string, start: number, end: number): string =>
   normalizeWhitespace(`${working.slice(0, start)} ${working.slice(end)}`);
-
-const extractBoundedClause = (working: string, regex: RegExp): { start: number; end: number; text: string } | null => {
-  const match = working.match(regex);
-  if (!match || match.index == null) {
-    return null;
-  }
-
-  const start = match.index;
-  const searchStart = start + match[0].length;
-  let end = working.length;
-
-  for (const boundary of EXCEPTION_BOUNDARY_PATTERNS) {
-    const boundaryMatch = working.slice(searchStart).match(boundary);
-    if (!boundaryMatch || boundaryMatch.index == null) {
-      continue;
-    }
-    end = Math.min(end, searchStart + boundaryMatch.index);
-  }
-
-  const trailingPunctuation = working.slice(end).match(/^\s*[.,;:!?]+/);
-  if (trailingPunctuation) {
-    end += trailingPunctuation[0].length;
-  }
-
-  const text = normalizeTokenWhitespace(working.slice(start, end).replace(/[.,;:!?]+$/g, ''));
-  if (!text) {
-    return null;
-  }
-
-  return { start, end, text };
-};
 
 const findBestRegexExtraction = <T>(working: string, definitions: RegexDefinition<T>[]): RegexExtraction<T> | null => {
   let best: { definition: RegexDefinition<T>; match: RegExpExecArray; index: number; value: T } | null = null;
@@ -453,68 +339,6 @@ export const detectStatus = (
 
   return {
     status: extraction.value,
-    working: extraction.working,
-    span: extraction.span,
-    confidence: extraction.confidence,
-    ruleId: extraction.ruleId,
-    note: extraction.note,
-  };
-};
-
-export const detectDuration = (
-  input: string,
-): {
-  duration: string | null;
-  working: string;
-  span: SpanLike | null;
-  confidence: number;
-  ruleId: string | null;
-  note: string;
-} => {
-  const extraction = findBestRegexExtraction(input, [
-    {
-      regex: new RegExp(`\\bfor\\s+(${DURATION_TOKEN})\\b`, 'i'),
-      value: (match) => normalizeTokenWhitespace(match[1] || ''),
-      confidence: 0.96,
-      ruleId: 'duration.for_phrase',
-      note: 'captured duration from for <duration> phrase',
-    },
-    {
-      regex: new RegExp(`\\bspend\\s+(${DURATION_TOKEN})\\b`, 'i'),
-      value: (match) => normalizeTokenWhitespace(match[1] || ''),
-      confidence: 0.95,
-      ruleId: 'duration.spend_phrase',
-      note: 'captured duration from spend <duration> phrase',
-    },
-    {
-      regex: new RegExp(`\\btake(?:\\s+about)?\\s+(${DURATION_TOKEN})\\b`, 'i'),
-      value: (match) => normalizeTokenWhitespace(match[1] || ''),
-      confidence: 0.95,
-      ruleId: 'duration.take_phrase',
-      note: 'captured duration from take <duration> phrase',
-    },
-    {
-      regex: new RegExp(`\\b(${DURATION_TOKEN})\\b`, 'i'),
-      value: (match) => normalizeTokenWhitespace(match[1] || ''),
-      confidence: 0.92,
-      ruleId: 'duration.bare_value',
-      note: 'captured bare duration token',
-    },
-  ]);
-
-  if (!extraction) {
-    return {
-      duration: null,
-      working: input,
-      span: null,
-      confidence: 0,
-      ruleId: null,
-      note: 'no duration found',
-    };
-  }
-
-  return {
-    duration: extraction.value,
     working: extraction.working,
     span: extraction.span,
     confidence: extraction.confidence,
@@ -851,224 +675,6 @@ export const extractAssignees = (
     working,
     assignees,
     spans,
-  };
-};
-
-export const applyDateTypoCorrections = (
-  input: string,
-): {
-  working: string;
-  corrections: Array<{ start: number; end: number; text: string; replacement: string }>;
-} => {
-  let output = input;
-  const corrections: Array<{ start: number; end: number; text: string; replacement: string }> = [];
-
-  for (const [pattern, replacement] of DATE_TYPO_CORRECTIONS) {
-    output = output.replace(pattern, (...args) => {
-      const text = String(args[0] || '');
-      const start = Number(args[args.length - 2]);
-      if (Number.isFinite(start)) {
-        corrections.push({ start, end: start + text.length, text, replacement });
-      }
-      return replacement;
-    });
-    pattern.lastIndex = 0;
-  }
-
-  return {
-    working: normalizeWhitespace(output),
-    corrections,
-  };
-};
-
-const isTimeOnlyText = (value: string): boolean =>
-  /^(?:at\s+|by\s+|before\s+)?(?:[1-9]|1[0-2])(?::\d{2})?\s*(?:am|pm)$/i.test(value) ||
-  /^(?:at\s+|by\s+|before\s+)?(?:noon|midnight)$/i.test(value);
-
-export const extractSchedule = (
-  input: string,
-  now: Date,
-): {
-  working: string;
-  recurring: boolean;
-  extractions: ScheduleExtraction[];
-} => {
-  let working = input;
-  const extractions: ScheduleExtraction[] = [];
-  const recurrenceSignal = RECURRENCE_SIGNAL_REGEX.test(working);
-  const pushExtraction = (
-    field: ScheduleExtraction['field'],
-    value: string,
-    start: number,
-    end: number,
-    confidence: number,
-    ruleId: string,
-    note: string,
-  ) => {
-    extractions.push({
-      field,
-      value,
-      span: { start, end, text: value },
-      confidence,
-      ruleId,
-      note,
-    });
-  };
-
-  const consume = (
-    field: ScheduleExtraction['field'],
-    definitions: RegexDefinition<string>[],
-  ) => {
-    const extraction = findBestRegexExtraction(working, definitions);
-    if (!extraction) {
-      return;
-    }
-    extractions.push({
-      field,
-      value: extraction.value,
-      span: extraction.span,
-      confidence: extraction.confidence,
-      ruleId: extraction.ruleId,
-      note: extraction.note,
-    });
-    working = extraction.working;
-  };
-
-  consume('due_time', [
-    {
-      regex: new RegExp(`\\b(?:by|at|before)\\s+(${CLOCK_TOKEN})\\b`, 'i'),
-      value: (match) => normalizeTokenWhitespace(match[0]),
-      confidence: 0.98,
-      ruleId: 'schedule.due_time.explicit',
-      note: 'captured explicit due time phrase',
-    },
-  ]);
-
-  if (recurrenceSignal) {
-    for (const rule of EXCEPTION_RULES) {
-      for (;;) {
-        const clause = extractBoundedClause(working, rule.regex);
-        if (!clause) {
-          break;
-        }
-
-        pushExtraction(
-          'recurrence_exception',
-          clause.text,
-          clause.start,
-          clause.start + clause.text.length,
-          rule.confidence,
-          rule.ruleId,
-          rule.note,
-        );
-        working = removeSegment(working, clause.start, clause.end);
-      }
-    }
-
-    consume('recurrence_start', [
-      {
-        regex: new RegExp(`\\b(?:starting|beginning|from)\\s+${RECURRENCE_ANCHOR_FRAGMENT}\\b`, 'i'),
-        value: (match) => normalizeTokenWhitespace(match[0]),
-        confidence: 0.94,
-        ruleId: 'schedule.recurrence_start.anchor',
-        note: 'captured recurrence start anchor',
-      },
-    ]);
-
-    consume('recurrence_end', [
-      {
-        regex: new RegExp(`\\b(?:until|till|through|ending(?:\\s+on)?)\\s+${RECURRENCE_ANCHOR_FRAGMENT}\\b`, 'i'),
-        value: (match) => normalizeTokenWhitespace(match[0]),
-        confidence: 0.94,
-        ruleId: 'schedule.recurrence_end.anchor',
-        note: 'captured recurrence end anchor',
-      },
-    ]);
-
-    consume('recurrence', [
-      {
-        regex: /\bevery\s+other\s+day\b/i,
-        value: (match) => normalizeTokenWhitespace(match[0]),
-        confidence: 0.93,
-        ruleId: 'schedule.recurrence.every_other_day',
-        note: 'captured every-other-day recurrence',
-      },
-      {
-        regex: new RegExp(`\\bevery\\s+other\\s+${WEEKDAY}\\b`, 'i'),
-        value: (match) => normalizeTokenWhitespace(match[0]),
-        confidence: 0.95,
-        ruleId: 'schedule.recurrence.every_other_weekday',
-        note: 'captured every-other-weekday recurrence',
-      },
-      {
-        regex: new RegExp(`\\bevery\\s+${ORDINAL}\\s+${WEEKDAY}\\s+of\\s+every\\s+month\\b`, 'i'),
-        value: (match) => normalizeTokenWhitespace(match[0]),
-        confidence: 0.94,
-        ruleId: 'schedule.recurrence.ordinal_monthly',
-        note: 'captured ordinal monthly recurrence',
-      },
-      {
-        regex: new RegExp(`\\bevery\\s+${WEEKDAY}\\b`, 'i'),
-        value: (match) => normalizeTokenWhitespace(match[0]),
-        confidence: 0.9,
-        ruleId: 'schedule.recurrence.every_weekday',
-        note: 'captured weekly weekday recurrence',
-      },
-      {
-        regex: /\b(?:daily|weekly|monthly|yearly|every day|every weekday|every weekend)\b/i,
-        value: (match) => normalizeTokenWhitespace(match[0]),
-        confidence: 0.86,
-        ruleId: 'schedule.recurrence.keyword',
-        note: 'captured keyword recurrence',
-      },
-    ]);
-  }
-
-  if (!recurrenceSignal) {
-    consume('due_date', [
-      {
-        regex: new RegExp(`\\b(?:by|before|on)\\s+${DATE_FRAGMENT}\\b`, 'i'),
-        value: (match) => normalizeTokenWhitespace(match[0]),
-        confidence: 0.94,
-        ruleId: 'schedule.due_date.marker_phrase',
-        note: 'captured one-off due date phrase with leading marker',
-      },
-      {
-        regex: new RegExp(`\\b${DATE_FRAGMENT}\\b`, 'i'),
-        value: (match) => normalizeTokenWhitespace(match[0]),
-        confidence: 0.82,
-        ruleId: 'schedule.due_date.named_phrase',
-        note: 'captured one-off due date phrase',
-      },
-    ]);
-
-    const dueDateAlreadyFound = extractions.some((entry) => entry.field === 'due_date');
-    if (!dueDateAlreadyFound) {
-      const chronoResult = chrono.parse(working, now, { forwardDate: true })[0] || null;
-      if (chronoResult && !isTimeOnlyText(chronoResult.text || '')) {
-        const text = normalizeTokenWhitespace(chronoResult.text || '');
-        const start = chronoResult.index ?? 0;
-        extractions.push({
-          field: 'due_date',
-          value: text,
-          span: {
-            start,
-            end: start + text.length,
-            text,
-          },
-          confidence: 0.72,
-          ruleId: 'schedule.due_date.chrono_fallback',
-          note: 'captured one-off due date using chrono text span',
-        });
-        working = removeSegment(working, start, start + text.length);
-      }
-    }
-  }
-
-  return {
-    working: normalizeWhitespace(working),
-    recurring: extractions.some((entry) => entry.field === 'recurrence'),
-    extractions,
   };
 };
 

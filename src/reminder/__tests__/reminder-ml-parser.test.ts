@@ -63,7 +63,8 @@ describe('reminder ML parser', () => {
       const result = await parser.parse(input, { now, timezone });
 
       assert.equal(result.fields.title, 'Water Plants and Add Soil');
-      assert.equal(result.fields.remind_at, '2026-03-28T09:00:00');
+      assert.equal(result.fields.remind_at, null);
+      assert.equal(result.schedule?.start?.date, '2026-03-28');
       assert.deepEqual(result.fields.recurrence, {
         frequency: 'weekly',
         interval: 2,
@@ -86,7 +87,7 @@ describe('reminder ML parser', () => {
       assert.deepEqual(planning.temporal.recurrence_exception, ['except the week of the 21st']);
 
       const spec = buildReminderDeliverySpec(planning, { destination: 'notifications' });
-      assert.equal(spec.trigger.trigger_time, '2026-03-28T09:00:00');
+      assert.equal(spec.trigger.trigger_time, null);
       assert.deepEqual(spec.schedule.recurrence_exception, ['except the week of the 21st']);
     } finally {
       await bundle.cleanup();

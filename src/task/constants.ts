@@ -72,32 +72,6 @@ export const PHRASE_CORRECTIONS: Array<[RegExp, string]> = [
   [/\bbday\b/gi, 'bday'],
 ];
 
-export const DATE_TYPO_CORRECTIONS: Array<[RegExp, string]> = [
-  [/\btmrw\b/gi, 'tomorrow'],
-  [/\btmr\b/gi, 'tomorrow'],
-  [/\btomorow\b/gi, 'tomorrow'],
-  [/\btonite\b/gi, 'tonight'],
-  [/\barvo\b/gi, 'afternoon'],
-  [/\bthurrsday\b/gi, 'thursday'],
-  [/\bthurdsay\b/gi, 'thursday'],
-  [/\bwendesday\b/gi, 'wednesday'],
-  [/\bwednsday\b/gi, 'wednesday'],
-  [/\bnext tues\b/gi, 'next tuesday'],
-  [/\bnext fri\b/gi, 'next friday'],
-  [/\bnext mon\b/gi, 'next monday'],
-  [/\bthurs\b/gi, 'thursday'],
-  [/\bthur\b/gi, 'thursday'],
-  [/\bfri\b/gi, 'friday'],
-  [/\bmon\b/gi, 'monday'],
-  [/\btues\b/gi, 'tuesday'],
-  [/\bwed\b/gi, 'wednesday'],
-  [/\bsat\b/gi, 'saturday'],
-  [/\bsun\b/gi, 'sunday'],
-  [/\bclose of business\b/gi, 'end of day'],
-  [/\bcob\b/gi, 'end of day'],
-  [/\beod\b/gi, 'end of day'],
-];
-
 export const HIGH_PRIORITY_PATTERNS: RegExp[] = [
   /\burgent\b/gi,
   /\burgnt\b/gi,

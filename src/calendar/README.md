@@ -2,14 +2,9 @@
 
 Offline, tiny-footprint natural-language parser for event-like input.
 
-## Weekday Semantics (Option B)
+## Dates
 
-- Bare weekday (`sunday`) resolves to the upcoming occurrence, including today if today matches.
-- `this <weekday>` first targets that weekday in the current week, including today if today matches. If that date would be in the past, it rolls forward to the next occurrence and marks the parse with lower confidence.
-- `next <weekday>` resolves to the upcoming occurrence, except when today already is that weekday.
-  On same-day input, it resolves to `+7 days`.
-- `next week <weekday>` resolves to the weekday in next ISO week (next week's Monday baseline).
-- Relative weekday phrases never resolve to a past date.
+Dates, times, end times, durations, repeats, exceptions and alert leads come from the shared kalandar-dates resolver (`src/dates`), the same one the Rust parser uses. The text fields hold the phrase the resolver found, such as `tomorrow` or `every other Tuesday`. The resolved values are on `schedule`.
 
 ## API
 
@@ -54,14 +49,14 @@ const result = await parser.parse('design review next Tuesday at 3', {
 EventParseResult {
   fields: {
     title: string | null;
-    date: string | null; // YYYY-MM-DD
-    time: string | null; // HH:MM (24h)
-    end_time: string | null; // HH:MM (24h)
+    date: string | null; // source text, e.g. "tomorrow"
+    time: string | null; // source text, e.g. "3 PM"
+    end_time: string | null; // source text, e.g. "4pm"
     duration_minutes: number | null;
     location: string | null;
-    recurrence: string | null; // RRULE-lite string such as FREQ=WEEKLY;INTERVAL=1;BYDAY=TU
-    recurrence_start: string | null; // ISO date for simple recurrence anchors
-    recurrence_end: string | null; // ISO date for simple recurrence cutoffs
+    recurrence: string | null; // source text, e.g. "every Tuesday"; the RRULE is schedule.recurrence.rrule
+    recurrence_start: string | null; // source text, e.g. "starting next month"
+    recurrence_end: string | null; // source text, e.g. "till July 1st"
     recurrence_exception: Array<{
       raw: string;
       condition:
@@ -78,7 +73,7 @@ EventParseResult {
         | { type: string; [key: string]: unknown }
         | null;
     }>;
-    alerts: Array<{ offset_minutes: number }> | null; // negative means before
+    alerts: Array<{ offset_minutes: number }> | null; // minutes before the start
     attendees: string[] | null; // email only
     contact_suggestions: Array<{ text: string; source: 'title_with_phrase' | 'attendee_clause' }> | null;
   };
@@ -124,6 +119,8 @@ EventParseResult {
     maskedInput: string;
     debugSteps: DebugStep[];
   };
+  warnings: ParseWarning[] | null;
+  schedule?: PreviewSchedule | null; // resolved start, end, duration, recurrence and alert from kalandar-dates
 }
 ```
 

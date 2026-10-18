@@ -1,11 +1,8 @@
-import { absoluteTimePass } from './passes/absoluteTimePass.ts';
-import { chronoFallbackPass } from './passes/chronoFallbackPass.ts';
+import { captureSchedule } from '../dates/index.ts';
+import type { ScheduleSpan } from '../dates/index.ts';
 import { finalizeReminderParseContext } from './finalize.ts';
-import { namedDatePass } from './passes/namedDatePass.ts';
-import { recurrencePass } from './passes/recurrencePass.ts';
-import { relativeTimePass } from './passes/relativeTimePass.ts';
-import { scheduleDetailsPass } from './passes/scheduleDetailsPass.ts';
 import { titlePass } from './passes/titlePass.ts';
+import { applyReminderSchedule } from './schedule.ts';
 import type { ReminderFields, ReminderParseContext, ReminderParseOptions, ReminderParseResult } from './types.ts';
 import { createReminderParseContext, extractTitle } from './utils.ts';
 import type { InferenceAdapter, LoadedMlArtifact, MlArtifactSource, RuntimeTensor } from '../runtime/types.ts';
@@ -16,6 +13,16 @@ const EXCEPTION_CONTINUATION_REGEX =
   /^(?:the\s+week of the\b|week of the\b|the\s+first\b|first\b|second\b|third\b|last\b|holiday\b|holidays\b)/i;
 const EXCEPTION_PREFIX_REGEX = /(?:except(?:\s+for)?|unless|but\s+skip|but\s+not|skip)\s*$/i;
 const LEADING_TRAILING_TRIM_REGEX = /^[\s,;:.]+|[\s,;:.]+$/g;
+const SCHEDULE_LABELS = new Set([
+  'trigger_time',
+  'remind_at',
+  'lead_time',
+  'recurrence',
+  'recurrence_start',
+  'recurrence_end',
+  'recurrence_exception',
+  'recurrence_window',
+]);
 
 type ConfidenceField = keyof ReminderParseResult['meta']['confidence'];
 type SpanField = keyof ReminderParseResult['meta']['spans'];
@@ -369,27 +376,6 @@ export const postprocessReminderMlEntities = (text: string, entities: ReminderMl
   return mergeReminderExceptionFragments(text, trimmed);
 };
 
-const createMaskedEntityContext = (
-  input: string,
-  opts: ReminderParseOptions | undefined,
-  entities: ReminderMlEntity[],
-): ReminderParseContext => {
-  const ctx = createReminderParseContext(input, opts);
-  const maskedChars = ctx.rawInput.split('').map(() => ' ');
-
-  for (const entity of entities) {
-    for (let index = entity.start; index < entity.end && index < maskedChars.length; index += 1) {
-      maskedChars[index] = ctx.rawInput[index];
-    }
-  }
-
-  const maskedInput = maskedChars.join('');
-  ctx.working = maskedInput;
-  ctx.maskedInput = maskedInput;
-  ctx.result.meta.maskedInput = maskedInput;
-  return ctx;
-};
-
 const appendDebugSteps = (ctx: ReminderParseContext, steps: ReminderParseResult['meta']['debugSteps']): void => {
   const seen = new Set(ctx.result.meta.debugSteps.map((step) => `${step.pass}|${step.ruleId}|${step.start}|${step.end}|${step.text}`));
   for (const step of steps) {
@@ -436,45 +422,6 @@ const applyFieldValue = <TField extends keyof ReminderFields>(
   return true;
 };
 
-const mergeFieldFromContext = <TField extends keyof ReminderFields>(
-  ctx: ReminderParseContext,
-  sourceCtx: ReminderParseContext,
-  field: TField,
-): boolean => {
-  const updated = applyFieldValue(
-    ctx,
-    field,
-    sourceCtx.result.fields[field],
-    sourceCtx.result.meta.confidence[field as ConfidenceField],
-    sourceCtx.result.meta.spans[field as SpanField] as ReminderParseResult['meta']['spans'][TField],
-  );
-  if (updated) {
-    appendDebugSteps(ctx, sourceCtx.result.meta.debugSteps);
-  }
-  return updated;
-};
-
-const mergeReminderState = (ctx: ReminderParseContext, sourceCtx: ReminderParseContext): void => {
-  if (sourceCtx.state.anchorDayOfMonth !== null) {
-    ctx.state.anchorDayOfMonth = sourceCtx.state.anchorDayOfMonth;
-  }
-  if (sourceCtx.state.anchorMonthDay) {
-    ctx.state.anchorMonthDay = cloneValue(sourceCtx.state.anchorMonthDay);
-  }
-  if (sourceCtx.state.recurrenceStartDate) {
-    ctx.state.recurrenceStartDate = sourceCtx.state.recurrenceStartDate;
-  }
-  if (sourceCtx.state.ambiguousTime) {
-    ctx.state.ambiguousTime = true;
-  }
-  if (sourceCtx.state.explicitHour !== null) {
-    ctx.state.explicitHour = sourceCtx.state.explicitHour;
-  }
-  if (sourceCtx.state.explicitMinute !== null) {
-    ctx.state.explicitMinute = sourceCtx.state.explicitMinute;
-  }
-};
-
 const maskReminderSpan = (ctx: ReminderParseContext, start: number, end: number): void => {
   if (end <= start || start < 0 || end > ctx.maskedInput.length) {
     return;
@@ -502,79 +449,21 @@ const normalizeLocationText = (text: string): string =>
     .replace(/\s+/g, ' ')
     .trim();
 
-const normalizeContextHint = (
-  text: string,
-): { value: string; hour: number | null; minute: number | null } => {
-  const cleaned = text.trim().replace(/[ ,;:.]+$/g, '');
-  if (/^(?:at\s+)?morning$/i.test(cleaned)) {
-    return { value: 'morning', hour: 9, minute: 0 };
-  }
-  if (/^(?:at\s+)?noon$/i.test(cleaned)) {
-    return { value: 'noon', hour: 12, minute: 0 };
-  }
-  if (/^(?:at\s+)?afternoon$/i.test(cleaned)) {
-    return { value: 'afternoon', hour: 15, minute: 0 };
-  }
-  if (/^(?:at\s+)?evening$/i.test(cleaned)) {
-    return { value: 'evening', hour: 18, minute: 0 };
-  }
-  if (/^(?:at\s+)?night$/i.test(cleaned)) {
-    return { value: 'night', hour: 20, minute: 0 };
-  }
-  if (/^first thing(?: in the morning)?$/i.test(cleaned)) {
-    return { value: 'first thing in the morning', hour: 9, minute: 0 };
-  }
-  if (/^after lunch$/i.test(cleaned)) {
-    return { value: 'after lunch', hour: 13, minute: 0 };
-  }
-  if (/^(?:end of day|eod|before i leave today)$/i.test(cleaned)) {
-    return { value: 'end of day', hour: 17, minute: 0 };
-  }
-  return { value: cleaned.replace(/^at\s+/i, '').trim(), hour: null, minute: null };
-};
-
-const applyScheduleEntities = (
-  ctx: ReminderParseContext,
-  input: string,
-  opts: ReminderParseOptions | undefined,
-  entities: ReminderMlEntity[],
-): void => {
+const applyScheduleEntities = (ctx: ReminderParseContext, entities: ReminderMlEntity[]): void => {
   if (entities.length === 0) {
     return;
   }
 
-  const subctx = createMaskedEntityContext(input, opts, entities);
-  recurrencePass(subctx);
-  scheduleDetailsPass(subctx);
-
-  mergeFieldFromContext(ctx, subctx, 'recurrence');
-  mergeFieldFromContext(ctx, subctx, 'recurrence_start');
-  mergeFieldFromContext(ctx, subctx, 'recurrence_end');
-  mergeFieldFromContext(ctx, subctx, 'recurrence_exception');
-  mergeFieldFromContext(ctx, subctx, 'recurrence_window');
-  mergeFieldFromContext(ctx, subctx, 'context_hint');
-  mergeReminderState(ctx, subctx);
-};
-
-const applyTriggerTimeEntities = (
-  ctx: ReminderParseContext,
-  input: string,
-  opts: ReminderParseOptions | undefined,
-  entities: ReminderMlEntity[],
-): void => {
-  if (entities.length === 0) {
-    return;
-  }
-
-  const subctx = createMaskedEntityContext(input, opts, entities);
-  relativeTimePass(subctx);
-  absoluteTimePass(subctx);
-  namedDatePass(subctx);
-  chronoFallbackPass(subctx);
-
-  mergeFieldFromContext(ctx, subctx, 'remind_at');
-  mergeFieldFromContext(ctx, subctx, 'context_hint');
-  mergeReminderState(ctx, subctx);
+  const found = captureSchedule(ctx.rawInput, 'reminder', {
+    now: ctx.now,
+    timezone: ctx.options.timezone,
+    spans: entities.map((entity) => ({ label: entity.label, start: entity.start, end: entity.end })),
+  });
+  const spanConfidence = (span: ScheduleSpan): number | null => {
+    const overlapping = entities.filter((entity) => entity.start < span.end && span.start < entity.end);
+    return overlapping.length > 0 ? Math.max(...overlapping.map((entity) => entity.confidence)) : null;
+  };
+  applyReminderSchedule(ctx, found, 'ml', spanConfidence);
 };
 
 const applyLocationEntities = (ctx: ReminderParseContext, entities: ReminderMlEntity[]): void => {
@@ -599,41 +488,6 @@ const applyLocationEntities = (ctx: ReminderParseContext, entities: ReminderMlEn
         text: entity.text,
         confidence: entity.confidence,
         note: 'location assembled from decoded ML entity span',
-      },
-    ]);
-    return;
-  }
-};
-
-const applyLeadTimeEntities = (ctx: ReminderParseContext, entities: ReminderMlEntity[]): void => {
-  const sorted = sortEntities(entities).sort((left, right) => right.confidence - left.confidence);
-  for (const entity of sorted) {
-    const normalized = normalizeContextHint(entity.text);
-    if (!normalized.value) {
-      continue;
-    }
-
-    const applied = applyFieldValue(ctx, 'context_hint', normalized.value, entity.confidence, [entitySpan(entity)]);
-    if (!applied) {
-      continue;
-    }
-
-    if (normalized.hour !== null) {
-      ctx.state.explicitHour = normalized.hour;
-    }
-    if (normalized.minute !== null) {
-      ctx.state.explicitMinute = normalized.minute;
-    }
-
-    appendDebugSteps(ctx, [
-      {
-        pass: 'ml',
-        ruleId: 'ml.lead_time_entity',
-        start: entity.start,
-        end: entity.end,
-        text: entity.text,
-        confidence: entity.confidence,
-        note: 'context hint assembled from decoded ML entity span',
       },
     ]);
     return;
@@ -744,19 +598,8 @@ export const parseReminderInputWithMl = async (
   );
   const entities = postprocessReminderMlEntities(ctx.rawInput, decoded);
 
-  applyScheduleEntities(
-    ctx,
-    ctx.rawInput,
-    opts,
-    entities.filter((entity) =>
-      ['recurrence', 'recurrence_start', 'recurrence_end', 'recurrence_exception', 'recurrence_window', 'lead_time'].includes(
-        entity.label,
-      ),
-    ),
-  );
-  applyTriggerTimeEntities(ctx, ctx.rawInput, opts, entities.filter((entity) => entity.label === 'trigger_time'));
+  applyScheduleEntities(ctx, entities.filter((entity) => SCHEDULE_LABELS.has(entity.label)));
   applyLocationEntities(ctx, entities.filter((entity) => entity.label === 'location'));
-  applyLeadTimeEntities(ctx, entities.filter((entity) => entity.label === 'lead_time'));
 
   for (const entity of entities) {
     if (entity.label === 'title') {

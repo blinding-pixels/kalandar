@@ -1,4 +1,5 @@
 import type { StructuredRecurrenceException } from '../calendar/types.ts';
+import type { PreviewSchedule } from '../dates/index.ts';
 import type { DebugStep, FieldSpan, ParseWarning } from '../shared/types.ts';
 
 export type TaskPriority = 'high' | 'medium' | 'low' | null;
@@ -64,11 +65,13 @@ export interface TaskParseResult {
   fields: TaskFields;
   meta: TaskParseMeta;
   warnings: ParseWarning[] | null;
+  schedule?: PreviewSchedule | null;
 }
 
 export interface TaskParseOptions {
   now?: Date | string;
   timezone?: string;
+  locale?: string;
   knownAssignees?: string[];
   debug?: boolean;
 }
@@ -78,7 +81,7 @@ export interface TaskParseContext {
   working: string;
   maskedInput: string;
   now: Date;
-  options: { timezone: string; knownAssignees?: string[]; debug: boolean };
+  options: { timezone: string; locale?: string; knownAssignees?: string[]; debug: boolean };
   result: TaskParseResult;
   state: {
     recurring: boolean;

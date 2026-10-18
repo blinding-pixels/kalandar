@@ -27,7 +27,7 @@
         "title": "Submit report",
         "assignee": ["Sara"],
         "priority": "high",
-        "due_time": "by 10 AM",
+        "due_time": "10 AM",
         "recurrence": "every tuesday",
         "recurrence_start": "starting today",
         "recurrence_end": "till 24th August",
@@ -61,7 +61,7 @@
       "text": "Review backlog every other Tuesday starting next month by noon",
       "expect": {
         "title": "Review backlog",
-        "due_time": "by noon",
+        "due_time": "noon",
         "recurrence": "every other Tuesday",
         "recurrence_start": "starting next month"
       },
@@ -73,7 +73,7 @@
       "expect": {
         "title": "call dentist",
         "due_date": "on tuesday",
-        "due_time": "at 3pm"
+        "due_time": "3pm"
       },
       "notes": "One-off tasks keep the date and clock time in separate fields."
     },
@@ -84,7 +84,7 @@
         "title": "meeting with sarah",
         "assignee": [],
         "due_date": "next monday",
-        "due_time": "at noon"
+        "due_time": "noon"
       },
       "notes": "The rule parser should not greedily convert every with-clause into assignees."
     },

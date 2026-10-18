@@ -1,12 +1,7 @@
 import { finalizeReminderParseContext } from './finalize.ts';
 import { parseReminderInputWithMl } from './ml.ts';
 import { prefixPass } from './passes/prefixPass.ts';
-import { recurrencePass } from './passes/recurrencePass.ts';
-import { scheduleDetailsPass } from './passes/scheduleDetailsPass.ts';
-import { relativeTimePass } from './passes/relativeTimePass.ts';
-import { absoluteTimePass } from './passes/absoluteTimePass.ts';
-import { namedDatePass } from './passes/namedDatePass.ts';
-import { chronoFallbackPass } from './passes/chronoFallbackPass.ts';
+import { schedulePass } from './passes/schedulePass.ts';
 import { titlePass } from './passes/titlePass.ts';
 import type { ReminderParser, ReminderParserConfig } from './ml.ts';
 import type { ReminderParseOptions, ReminderParsePass, ReminderParseResult } from './types.ts';
@@ -16,12 +11,7 @@ import type { LoadedMlArtifact, MlArtifactSource } from '../runtime/types.ts';
 
 const PIPELINE: ReminderParsePass[] = [
   prefixPass,
-  recurrencePass,
-  scheduleDetailsPass,
-  relativeTimePass,
-  absoluteTimePass,
-  namedDatePass,
-  chronoFallbackPass,
+  schedulePass,
   titlePass,
 ];
 

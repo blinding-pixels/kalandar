@@ -110,11 +110,11 @@ const titleSpansFromMaskedInput = (ctx: ParseContext): Array<{ start: number; en
 
 export const titlePass = (ctx: ParseContext): void => {
   const base = cleanTitleNoise(ctx.maskedInput);
-  const shouldStripReminderLeadPrefix = /^\s*(?:remind\s+me|don['\u2019]?t\s+forget)\b/i.test(ctx.rawInput);
+  const shouldStripReminderLeadPrefix = /^\s*(?:remind\s+me|don['\u2019]?t\s+forget)\b/i.test(ctx.cleanedInput);
   const titleBase = shouldStripReminderLeadPrefix ? stripReminderLeadPrefix(base) : base;
   const mentionAndPriorityStripped = stripMentionNoise(stripPriorityNoise(titleBase));
   const temporalStripped = stripTemporalNoise(mentionAndPriorityStripped);
-  const temporalContentRemoved = temporalStripped !== mentionAndPriorityStripped || ctx.maskedInput !== ctx.rawInput;
+  const temporalContentRemoved = temporalStripped !== mentionAndPriorityStripped || ctx.maskedInput !== ctx.cleanedInput;
   const title = stripEdgeGlueWords(
     smartCalendarTitleCase(
       stripTrailingDanglingPreposition(

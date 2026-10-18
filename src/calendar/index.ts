@@ -1,11 +1,7 @@
-import { alertsPass } from './passes/alertsPass.ts';
 import { attendeesPass } from './passes/attendeesPass.ts';
-import { chronoPass } from './passes/chronoPass.ts';
-import { durationPass } from './passes/durationPass.ts';
 import { finalizeCalendarParseContext } from './finalize.ts';
 import { locationPass } from './passes/locationPass.ts';
 import { parseCalendarInputWithMl } from './ml.ts';
-import { recurrencePass } from './passes/recurrencePass.ts';
 import {
   classifyRecurrenceException,
   classifyRecurrenceExceptionAction,
@@ -16,6 +12,7 @@ import {
   resetRecurrenceExceptionResolvers,
   resolveRecurrenceExceptionCondition,
 } from './recurrenceExceptions.ts';
+import { schedulePass } from './passes/schedulePass.ts';
 import { titlePass } from './passes/titlePass.ts';
 import type { CalendarParser, CalendarParserConfig } from './ml.ts';
 import type { EventParseResult, ParseOptions } from './types.ts';
@@ -56,7 +53,7 @@ export {
   resolveRecurrenceExceptionCondition,
 };
 
-const PIPELINE = [recurrencePass, alertsPass, durationPass, locationPass, attendeesPass, chronoPass, titlePass];
+const PIPELINE = [attendeesPass, schedulePass, locationPass, titlePass];
 
 const isLoadedCalendarArtifact = (
   artifact: MlArtifactSource | LoadedMlArtifact<'calendar'>,

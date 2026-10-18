@@ -1,11 +1,4 @@
-export type RecurrenceFrequency = 'daily' | 'weekly' | 'monthly' | 'yearly';
-
-export interface RecurrenceSignal {
-  frequency: RecurrenceFrequency | null;
-  interval: number | null;
-  days: string[] | null;
-  ordinal: number | null;
-}
+import type { PreviewSchedule } from '../dates/index.ts';
 
 export interface AlertField {
   offset_minutes: number;
@@ -189,6 +182,7 @@ export interface EventParseResult {
   fields: EventFields;
   meta: EventParseMeta;
   warnings: ParseWarning[] | null;
+  schedule?: PreviewSchedule | null;
 }
 
 export interface ParseOptions {
@@ -207,9 +201,6 @@ export interface ParseContext {
     timezone: string;
     locale: string;
     debug: boolean;
-  };
-  signals: {
-    recurrence: RecurrenceSignal;
   };
   result: EventParseResult;
 }

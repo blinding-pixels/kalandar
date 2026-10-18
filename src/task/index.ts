@@ -1,8 +1,6 @@
 import { finalizeTaskParseContext } from './finalize.ts';
 import { parseTaskInputWithMl } from './ml.ts';
 import { assigneePass } from './passes/assigneePass.ts';
-import { dateTypoCorrectionPass } from './passes/dateTypoCorrectionPass.ts';
-import { durationPass } from './passes/durationPass.ts';
 import { priorityPass } from './passes/priorityPass.ts';
 import { projectPass } from './passes/projectPass.ts';
 import { schedulePass } from './passes/schedulePass.ts';
@@ -18,11 +16,9 @@ import type { LoadedMlArtifact, MlArtifactSource } from '../runtime/types.ts';
 const PIPELINE: TaskParsePass[] = [
   priorityPass,
   statusPass,
-  durationPass,
   tagsPass,
   projectPass,
   assigneePass,
-  dateTypoCorrectionPass,
   schedulePass,
   titlePass,
 ];

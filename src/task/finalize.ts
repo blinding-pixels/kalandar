@@ -71,7 +71,7 @@ const buildTaskWarnings = (ctx: TaskParseContext): ParseWarning[] => {
     });
   }
 
-  if (!ctx.result.fields.due_date && !ctx.result.fields.recurrence) {
+  if (!ctx.result.fields.due_date && !ctx.result.fields.due_time && !ctx.result.fields.recurrence) {
     warnings.push({
       code: 'no_due_date',
       severity: 'info',

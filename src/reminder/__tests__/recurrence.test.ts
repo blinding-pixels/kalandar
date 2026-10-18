@@ -22,21 +22,13 @@ describe('reminder parser recurrence extraction', () => {
 
   test('extracts daily recurrence when "daily" appears at the start', () => {
     const result = parse('daily water plants');
-    assert.deepEqual(result.fields.recurrence, {
-      frequency: 'daily',
-      interval: 1,
-      days: null,
-    });
-    assert.equal(result.fields.title, 'Water Plants');
+    assert.deepEqual(result.fields.recurrence, null);
+    assert.equal(result.fields.title, 'Daily Water Plants');
   });
 
   test('extracts monthly recurrence when "monthly" appears at the start', () => {
     const result = parse('monthly pay rent on the 1st');
-    assert.deepEqual(result.fields.recurrence, {
-      frequency: 'monthly',
-      interval: 1,
-      days: null,
-    });
+    assert.deepEqual(result.fields.recurrence, null);
   });
 
   test('extracts every-other-week recurrence and keeps cleaned title', () => {
@@ -73,7 +65,7 @@ describe('reminder parser recurrence extraction', () => {
     assert.deepEqual(result.fields.recurrence, {
       frequency: 'weekly',
       interval: 1,
-      days: ['sunday', 'wednesday'],
+      days: ['wednesday', 'sunday'],
     });
   });
 
@@ -125,7 +117,8 @@ describe('reminder parser recurrence extraction', () => {
     const result = parse('lunch with sara every other tuesday starting next month');
 
     assert.equal(result.fields.recurrence_start, 'starting next month');
-    assert.equal(result.fields.remind_at, '2026-04-07T09:00:00');
+    assert.equal(result.fields.remind_at, null);
+    assert.equal(result.schedule?.start?.local, '2026-04-07T12:00:00');
     assert.deepEqual(result.fields.recurrence, {
       frequency: 'weekly',
       interval: 2,

@@ -1,7 +1,8 @@
 import type { DebugStep, FieldSpan, ParseWarning } from '../shared/types.ts';
 import type { StructuredRecurrenceException } from '../calendar/types.ts';
+import type { PreviewSchedule } from '../dates/index.ts';
 
-export type ReminderRecurrenceFrequency = 'daily' | 'weekly' | 'monthly' | 'yearly';
+export type ReminderRecurrenceFrequency = 'minutely' | 'hourly' | 'daily' | 'weekly' | 'monthly' | 'yearly';
 
 export interface ReminderRecurrence {
   frequency: ReminderRecurrenceFrequency;
@@ -57,6 +58,7 @@ export interface ReminderParseResult {
   fields: ReminderFields;
   meta: ReminderParseMeta;
   warnings: ParseWarning[] | null;
+  schedule?: PreviewSchedule | null;
 }
 
 export interface ReminderParseOptions {
@@ -72,14 +74,6 @@ export interface ReminderParseContext {
   now: Date;
   options: { timezone: string; debug: boolean };
   result: ReminderParseResult;
-  state: {
-    anchorDayOfMonth: number | null;
-    anchorMonthDay: { month: number; day: number } | null;
-    recurrenceStartDate: string | null;
-    explicitHour: number | null;
-    explicitMinute: number | null;
-    ambiguousTime: boolean;
-  };
 }
 
 export type ReminderParsePass = (ctx: ReminderParseContext) => void;

@@ -1,4 +1,4 @@
-import { DEFAULT_LOCALE, DEFAULT_TIMEZONE, NUMBER_WORDS, TITLE_GLUE_WORDS, WEEKDAY_ALIASES } from './constants.ts';
+import { DEFAULT_LOCALE, DEFAULT_TIMEZONE, TITLE_GLUE_WORDS } from './constants.ts';
 import type {
   ConfidenceFields,
   DebugStep,
@@ -61,8 +61,6 @@ const weekdayMap: Record<string, number> = {
   sat: 6,
   saturday: 6,
 };
-
-const weekdayNameByIndex = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'] as const;
 
 export interface ZonedDateTimeParts {
   year: number;
@@ -197,51 +195,6 @@ export const isValidCalendarDate = (year: number, month: number, day: number): b
   return utc.getUTCFullYear() === year && utc.getUTCMonth() === month - 1 && utc.getUTCDate() === day;
 };
 
-export const toIsoTime = (hour: number, minute = 0): string => {
-  const safeHour = String(hour).padStart(2, '0');
-  const safeMinute = String(minute).padStart(2, '0');
-  return `${safeHour}:${safeMinute}`;
-};
-
-export const formatDateInTimezone = (date: Date, timezone: string): string => {
-  const parts = getZonedDateTimeParts(date, timezone);
-  return toIsoDate(parts.year, parts.month, parts.day);
-};
-
-export const formatTimeInTimezone = (date: Date, timezone: string): string => {
-  const parts = getZonedDateTimeParts(date, timezone);
-  return toIsoTime(parts.hour, parts.minute);
-};
-
-export const addDaysToIsoDate = (isoDate: string, days: number): string => {
-  const [yearPart, monthPart, dayPart] = isoDate.split('-').map((value) => Number(value));
-  if (!yearPart || !monthPart || !dayPart) {
-    return isoDate;
-  }
-  const utc = Date.UTC(yearPart, monthPart - 1, dayPart);
-  const adjusted = new Date(utc + days * 86400000);
-  return toIsoDate(adjusted.getUTCFullYear(), adjusted.getUTCMonth() + 1, adjusted.getUTCDate());
-};
-
-export const weekdayFromIsoDate = (isoDate: string): number | null => {
-  const [yearPart, monthPart, dayPart] = isoDate.split('-').map((value) => Number(value));
-  if (!yearPart || !monthPart || !dayPart) {
-    return null;
-  }
-  const utc = new Date(Date.UTC(yearPart, monthPart - 1, dayPart));
-  return utc.getUTCDay();
-};
-
-export const weekdayOfISODate = (isoDate: string, timezone: string): string | null => {
-  // Timezone is kept for API consistency; ISO calendar date weekday is timezone-independent.
-  void timezone;
-  const weekday = weekdayFromIsoDate(isoDate);
-  if (weekday === null) {
-    return null;
-  }
-  return weekdayNameByIndex[weekday] || null;
-};
-
 export const normalizeWeekdayToken = (text: string): string | null => {
   const normalized = (text || '').trim().toLowerCase();
   if (!normalized) {
@@ -289,6 +242,7 @@ export const createParseContext = (input: string, opts?: ParseOptions): ParseCon
       debugSteps: [],
     },
     warnings: null,
+    schedule: null,
   };
 
   return {
@@ -300,14 +254,6 @@ export const createParseContext = (input: string, opts?: ParseOptions): ParseCon
       locale,
       timezone,
       debug: Boolean(opts?.debug),
-    },
-    signals: {
-      recurrence: {
-        frequency: null,
-        interval: null,
-        days: null,
-        ordinal: null,
-      },
     },
     result,
   };
@@ -364,67 +310,6 @@ export const isSpanAvailable = (ctx: ParseContext, start: number, end: number): 
     return false;
   }
   return /\S/.test(ctx.maskedInput.slice(start, end));
-};
-
-export const parseNumberToken = (token: string): number | null => {
-  const normalized = token.trim().toLowerCase();
-  if (!normalized) {
-    return null;
-  }
-
-  const direct = Number(normalized);
-  if (!Number.isNaN(direct)) {
-    return direct;
-  }
-
-  if (normalized in NUMBER_WORDS) {
-    return NUMBER_WORDS[normalized];
-  }
-
-  if (normalized === 'half') {
-    return 0.5;
-  }
-
-  return null;
-};
-
-export const normalizeWeekdayList = (source: string): string[] | null => {
-  const found: string[] = [];
-
-  for (const alias of WEEKDAY_ALIASES) {
-    if (alias.token.test(source)) {
-      found.push(alias.day);
-    }
-    alias.token.lastIndex = 0;
-  }
-
-  return found.length > 0 ? found : null;
-};
-
-export const replaceWithSameLength = (input: string, pattern: RegExp, replacement: string): string =>
-  input.replace(pattern, (match) => {
-    const adjusted = replacement.length >= match.length ? replacement.slice(0, match.length) : replacement.padEnd(match.length, ' ');
-    return adjusted;
-  });
-
-export const parseDurationToMinutes = (amountToken: string, unitToken: string): number | null => {
-  const amount = parseNumberToken(amountToken);
-  if (amount === null) {
-    return null;
-  }
-
-  const unit = unitToken.toLowerCase();
-  if (/^d(?:ay)?s?$/.test(unit)) {
-    return Math.round(amount * 1440);
-  }
-  if (/^(?:h|hr|hrs|hour|hours)$/.test(unit)) {
-    return Math.round(amount * 60);
-  }
-  if (/^(?:m|min|mins|minute|minutes)$/.test(unit)) {
-    return Math.round(amount);
-  }
-
-  return null;
 };
 
 export const stripEdgeGlueWords = (input: string): string => {

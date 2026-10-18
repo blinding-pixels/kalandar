@@ -1,7 +1,5 @@
-import { dateTypoCorrectionPass } from './passes/dateTypoCorrectionPass.ts';
-import { durationPass } from './passes/durationPass.ts';
 import { priorityPass } from './passes/priorityPass.ts';
-import { schedulePass } from './passes/schedulePass.ts';
+import { applyCaptureSchedule } from './passes/schedulePass.ts';
 import { statusPass } from './passes/statusPass.ts';
 import { tagsPass } from './passes/tagsPass.ts';
 import { titlePass } from './passes/titlePass.ts';
@@ -9,6 +7,7 @@ import { finalizeTaskParseContext } from './finalize.ts';
 import type { TaskFields, TaskParseContext, TaskParseOptions, TaskParseResult } from './types.ts';
 import { createTaskParseContext, extractAssignees } from './utils.ts';
 import { extractProject } from './utils.ts';
+import { captureSchedule } from '../dates/index.ts';
 import type { InferenceAdapter, LoadedMlArtifact, MlArtifactSource, RuntimeTensor } from '../runtime/types.ts';
 
 const PUNCT_TRIM = ' ,;:.';
@@ -18,6 +17,15 @@ const RECURRENCE_MONTH_TAIL_REGEX = /\bof every$/i;
 const PRIORITY_LIKE_REGEX = /(?:priority|priorty|urgent|low|medium|high)/i;
 const TAG_TOKEN_REGEX = /#?[A-Za-z0-9][A-Za-z0-9_-]*/g;
 const ASSIGNEE_NOISE = new Set(['and', '&']);
+const SCHEDULE_LABELS = new Set([
+  'due_date',
+  'due_time',
+  'duration',
+  'recurrence',
+  'recurrence_start',
+  'recurrence_end',
+  'recurrence_exception',
+]);
 
 type ConfidenceField = keyof TaskParseResult['meta']['confidence'];
 type SpanField = keyof TaskParseResult['meta']['spans'];
@@ -561,15 +569,6 @@ const applyStatusEntities = (ctx: TaskParseContext, input: string, opts: TaskPar
   mergeFieldFromContext(ctx, subctx, 'status');
 };
 
-const applyDurationEntities = (ctx: TaskParseContext, input: string, opts: TaskParseOptions | undefined, entities: TaskMlEntity[]): void => {
-  if (entities.length === 0) {
-    return;
-  }
-  const subctx = createMaskedEntityContext(input, opts, entities);
-  durationPass(subctx);
-  mergeFieldFromContext(ctx, subctx, 'duration');
-};
-
 const applyTagsEntities = (ctx: TaskParseContext, input: string, opts: TaskParseOptions | undefined, entities: TaskMlEntity[]): void => {
   if (entities.length === 0) {
     return;
@@ -705,16 +704,26 @@ const applyScheduleEntities = (
     return;
   }
 
-  const subctx = createMaskedEntityContext(input, opts, entities);
-  dateTypoCorrectionPass(subctx);
-  schedulePass(subctx);
+  const subctx = createTaskParseContext(input, opts);
+  const found = captureSchedule(subctx.rawInput, 'task', {
+    now: subctx.now,
+    timezone: subctx.options.timezone,
+    locale: subctx.options.locale,
+    spans: entities.map((entity) => ({ label: entity.label, start: entity.start, end: entity.end })),
+  });
+  applyCaptureSchedule(subctx, found, Math.max(...entities.map((entity) => entity.confidence)));
   mergeFieldFromContext(ctx, subctx, 'due_date');
   mergeFieldFromContext(ctx, subctx, 'due_time');
+  mergeFieldFromContext(ctx, subctx, 'duration');
   mergeFieldFromContext(ctx, subctx, 'recurrence');
   mergeFieldFromContext(ctx, subctx, 'recurrence_start');
   mergeFieldFromContext(ctx, subctx, 'recurrence_end');
   mergeFieldFromContext(ctx, subctx, 'recurrence_exception');
   ctx.state.recurring = subctx.state.recurring;
+  ctx.result.schedule = found.schedule;
+  if (subctx.result.warnings) {
+    ctx.result.warnings = [...(ctx.result.warnings || []), ...subctx.result.warnings];
+  }
 };
 
 const applyTitleEntities = (ctx: TaskParseContext, input: string, opts: TaskParseOptions | undefined, entities: TaskMlEntity[]): void => {
@@ -796,18 +805,10 @@ export const parseTaskInputWithMl = async (
 
   applyPriorityEntities(ctx, ctx.rawInput, opts, entities.filter((entity) => entity.label === 'priority'));
   applyStatusEntities(ctx, ctx.rawInput, opts, entities.filter((entity) => entity.label === 'status'));
-  applyDurationEntities(ctx, ctx.rawInput, opts, entities.filter((entity) => entity.label === 'duration'));
   applyTagsEntities(ctx, ctx.rawInput, opts, entities.filter((entity) => entity.label === 'tags'));
   applyProjectEntities(ctx, entities.filter((entity) => entity.label === 'project'));
   applyAssigneeEntities(ctx, entities.filter((entity) => entity.label === 'assignee'));
-  applyScheduleEntities(
-    ctx,
-    ctx.rawInput,
-    opts,
-    entities.filter((entity) =>
-      ['due_date', 'due_time', 'recurrence', 'recurrence_start', 'recurrence_end', 'recurrence_exception'].includes(entity.label),
-    ),
-  );
+  applyScheduleEntities(ctx, ctx.rawInput, opts, entities.filter((entity) => SCHEDULE_LABELS.has(entity.label)));
 
   for (const entity of entities) {
     if (entity.label === 'title') {

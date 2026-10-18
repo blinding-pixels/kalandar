@@ -1,4 +1,5 @@
 import type { EventParseResult } from '../calendar/types.ts';
+import type { PreviewSchedule } from '../dates/index.ts';
 import type { IntentResult } from '../intent/types.ts';
 import type { ReminderParseResult, ReminderRecurrence } from '../reminder/types.ts';
 import type { TaskParseResult } from '../task/types.ts';
@@ -100,6 +101,7 @@ export interface CapturePreviewResult {
   thought: CapturePreviewThoughtDraft | null;
   unavailable_reason: string | null;
   warnings: CapturePreviewWarning[];
+  schedule?: PreviewSchedule | null;
 }
 
 export interface TypeScriptCapturePreviewConfig {

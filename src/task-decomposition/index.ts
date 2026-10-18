@@ -160,7 +160,7 @@ const removeKnownFieldText = (input: string, value: string | null): string => {
   if (!value) {
     return input;
   }
-  return normalizeWhitespace(input.replace(new RegExp(`\\s*${escapeRegExp(value)}\\b`, 'i'), ' '));
+  return normalizeWhitespace(input.replace(new RegExp(`\\s*(?:\\b(?:at|on|@)\\s+)?${escapeRegExp(value)}\\b`, 'i'), ' '));
 };
 
 const normalizeProjectValue = (input: string): string => {

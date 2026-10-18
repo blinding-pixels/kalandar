@@ -34,8 +34,10 @@ test('parseCapturePreviewInput routes unprefixed calendar text through intent', 
 
   assert.equal(result.kind, 'calendar-event');
   assert.equal(result.event?.title, 'Lunch with Sara');
-  assert.equal(result.event?.date_text, '2026-03-28');
-  assert.equal(result.event?.time_text, '12:00');
+  assert.equal(result.event?.date_text, 'tomorrow');
+  assert.equal(result.event?.time_text, 'noon');
+  assert.equal(result.schedule?.start?.date, '2026-03-28');
+  assert.equal(result.schedule?.start?.time, '12:00');
   assert.ok(result.candidates.some((candidate) => candidate.kind === 'calendar-event'));
 });
 

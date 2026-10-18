@@ -14,26 +14,26 @@ describe('task parser schedule extraction', () => {
   test('splits one-off date and time for "buy groceries today at 6pm"', () => {
     const result = parse('buy groceries today at 6pm');
     assert.equal(result.fields.due_date, 'today');
-    assert.equal(result.fields.due_time, 'at 6pm');
+    assert.equal(result.fields.due_time, '6pm');
     assert.equal(result.fields.recurrence, null);
   });
 
   test('keeps the date separate from the clock time for "call dentist at 3pm on tuesday"', () => {
     const result = parse('call dentist at 3pm on tuesday');
     assert.equal(result.fields.due_date, 'on tuesday');
-    assert.equal(result.fields.due_time, 'at 3pm');
+    assert.equal(result.fields.due_time, '3pm');
   });
 
-  test('normalizes eod shorthand into due_date text', () => {
+  test('keeps eod shorthand as due_time text', () => {
     const result = parse('send it by eod');
-    assert.equal(result.fields.due_date, 'by end of day');
-    assert.equal(result.fields.due_time, null);
+    assert.equal(result.fields.due_date, null);
+    assert.equal(result.fields.due_time, 'eod');
   });
 
   test('extracts recurring spans without collapsing them into due_date', () => {
     const result = parse('Review backlog every other Tuesday starting next month by noon');
     assert.equal(result.fields.due_date, null);
-    assert.equal(result.fields.due_time, 'by noon');
+    assert.equal(result.fields.due_time, 'noon');
     assert.equal(result.fields.recurrence, 'every other Tuesday');
     assert.equal(result.fields.recurrence_start, 'starting next month');
   });
@@ -53,7 +53,7 @@ describe('task parser schedule extraction', () => {
     ]);
     assert.equal(result.fields.recurrence_start, 'starting today');
     assert.equal(result.fields.recurrence_end, 'till 24th August');
-    assert.equal(result.fields.due_time, 'by 10 AM');
+    assert.equal(result.fields.due_time, '10 AM');
     assert.equal(result.fields.due_date, null);
   });
 
@@ -75,6 +75,6 @@ describe('task parser schedule extraction', () => {
       },
     ]);
     assert.equal(result.fields.recurrence_start, 'starting next month');
-    assert.equal(result.fields.due_time, 'by 10 AM');
+    assert.equal(result.fields.due_time, '10 AM');
   });
 });

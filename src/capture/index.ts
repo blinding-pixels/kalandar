@@ -3,6 +3,7 @@ import { classifyIntent } from '../intent/index.ts';
 import { parseReminderInput } from '../reminder/index.ts';
 import { DEFAULT_LOCALE, DEFAULT_TIMEZONE } from '../shared/constants.ts';
 import { normalizeWhitespace } from '../shared/utils.ts';
+import type { PreviewSchedule } from '../dates/index.ts';
 import { parseTaskInput } from '../task/index.ts';
 import {
   CAPTURE_PREVIEW_CONTRACT_VERSION,
@@ -117,6 +118,7 @@ const unsupported = (unavailableReason: string, message: string): CapturePreview
       message,
     },
   ],
+  schedule: null,
 });
 
 const stripPrefixCaseInsensitive = (text: string, prefix: string): string | null =>
@@ -137,12 +139,24 @@ const recurrencePartToString = (value: unknown): string | null => {
 
 const toRecurrenceExceptions = (
   entries: Array<{ raw: string; condition?: unknown; action?: unknown }>,
-): CapturePreviewRecurrenceException[] =>
-  entries.map((entry) => ({
-    raw: entry.raw,
-    condition: recurrencePartToString(entry.condition),
-    action: recurrencePartToString(entry.action),
-  }));
+  schedule?: PreviewSchedule | null,
+): CapturePreviewRecurrenceException[] => {
+  const resolved = schedule?.recurrence?.exceptions || [];
+  const sameCount = resolved.length === entries.length;
+  return entries.map((entry, index) => {
+    const matched = sameCount
+      ? resolved[index]
+      : resolved.find((exception) => exception.raw.includes(entry.raw) || entry.raw.includes(exception.raw));
+    if (resolved.length > 0) {
+      return { raw: entry.raw, condition: matched?.condition ?? null, action: matched?.action ?? null };
+    }
+    return {
+      raw: entry.raw,
+      condition: recurrencePartToString(entry.condition),
+      action: recurrencePartToString(entry.action),
+    };
+  });
+};
 
 const toPreviewWarnings = (warnings: WarningLike[] | null | undefined): CapturePreviewWarning[] =>
   (warnings || []).map((warning) => ({
@@ -173,7 +187,7 @@ const toTaskDraft = (result: ReturnType<typeof parseTaskInput>): CapturePreviewT
   recurrence_text: result.fields.recurrence,
   recurrence_start_text: result.fields.recurrence_start,
   recurrence_end_text: result.fields.recurrence_end,
-  recurrence_exceptions: toRecurrenceExceptions(result.fields.recurrence_exception),
+  recurrence_exceptions: toRecurrenceExceptions(result.fields.recurrence_exception, result.schedule),
 });
 
 const toReminderDraft = (result: ReturnType<typeof parseReminderInput>): CapturePreviewReminderDraft => ({
@@ -182,7 +196,7 @@ const toReminderDraft = (result: ReturnType<typeof parseReminderInput>): Capture
   recurrence: result.fields.recurrence,
   recurrence_start_text: result.fields.recurrence_start,
   recurrence_end_text: result.fields.recurrence_end,
-  recurrence_exceptions: toRecurrenceExceptions(result.fields.recurrence_exception),
+  recurrence_exceptions: toRecurrenceExceptions(result.fields.recurrence_exception, result.schedule),
   recurrence_window_text: result.fields.recurrence_window,
   location: result.fields.location,
   context_hint: result.fields.context_hint,
@@ -198,7 +212,7 @@ const toEventDraft = (result: ReturnType<typeof parseEventInput>): CapturePrevie
   recurrence_text: result.fields.recurrence,
   recurrence_start_text: result.fields.recurrence_start,
   recurrence_end_text: result.fields.recurrence_end,
-  recurrence_exceptions: toRecurrenceExceptions(result.fields.recurrence_exception),
+  recurrence_exceptions: toRecurrenceExceptions(result.fields.recurrence_exception, result.schedule),
   alert_offset_minutes: (result.fields.alerts || []).map((alert) => alert.offset_minutes),
   attendees: result.fields.attendees || [],
 });
@@ -218,6 +232,7 @@ const taskResult = (
   thought: null,
   unavailable_reason: null,
   warnings: [...intentWarnings, ...toPreviewWarnings(task.warnings)],
+  schedule: task.schedule ?? null,
 });
 
 const reminderResult = (
@@ -235,6 +250,7 @@ const reminderResult = (
   thought: null,
   unavailable_reason: null,
   warnings: [...intentWarnings, ...toPreviewWarnings(reminder.warnings)],
+  schedule: reminder.schedule ?? null,
 });
 
 const calendarResult = (
@@ -252,6 +268,7 @@ const calendarResult = (
   thought: null,
   unavailable_reason: null,
   warnings: [...intentWarnings, ...toPreviewWarnings(event.warnings)],
+  schedule: event.schedule ?? null,
 });
 
 export const parseCapturePreviewInput = (
@@ -320,6 +337,7 @@ export const parseCapturePreviewInput = (
         thought: { text },
         unavailable_reason: null,
         warnings: intentWarnings,
+        schedule: null,
       };
   }
 };

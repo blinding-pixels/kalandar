@@ -1,7 +1,6 @@
-import { alertsPass } from './passes/alertsPass.ts';
+import { captureSchedule } from '../dates/index.ts';
 import { attendeesPass } from './passes/attendeesPass.ts';
-import { chronoPass } from './passes/chronoPass.ts';
-import { recurrencePass } from './passes/recurrencePass.ts';
+import { applyCaptureSchedule } from './passes/schedulePass.ts';
 import { titlePass } from './passes/titlePass.ts';
 import { extractCalendarContactSuggestions } from './contactSuggestions.ts';
 import { finalizeCalendarParseContext } from './finalize.ts';
@@ -15,10 +14,23 @@ import type {
   ParseOptions,
   StructuredRecurrenceException,
 } from './types.ts';
-import { createParseContext, maskSpan, parseDurationToMinutes } from './utils.ts';
+import { createParseContext, maskSpan } from './utils.ts';
 import type { InferenceAdapter, LoadedMlArtifact, MlArtifactSource, RuntimeTensor } from '../runtime/types.ts';
 
 const RECURRENCE_START_CUE = /\b(?:starting|beginning)\s+(?:next|the following)\b/i;
+const SCHEDULE_LABELS = new Set([
+  'start_time',
+  'end_time',
+  'date',
+  'time',
+  'duration',
+  'recurrence',
+  'recurrence_start',
+  'recurrence_end',
+  'recurrence_exception',
+  'lead_time',
+  'alert',
+]);
 
 type ConfidenceField = keyof EventParseResult['meta']['confidence'];
 type SpanField = keyof EventParseResult['meta']['spans'];
@@ -317,31 +329,6 @@ const mergeFieldFromContext = <TField extends keyof EventFields>(
   }
 };
 
-const parseMlDurationText = (text: string): number | null => {
-  const cleaned = text.trim().replace(/[.,;:]+$/g, '');
-  if (!cleaned) {
-    return null;
-  }
-  if (/^(?:for\s+)?half\s+an?\s+hour$/i.test(cleaned)) {
-    return 30;
-  }
-  if (/^(?:for\s+)?(?:an|a|one)\s+hour$/i.test(cleaned)) {
-    return 60;
-  }
-  if (/^(?:for\s+)?(?:an|a|one)\s+day$/i.test(cleaned)) {
-    return 1440;
-  }
-
-  const match =
-    /^(?:for\s+)?(\d+(?:\.\d+)?|a|an|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve)\s*(days?|d|hours?|hrs?|hr|h|minutes?|mins?|min|m)$/i.exec(
-      cleaned,
-    );
-  if (!match) {
-    return null;
-  }
-  return parseDurationToMinutes(match[1] || '', match[2] || '');
-};
-
 const normalizeLocationText = (text: string): string =>
   text
     .trim()
@@ -373,85 +360,6 @@ const applyTitleEntities = (ctx: ParseContext, input: string, opts: ParseOptions
       ctx.result.fields.contact_suggestions = suggestions;
       ctx.result.meta.confidence.contact_suggestions = 0.78;
     }
-  }
-};
-
-const applyStartTimeEntities = (ctx: ParseContext, input: string, opts: ParseOptions | undefined, entities: CalendarMlEntity[]): void => {
-  if (entities.length === 0) {
-    return;
-  }
-
-  const subctx = createMaskedEntityContext(input, opts, entities);
-  chronoPass(subctx);
-  mergeFieldFromContext(ctx, subctx, 'date');
-  mergeFieldFromContext(ctx, subctx, 'time');
-  mergeFieldFromContext(ctx, subctx, 'end_time');
-  mergeFieldFromContext(ctx, subctx, 'duration_minutes');
-};
-
-const applyEndTimeEntities = (ctx: ParseContext, input: string, opts: ParseOptions | undefined, entities: CalendarMlEntity[]): void => {
-  if (entities.length === 0) {
-    return;
-  }
-
-  const subctx = createMaskedEntityContext(input, opts, entities);
-  chronoPass(subctx);
-
-  const candidateValue = subctx.result.fields.end_time ?? subctx.result.fields.time;
-  const candidateConfidence =
-    subctx.result.fields.end_time !== null
-      ? subctx.result.meta.confidence.end_time
-      : subctx.result.meta.confidence.time;
-  const candidateSpans =
-    subctx.result.fields.end_time !== null ? subctx.result.meta.spans.end_time : subctx.result.meta.spans.time;
-
-  const applied = applyFieldValue(ctx, 'end_time', candidateValue, candidateConfidence, candidateSpans);
-  if (applied) {
-    appendDebugSteps(ctx, subctx.result.meta.debugSteps);
-  }
-
-  mergeFieldFromContext(ctx, subctx, 'duration_minutes');
-};
-
-const applyDurationEntities = (ctx: ParseContext, entities: CalendarMlEntity[]): void => {
-  const sorted = [...entities].sort((left, right) => right.confidence - left.confidence);
-  for (const entity of sorted) {
-    const minutes = parseMlDurationText(entity.text);
-    if (!minutes || minutes <= 0) {
-      continue;
-    }
-
-    const applied = applyFieldValue(
-      ctx,
-      'duration_minutes',
-      Math.round(minutes),
-      entity.confidence,
-      [
-        {
-          start: entity.start,
-          end: entity.end,
-          text: entity.text,
-          ruleId: 'ml.duration_entity',
-          confidence: entity.confidence,
-        },
-      ],
-    );
-    if (!applied) {
-      continue;
-    }
-
-    appendDebugSteps(ctx, [
-      {
-        pass: 'ml',
-        ruleId: 'ml.duration_entity',
-        start: entity.start,
-        end: entity.end,
-        text: entity.text,
-        confidence: entity.confidence,
-        note: 'duration assembled from decoded ML entity span',
-      },
-    ]);
-    return;
   }
 };
 
@@ -497,18 +405,22 @@ const applyLocationEntities = (ctx: ParseContext, entities: CalendarMlEntity[]):
   }
 };
 
-const applyRecurrenceEntities = (ctx: ParseContext, input: string, opts: ParseOptions | undefined, entities: CalendarMlEntity[]): void => {
+const applyScheduleEntities = (ctx: ParseContext, entities: CalendarMlEntity[]): void => {
   if (entities.length === 0) {
     return;
   }
 
-  const subctx = createMaskedEntityContext(input, opts, entities);
-  recurrencePass(subctx);
-  mergeFieldFromContext(ctx, subctx, 'recurrence');
-  mergeFieldFromContext(ctx, subctx, 'recurrence_start');
-  mergeFieldFromContext(ctx, subctx, 'recurrence_end');
-  mergeFieldFromContext(ctx, subctx, 'recurrence_exception');
-  ctx.signals.recurrence = cloneValue(subctx.signals.recurrence);
+  const capture = captureSchedule(ctx.rawInput, 'calendar', {
+    now: ctx.now,
+    timezone: ctx.options.timezone,
+    locale: ctx.options.locale,
+    spans: entities.map(({ label, start, end }) => ({ label, start, end })),
+  });
+  const fallback = Math.max(...entities.map((entity) => entity.confidence));
+  applyCaptureSchedule(ctx, capture, (span) => {
+    const overlapping = entities.filter((entity) => entity.start < span.end && entity.end > span.start);
+    return overlapping.length > 0 ? Math.max(...overlapping.map((entity) => entity.confidence)) : fallback;
+  });
 };
 
 const validateLogitsTensor = (artifact: LoadedMlArtifact<'calendar'>, encodingLength: number, tensor: RuntimeTensor): void => {
@@ -579,24 +491,13 @@ export const parseCalendarInputWithMl = async (
   const entities = postprocessCalendarMlEntities(decoded, opts);
 
   applyTitleEntities(ctx, ctx.rawInput, opts, entities.filter((entity) => entity.label === 'title'));
-  applyStartTimeEntities(ctx, ctx.rawInput, opts, entities.filter((entity) => entity.label === 'start_time'));
-  applyEndTimeEntities(ctx, ctx.rawInput, opts, entities.filter((entity) => entity.label === 'end_time'));
-  applyDurationEntities(ctx, entities.filter((entity) => entity.label === 'duration'));
+  applyScheduleEntities(ctx, entities.filter((entity) => SCHEDULE_LABELS.has(entity.label)));
   applyLocationEntities(ctx, entities.filter((entity) => entity.label === 'location'));
-  applyRecurrenceEntities(
-    ctx,
-    ctx.rawInput,
-    opts,
-    entities.filter((entity) =>
-      ['recurrence', 'recurrence_start', 'recurrence_end', 'recurrence_exception'].includes(entity.label),
-    ),
-  );
 
   for (const entity of entities) {
     maskSpan(ctx, entity.start, entity.end);
   }
 
-  alertsPass(ctx);
   attendeesPass(ctx);
 
   if (encoding.truncated) {

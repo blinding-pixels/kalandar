@@ -83,7 +83,7 @@ describe('calendar ML postprocess', () => {
       const result = await parser.parse('lunch with sara every tuesday starting july 1st', { now, timezone });
       assert.deepEqual(result.fields.contact_suggestions, [{ text: 'Sara', source: 'title_with_phrase' }]);
       assert.ok(result.warnings);
-      assert.equal(result.warnings?.[0].code, 'recurrence_start_weekday_mismatch');
+      assert.ok(result.warnings?.some((warning) => warning.code === 'start_adjusted' && warning.severity === 'info'));
     } finally {
       await bundle.cleanup();
     }

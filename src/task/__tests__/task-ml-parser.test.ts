@@ -59,7 +59,7 @@ describe('task ML parser', () => {
 
       assert.equal(result.fields.title, 'finish report');
       assert.equal(result.fields.due_date, 'tomorrow');
-      assert.equal(result.fields.due_time, 'at 3 pm');
+      assert.equal(result.fields.due_time, '3 pm');
       assert.equal(result.meta.runtime?.mode, 'ml');
       assert.equal('token_ids' in result, false);
       assert.equal('logits' in result, false);
@@ -67,15 +67,15 @@ describe('task ML parser', () => {
       const planning = taskResultToPlanningObject(result);
       assert.equal(planning.kind, 'task');
       assert.equal(planning.temporal.date, 'tomorrow');
-      assert.equal(planning.temporal.time, 'at 3 pm');
+      assert.equal(planning.temporal.time, '3 pm');
 
       const reminder = buildTaskReminderDeliverySpec(result, { destination: 'notifications' });
-      assert.equal(reminder.trigger.trigger_time, 'at 3 pm');
+      assert.equal(reminder.trigger.trigger_time, '3 pm');
       assert.equal(reminder.schedule.recurrence, null);
 
       const calendarBlock = buildTaskCalendarBlockSpec(result);
       assert.equal(calendarBlock.date, 'tomorrow');
-      assert.equal(calendarBlock.time, 'at 3 pm');
+      assert.equal(calendarBlock.time, '3 pm');
     } finally {
       await bundle.cleanup();
     }

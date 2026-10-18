@@ -53,8 +53,8 @@ describe('calendar ML parser', () => {
       const result = await parser.parse('lunch with sara every tuesday starting next month', { now, timezone });
 
       assert.equal(result.fields.title, 'Lunch with Sara');
-      assert.equal(result.fields.recurrence, 'FREQ=WEEKLY;INTERVAL=1;BYDAY=TU');
-      assert.equal(result.fields.recurrence_start, '2026-04-01');
+      assert.equal(result.fields.recurrence, 'every tuesday');
+      assert.equal(result.fields.recurrence_start, 'starting next month');
       assert.equal(result.fields.date, null);
       assert.deepEqual(result.fields.contact_suggestions, [{ text: 'Sara', source: 'title_with_phrase' }]);
       assert.equal(result.meta.runtime?.mode, 'ml');
@@ -63,7 +63,7 @@ describe('calendar ML parser', () => {
 
       const planning = eventResultToPlanningObject(result);
       assert.equal(planning.kind, 'event');
-      assert.equal(planning.temporal.recurrence, 'FREQ=WEEKLY;INTERVAL=1;BYDAY=TU');
+      assert.equal(planning.temporal.recurrence, 'every tuesday');
       assert.deepEqual(planning.contact_suggestions, [{ text: 'Sara', source: 'title_with_phrase' }]);
     } finally {
       await bundle.cleanup();

@@ -1,27 +1,5 @@
 export const DEFAULT_TIMEZONE = 'UTC';
 
-export const WEEKDAY_MAP: Record<string, number> = {
-  sunday: 0,
-  sun: 0,
-  monday: 1,
-  mon: 1,
-  tuesday: 2,
-  tue: 2,
-  tues: 2,
-  wednesday: 3,
-  wed: 3,
-  thursday: 4,
-  thu: 4,
-  thur: 4,
-  thurs: 4,
-  friday: 5,
-  fri: 5,
-  saturday: 6,
-  sat: 6,
-};
-
-export const WEEKDAY_SET = new Set(Object.keys(WEEKDAY_MAP));
-
 export const TITLE_CORRECTIONS: Record<string, string> = {
   abt: 'about',
   adn: 'and',
@@ -149,32 +127,7 @@ export const TRAILING_FILLER_PATTERNS: RegExp[] = [
 ];
 
 export const START_STRIP_PATTERNS: RegExp[] = [
+  /^[\s,;:.!?-]+/,
   /^\s*(?:to|about|that|re:|re|abt|bout)\b[\s,:-]*/i,
   /^\s*for\b[\s,:-]*/i,
-];
-
-export const RECURRENCE_DAY_LIST = '(?:mon(?:day)?|tue(?:s|sday)?|wed(?:nesday)?|thu(?:r|rs|rsday|ursday)?|fri(?:day)?|sat(?:urday)?|sun(?:day)?)';
-
-export const TIME_PREPROCESS_REPLACEMENTS: Array<[RegExp, string | ((...args: string[]) => string)]> = [
-  [/\btmrw\b/gi, 'tomorrow'],
-  [/\btmr\b/gi, 'tomorrow'],
-  [/\btomorow\b/gi, 'tomorrow'],
-  [/\bfirday\b/gi, 'friday'],
-  [/\bwedensday\b/gi, 'wednesday'],
-  [/\bon wed\b/gi, 'on wednesday'],
-  [/\bmornig\b/gi, 'morning'],
-  [/\bmornng\b/gi, 'morning'],
-  [/\btongiht\b/gi, 'tonight'],
-  [/\bthis aft\b/gi, 'this afternoon'],
-  [/\barvo\b/gi, 'arvo'],
-  [/\bin lke (\d+)\s*min\b/gi, 'in $1 minutes'],
-  [/\bin (\d+)\s*min\b/gi, 'in $1 minutes'],
-  [/\bin (\d+)\s*hr\b/gi, 'in $1 hours'],
-  [/\b(tomorrow|monday|tuesday|wednesday|thursday|friday|saturday|sunday)\s+(\d{1,2})(?!\d|:|\s*(?:am|pm))\b/gi, '$1 at $2am'],
-  [/\bat (\d{1,2})(?!\d|:|\s*(?:am|pm))\b/gi, (_m, hour: string) => `at ${hour}${Number(hour) <= 6 ? 'pm' : 'am'}`],
-  [/\b(monday|tuesday|wednesday|thursday|friday|saturday|sunday)\s+(\d{1,2})(?!\d|:|\s*(?:am|pm))\b/gi, '$1 at $2am'],
-  [/\bhalf\s+(\d{1,2})\b/gi, (_m, hour: string) => `${hour}:30pm`],
-  [/\bto PM\b/g, '2 PM'],
-  [/\bat to PM\b/g, 'at 2 PM'],
-  [/\blunchtime\b/gi, '12pm'],
 ];

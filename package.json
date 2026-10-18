@@ -150,13 +150,14 @@
     "typecheck": "node ./scripts/typecheck.mjs",
     "lint": "node ./scripts/lint.mjs",
     "coreai:parity": "node --experimental-strip-types ./scripts/coreai-parity.mjs",
+    "dates:parity": "node --experimental-strip-types ./scripts/dates-parity.mjs",
+    "dates:wasm": "node ./scripts/build-dates-wasm.mjs",
+    "dates:xcframework": "./scripts/build-dates-xcframework.sh",
+    "test": "node --test --experimental-strip-types \"src/**/__tests__/*.test.ts\"",
     "swift:build": "swift build --package-path swift",
     "swift:test": "swift test --package-path swift",
     "swift:coreai:app-parity": "swift build --package-path swift && node --experimental-strip-types ./scripts/coreai-parity.mjs --coreai-app-command ./swift/.build/debug/kalandar-coreai-capture-preview --require-coreai-app",
-    "release:check": "npm run typecheck && npm run build && npm run swift:test && cargo test --manifest-path rust/Cargo.toml && npm run swift:coreai:app-parity && npm pack --dry-run"
-  },
-  "dependencies": {
-    "chrono-node": "^2.9.0"
+    "release:check": "npm run typecheck && npm run lint && npm run build && npm run dates:xcframework && npm run swift:test && cargo test --manifest-path rust/Cargo.toml && npm run swift:coreai:app-parity && node --experimental-strip-types ./scripts/dates-parity.mjs --require-swift && npm pack --dry-run"
   },
   "engines": {
     "node": ">=18"
