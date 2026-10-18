@@ -2,7 +2,9 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 nice -n 10 cargo build --release --example diff_runner
-python3 difftest/collect_phrases.py difftest/phrases.json
+if [[ -n "${DIFFTEST_COLLECT:-}" ]]; then
+  python3 difftest/collect_phrases.py difftest/phrases.json
+fi
 python3 difftest/build_cases.py difftest/phrases.json difftest/cases.jsonl
 python3 difftest/fuzz_phrases.py difftest/phrases.json 20000 11 difftest/fuzz_phrases.json
 python3 difftest/build_cases.py difftest/fuzz_phrases.json difftest/fuzz_cases.jsonl

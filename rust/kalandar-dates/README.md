@@ -1,4 +1,4 @@
-# chrono-english-rs
+# kalandar-dates
 
 A Rust port of the English parser in [chrono-node](https://github.com/wanasit/chrono) **v2.10.1**.
 
@@ -14,7 +14,7 @@ The goal is the same output as chrono-node for the same text, reference instant 
 
 ```rust
 use chrono::{TimeZone, Utc};
-use chrono_english_rs::{chrono_tz, parse, Component, ParsingOption, ParsingReference, SystemZone};
+use kalandar_dates::{chrono_tz, parse, Component, ParsingOption, ParsingReference, SystemZone};
 
 let now = Utc.with_ymd_and_hms(2026, 10, 18, 13, 0, 0).unwrap();
 let reference = ParsingReference::new(now)
@@ -79,14 +79,14 @@ None showed up in the differential runs. These are the deliberate or theoretical
 - Custom DST rules for extra time zone abbreviations are `DstRule` values (nth or last weekday of a month, or a `fn(i32) -> NaiveDateTime`) rather than arbitrary closures.
 - Not ported: other locales, the debug handler, and adding custom parsers or refiners at runtime.
 
-## Facets layer (`facets` module, feature `facets`, on by default)
+## Capture resolution layer (`capture` module, feature `capture`, on by default)
 
-The `facets` module sits on top of the port and doesn't change it. The port's tests and the differential harness still run against the unmodified parser. The layer turns the date and time phrases that Facets' models mark in a captured line into dates, times and repeat rules, following the written conventions in `docs/facets-conventions.md`.
+The `capture` module sits on top of the port and doesn't change it. The port's tests and the differential harness still run against the unmodified parser. The layer turns the date and time phrases in a captured line, whether a capture model marked them or the layer found them itself, into dates, times and repeat rules, following the written conventions in `docs/resolution-conventions.md`.
 
 ### Calling it
 
 ```rust
-use chrono_english_rs::facets::{resolve_capture, CaptureKind, Context, LabelledSpan, Role, Settings};
+use kalandar_dates::capture::{resolve_capture, CaptureKind, Context, LabelledSpan, Role, Settings};
 
 let ctx = Context::new(now_utc, chrono_tz::America::Los_Angeles).with_settings(Settings::default());
 let spans = [LabelledSpan::new(Role::EventStart, 15, 23), LabelledSpan::new(Role::EventStart, 24, 28)];
@@ -98,7 +98,7 @@ let resolution = resolve_capture("lunch with Sam tomorrow at 1", CaptureKind::Ca
 - `resolve_unlabelled(line, kind, ctx)` and `resolve_phrase(phrase, role, kind, ctx)` cover no spans and a single labelled phrase.
 - `parse_recurrence(text, settings)` parses a repeat phrase on its own.
 
-The result (`LineResolution`, serialisable with serde) has the start (event start, task due or reminder trigger), the end (calendar events), the recurrence (`rule`, an `RRULE` string, the shape Facets stores today as `{frequency, interval, days}`, start and end dates, exceptions, and the first occurrence), an alert (relative, absolute or off), lead minutes, `notify_at` (for a date-only task or all-day reminder, the date at the default notification time; it never changes the due), the task signal, and warnings. Every moment lists which parts were `implied` and carries warnings such as `time_assumed`, `rolled_to_tomorrow`, `moved_to_next_week`, `ambiguous_meridiem`, `approximate_time`, `end_assumed`, `start_adjusted`, `dst_gap_shifted` and `dst_overlap_earlier`. The app can show the guess instead of refusing to save.
+The result (`LineResolution`, serialisable with serde) has the start (event start, task due or reminder trigger), the end (calendar events), the recurrence (`rule`, an `RRULE` string, the reminder shape `{frequency, interval, days}` (`reminder_shape`), start and end dates, exceptions, and the first occurrence), an alert (relative, absolute or off), lead minutes, `notify_at` (for a date-only task or all-day reminder, the date at the default notification time; it never changes the due), the task signal, and warnings. Every moment lists which parts were `implied` and carries warnings such as `time_assumed`, `rolled_to_tomorrow`, `moved_to_next_week`, `ambiguous_meridiem`, `approximate_time`, `end_assumed`, `start_adjusted`, `dst_gap_shifted` and `dst_overlap_earlier`. The app can show the guess instead of refusing to save.
 
 ### What it adds to chrono-node
 
@@ -120,12 +120,12 @@ The result (`LineResolution`, serialisable with serde) has the start (event star
 
 ## Holiday data
 
-`src/facets/holidays.bin` is a generated table. It is built from [date-holidays](https://github.com/commenthol/date-holidays) by `tools/holidays/regenerate.sh`, at the version and npm integrity hash pinned in `tools/holidays/date-holidays.pin`.
+`src/capture/holidays.bin` is a generated table. It is built from [date-holidays](https://github.com/commenthol/date-holidays) by `tools/holidays/regenerate.sh`, at the version and npm integrity hash pinned in `tools/holidays/date-holidays.pin`.
 
 - **No npm in the tree.** The script installs the pinned package into a throwaway folder, checks the hash, runs `tools/holidays/generate.mjs`, writes the table, the differential-test fixture (`tests/data/holiday_samples.json`) and the licence and attribution file (`LICENSES/date-holidays.txt`), then deletes the folder.
 - **Bumping the version.** `regenerate.sh --bump <version>` pins a new version and prints which holidays were added, removed or moved per country.
 - **Staleness.** `tools/holidays/check.sh` reports how old the pinned version is and whether a newer one exists. It needs the network and is for developers only.
-- **Header.** The table records the source version, its integrity hash and the generation date. `facets::holiday_data_info()` exposes them.
+- **Header.** The table records the source version, its integrity hash and the generation date. `capture::holiday_data_info()` exposes them.
 - **Indian festivals.** The table also holds the computed Indian festivals, documented in `docs/indian-festivals.md`.
 
 date-holidays is licensed "(ISC AND CC-BY-3.0)". The holiday data is the CC part; see `LICENSES/date-holidays.txt` for the licence text and the attribution that must ship with it.

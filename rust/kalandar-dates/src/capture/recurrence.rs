@@ -4,9 +4,9 @@ use chrono::{Datelike, Duration, Months, NaiveDate, NaiveDateTime, NaiveTime, Ti
 use regex::Regex;
 use serde::Serialize;
 
-use crate::facets::holidays::{Holiday, HolidayScope, YearlyShape};
-use crate::facets::lexicon::number_value;
-use crate::facets::settings::Settings;
+use crate::capture::holidays::{Holiday, HolidayScope, YearlyShape};
+use crate::capture::lexicon::number_value;
+use crate::capture::settings::Settings;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize)]
 #[serde(rename_all = "lowercase")]
@@ -86,7 +86,7 @@ pub struct RecurrenceException {
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize)]
-pub struct FacetsRecurrence {
+pub struct ReminderRecurrence {
     pub frequency: &'static str,
     pub interval: u32,
     pub days: Option<Vec<&'static str>>,
@@ -171,7 +171,7 @@ impl Rule {
         parts.join(";")
     }
 
-    pub fn facets_shape(&self) -> Option<FacetsRecurrence> {
+    pub fn reminder_shape(&self) -> Option<ReminderRecurrence> {
         let frequency = match self.frequency {
             Frequency::Daily => "daily",
             Frequency::Weekly => "weekly",
@@ -191,7 +191,7 @@ impl Rule {
                 .map(|d| weekday_name(d.weekday))
                 .collect()
         });
-        Some(FacetsRecurrence {
+        Some(ReminderRecurrence {
             frequency,
             interval: self.interval,
             days,
@@ -497,7 +497,7 @@ fn rule_time(t: &str, settings: &Settings) -> Option<(NaiveTime, bool)> {
 fn holiday_rule(t: &str, scope: HolidayScope) -> Option<Rule> {
     let after_every = re!(r"(?i)\b(?:every|each)\s+(?:year\s+(?:on|at)\s+)?(.+)").captures(t)?;
     let rest = after_every.get(1)?.as_str();
-    let found = crate::facets::holidays::find_holidays(rest, scope)
+    let found = crate::capture::holidays::find_holidays(rest, scope)
         .into_iter()
         .find(|h| h.start == 0)?;
     let mut rule = Rule::new(Frequency::Yearly);
@@ -1151,7 +1151,7 @@ pub fn find_recurrence_phrases(line: &str, scope: HolidayScope) -> Vec<(PhraseKi
         out.push((PhraseKind::RangeRule, m.start(), m.end()));
     }
     for m in re!(r"(?i)\b(?:every|each)\s+(?:year\s+(?:on|at)\s+)?").find_iter(line) {
-        if let Some(h) = crate::facets::holidays::find_holidays(&line[m.end()..], scope)
+        if let Some(h) = crate::capture::holidays::find_holidays(&line[m.end()..], scope)
             .into_iter()
             .find(|h| h.start == 0)
         {
@@ -1162,7 +1162,7 @@ pub fn find_recurrence_phrases(line: &str, scope: HolidayScope) -> Vec<(PhraseKi
         return out;
     }
     for m in re!(r"(?i)\bskip(?:ping)?\s+").find_iter(line) {
-        if let Some(h) = crate::facets::holidays::find_holidays(&line[m.end()..], scope)
+        if let Some(h) = crate::capture::holidays::find_holidays(&line[m.end()..], scope)
             .into_iter()
             .find(|h| h.start == 0)
         {

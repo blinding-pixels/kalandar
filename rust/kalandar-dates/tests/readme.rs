@@ -1,7 +1,7 @@
 #![cfg(feature = "tz")]
 
 use chrono::{TimeZone, Utc};
-use chrono_english_rs::{chrono_tz, parse, Component, ParsingOption, ParsingReference, SystemZone};
+use kalandar_dates::{chrono_tz, parse, Component, ParsingOption, ParsingReference, SystemZone};
 
 #[test]
 fn readme_example() {

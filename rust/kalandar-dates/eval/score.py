@@ -57,7 +57,7 @@ def main():
     heldout = "--heldout" in sys.argv
     all_cases = heldout_cases() if heldout else cases()
     feed = "".join(json.dumps({k: v for k, v in c.items() if k != "gold"}) + "\n" for c in all_cases)
-    binary = os.path.join(CRATE, "target", "release", "examples", "facets_eval")
+    binary = os.path.join(CRATE, "..", "target", "release", "examples", "capture_eval")
     out = subprocess.run([binary], input=feed, capture_output=True, text=True, check=True).stdout
     preds = {o["id"]: o for o in map(json.loads, out.splitlines())}
     report = {}

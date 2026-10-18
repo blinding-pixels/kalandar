@@ -1,6 +1,6 @@
 use std::io::{self, BufRead, Write};
 
-use chrono_english_wasm::{parse_json, resolve_capture_json, resolve_line_json, resolve_unlabelled_json};
+use kalandar_dates_wasm::{parse_json, resolve_capture_json, resolve_line_json, resolve_unlabelled_json};
 use serde_json::Value;
 
 fn main() {

@@ -25,11 +25,11 @@ for (const f of [...FESTIVALS].sort((a, b) => a.id.localeCompare(b.id))) {
     list.push({ date, offset: 0, minutes: 1440, substitute: false, kind: null });
   }
   entries.push({ definition: definitions.length, series: series.length, kind: f.kind });
-  definitions.push({ id: `facets:${f.id}`, flags: FLAG_COMPUTED | FLAG_ADDED, names: f.names });
+  definitions.push({ id: `kalandar:${f.id}`, flags: FLAG_COMPUTED | FLAG_ADDED, names: f.names });
   series.push(list);
 }
 const bytes = encode({
-  source: "facets-astronomy",
+  source: "kalandar-astronomy",
   version: RULES_VERSION,
   integrity: `sha512-${hash.digest("base64")}`,
   generated: args.generated ?? new Date().toISOString().slice(0, 10),

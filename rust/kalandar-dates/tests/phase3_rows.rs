@@ -1,9 +1,9 @@
-#![cfg(feature = "facets")]
+#![cfg(feature = "capture")]
 
 use std::collections::BTreeMap;
 
 use chrono::{DateTime, Utc, Weekday};
-use chrono_english_rs::facets::{
+use kalandar_dates::capture::{
     resolve_unlabelled, CaptureKind, Clock, Context, HolidaySetting, LineResolution, Moment,
     Settings,
 };
@@ -193,14 +193,14 @@ fn independent_phase3_rows() {
         "phase4b_rows_f.jsonl",
         "phase5_rows_g.jsonl",
     ] {
-        let path = format!("{}/facets-eval/{name}", env!("CARGO_MANIFEST_DIR"));
+        let path = format!("{}/eval/{name}", env!("CARGO_MANIFEST_DIR"));
         text.push_str(&std::fs::read_to_string(path).expect("rows"));
         text.push('\n');
     }
     let superseded: Value = serde_json::from_str(
         &std::fs::read_to_string(concat!(
             env!("CARGO_MANIFEST_DIR"),
-            "/facets-eval/superseded.json"
+            "/eval/superseded.json"
         ))
         .expect("superseded"),
     )

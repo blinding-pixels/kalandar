@@ -14,5 +14,5 @@ for f in "$UPSTREAM"/test/en/*.test.ts "$UPSTREAM"/test/system_timezone.test.ts;
     "$f" > "$WORK/$b.ts"
 done
 cd "$WORK"
-TZ=UTC CHRONO_PATH="${CHRONO_PATH:-/Users/eshaansood/facets - marketing site/node_modules/chrono-node}" \
+TZ=UTC CHRONO_PATH="${CHRONO_PATH:?set CHRONO_PATH to an installed chrono-node 2.10.1 directory}" \
   node --no-warnings "$HERE/recorder.mjs" "$HERE/recorded.json" "$WORK"/*.test.ts

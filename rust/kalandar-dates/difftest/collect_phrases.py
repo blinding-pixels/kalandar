@@ -1,7 +1,7 @@
 import glob, itertools, json, os, re, sys
 
-MODEL_EVAL = "/Users/eshaansood/runtime-split/model-eval"
-SITE = "/Users/eshaansood/facets - marketing site"
+MODEL_EVAL = os.environ.get("DIFFTEST_MODEL_EVAL", "")
+SITE = os.environ.get("DIFFTEST_SITE", "")
 NON_TIME_LABELS = {"title", "assignee", "project", "tags", "priority", "status", "location", "context_hint", "O"}
 
 phrases = {}

@@ -1,7 +1,7 @@
 #![no_main]
 
 use chrono::{DateTime, Utc};
-use chrono_english_rs::{ParsingOption, ParsingReference, SystemZone};
+use kalandar_dates::{ParsingOption, ParsingReference, SystemZone};
 use libfuzzer_sys::fuzz_target;
 
 fuzz_target!(|data: &[u8]| {
@@ -12,7 +12,7 @@ fuzz_target!(|data: &[u8]| {
         return;
     };
     let reference = ParsingReference::new(now).with_system_zone(SystemZone::Iana(chrono_tz::Europe::Berlin));
-    for result in chrono_english_rs::parse(text, &reference, &ParsingOption::forward()) {
+    for result in kalandar_dates::parse(text, &reference, &ParsingOption::forward()) {
         let _ = result.date();
         let _ = &text[result.index..];
     }

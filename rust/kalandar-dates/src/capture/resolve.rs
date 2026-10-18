@@ -4,17 +4,17 @@ use chrono::{
 };
 use serde::Serialize;
 
-use crate::facets::context::Context;
-use crate::facets::lexicon::{
+use crate::capture::context::Context;
+use crate::capture::lexicon::{
     line_activity, line_daypart_meridiem, line_mentions_lunch, normalize, scan, task_signal,
     Activity, Daypart, Meridiem, Normalized, Piece, Season, SeasonModifier, Token, WeekdayWord,
 };
-use crate::facets::recurrence::{
+use crate::capture::recurrence::{
     add_span, exceptions_in, find_recurrence_phrases, first_occurrence, ignoring_interval,
-    FacetsRecurrence, PhraseKind, RecurrenceException, Rule,
+    ReminderRecurrence, PhraseKind, RecurrenceException, Rule,
 };
-use crate::facets::settings::Clock;
-use crate::facets::warning::{Warning, WarningCode};
+use crate::capture::settings::Clock;
+use crate::capture::warning::{Warning, WarningCode};
 use crate::{
     Component, ParsedComponents, ParsedResult, ParsingOption, ParsingReference, SystemZone,
 };
@@ -133,7 +133,7 @@ pub enum Alert {
 pub struct ResolvedRecurrence {
     pub rule: Rule,
     pub rrule: String,
-    pub facets: Option<FacetsRecurrence>,
+    pub reminder_shape: Option<ReminderRecurrence>,
     pub start_date: Option<NaiveDate>,
     pub end_date: Option<NaiveDate>,
     pub until: Option<NaiveDate>,
@@ -520,12 +520,12 @@ fn end_of_week(today: NaiveDate, ctx: &Context) -> NaiveDate {
 }
 
 fn holiday_warnings(
-    holiday: crate::facets::Holiday,
-    reach: crate::facets::HolidayReach,
+    holiday: crate::capture::Holiday,
+    reach: crate::capture::HolidayReach,
 ) -> Vec<Warning> {
     let mut out = Vec::new();
     let name = holiday.name();
-    if reach == crate::facets::HolidayReach::Elsewhere {
+    if reach == crate::capture::HolidayReach::Elsewhere {
         out.push(Warning::new(
             WarningCode::HolidayOtherRegion,
             format!(
@@ -1007,7 +1007,7 @@ fn finish(mut draft: Draft, kind: CaptureKind, line: &str, ctx: &Context) -> Opt
                             .split("before ")
                             .skip(1)
                             .filter_map(|rest| rest.split_whitespace().next())
-                            .filter_map(crate::facets::recurrence::parse_weekday)
+                            .filter_map(crate::capture::recurrence::parse_weekday)
                             .any(|w| w == weekday);
                     if before_today {
                         warnings.push(Warning::new(
@@ -1073,7 +1073,7 @@ fn finish(mut draft: Draft, kind: CaptureKind, line: &str, ctx: &Context) -> Opt
                 .checked_sub_signed(Duration::minutes(i64::from(*offset)))
                 .map(|utc| utc.and_utc().with_timezone(&ctx.zone).naive_local()),
             StatedZone::Iana(tz, _) => {
-                let (instant, _) = crate::facets::context::to_instant(*tz, stated_local);
+                let (instant, _) = crate::capture::context::to_instant(*tz, stated_local);
                 Some(instant.with_timezone(&ctx.zone).naive_local())
             }
         };
@@ -1171,7 +1171,7 @@ fn moment_at(
 }
 
 struct Analysis {
-    scope: crate::facets::HolidayScope,
+    scope: crate::capture::HolidayScope,
     norm: Normalized,
     results: Vec<ParsedResult>,
     pieces: Vec<Piece>,
@@ -1555,7 +1555,7 @@ fn with_detected_recurrence(
     line: &str,
     kind: CaptureKind,
     spans: &[LabelledSpan],
-    scope: crate::facets::HolidayScope,
+    scope: crate::capture::HolidayScope,
 ) -> Vec<LabelledSpan> {
     if spans.iter().any(|s| s.role == Role::Recurrence) {
         return spans.to_vec();
@@ -1714,10 +1714,10 @@ fn resolve_with(
                         end_date = None;
                     }
                     CaptureKind::Reminder => {
-                        let rule = Rule::new(crate::facets::recurrence::Frequency::Daily);
+                        let rule = Rule::new(crate::capture::recurrence::Frequency::Daily);
                         let rrule = rule.rrule(Some(last));
                         recurrence = Some(ResolvedRecurrence {
-                            facets: rule.facets_shape(),
+                            reminder_shape: rule.reminder_shape(),
                             rrule,
                             rule,
                             start_date: Some(s.date),
@@ -2023,7 +2023,7 @@ fn resolve_recurrence(
     let rule_text = text_of(Role::Recurrence);
     let window_text = text_of(Role::RecurrenceWindow);
     let combined = format!("{rule_text} {window_text}");
-    let mut rule = crate::facets::recurrence::parse_rule_scoped(
+    let mut rule = crate::capture::recurrence::parse_rule_scoped(
         &combined,
         &ctx.settings,
         ctx.holiday_scope(),
@@ -2045,25 +2045,25 @@ fn resolve_recurrence(
     let day_unspecified = rule.weekdays.is_empty() && rule.month_days.is_empty();
     if day_unspecified {
         match (rule.frequency, start_draft.date) {
-            (crate::facets::recurrence::Frequency::Weekly, Some((_, DateKind::Weekday(w, _)))) => {
-                rule.weekdays = vec![crate::facets::recurrence::ByDay {
+            (crate::capture::recurrence::Frequency::Weekly, Some((_, DateKind::Weekday(w, _)))) => {
+                rule.weekdays = vec![crate::capture::recurrence::ByDay {
                     position: None,
                     weekday: w,
                 }];
             }
             (
-                crate::facets::recurrence::Frequency::Yearly,
+                crate::capture::recurrence::Frequency::Yearly,
                 Some((d, DateKind::MonthDayNoYear | DateKind::Exact)),
             ) if rule.months.is_empty() => {
                 rule.months = vec![d.month()];
                 rule.month_days = vec![d.day() as i8];
             }
-            (crate::facets::recurrence::Frequency::Yearly, Some((d, DateKind::MonthOnly)))
+            (crate::capture::recurrence::Frequency::Yearly, Some((d, DateKind::MonthOnly)))
                 if rule.months.is_empty() =>
             {
                 rule.months = vec![d.month()];
             }
-            (crate::facets::recurrence::Frequency::Monthly, Some((d, DateKind::Exact)))
+            (crate::capture::recurrence::Frequency::Monthly, Some((d, DateKind::Exact)))
                 if start_draft.implied.contains(&"month") =>
             {
                 rule.month_days = vec![d.day() as i8];
@@ -2114,7 +2114,7 @@ fn resolve_recurrence(
         date_only.time = None;
         let candidate = finish(date_only, CaptureKind::CalendarEvent, line, ctx).map(|m| m.date);
         let restates_rule = |d: NaiveDate| {
-            rule.frequency == crate::facets::recurrence::Frequency::Yearly
+            rule.frequency == crate::capture::recurrence::Frequency::Yearly
                 && (rule.months.is_empty() || rule.months.contains(&d.month()))
         };
         start_date = candidate.filter(|d| rule.span_days.is_none() && !restates_rule(*d));
@@ -2176,7 +2176,7 @@ fn resolve_recurrence(
     }
     if rule.count.is_none() && rule.time.is_none() && twice_daily(&combined) {
         return Some(ResolvedRecurrence {
-            facets: rule.facets_shape(),
+            reminder_shape: rule.reminder_shape(),
             rrule: rule.rrule(None),
             rule,
             start_date,
@@ -2196,19 +2196,19 @@ fn resolve_recurrence(
     let now = ctx.local_now();
     let sub_daily = matches!(
         rule.frequency,
-        crate::facets::recurrence::Frequency::Hourly
-            | crate::facets::recurrence::Frequency::Minutely
+        crate::capture::recurrence::Frequency::Hourly
+            | crate::capture::recurrence::Frequency::Minutely
     );
     let until = end_date;
     let mut exdates: Vec<NaiveDateTime> = Vec::new();
     let first: Option<NaiveDateTime> = if sub_daily {
         let anchor_time = rule.time.map(|t| anchor.and_time(t));
-        let first = crate::facets::recurrence::first_slot(&rule, now, anchor_time);
+        let first = crate::capture::recurrence::first_slot(&rule, now, anchor_time);
         if let (Some(f), Some(span)) = (first, rule.span_days) {
             if let Some(end) = add_span(f.date(), span) {
                 let last = end.and_time(NaiveTime::MIN) - Duration::minutes(1);
                 let count =
-                    crate::facets::recurrence::slot_occurrences(&rule, f, last, 10_000).len();
+                    crate::capture::recurrence::slot_occurrences(&rule, f, last, 10_000).len();
                 rule.count = u32::try_from(count).ok();
                 end_date = Some(end);
             }
@@ -2234,8 +2234,8 @@ fn resolve_recurrence(
         let mut weekday_removed = Vec::new();
         for exception in &exceptions {
             let days =
-                crate::facets::recurrence::exception_weekdays(std::slice::from_ref(exception));
-            if rule.frequency == crate::facets::recurrence::Frequency::Weekly
+                crate::capture::recurrence::exception_weekdays(std::slice::from_ref(exception));
+            if rule.frequency == crate::capture::recurrence::Frequency::Weekly
                 && !days.is_empty()
                 && days.iter().all(|d| {
                     rule.weekdays
@@ -2271,7 +2271,7 @@ fn resolve_recurrence(
                     .checked_add_months(Months::new(12))
                     .unwrap_or(first_date),
             };
-            let mut dates = crate::facets::recurrence::occurrence_dates(
+            let mut dates = crate::capture::recurrence::occurrence_dates(
                 &rule,
                 first_date,
                 ctx.settings.week_start,
@@ -2371,12 +2371,12 @@ fn resolve_recurrence(
     });
 
     warnings.extend(exception_warnings);
-    let facets = rule.facets_shape();
+    let reminder_shape = rule.reminder_shape();
     let rrule = rule.rrule(until);
     Some(ResolvedRecurrence {
         rule,
         rrule,
-        facets,
+        reminder_shape,
         start_date,
         end_date,
         until,
@@ -2401,7 +2401,7 @@ fn exception_dates(
         let raw = exception.raw.as_str();
         let lower = raw.to_lowercase();
         let mut candidates: Vec<Box<dyn Fn(NaiveDate) -> bool>> = Vec::new();
-        let days = crate::facets::recurrence::exception_weekdays(std::slice::from_ref(exception));
+        let days = crate::capture::recurrence::exception_weekdays(std::slice::from_ref(exception));
         let days: Vec<Weekday> = days
             .into_iter()
             .filter(|d| !weekday_removed.contains(d))
@@ -2412,11 +2412,11 @@ fn exception_dates(
         let scope = ctx.holiday_scope();
         if lower.contains("holiday") && !lower.contains("school") && scope.region().is_some() {
             candidates.push(Box::new(move |d: NaiveDate| {
-                crate::facets::holidays::is_day_off(scope, d)
+                crate::capture::holidays::is_day_off(scope, d)
             }));
         }
-        let holidays: Vec<crate::facets::Holiday> =
-            crate::facets::holidays::find_holidays(raw, scope)
+        let holidays: Vec<crate::capture::Holiday> =
+            crate::capture::holidays::find_holidays(raw, scope)
                 .into_iter()
                 .map(|h| h.holiday)
                 .collect();
@@ -2514,7 +2514,7 @@ fn exception_dates(
 }
 
 fn exception_removed_weekday(exception: &RecurrenceException, removed: &[Weekday]) -> bool {
-    let days = crate::facets::recurrence::exception_weekdays(std::slice::from_ref(exception));
+    let days = crate::capture::recurrence::exception_weekdays(std::slice::from_ref(exception));
     !days.is_empty() && days.iter().all(|d| removed.contains(d))
 }
 
@@ -2537,7 +2537,7 @@ fn bound_date(
     let lower = text.to_lowercase();
     let today = ctx.today();
     if is_end {
-        let month = crate::facets::recurrence::month_only(&lower);
+        let month = crate::capture::recurrence::month_only(&lower);
         if let Some(month) = month {
             let mut year = today.year();
             if month < today.month() || (month == today.month()) {
@@ -2879,7 +2879,7 @@ fn keep_result(text: &str, result: &ParsedResult) -> bool {
     let start = result.index + offset;
     let end = result.index + raw.len();
     if matches!(word, "sat" | "sun") {
-        return crate::facets::lexicon::lookalike_is_day(text, start, end);
+        return crate::capture::lexicon::lookalike_is_day(text, start, end);
     }
     let months = [
         "january",
@@ -2907,7 +2907,7 @@ fn keep_result(text: &str, result: &ParsedResult) -> bool {
         "nov",
         "dec",
     ];
-    if months.contains(&word) && crate::facets::lexicon::month_is_person(text, start, end) {
+    if months.contains(&word) && crate::capture::lexicon::month_is_person(text, start, end) {
         return false;
     }
     true
@@ -3142,7 +3142,7 @@ fn multiple_items(analysis: &Analysis, line: &str) -> Option<usize> {
             .any(|w| {
                 let lower = w.to_lowercase();
                 !filler.contains(&lower.as_str())
-                    && crate::facets::recurrence::parse_weekday(&lower)
+                    && crate::capture::recurrence::parse_weekday(&lower)
                         .is_none_or(|_| lower.len() > 9)
                     && ![
                         "jan", "feb", "mar", "apr", "jun", "jul", "aug", "sep", "sept", "oct",

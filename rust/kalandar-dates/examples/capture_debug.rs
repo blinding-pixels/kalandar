@@ -1,6 +1,6 @@
 use chrono::{DateTime, Utc};
-use chrono_english_rs::facets::{resolve_unlabelled, CaptureKind, Context};
-use chrono_english_rs::{parse, ParsingOption, ParsingReference, SystemZone};
+use kalandar_dates::capture::{resolve_unlabelled, CaptureKind, Context};
+use kalandar_dates::{parse, ParsingOption, ParsingReference, SystemZone};
 
 fn main() {
     let now: DateTime<Utc> = "2026-10-18T17:00:00Z".parse().expect("now");

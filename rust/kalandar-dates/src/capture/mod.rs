@@ -13,7 +13,7 @@ pub use holidays::{
     YearlyShape,
 };
 pub use lexicon::task_signal;
-pub use recurrence::{ByDay, FacetsRecurrence, Frequency, RecurrenceException, Rule};
+pub use recurrence::{ByDay, ReminderRecurrence, Frequency, RecurrenceException, Rule};
 pub use resolve::{
     detect_spans, resolve_capture, resolve_line, resolve_phrase, resolve_unlabelled, Alert,
     CaptureKind, LabelledSpan, LineResolution, Moment, ResolvedRecurrence, Role,

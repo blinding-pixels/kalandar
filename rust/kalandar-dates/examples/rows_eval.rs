@@ -1,7 +1,7 @@
 use std::io::{self, BufRead, Write};
 
 use chrono::{DateTime, Utc, Weekday};
-use chrono_english_rs::facets::{
+use kalandar_dates::capture::{
     resolve_unlabelled, CaptureKind, Clock, Context, HolidaySetting, Moment, Settings,
 };
 use serde_json::{json, Value};

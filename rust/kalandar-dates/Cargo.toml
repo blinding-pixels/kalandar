@@ -1,15 +1,20 @@
 [package]
-name = "chrono-english-rs"
-version = "0.1.0"
+name = "kalandar-dates"
+version = "0.2.0"
 edition = "2021"
-license = "MIT"
-description = "English natural-language date parser, a Rust port of chrono-node v2.10.1"
-publish = false
+license = "MIT AND CC-BY-SA-3.0"
+description = "Date, time, repeat, lead-time and holiday resolution for Kalandar, built on a Rust port of chrono-node v2.10.1."
+readme = "README.md"
+repository = "https://github.com/blinding-pixels/kalandar"
+homepage = "https://github.com/blinding-pixels/kalandar"
+keywords = ["date", "parser", "natural-language", "recurrence", "holidays"]
+categories = ["date-and-time", "parser-implementations"]
+include = ["Cargo.toml", "README.md", "LICENSE", "LICENSES/**", "docs/**", "src/**"]
 
 [features]
-default = ["tz", "facets"]
+default = ["tz", "capture"]
 tz = ["dep:chrono-tz"]
-facets = ["tz", "dep:serde", "chrono/serde"]
+capture = ["tz", "dep:serde", "chrono/serde"]
 
 [dependencies]
 chrono = { version = "0.4", default-features = false, features = ["std", "clock"] }
@@ -29,17 +34,17 @@ name = "diff_runner"
 required-features = ["tz"]
 
 [[example]]
-name = "facets_eval"
-required-features = ["facets"]
+name = "capture_eval"
+required-features = ["capture"]
 
 [[example]]
-name = "facets_debug"
-required-features = ["facets"]
+name = "capture_debug"
+required-features = ["capture"]
 
 [[example]]
 name = "rows_eval"
-required-features = ["facets"]
+required-features = ["capture"]
 
 [[example]]
 name = "holiday_probe"
-required-features = ["facets"]
+required-features = ["capture"]

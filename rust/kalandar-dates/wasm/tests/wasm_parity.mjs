@@ -7,7 +7,7 @@ import assert from "assert";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const require = createRequire(import.meta.url);
-const wasm = require(join(here, "..", "pkg", "chrono_english_wasm.js"));
+const wasm = require(join(here, "..", "pkg", "kalandar_dates_wasm.js"));
 
 const callsText = readFileSync(join(here, "calls.jsonl"), "utf8");
 const calls = callsText.split("\n").filter((l) => l.trim()).map((l) => JSON.parse(l));
@@ -38,7 +38,7 @@ const weekly = JSON.parse(
   wasm.resolveUnlabelled(JSON.stringify({ line: "remind me every Monday and Wednesday", kind: "reminder", now: "2026-10-18T17:00:00Z", zone: "America/Los_Angeles" }))
 );
 assert.strictEqual(weekly.recurrence.rrule, "FREQ=WEEKLY;INTERVAL=1;BYDAY=MO,WE");
-assert.deepStrictEqual(weekly.recurrence.facets, { frequency: "weekly", interval: 1, days: ["monday", "wednesday"] });
+assert.deepStrictEqual(weekly.recurrence.reminder_shape, { frequency: "weekly", interval: 1, days: ["monday", "wednesday"] });
 
 const parsed = JSON.parse(wasm.parse(JSON.stringify({ text: "next friday at 5pm", ref: 1760792400000, zone: "UTC", tz: null, forward: false, config: "casual" })));
 assert.strictEqual(parsed[0].start.date, 1761325200000);

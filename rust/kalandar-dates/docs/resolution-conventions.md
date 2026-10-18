@@ -1,6 +1,6 @@
 # Facets resolution conventions
 
-These rules say what a date or time phrase in a Facets capture should resolve to. The `facets` module implements them, and the evaluation gold in `facets-eval/` was written from them by hand. Where a rule doesn't cover a phrase, the expected answer is what a reasonable person typing the line would mean.
+These rules say what a date or time phrase in a Kalandar capture should resolve to. The `capture` module implements them, and the evaluation gold in `eval/` was written from them by hand. Where a rule doesn't cover a phrase, the expected answer is what a reasonable person typing the line would mean.
 
 ## Context used for the evaluation
 
@@ -344,7 +344,7 @@ These rules replace parts of the phase 4 rules. Where they disagree, these win.
 
 This replaces the hand-rolled list from phase 4b. The phase 4b rule still holds: a matched holiday is always a date, with no guessing from neighbouring words.
 
-- **Data.** Holidays come from date-holidays, pinned in `tools/holidays/date-holidays.pin` and embedded as `src/facets/holidays.bin`. It covers every country, state and region the package has, for 1970 to 2100.
+- **Data.** Holidays come from date-holidays, pinned in `tools/holidays/date-holidays.pin` and embedded as `src/capture/holidays.bin`. It covers every country, state and region the package has, for 1970 to 2100.
   - Each holiday has its dates (substitute days flagged), its type (public, bank, school, optional or observance), a stable id and its names in every language the package provides.
   - India also gets the computed Hindu festivals and four Islamic holidays (see `docs/indian-festivals.md`).
   - Nothing is fetched at runtime.

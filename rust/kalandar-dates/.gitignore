@@ -6,3 +6,4 @@ difftest/fuzz2_cases.jsonl
 difftest/year_cases.jsonl
 difftest/charfuzz_cases.jsonl
 difftest/*_phrases.json
+__pycache__/

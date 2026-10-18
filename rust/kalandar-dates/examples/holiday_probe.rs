@@ -1,4 +1,4 @@
-use chrono_english_rs::facets::{find_holidays, HolidayScope, Settings};
+use kalandar_dates::capture::{find_holidays, HolidayScope, Settings};
 
 fn main() {
     let scope = HolidayScope::from_settings(&Settings::default(), Some("America/Los_Angeles"));

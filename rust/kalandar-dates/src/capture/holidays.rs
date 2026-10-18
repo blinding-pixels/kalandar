@@ -4,7 +4,7 @@ use std::sync::LazyLock;
 use chrono::{Datelike, Duration, NaiveDate, Weekday};
 use serde::Serialize;
 
-use crate::facets::settings::{HolidaySetting, Settings};
+use crate::capture::settings::{HolidaySetting, Settings};
 
 static RAW: &[u8] = include_bytes!("holidays.bin");
 static FESTIVALS_RAW: &[u8] = include_bytes!("festivals.bin");
@@ -70,7 +70,7 @@ pub struct Definition {
 pub enum HolidaySource {
     #[default]
     DateHolidays,
-    FacetsAstronomy,
+    Astronomy,
 }
 
 #[derive(Clone, Debug, Default, PartialEq, Eq, Serialize)]
@@ -321,7 +321,7 @@ fn merge_festivals(data: &mut HolidayData, festivals: HolidayData) {
             .map(|(l, n)| (language_of(data, &festivals.languages[l]), n))
             .collect();
         data.definitions.push(Definition {
-            source: HolidaySource::FacetsAstronomy,
+            source: HolidaySource::Astronomy,
             names,
             ..def
         });

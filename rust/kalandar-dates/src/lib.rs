@@ -5,8 +5,8 @@ mod casual_references;
 mod chrono;
 mod common_parsers;
 mod en;
-#[cfg(feature = "facets")]
-pub mod facets;
+#[cfg(feature = "capture")]
+pub mod capture;
 mod js_regex;
 mod jsdate;
 mod refiners;

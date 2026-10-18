@@ -1,9 +1,9 @@
 use chrono::{DateTime, NaiveTime, Utc, Weekday};
-use chrono_english_rs::facets::{
+use kalandar_dates::capture::{
     holiday_data_info, resolve_capture, resolve_line, resolve_unlabelled, CaptureKind, Clock, Context, HolidaySetting,
     LabelledSpan, Role, Settings,
 };
-use chrono_english_rs::{Component, ParsedComponents, ParsingOption, ParsingReference, SystemZone};
+use kalandar_dates::{Component, ParsedComponents, ParsingOption, ParsingReference, SystemZone};
 use serde_json::{json, Map, Value};
 use wasm_bindgen::prelude::wasm_bindgen;
 
@@ -210,9 +210,9 @@ pub fn parse_json(request: &str) -> String {
         ..ParsingOption::default()
     };
     let chrono = match request["config"].as_str() {
-        Some("strict") => chrono_english_rs::strict(),
-        Some("gb") => chrono_english_rs::gb(),
-        _ => chrono_english_rs::casual(),
+        Some("strict") => kalandar_dates::strict(),
+        Some("gb") => kalandar_dates::gb(),
+        _ => kalandar_dates::casual(),
     };
     let results: Vec<Value> = chrono
         .parse(text, &reference, &option)

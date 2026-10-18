@@ -1,6 +1,7 @@
 The MIT License
 
 Copyright (c) 2014, Wanasit Tanakitrungruang
+Copyright (c) 2026 Eshaan Sood
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -19,3 +20,9 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
+
+
+src/capture/holidays.bin is not covered by this licence. It is generated from
+date-holidays (https://github.com/commenthol/date-holidays) and is available
+under CC BY-SA 3.0; see LICENSES/date-holidays.txt for the licence and the
+required attribution.

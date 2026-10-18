@@ -1,9 +1,9 @@
 [package]
-name = "chrono-english-wasm"
+name = "kalandar-dates-wasm"
 version = "0.1.0"
 edition = "2021"
 license = "MIT"
-description = "wasm-bindgen build of chrono-english-rs and its Facets layer"
+description = "wasm-bindgen build of kalandar-dates and its capture resolution layer"
 publish = false
 
 [lib]
@@ -12,7 +12,7 @@ crate-type = ["cdylib", "rlib"]
 [dependencies]
 chrono = { version = "0.4", default-features = false, features = ["std", "serde"] }
 chrono-tz = "0.10"
-chrono-english-rs = { path = "..", features = ["facets"] }
+kalandar-dates = { path = "..", features = ["capture"] }
 serde = "1"
 serde_json = "1"
 wasm-bindgen = "=0.2.121"

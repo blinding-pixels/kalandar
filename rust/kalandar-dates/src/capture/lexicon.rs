@@ -2,7 +2,7 @@ use std::sync::LazyLock;
 
 use regex::Regex;
 
-use crate::facets::holidays::{find_holidays, Holiday, HolidayReach, HolidayScope};
+use crate::capture::holidays::{find_holidays, Holiday, HolidayReach, HolidayScope};
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Daypart {
@@ -635,7 +635,7 @@ pub fn scan(text: &str, scope: HolidayScope) -> Vec<Piece> {
         {
             continue;
         }
-        let Some(weekday) = crate::facets::recurrence::parse_weekday(word) else {
+        let Some(weekday) = crate::capture::recurrence::parse_weekday(word) else {
             continue;
         };
         let modifier = match c.get(1).map(|m| m.as_str().to_lowercase()) {
@@ -938,7 +938,7 @@ pub fn scan(text: &str, scope: HolidayScope) -> Vec<Piece> {
         ];
         let lower_m = m.as_str().to_lowercase();
         let (Some(weekday), Some(month)) = (
-            crate::facets::recurrence::parse_weekday(w.as_str()),
+            crate::capture::recurrence::parse_weekday(w.as_str()),
             months.iter().position(|x| lower_m.starts_with(x)),
         ) else {
             continue;
@@ -957,8 +957,8 @@ pub fn scan(text: &str, scope: HolidayScope) -> Vec<Piece> {
             continue;
         };
         if let (Some(a), Some(b)) = (
-            crate::facets::recurrence::parse_weekday(a.as_str()),
-            crate::facets::recurrence::parse_weekday(b.as_str()),
+            crate::capture::recurrence::parse_weekday(a.as_str()),
+            crate::capture::recurrence::parse_weekday(b.as_str()),
         ) {
             if a != b {
                 push(whole.start(), whole.end(), Token::WeekdayRange(a, b));

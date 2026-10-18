@@ -16,7 +16,7 @@ def main(path):
     if skipped:
         print(f"skipped {len(skipped)} superseded rows")
     feed = "".join(json.dumps(r) + "\n" for r in rows)
-    out = subprocess.run([os.path.join(CRATE, "target", "release", "examples", "rows_eval")], input=feed, capture_output=True, text=True, check=True).stdout
+    out = subprocess.run([os.path.join(CRATE, "..", "target", "release", "examples", "rows_eval")], input=feed, capture_output=True, text=True, check=True).stdout
     preds = {o["id"]: o for o in map(json.loads, out.splitlines())}
     stats = collections.defaultdict(lambda: [0, 0])
     failures = []

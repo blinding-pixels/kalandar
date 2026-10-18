@@ -1,9 +1,9 @@
-#![cfg(feature = "facets")]
+#![cfg(feature = "capture")]
 
 use std::collections::BTreeMap;
 
 use chrono::{DateTime, Datelike, Utc};
-use chrono_english_rs::facets::{
+use kalandar_dates::capture::{
     holiday_data, holiday_data_info, resolve_unlabelled, CaptureKind, Context, HolidayKind,
     HolidaySetting, Moment, Settings, WarningCode,
 };

@@ -2,8 +2,8 @@ import json, os, subprocess, sys, collections
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 CRATE = os.path.dirname(HERE)
-CHRONO_PATH = "/Users/eshaansood/facets - marketing site/node_modules/chrono-node"
-RUST_BIN = os.path.join(CRATE, "target", "release", "examples", "diff_runner")
+CHRONO_PATH = os.environ["CHRONO_PATH"]
+RUST_BIN = os.path.join(CRATE, "..", "target", "release", "examples", "diff_runner")
 
 def run(cmd, cases, env=None):
     data = "".join(json.dumps(c) + "\n" for c in cases)

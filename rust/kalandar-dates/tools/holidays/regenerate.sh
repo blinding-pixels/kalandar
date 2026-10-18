@@ -3,7 +3,7 @@ set -euo pipefail
 here="$(cd "$(dirname "$0")" && pwd)"
 crate="$(cd "$here/../.." && pwd)"
 pin="$here/date-holidays.pin"
-out="$crate/src/facets/holidays.bin"
+out="$crate/src/capture/holidays.bin"
 samples="$crate/tests/data/holiday_samples.json"
 notice="$crate/LICENSES/date-holidays.txt"
 
@@ -64,7 +64,7 @@ node "$here/generate.mjs" \
   --samples "$samples" \
   --notice "$notice"
 
-node "$here/generate_festivals.mjs" --out "$crate/src/facets/festivals.bin" --generated "$(date -u +%Y-%m-%d)"
+node "$here/generate_festivals.mjs" --out "$crate/src/capture/festivals.bin" --generated "$(date -u +%Y-%m-%d)"
 
 if [[ -n "$bump" ]]; then
   printf 'version=%s\nintegrity=%s\n' "$version" "$integrity" > "$pin"

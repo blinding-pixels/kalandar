@@ -3,8 +3,8 @@ use chrono::{
 };
 use chrono_tz::Tz;
 
-use crate::facets::settings::Settings;
-use crate::facets::warning::{Warning, WarningCode};
+use crate::capture::settings::Settings;
+use crate::capture::warning::{Warning, WarningCode};
 
 #[derive(Clone, Debug)]
 pub struct Context {
@@ -27,8 +27,8 @@ impl Context {
         self
     }
 
-    pub fn holiday_scope(&self) -> crate::facets::holidays::HolidayScope {
-        crate::facets::holidays::HolidayScope::from_settings(&self.settings, Some(self.zone.name()))
+    pub fn holiday_scope(&self) -> crate::capture::holidays::HolidayScope {
+        crate::capture::holidays::HolidayScope::from_settings(&self.settings, Some(self.zone.name()))
     }
 
     pub fn local_now(&self) -> NaiveDateTime {

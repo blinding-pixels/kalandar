@@ -1,7 +1,7 @@
 use std::io::{self, BufRead, Write};
 
 use chrono::{DateTime, Utc};
-use chrono_english_rs::facets::{
+use kalandar_dates::capture::{
     resolve_capture, resolve_line, resolve_unlabelled, Alert, CaptureKind, Context, LabelledSpan,
     LineResolution, Moment, Role,
 };

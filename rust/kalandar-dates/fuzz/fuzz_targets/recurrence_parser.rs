@@ -1,7 +1,7 @@
 #![no_main]
 
 use chrono::{DateTime, Utc};
-use chrono_english_rs::facets::{parse_recurrence, resolve_unlabelled, CaptureKind, Context, Settings};
+use kalandar_dates::capture::{parse_recurrence, resolve_unlabelled, CaptureKind, Context, Settings};
 use libfuzzer_sys::fuzz_target;
 
 fuzz_target!(|data: &[u8]| {
@@ -11,7 +11,7 @@ fuzz_target!(|data: &[u8]| {
     let settings = Settings::default();
     if let Some(rule) = parse_recurrence(text, &settings) {
         let _ = rule.rrule(None);
-        let _ = rule.facets_shape();
+        let _ = rule.reminder_shape();
     }
     let Some(now) = DateTime::<Utc>::from_timestamp(1_792_342_800, 0) else {
         return;

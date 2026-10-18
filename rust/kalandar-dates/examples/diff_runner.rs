@@ -1,7 +1,7 @@
 use std::io::{self, BufRead, Write};
 
 use chrono::{DateTime, Utc};
-use chrono_english_rs::{Component, ParsedComponents, ParsingOption, ParsingReference, SystemZone};
+use kalandar_dates::{Component, ParsedComponents, ParsingOption, ParsingReference, SystemZone};
 use serde_json::{json, Map, Value};
 
 fn system_zone(name: &str) -> SystemZone {
@@ -60,9 +60,9 @@ fn main() {
             ..ParsingOption::default()
         };
         let chrono = match case["config"].as_str().unwrap_or("casual") {
-            "strict" => chrono_english_rs::strict(),
-            "gb" => chrono_english_rs::gb(),
-            _ => chrono_english_rs::casual(),
+            "strict" => kalandar_dates::strict(),
+            "gb" => kalandar_dates::gb(),
+            _ => kalandar_dates::casual(),
         };
         let results: Vec<Value> = chrono
             .parse(text, &reference, &option)

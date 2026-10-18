@@ -84,7 +84,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "chrono-english-rs"
+name = "kalandar-dates"
 version = "0.1.0"
 dependencies = [
  "chrono",
@@ -95,11 +95,11 @@ dependencies = [
 ]
 
 [[package]]
-name = "chrono-english-rs-fuzz"
+name = "kalandar-dates-fuzz"
 version = "0.0.0"
 dependencies = [
  "chrono",
- "chrono-english-rs",
+ "kalandar-dates",
  "chrono-tz",
  "libfuzzer-sys",
 ]

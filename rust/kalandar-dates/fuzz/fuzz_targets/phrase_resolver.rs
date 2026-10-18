@@ -1,7 +1,7 @@
 #![no_main]
 
 use chrono::{DateTime, Utc};
-use chrono_english_rs::facets::{
+use kalandar_dates::capture::{
     resolve_capture, resolve_line, resolve_phrase, resolve_unlabelled, CaptureKind, Context, LabelledSpan, Role,
 };
 use libfuzzer_sys::fuzz_target;

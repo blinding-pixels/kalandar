@@ -1,7 +1,7 @@
-#![cfg(feature = "facets")]
+#![cfg(feature = "capture")]
 
 use chrono::{DateTime, NaiveTime, Utc, Weekday};
-use chrono_english_rs::facets::{
+use kalandar_dates::capture::{
     resolve_capture, resolve_line, resolve_phrase, resolve_unlabelled, task_signal, Alert,
     CaptureKind, Clock, Context, LabelledSpan, LineResolution, Moment, Role, Settings, WarningCode,
 };
@@ -525,17 +525,17 @@ fn recurrence_rules() {
         assert_eq!(rec.rrule, rule, "{line}");
         assert_eq!(show(&rec.first), first, "{line}");
     }
-    let facets = resolve_unlabelled("remind me every Monday and Wednesday", Rem, &ctx())
+    let shape = resolve_unlabelled("remind me every Monday and Wednesday", Rem, &ctx())
         .recurrence
-        .and_then(|r| r.facets)
-        .expect("facets shape");
-    assert_eq!(facets.frequency, "weekly");
-    assert_eq!(facets.interval, 1);
-    assert_eq!(facets.days, Some(vec!["monday", "wednesday"]));
+        .and_then(|r| r.reminder_shape)
+        .expect("reminder shape");
+    assert_eq!(shape.frequency, "weekly");
+    assert_eq!(shape.interval, 1);
+    assert_eq!(shape.days, Some(vec!["monday", "wednesday"]));
     assert!(
         resolve_unlabelled("remind me every first Monday", Rem, &ctx())
             .recurrence
-            .and_then(|r| r.facets)
+            .and_then(|r| r.reminder_shape)
             .is_none()
     );
 }
@@ -699,7 +699,7 @@ fn rrule_shortcut() {
 
 #[test]
 fn holiday_forms_resolve_to_their_dates() {
-    use chrono_english_rs::facets::{find_holidays, HolidayScope};
+    use kalandar_dates::capture::{find_holidays, HolidayScope};
     let us = HolidayScope::from_settings(&Settings::default(), Some("America/Los_Angeles"));
     let cases = [
         ("nye", "2026-12-31", false),
