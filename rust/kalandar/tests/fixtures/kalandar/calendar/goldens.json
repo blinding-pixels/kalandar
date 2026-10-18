@@ -16,9 +16,7 @@
       "recurrenceStartText": null,
       "recurrenceEndText": null,
       "recurrenceExceptions": [],
-      "attendees": [
-        "sara"
-      ]
+      "attendees": []
     }
   },
   {
@@ -58,9 +56,7 @@
       "recurrenceStartText": "starting next month",
       "recurrenceEndText": null,
       "recurrenceExceptions": [],
-      "attendees": [
-        "sara"
-      ]
+      "attendees": []
     }
   },
   {
@@ -87,9 +83,7 @@
           "raw": "but skip the first one"
         }
       ],
-      "attendees": [
-        "sara"
-      ]
+      "attendees": []
     }
   },
   {
@@ -109,9 +103,7 @@
       "recurrenceStartText": null,
       "recurrenceEndText": "till july 1st",
       "recurrenceExceptions": [],
-      "attendees": [
-        "venue"
-      ]
+      "attendees": []
     }
   }
 ]

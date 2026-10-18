@@ -1,135 +1,137 @@
+mod attendees;
+pub(crate) mod js;
+mod location;
+mod recurrence_exceptions;
+mod schedule;
+
 use super::{
-    postprocess::finalize_calendar_title, schedule::extract_schedule,
-    CapturePreviewCalendarEventDraft, CapturePreviewRequest, CapturePreviewResult,
-    CapturePreviewWarning,
+    postprocess::finalize_calendar_title, CapturePreviewCalendarEventDraft, CapturePreviewRequest,
+    CapturePreviewResult, CapturePreviewWarning,
 };
-use kalandar_dates::capture::CaptureKind;
-use regex::Regex;
-use std::sync::OnceLock;
+use kalandar_dates::capture::PreviewSchedule;
+use kalandar_dates::chrono_tz::Tz;
+use recurrence_exceptions::{ClassifyOptions, StructuredRecurrenceException};
+
+#[derive(Default)]
+pub(crate) struct ParseContext {
+    raw_input: String,
+    cleaned_input: String,
+    masked_input: String,
+    title: Option<String>,
+    date: Option<String>,
+    time: Option<String>,
+    end_time: Option<String>,
+    duration_minutes: Option<u32>,
+    location: Option<String>,
+    location_confidence: f64,
+    recurrence: Option<String>,
+    recurrence_start: Option<String>,
+    recurrence_end: Option<String>,
+    recurrence_exception: Vec<StructuredRecurrenceException>,
+    alerts: Vec<u32>,
+    attendees: Option<Vec<String>>,
+    warnings: Vec<CapturePreviewWarning>,
+    schedule: Option<PreviewSchedule>,
+}
+
+impl ParseContext {
+    fn new(input: &str) -> Self {
+        let cleaned_input = js::normalize_whitespace(input);
+        Self {
+            raw_input: cleaned_input.clone(),
+            masked_input: cleaned_input.clone(),
+            cleaned_input,
+            ..Self::default()
+        }
+    }
+
+    fn mask_span(&mut self, start: usize, end: usize) {
+        if end <= start || end > self.masked_input.len() {
+            return;
+        }
+        if self.masked_input.is_char_boundary(start) && self.masked_input.is_char_boundary(end) {
+            self.masked_input
+                .replace_range(start..end, &" ".repeat(end - start));
+        }
+    }
+
+    fn is_span_available(&self, start: usize, end: usize) -> bool {
+        if end <= start || end > self.masked_input.len() {
+            return false;
+        }
+        self.masked_input
+            .get(start..end)
+            .is_some_and(js::has_non_space)
+    }
+}
+
+fn is_blank(value: Option<&String>) -> bool {
+    value.is_none_or(String::is_empty)
+}
+
+fn title_pass(ctx: &mut ParseContext) {
+    let title = finalize_calendar_title(&ctx.masked_input, &ctx.cleaned_input);
+    ctx.title = (!title.is_empty()).then_some(title);
+}
+
+fn finalize_calendar_parse_context(ctx: &mut ParseContext) {
+    let mut warnings = Vec::new();
+    if is_blank(ctx.date.as_ref())
+        && is_blank(ctx.time.as_ref())
+        && is_blank(ctx.recurrence.as_ref())
+    {
+        warnings.push(CapturePreviewWarning {
+            code: "calendar-time-missing".to_string(),
+            severity: "warning".to_string(),
+            message: "No date, time, or recurrence extracted.".to_string(),
+        });
+    }
+    warnings.append(&mut ctx.warnings);
+    ctx.warnings = warnings;
+}
+
+fn classify_options(request: &CapturePreviewRequest) -> ClassifyOptions {
+    ClassifyOptions {
+        now: request
+            .now_iso
+            .as_deref()
+            .and_then(|iso| iso.parse::<chrono::DateTime<chrono::Utc>>().ok())
+            .unwrap_or_else(chrono::Utc::now),
+        timezone: request.timezone.parse().unwrap_or(Tz::UTC),
+    }
+}
+
+fn parse_event_input(input: &str, request: &CapturePreviewRequest) -> ParseContext {
+    let mut ctx = ParseContext::new(input);
+    attendees::attendees_pass(&mut ctx);
+    schedule::schedule_pass(&mut ctx, request, &classify_options(request));
+    location::location_pass(&mut ctx);
+    title_pass(&mut ctx);
+    finalize_calendar_parse_context(&mut ctx);
+    ctx
+}
+
+fn calendar_result(ctx: ParseContext) -> CapturePreviewResult {
+    let recurrence_exceptions =
+        schedule::to_recurrence_exceptions(&ctx.recurrence_exception, ctx.schedule.as_ref());
+    let event = CapturePreviewCalendarEventDraft {
+        title: ctx.title,
+        date_text: ctx.date,
+        time_text: ctx.time,
+        end_time_text: ctx.end_time,
+        duration_minutes: ctx.duration_minutes,
+        location: ctx.location,
+        recurrence_text: ctx.recurrence,
+        recurrence_start_text: ctx.recurrence_start,
+        recurrence_end_text: ctx.recurrence_end,
+        recurrence_exceptions,
+        alert_offset_minutes: ctx.alerts,
+        attendees: ctx.attendees.unwrap_or_default(),
+    };
+    CapturePreviewResult::calendar_event(event, 0.99, Vec::new(), ctx.warnings)
+        .with_schedule(ctx.schedule)
+}
 
 pub fn parse_calendar_preview(text: &str, request: &CapturePreviewRequest) -> CapturePreviewResult {
-    let working = normalize_whitespace(text);
-
-    let attendees = extract_attendees(text);
-    let schedule = extract_schedule(text, &working, CaptureKind::CalendarEvent, request);
-    let mut working = schedule.remaining.clone();
-    let location = extract_location(&mut working);
-    let title = build_calendar_title(&working, text);
-    let date_text = schedule.texts.date.clone();
-    let time_text = schedule.texts.time.clone();
-    let recurrence_text = schedule.texts.recurrence.clone();
-
-    let mut warnings = Vec::new();
-    if date_text.is_none() && time_text.is_none() && recurrence_text.is_none() {
-        warnings.push(warning(
-            "calendar-time-missing",
-            "warning",
-            "No date, time, or recurrence extracted.",
-        ));
-    }
-    warnings.extend(schedule.warnings.iter().cloned());
-
-    CapturePreviewResult::calendar_event(
-        CapturePreviewCalendarEventDraft {
-            title: (!title.is_empty()).then_some(title),
-            date_text,
-            time_text,
-            end_time_text: schedule.texts.end_time.clone(),
-            duration_minutes: schedule.duration_minutes(),
-            location,
-            recurrence_text,
-            recurrence_start_text: schedule.texts.recurrence_start.clone(),
-            recurrence_end_text: schedule.texts.recurrence_end.clone(),
-            recurrence_exceptions: schedule.recurrence_exceptions(),
-            alert_offset_minutes: schedule.alert_offsets(),
-            attendees,
-        },
-        0.9,
-        Vec::new(),
-        warnings,
-    )
-    .with_schedule(schedule.schedule)
-}
-
-fn warning(code: &str, severity: &str, message: &str) -> CapturePreviewWarning {
-    CapturePreviewWarning {
-        code: code.to_string(),
-        severity: severity.to_string(),
-        message: message.to_string(),
-    }
-}
-
-fn normalize_whitespace(text: &str) -> String {
-    text.split_whitespace().collect::<Vec<_>>().join(" ")
-}
-
-fn remove_segment(working: &mut String, start: usize, end: usize) {
-    *working = normalize_whitespace(&format!("{} {}", &working[..start], &working[end..]));
-}
-
-fn extract_attendees(text: &str) -> Vec<String> {
-    attendees_regex()
-        .captures(text)
-        .and_then(|captures| captures.get(1))
-        .map(|group| {
-            group
-                .as_str()
-                .split(&[',', '&'][..])
-                .flat_map(|entry| entry.split(" and "))
-                .map(|entry| entry.trim().trim_start_matches('@').to_string())
-                .filter(|entry| !entry.is_empty())
-                .collect::<Vec<_>>()
-        })
-        .unwrap_or_default()
-}
-
-fn extract_location(working: &mut String) -> Option<String> {
-    let captures = location_regex().captures(working.as_str())?;
-    let full = captures.get(0)?;
-    let group = captures.get(1)?;
-    let value = trim_location_candidate(group.as_str())?;
-    let candidate_end = group.start() + value.len();
-    remove_segment(working, full.start(), candidate_end);
-    Some(normalize_whitespace(&value))
-}
-
-fn build_calendar_title(input: &str, raw_input: &str) -> String {
-    finalize_calendar_title(input, raw_input)
-}
-
-fn attendees_regex() -> &'static Regex {
-    static REGEX: OnceLock<Regex> = OnceLock::new();
-    REGEX.get_or_init(|| {
-        Regex::new(r"(?i)\bwith\s+([A-Za-z@][A-Za-z0-9@'._+-]*(?:\s*(?:,|and|&)\s*[A-Za-z@][A-Za-z0-9@'._+-]*)*)")
-            .expect("calendar attendees regex should compile")
-    })
-}
-
-fn location_regex() -> &'static Regex {
-    static REGEX: OnceLock<Regex> = OnceLock::new();
-    REGEX.get_or_init(|| {
-        Regex::new(r"(?i)\b(?:at|in)\s+([A-Za-z][A-Za-z0-9 '&/_-]*)")
-            .expect("calendar location regex should compile")
-    })
-}
-
-fn trim_location_candidate(value: &str) -> Option<String> {
-    let stop_regex = Regex::new(
-        r"(?i)\s+(?:today|tomorrow|tonight|next\b|this\b|every\b|daily\b|weekly\b|monthly\b|yearly\b|mon(?:day)?\b|tue(?:s|sday)?\b|wed(?:nesday)?\b|thu(?:r|rs|rsday|ursday)?\b|fri(?:day)?\b|sat(?:urday)?\b|sun(?:day)?\b|(?:jan|feb|mar|apr|may|jun|jul|aug|sep|sept|oct|nov|dec)[a-z]*\b|\d{1,2}(?::\d{2})?\s*(?:am|pm)\b|noon\b|midnight\b)",
-    )
-    .expect("calendar location stop regex should compile");
-    let trimmed = if let Some(found) = stop_regex.find(value) {
-        &value[..found.start()]
-    } else {
-        value
-    };
-    let candidate = trimmed
-        .trim()
-        .trim_matches(|char: char| ",.;:!?".contains(char));
-    if candidate.is_empty() {
-        return None;
-    }
-    let time_like = Regex::new(r"(?i)^(?:\d{1,2}(?::\d{2})?\s*(?:am|pm)?|noon|midnight)$")
-        .expect("calendar location time-like regex should compile");
-    (!time_like.is_match(candidate)).then_some(candidate.to_string())
+    calendar_result(parse_event_input(text, request))
 }
