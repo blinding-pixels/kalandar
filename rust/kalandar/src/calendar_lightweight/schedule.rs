@@ -1,12 +1,23 @@
 use super::ParseContext;
+use crate::capture_spans::CaptureSpanSource;
 use crate::recurrence_exceptions::classify_recurrence_exception;
 use crate::schedule::{context_for, ScheduleOutput};
 use crate::CapturePreviewRequest;
 use kalandar_dates::capture::{capture_schedule, CaptureKind};
 
-pub(super) fn schedule_pass(ctx: &mut ParseContext, request: &CapturePreviewRequest) {
+pub(super) fn schedule_pass(
+    ctx: &mut ParseContext,
+    request: &CapturePreviewRequest,
+    spans: &dyn CaptureSpanSource,
+) {
     let context = context_for(request);
-    let capture = capture_schedule(&ctx.raw_input, CaptureKind::CalendarEvent, None, &context);
+    let labelled = spans.schedule_spans(CaptureKind::CalendarEvent, &ctx.raw_input);
+    let capture = capture_schedule(
+        &ctx.raw_input,
+        CaptureKind::CalendarEvent,
+        labelled.as_deref(),
+        &context,
+    );
     let output = ScheduleOutput::new(capture, &ctx.masked_input);
     ctx.duration_minutes = output.duration_minutes();
     ctx.alerts = output.alert_offsets();

@@ -1,5 +1,6 @@
 mod artifacts;
 mod calendar_lightweight;
+mod capture_spans;
 mod errors;
 mod inference;
 mod intent;

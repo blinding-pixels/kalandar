@@ -9,6 +9,7 @@ use super::{
     CapturePreviewCalendarEventDraft, CapturePreviewRequest, CapturePreviewResult,
     CapturePreviewWarning,
 };
+use crate::capture_spans::CaptureSpanSource;
 use kalandar_dates::capture::PreviewSchedule;
 
 #[derive(Default)]
@@ -89,10 +90,14 @@ fn finalize_calendar_parse_context(ctx: &mut ParseContext) {
     ctx.warnings = warnings;
 }
 
-fn parse_event_input(input: &str, request: &CapturePreviewRequest) -> ParseContext {
+fn parse_event_input(
+    input: &str,
+    request: &CapturePreviewRequest,
+    spans: &dyn CaptureSpanSource,
+) -> ParseContext {
     let mut ctx = ParseContext::new(input);
     attendees::attendees_pass(&mut ctx);
-    schedule::schedule_pass(&mut ctx, request);
+    schedule::schedule_pass(&mut ctx, request, spans);
     location::location_pass(&mut ctx);
     title_pass(&mut ctx);
     finalize_calendar_parse_context(&mut ctx);
@@ -120,6 +125,10 @@ fn calendar_result(ctx: ParseContext) -> CapturePreviewResult {
         .with_schedule(ctx.schedule)
 }
 
-pub fn parse_calendar_preview(text: &str, request: &CapturePreviewRequest) -> CapturePreviewResult {
-    calendar_result(parse_event_input(text, request))
+pub fn parse_calendar_preview(
+    text: &str,
+    request: &CapturePreviewRequest,
+    spans: &dyn CaptureSpanSource,
+) -> CapturePreviewResult {
+    calendar_result(parse_event_input(text, request, spans))
 }

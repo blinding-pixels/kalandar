@@ -5,8 +5,9 @@ use super::{
     schedule::{context_for, ScheduleOutput},
     CapturePreviewReminderDraft, CapturePreviewRequest, CapturePreviewWarning, PreviewSchedule,
 };
+use crate::capture_spans::CaptureSpanSource;
 use fancy_regex::Regex;
-use kalandar_dates::capture::{capture_schedule, CaptureKind, Context, Settings};
+use kalandar_dates::capture::{capture_schedule, CaptureKind, Settings};
 use std::sync::OnceLock;
 
 pub struct ReminderParseOutput {
@@ -15,12 +16,32 @@ pub struct ReminderParseOutput {
     pub schedule: Option<PreviewSchedule>,
 }
 
-pub fn parse_reminder_preview(text: &str, request: &CapturePreviewRequest) -> ReminderParseOutput {
-    let working = normalize_whitespace(text);
-    let working = prefix_pass(&working);
+pub fn parse_reminder_preview(
+    text: &str,
+    request: &CapturePreviewRequest,
+    spans: &dyn CaptureSpanSource,
+) -> ReminderParseOutput {
+    let original = normalize_whitespace(text);
     let context = context_for(request).with_settings(Settings::default());
-    let found = schedule_pass(&working, &context);
-    let title = finalize_reminder_title(&found.remaining);
+    let (found, title) = match spans.schedule_spans(CaptureKind::Reminder, &original) {
+        Some(labelled) => {
+            let found = ScheduleOutput::new(
+                capture_schedule(&original, CaptureKind::Reminder, Some(&labelled), &context),
+                &original,
+            );
+            let title = finalize_reminder_title(&prefix_pass(&found.remaining));
+            (found, title)
+        }
+        None => {
+            let working = prefix_pass(&original);
+            let found = ScheduleOutput::new(
+                capture_schedule(&working, CaptureKind::Reminder, None, &context),
+                &working,
+            );
+            let title = finalize_reminder_title(&found.remaining);
+            (found, title)
+        }
+    };
 
     let recurrence_exception = found
         .texts
@@ -87,11 +108,6 @@ fn strip_prefixes(input: &str) -> String {
         working = replace_first(pattern, &working, "");
     }
     normalize_whitespace(&working)
-}
-
-fn schedule_pass(working: &str, context: &Context) -> ScheduleOutput {
-    let found = capture_schedule(working, CaptureKind::Reminder, None, context);
-    ScheduleOutput::new(found, working)
 }
 
 fn build_reminder_warnings(

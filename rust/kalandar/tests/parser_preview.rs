@@ -236,14 +236,11 @@ fn normalize_calendar_preview(preview: &CapturePreviewResult) -> CalendarOracle 
 }
 
 #[test]
-fn preview_capture_matches_intent_oracle_goldens() {
-    let Some(parser) = parser() else {
-        return;
-    };
+fn rules_preview_matches_intent_oracle_goldens() {
     let fixtures: Vec<IntentFixture> = load_fixtures("intent/goldens.json");
 
     for fixture in fixtures {
-        let preview = parser.preview_capture(preview_request(
+        let preview = kalandar::preview_capture_rules(preview_request(
             &fixture.input,
             "America/New_York",
             Some("en-US"),
@@ -258,14 +255,11 @@ fn preview_capture_matches_intent_oracle_goldens() {
 }
 
 #[test]
-fn preview_capture_matches_task_oracle_goldens() {
-    let Some(parser) = parser() else {
-        return;
-    };
+fn rules_preview_matches_task_oracle_goldens() {
     let fixtures: Vec<TaskFixture> = load_fixtures("task/goldens.json");
 
     for fixture in fixtures {
-        let preview = parser.preview_capture(preview_request(
+        let preview = kalandar::preview_capture_rules(preview_request(
             &fixture.input,
             &fixture.timezone,
             Some("en-US"),
@@ -286,14 +280,11 @@ fn preview_capture_matches_task_oracle_goldens() {
 }
 
 #[test]
-fn preview_capture_matches_reminder_oracle_goldens() {
-    let Some(parser) = parser() else {
-        return;
-    };
+fn rules_preview_matches_reminder_oracle_goldens() {
     let fixtures: Vec<ReminderFixture> = load_fixtures("reminder/goldens.json");
 
     for fixture in fixtures {
-        let preview = parser.preview_capture(preview_request(
+        let preview = kalandar::preview_capture_rules(preview_request(
             &fixture.input,
             &fixture.timezone,
             Some("en-US"),
@@ -314,14 +305,11 @@ fn preview_capture_matches_reminder_oracle_goldens() {
 }
 
 #[test]
-fn preview_capture_matches_calendar_oracle_goldens() {
-    let Some(parser) = parser() else {
-        return;
-    };
+fn rules_preview_matches_calendar_oracle_goldens() {
     let fixtures: Vec<CalendarFixture> = load_fixtures("calendar/goldens.json");
 
     for fixture in fixtures {
-        let preview = parser.preview_capture(preview_request(
+        let preview = kalandar::preview_capture_rules(preview_request(
             &fixture.input,
             &fixture.timezone,
             Some(&fixture.locale),
@@ -525,4 +513,44 @@ fn preview_capture_includes_the_resolved_schedule() {
         known_assignees: None,
     });
     assert!(preview.schedule.is_none());
+}
+
+#[test]
+fn preview_capture_reads_schedule_spans_from_the_models() {
+    let Some(parser) = parser() else {
+        return;
+    };
+    let request = |text: &str| CapturePreviewRequest {
+        text: text.to_string(),
+        now_iso: Some("2026-10-19T15:00:00Z".to_string()),
+        timezone: "America/New_York".to_string(),
+        locale: None,
+        known_assignees: None,
+    };
+
+    let modelled = parser.preview_capture(request(
+        "task: call the bank about the may 5 statement next tuesday",
+    ));
+    let rules_only = kalandar::preview_capture_rules(request(
+        "task: call the bank about the may 5 statement next tuesday",
+    ));
+    let due = |result: &CapturePreviewResult| {
+        result
+            .schedule
+            .as_ref()
+            .and_then(|schedule| schedule.start.as_ref())
+            .map(|start| start.date.clone())
+    };
+    assert_eq!(due(&rules_only).as_deref(), Some("2027-05-05"));
+    assert_eq!(due(&modelled).as_deref(), Some("2026-10-27"));
+    assert_eq!(
+        modelled.task.as_ref().map(|task| task.title.as_str()),
+        Some("call the bank about the may 5 statement")
+    );
+
+    let chapter = parser.preview_capture(request("task: review chapter 12 tomorrow morning"));
+    assert_eq!(
+        chapter.task.as_ref().map(|task| task.title.as_str()),
+        Some("review chapter 12")
+    );
 }

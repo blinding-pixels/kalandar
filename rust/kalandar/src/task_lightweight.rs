@@ -8,6 +8,7 @@ use super::{
     schedule::{context_for, ScheduleOutput},
     CapturePreviewRequest, CapturePreviewTaskDraft, CapturePreviewWarning, PreviewSchedule,
 };
+use crate::capture_spans::CaptureSpanSource;
 use fancy_regex::{Captures, Regex};
 use kalandar_dates::capture::{capture_schedule, CaptureKind, Context};
 use std::collections::BTreeSet;
@@ -126,11 +127,15 @@ fn person_list() -> String {
     format!(r"{PERSON_TOKEN}(?:\s*(?:,|and|&)\s*{PERSON_TOKEN})*")
 }
 
-pub fn parse_task_preview(text: &str, request: &CapturePreviewRequest) -> TaskParseOutput {
+pub fn parse_task_preview(
+    text: &str,
+    request: &CapturePreviewRequest,
+    spans: &dyn CaptureSpanSource,
+) -> TaskParseOutput {
     let mut ctx = create_task_parse_context(text, request);
     priority_pass(&mut ctx);
     status_pass(&mut ctx);
-    schedule_pass(&mut ctx);
+    schedule_pass(&mut ctx, spans);
     tags_pass(&mut ctx);
     project_pass(&mut ctx);
     assignee_pass(&mut ctx);
@@ -169,8 +174,14 @@ fn status_pass(ctx: &mut TaskParseContext) {
     }
 }
 
-fn schedule_pass(ctx: &mut TaskParseContext) {
-    let found = capture_schedule(&ctx.working, CaptureKind::Task, None, &ctx.context);
+fn schedule_pass(ctx: &mut TaskParseContext, spans: &dyn CaptureSpanSource) {
+    let labelled = spans.schedule_spans(CaptureKind::Task, &ctx.working);
+    let found = capture_schedule(
+        &ctx.working,
+        CaptureKind::Task,
+        labelled.as_deref(),
+        &ctx.context,
+    );
     let ScheduleOutput {
         remaining,
         texts,

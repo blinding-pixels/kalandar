@@ -2,6 +2,21 @@
 
 ## Unreleased
 
+### Changed
+
+- **The Rust `CaptureParser` now uses the models.** It used to run each family's model once on a fixed sample and build every field with rules. Now each preview runs the family model on the line itself:
+  - the schedule spans go to the `kalandar-dates` resolver;
+  - the title comes from the model's title spans;
+  - assignee, tags, status, project and priority stay with the rules, which win there.
+  On blind set 2 the Rust pipeline gets 215/278 task, 168/238 calendar and 156/234 reminder items right, against 83, 49 and 38 for the Rust rules.
+- **Reminders resolve on the original line.** Prefix stripping ("remind me to") now applies to the title only. Lines that start with a time ("17:00 timesheet") get a trigger again, and lead times apply.
+- `preview_capture_rules` is unchanged and still matches the frozen oracle goldens.
+
+### Security
+
+- Model, vocabulary and intent files load from the bytes the manifest check verified, so a file swapped after loading is refused.
+- Typed amounts past ten years ("in 10000000 fortnights") leave the phrase unparsed instead of clamping or overflowing.
+
 ### Security
 
 - **The Rust library no longer reads the manifest digest from the environment.** `KALANDAR_CAPTURE_MANIFEST_SHA256` let anyone who could set a host's environment make it load different model files. The library now trusts the bundled digest, or the one a host passes to `CaptureParser::with_manifest_sha256` / `load_capture_parser_artifact_manifest_from_root_with_sha256`. Only the `kalandar-capture-preview` CLI still reads the variable, alongside a new `--manifest-sha256` flag.
