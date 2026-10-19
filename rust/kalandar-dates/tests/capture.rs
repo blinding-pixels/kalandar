@@ -869,3 +869,32 @@ fn capture_schedule_texts_and_schedule() {
     assert!(s.spans.is_empty());
     assert!(s.schedule.is_none());
 }
+
+#[test]
+fn typed_magnitudes_past_ten_years_resolve_to_nothing_instead_of_panicking() {
+    let ctx = ctx();
+    for (role, kind, phrase) in [
+        (Role::Trigger, Rem, "in 10000000 fortnights"),
+        (Role::Trigger, Rem, "in 9223372036854775807 fortnights"),
+        (Role::DueDate, Task, "in 100000000 business days"),
+        (Role::Trigger, Rem, "in 99999999999 hours and a half"),
+    ] {
+        let resolution = resolve_phrase(phrase, role, kind, &ctx);
+        assert!(
+            resolution.start.is_none(),
+            "{phrase} should not resolve to a date"
+        );
+    }
+    for line in [
+        "dentist friday at 3pm, remind me 100000000000 days before",
+        "workshop tomorrow at 9 for 99999999999 hours",
+        "standup tomorrow 9am (99999999999 hours)",
+    ] {
+        let resolution = resolve_unlabelled(line, Cal, &ctx);
+        assert!(resolution.start.is_some(), "{line} keeps its real start");
+        assert_eq!(
+            resolution.lead_minutes, None,
+            "{line} drops the oversized lead"
+        );
+    }
+}

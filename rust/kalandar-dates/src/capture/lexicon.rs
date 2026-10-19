@@ -135,8 +135,8 @@ const COUNT: &str = r"\d+(?:\.\d+)?|an?|one|two|three|four|five|six|seven|eight|
 
 const MAX_MINUTES: f64 = 5_259_600.0;
 
-fn bounded_minutes(value: f64) -> i64 {
-    value.clamp(-MAX_MINUTES, MAX_MINUTES).round() as i64
+fn bounded_minutes(value: f64) -> Option<i64> {
+    (value.is_finite() && value.abs() <= MAX_MINUTES).then(|| value.round() as i64)
 }
 
 pub fn number_value(text: &str) -> Option<f64> {
@@ -618,7 +618,9 @@ pub fn scan(text: &str, scope: HolidayScope) -> Vec<Piece> {
     for c in re!(r"(?i)\bin\s+(an?|one|two|three|\d+)\s+hours?\s+and\s+a\s+half\b|\bin\s+(\d+)\s+and\s+a\s+half\s+hours\b").captures_iter(text) {
         let Some(whole) = c.get(0) else { continue };
         let hours = c.get(1).or(c.get(2)).and_then(|m| number_value(m.as_str())).unwrap_or(1.0);
-        push(whole.start(), whole.end(), Token::AddMinutes(bounded_minutes(hours * 60.0 + 30.0)));
+        if let Some(minutes) = bounded_minutes(hours * 60.0 + 30.0) {
+            push(whole.start(), whole.end(), Token::AddMinutes(minutes));
+        }
     }
 
     let weekday = re!(
@@ -805,11 +807,9 @@ pub fn scan(text: &str, scope: HolidayScope) -> Vec<Piece> {
             .or(c.get(2))
             .and_then(|m| number_value(m.as_str()))
             .unwrap_or(1.0);
-        push(
-            whole.start(),
-            whole.end(),
-            Token::AddDays((count * 14.0) as i64),
-        );
+        if let Some(minutes) = bounded_minutes(count * 14.0 * 1440.0) {
+            push(whole.start(), whole.end(), Token::AddDays(minutes / 1440));
+        }
     }
     let weekdays = re_fmt!(
         r"(?i)\bin\s+({COUNT})\s+(?:week\s*days?|business\s+days?|working\s+days?|work\s*days?)\b"
@@ -818,11 +818,11 @@ pub fn scan(text: &str, scope: HolidayScope) -> Vec<Piece> {
         let (Some(whole), Some(n)) = (c.get(0), c.get(1)) else {
             continue;
         };
-        if let Some(n) = number_value(n.as_str()) {
+        if let Some(minutes) = number_value(n.as_str()).and_then(|n| bounded_minutes(n * 1440.0)) {
             push(
                 whole.start(),
                 whole.end(),
-                Token::AddWeekdays(bounded_minutes(n * 1440.0) / 1440),
+                Token::AddWeekdays(minutes / 1440),
             );
         }
     }
@@ -846,11 +846,9 @@ pub fn scan(text: &str, scope: HolidayScope) -> Vec<Piece> {
                 .unwrap_or(0.0),
             None => 0.0,
         };
-        push(
-            whole.start(),
-            whole.end(),
-            Token::Duration((n * per + extra).round() as i64),
-        );
+        if let Some(minutes) = bounded_minutes(n * per + extra) {
+            push(whole.start(), whole.end(), Token::Duration(minutes));
+        }
     }
 
     let lead = re_fmt!(
@@ -872,12 +870,8 @@ pub fn scan(text: &str, scope: HolidayScope) -> Vec<Piece> {
         } else {
             None
         };
-        if let Some(minutes) = minutes {
-            push(
-                whole.start(),
-                whole.end(),
-                Token::LeadMinutes(minutes.round() as i64),
-            );
+        if let Some(minutes) = minutes.and_then(bounded_minutes) {
+            push(whole.start(), whole.end(), Token::LeadMinutes(minutes));
         }
     }
 
@@ -997,7 +991,9 @@ pub fn scan(text: &str, scope: HolidayScope) -> Vec<Piece> {
             continue;
         }
         let (Ok(n), Some(per)) = (n.as_str().parse::<f64>(), unit_minutes(unit.as_str())) else { continue };
-        push(whole.start() + lead_len, whole.end(), Token::Duration(bounded_minutes(n * per)));
+        if let Some(minutes) = bounded_minutes(n * per) {
+            push(whole.start() + lead_len, whole.end(), Token::Duration(minutes));
+        }
     }
 
     for c in
@@ -1048,11 +1044,9 @@ pub fn scan(text: &str, scope: HolidayScope) -> Vec<Piece> {
         else {
             continue;
         };
-        push(
-            n.start(),
-            unit.end(),
-            Token::Duration(bounded_minutes(value * per)),
-        );
+        if let Some(minutes) = bounded_minutes(value * per) {
+            push(n.start(), unit.end(), Token::Duration(minutes));
+        }
     }
 
     let shifted: Vec<(usize, usize)> = pieces
