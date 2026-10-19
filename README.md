@@ -8,13 +8,19 @@ It ships three implementation paths behind one capture-preview contract:
 - Rust for Windows, Linux, and cross-platform native hosts.
 - Swift/Core AI for Apple-native apps.
 
-The Git repository is the distribution surface. It can be consumed as a JavaScript Git dependency or a Swift Package Manager dependency. npm registry and crates.io publication are disabled.
+Kalandar is published to npm as `kalandar`. It can also be consumed as a JavaScript Git dependency or a Swift Package Manager dependency. crates.io publication is disabled.
 
 The repository includes parser code, runtime contracts, integration adapters, Swift source, and a validated `resources/capture-parser` ONNX suite for task, reminder, and calendar parsing. It does not include Core AI model artifacts, training data, checkpoints, local keys, or generated build output. A Core AI app supplies a validated artifact root separately.
 
 ## Quick Start
 
-Install from the private Git repository. Replace `<git-ref>` with a commit SHA, branch, or release tag that contains the version you want to consume:
+Install from npm:
+
+```sh
+npm install kalandar
+```
+
+Or install from the Git repository. Replace `<git-ref>` with a commit SHA, branch, or release tag that contains the version you want to consume:
 
 ```sh
 npm install git+ssh://git@github.com/blinding-pixels/kalandar.git#<git-ref>

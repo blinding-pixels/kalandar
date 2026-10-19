@@ -1,6 +1,6 @@
 # Publishing Kalandar
 
-This page describes how to create a Git release for private JavaScript and SwiftPM consumers. npm registry and crates.io publication are disabled for this repository.
+This page describes how to release Kalandar to npm and as a Git tag for JavaScript and SwiftPM consumers. crates.io publication is disabled for this repository.
 
 ## Before You Begin
 
@@ -52,6 +52,8 @@ Before tagging a model-backed release, validate each Core AI artifact suite with
 2. Create a semantic version tag that includes the model-backed Swift implementation.
 3. Push the commit and tag to the private repository.
 4. Configure consumers to use the tag through npm Git dependencies or Swift Package Manager.
+5. Attach `KalandarDatesFFI-<version>.xcframework.zip` to the GitHub release for the tag.
+6. Run `npm publish` from the tagged commit.
 
 SwiftPM consumers can resolve a private tag without a Swift package registry or Swift Package Index entry.
 
