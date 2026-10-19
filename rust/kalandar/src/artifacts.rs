@@ -6,7 +6,7 @@ use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 use std::{
     collections::{BTreeMap, BTreeSet},
-    env, fs,
+    fs,
     path::{Path, PathBuf},
 };
 
@@ -17,7 +17,6 @@ pub const LEGACY_CAPTURE_PARSER_ARTIFACT_MANIFEST_VERSION: &str =
     "facets-capture-parser-artifacts-v1";
 pub const BERT_TOKEN_CLASSIFIER_RUNTIME_KIND: &str = "bert-token-classifier";
 pub const TINY_LINEAR_RUNTIME_KIND: &str = "tiny-linear";
-pub const CAPTURE_PARSER_MANIFEST_SHA256_ENV: &str = "KALANDAR_CAPTURE_MANIFEST_SHA256";
 pub const TRUSTED_CAPTURE_PARSER_MANIFEST_SHA256: &str =
     "c90dd12c907a20419ceae7029a6bae58f38c1f53d9f4038f8af77c8518030d9b";
 const INTENT_TINY_LINEAR_LABELS: [&str; 3] = ["calendar", "none", "task"];
@@ -145,10 +144,20 @@ pub fn load_capture_parser_artifact_manifest(
 pub fn load_capture_parser_artifact_manifest_from_root(
     root: &Path,
 ) -> Result<CaptureParserArtifactManifest, CaptureParserError> {
+    load_capture_parser_artifact_manifest_from_root_with_sha256(
+        root,
+        TRUSTED_CAPTURE_PARSER_MANIFEST_SHA256,
+    )
+}
+
+pub fn load_capture_parser_artifact_manifest_from_root_with_sha256(
+    root: &Path,
+    manifest_sha256: &str,
+) -> Result<CaptureParserArtifactManifest, CaptureParserError> {
+    let expected_manifest_hash = normalized_manifest_sha256(manifest_sha256)?;
     let manifest_path = root.join(CAPTURE_PARSER_MANIFEST_NAME);
     let manifest_bytes =
         fs::read(&manifest_path).map_err(|_| CaptureParserError::ManifestMissing)?;
-    let expected_manifest_hash = expected_manifest_sha256()?;
     if sha256_hex(&manifest_bytes) != expected_manifest_hash {
         return Err(CaptureParserError::ManifestInvalid);
     }
@@ -338,9 +347,7 @@ fn sha256_hex(bytes: &[u8]) -> String {
     format!("{:x}", digest.finalize())
 }
 
-fn expected_manifest_sha256() -> Result<String, CaptureParserError> {
-    let value = env::var(CAPTURE_PARSER_MANIFEST_SHA256_ENV)
-        .unwrap_or_else(|_| TRUSTED_CAPTURE_PARSER_MANIFEST_SHA256.to_string());
+fn normalized_manifest_sha256(value: &str) -> Result<String, CaptureParserError> {
     if value.len() != 64 || !value.chars().all(|char| char.is_ascii_hexdigit()) {
         return Err(CaptureParserError::ManifestInvalid);
     }

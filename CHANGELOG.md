@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Security
+
+- **The Rust library no longer reads the manifest digest from the environment.** `KALANDAR_CAPTURE_MANIFEST_SHA256` let anyone who could set a host's environment make it load different model files. The library now trusts the bundled digest, or the one a host passes to `CaptureParser::with_manifest_sha256` / `load_capture_parser_artifact_manifest_from_root_with_sha256`. Only the `kalandar-capture-preview` CLI still reads the variable, alongside a new `--manifest-sha256` flag.
+
 ## 0.2.1
 
 ### Fixed

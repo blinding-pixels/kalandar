@@ -52,7 +52,7 @@ The Git package vendors the ONNX suite at `resources/capture-parser`. Provide th
 
 The crates.io package contains code only. Download the `kalandar-onnx-<version>.tar.gz` asset from the matching GitHub release and use its extracted `capture-parser` directory as the resource root.
 
-Set `KALANDAR_CAPTURE_MANIFEST_SHA256` when the host locks a specific manifest digest.
+The library only loads the bundled manifest digest unless the host passes its own to `CaptureParser::with_manifest_sha256`. It never reads the digest from the environment. The `kalandar-capture-preview` CLI accepts `--manifest-sha256 <digest>` or `KALANDAR_CAPTURE_MANIFEST_SHA256`.
 
 ## License
 

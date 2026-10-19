@@ -56,7 +56,7 @@ The output is one `capture-preview-v1` result JSON object.
 
 Set `KALANDAR_CAPTURE_RESOURCE_ROOT` when the resource root is not passed as a CLI flag.
 
-Set `KALANDAR_CAPTURE_MANIFEST_SHA256` when the host locks a specific manifest digest.
+The library only loads the bundled manifest digest unless the host passes its own to `CaptureParser::with_manifest_sha256`. It never reads the digest from the environment. The `kalandar-capture-preview` CLI accepts `--manifest-sha256 <digest>` or `KALANDAR_CAPTURE_MANIFEST_SHA256`.
 
 ## Tests
 

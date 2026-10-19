@@ -50,6 +50,17 @@ impl CaptureParser {
         Ok(Self { manifest })
     }
 
+    pub fn with_manifest_sha256(
+        resource_root: impl Into<PathBuf>,
+        manifest_sha256: &str,
+    ) -> Result<Self, CaptureParserError> {
+        let manifest = load_capture_parser_artifact_manifest_from_root_with_sha256(
+            resource_root.into().as_path(),
+            manifest_sha256,
+        )?;
+        Ok(Self { manifest })
+    }
+
     pub fn resource_root(&self) -> &Path {
         self.manifest.root.as_path()
     }

@@ -1,7 +1,9 @@
 use kalandar::{
-    load_capture_parser_artifact_manifest_from_root, CaptureParserError,
+    load_capture_parser_artifact_manifest_from_root,
+    load_capture_parser_artifact_manifest_from_root_with_sha256, CaptureParserError,
     CAPTURE_PARSER_ARTIFACT_MANIFEST_VERSION,
 };
+use sha2::{Digest, Sha256};
 use std::{
     env, fs,
     path::{Path, PathBuf},
@@ -110,4 +112,40 @@ fn capture_parser_manifest_rejects_digest_drift_even_when_json_is_well_formed() 
     let error = load_capture_parser_artifact_manifest_from_root(resource_root.as_path())
         .expect_err("tampered manifest digest should fail");
     assert_eq!(error, CaptureParserError::ManifestInvalid);
+}
+
+#[test]
+fn capture_parser_manifest_digest_comes_from_the_host_never_the_environment() {
+    let Some(resource_source) = resource_root_or_skip() else {
+        return;
+    };
+    let temp = tempdir().expect("temp dir should be created");
+    let resource_root = temp.path().join("capture-parser");
+    copy_dir_all(resource_source.as_path(), resource_root.as_path());
+
+    let manifest_path = resource_root.join("manifest.json");
+    let manifest = fs::read_to_string(&manifest_path).expect("copied manifest should read");
+    let substituted = manifest.replace(
+        "\"suiteVersion\": \"kalandar-capture-parser-onnx-v2\"",
+        "\"suiteVersion\": \"kalandar-capture-parser-onnx-v2-substituted\"",
+    );
+    assert_ne!(manifest, substituted);
+    fs::write(&manifest_path, &substituted).expect("substituted manifest should write");
+    let substituted_sha256 = format!("{:x}", Sha256::digest(substituted.as_bytes()));
+
+    env::set_var("KALANDAR_CAPTURE_MANIFEST_SHA256", &substituted_sha256);
+    let error = load_capture_parser_artifact_manifest_from_root(resource_root.as_path())
+        .expect_err("an environment digest must not admit a substituted manifest");
+    env::remove_var("KALANDAR_CAPTURE_MANIFEST_SHA256");
+    assert_eq!(error, CaptureParserError::ManifestInvalid);
+
+    let manifest = load_capture_parser_artifact_manifest_from_root_with_sha256(
+        resource_root.as_path(),
+        &substituted_sha256,
+    )
+    .expect("a host-pinned digest should admit its own manifest");
+    assert_eq!(
+        manifest.suite_version,
+        "kalandar-capture-parser-onnx-v2-substituted"
+    );
 }

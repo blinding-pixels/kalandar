@@ -77,7 +77,7 @@ You can pass the root in either place:
 - `--resource-root <path>` when invoking the CLI directly.
 - `resourceRoot` when using `createCapturePreviewParser`.
 
-If the manifest digest is locked, set `KALANDAR_CAPTURE_MANIFEST_SHA256`.
+If the manifest digest is locked, pass `--manifest-sha256 <digest>` or set `KALANDAR_CAPTURE_MANIFEST_SHA256`. Only the CLI reads that variable; the library takes the digest as an argument.
 
 ## Troubleshooting
 
