@@ -94,3 +94,50 @@ fn bundled_calendar_ort_session_loads_and_runs_inference() {
         vec![1, encoded.input_ids.len(), bundle.labels.len()]
     );
 }
+
+fn copy_resource_tree(source: &std::path::Path, destination: &std::path::Path) {
+    std::fs::create_dir_all(destination).expect("destination should be created");
+    for entry in std::fs::read_dir(source).expect("source should be readable") {
+        let entry = entry.expect("entry should be readable");
+        let path = entry.path();
+        let target = destination.join(entry.file_name());
+        if path.is_dir() {
+            copy_resource_tree(&path, &target);
+        } else {
+            std::fs::copy(&path, &target).expect("file should copy");
+        }
+    }
+}
+
+#[test]
+fn artifacts_swapped_after_the_manifest_loads_are_refused_at_use() {
+    let Some(resource_source) = resource_root_or_skip() else {
+        return;
+    };
+    let temp = tempfile::tempdir().expect("temp dir should be created");
+    let resource_root = temp.path().join("capture-parser");
+    copy_resource_tree(resource_source.as_path(), resource_root.as_path());
+    let manifest = load_capture_parser_artifact_manifest_from_root(resource_root.as_path())
+        .expect("genuine bundle should load");
+    let bundle = manifest.bundle("task").expect("task bundle should exist");
+
+    std::fs::copy(
+        resource_root.join("reminder").join("model.onnx"),
+        resource_root.join("task").join("model.onnx"),
+    )
+    .expect("a different genuine model should replace the task model");
+    std::fs::write(
+        resource_root.join("task").join("vocab.txt"),
+        "[PAD]\n[UNK]\n",
+    )
+    .expect("vocab should be replaced");
+
+    assert_eq!(
+        load_ort_session(&manifest, bundle).err(),
+        Some(kalandar::CaptureParserError::ArtifactIntegrityMismatch)
+    );
+    assert_eq!(
+        CaptureWordPieceTokenizer::load(&manifest, bundle).err(),
+        Some(kalandar::CaptureParserError::ArtifactIntegrityMismatch)
+    );
+}

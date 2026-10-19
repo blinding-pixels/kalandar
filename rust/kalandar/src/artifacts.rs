@@ -279,23 +279,30 @@ fn validate_bundle_artifact_id(
     Ok(())
 }
 
+pub fn read_verified_artifact(
+    manifest: &CaptureParserArtifactManifest,
+    file: &CaptureParserArtifactFile,
+) -> Result<Vec<u8>, CaptureParserError> {
+    let canonical = manifest
+        .resolve_file_path(file)
+        .canonicalize()
+        .map_err(|_| CaptureParserError::ArtifactMissing)?;
+    if !canonical.starts_with(&manifest.root) {
+        return Err(CaptureParserError::ManifestInvalid);
+    }
+    let bytes = fs::read(&canonical).map_err(|_| CaptureParserError::ArtifactMissing)?;
+    if bytes.len() as u64 != file.size_bytes || sha256_hex(&bytes) != file.sha256 {
+        return Err(CaptureParserError::ArtifactIntegrityMismatch);
+    }
+    Ok(bytes)
+}
+
 fn validate_bundle_files(
     manifest: &CaptureParserArtifactManifest,
     bundle: &CaptureParserArtifactBundle,
 ) -> Result<(), CaptureParserError> {
     for file in &bundle.files {
-        let path = manifest.resolve_file_path(file);
-        let canonical = path
-            .canonicalize()
-            .map_err(|_| CaptureParserError::ArtifactMissing)?;
-        if !canonical.starts_with(&manifest.root) {
-            return Err(CaptureParserError::ManifestInvalid);
-        }
-
-        let bytes = fs::read(&canonical).map_err(|_| CaptureParserError::ArtifactMissing)?;
-        if bytes.len() as u64 != file.size_bytes || sha256_hex(&bytes) != file.sha256 {
-            return Err(CaptureParserError::ArtifactIntegrityMismatch);
-        }
+        let bytes = read_verified_artifact(manifest, file)?;
 
         if file.logical_name == "config" {
             validate_config_labels(bundle, &bytes)?;

@@ -3,7 +3,6 @@ use super::intent_model::{validate_model, TinyIntentModel};
 use super::{CaptureParserArtifactManifest, CaptureParserError, TINY_LINEAR_RUNTIME_KIND};
 use std::{
     collections::BTreeMap,
-    fs,
     path::PathBuf,
     sync::{Arc, Mutex, OnceLock},
 };
@@ -31,20 +30,20 @@ pub(crate) fn load_tiny_intent_model(
         .iter()
         .find(|file| file.logical_name == "model_json")
         .ok_or(CaptureParserError::ManifestInvalid)?;
-    let canonical = manifest
-        .resolve_file_path(model_file)
-        .canonicalize()
-        .map_err(|_| CaptureParserError::ArtifactMissing)?;
+    let key = (
+        manifest.resolve_file_path(model_file),
+        model_file.sha256.clone(),
+    );
 
     let cache = intent_model_cache()
         .lock()
         .expect("intent model cache should lock");
-    if let Some(model) = cache.get(&canonical) {
+    if let Some(model) = cache.get(&key) {
         return Ok(Arc::clone(model));
     }
     drop(cache);
 
-    let bytes = fs::read(&canonical).map_err(|_| CaptureParserError::ArtifactMissing)?;
+    let bytes = crate::read_verified_artifact(manifest, model_file)?;
     let parsed: TinyIntentModel =
         serde_json::from_slice(&bytes).map_err(|_| CaptureParserError::ManifestInvalid)?;
     validate_model(&parsed)?;
@@ -56,11 +55,13 @@ pub(crate) fn load_tiny_intent_model(
     let mut cache = intent_model_cache()
         .lock()
         .expect("intent model cache should lock");
-    cache.insert(canonical, Arc::clone(&parsed));
+    cache.insert(key, Arc::clone(&parsed));
     Ok(parsed)
 }
 
-fn intent_model_cache() -> &'static Mutex<BTreeMap<PathBuf, Arc<TinyIntentModel>>> {
-    static CACHE: OnceLock<Mutex<BTreeMap<PathBuf, Arc<TinyIntentModel>>>> = OnceLock::new();
+type IntentModelKey = (PathBuf, String);
+
+fn intent_model_cache() -> &'static Mutex<BTreeMap<IntentModelKey, Arc<TinyIntentModel>>> {
+    static CACHE: OnceLock<Mutex<BTreeMap<IntentModelKey, Arc<TinyIntentModel>>>> = OnceLock::new();
     CACHE.get_or_init(|| Mutex::new(BTreeMap::new()))
 }

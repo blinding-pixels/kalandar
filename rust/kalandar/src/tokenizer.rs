@@ -77,8 +77,8 @@ impl CaptureWordPieceTokenizer {
             .iter()
             .find(|file| file.logical_name == "vocab")
             .ok_or(CaptureParserError::ManifestInvalid)?;
-        let vocab_text = std::fs::read_to_string(manifest.resolve_file_path(vocab_spec))
-            .map_err(|_| CaptureParserError::ArtifactMissing)?;
+        let vocab_text = String::from_utf8(crate::read_verified_artifact(manifest, vocab_spec)?)
+            .map_err(|_| CaptureParserError::ManifestInvalid)?;
         Self::from_vocab(
             &vocab_text,
             CaptureTokenizerConfig {

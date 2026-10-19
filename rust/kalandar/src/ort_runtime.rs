@@ -1,8 +1,8 @@
 use crate::{
-    CaptureParserArtifactBundle, CaptureParserArtifactManifest, CaptureParserError,
-    CaptureParserTensorRequest, InferenceOutput, InferenceSessionDescriptor, RuntimeTensor,
-    RuntimeTensorData, ATTENTION_MASK_TENSOR_NAME, BERT_TOKEN_CLASSIFIER_RUNTIME_KIND,
-    INPUT_IDS_TENSOR_NAME, LOGITS_OUTPUT_TENSOR_NAME,
+    read_verified_artifact, CaptureParserArtifactBundle, CaptureParserArtifactManifest,
+    CaptureParserError, CaptureParserTensorRequest, InferenceOutput, InferenceSessionDescriptor,
+    RuntimeTensor, RuntimeTensorData, ATTENTION_MASK_TENSOR_NAME,
+    BERT_TOKEN_CLASSIFIER_RUNTIME_KIND, INPUT_IDS_TENSOR_NAME, LOGITS_OUTPUT_TENSOR_NAME,
 };
 use ndarray::Array2;
 use ort::{inputs, session::Session, value::TensorRef};
@@ -100,7 +100,7 @@ pub fn load_ort_session(
         .iter()
         .find(|file| file.logical_name == "model")
         .ok_or(CaptureParserError::ManifestInvalid)?;
-    let model_path = manifest.resolve_file_path(model);
+    let model_bytes = read_verified_artifact(manifest, model)?;
     let descriptor = InferenceSessionDescriptor {
         parser_family: bundle.parser.clone(),
         artifact_id: bundle.artifact_id.clone(),
@@ -112,7 +112,7 @@ pub fn load_ort_session(
     };
     let session = Session::builder()
         .map_err(|_| CaptureParserError::SessionLoadFailed)?
-        .commit_from_file(&model_path)
+        .commit_from_memory(&model_bytes)
         .map_err(|_| CaptureParserError::SessionLoadFailed)?;
 
     Ok(CaptureParserOrtSession {
