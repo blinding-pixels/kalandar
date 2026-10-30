@@ -1,3 +1,5 @@
+use chrono::NaiveTime;
+use kalandar_dates::capture::Settings;
 use kalandar::{CaptureParser, CapturePreviewRequest, CapturePreviewResult};
 use serde::Deserialize;
 use std::{collections::BTreeSet, env, fs, path::PathBuf};
@@ -135,6 +137,7 @@ fn preview_request(
         timezone: timezone.to_string(),
         locale: locale.map(str::to_string),
         known_assignees,
+        settings: None,
     }
 }
 
@@ -341,6 +344,7 @@ fn preview_capture_routes_task_drafts_through_runtime() {
         timezone: "America/New_York".to_string(),
         locale: Some("en-US".to_string()),
         known_assignees: Some(vec!["Sara".to_string()]),
+        settings: None,
     });
 
     assert_eq!(preview.kind, "task");
@@ -366,6 +370,7 @@ fn preview_capture_preserves_contextual_with_phrases_in_task_titles() {
         timezone: "America/New_York".to_string(),
         locale: Some("en-US".to_string()),
         known_assignees: Some(vec!["Sarah".to_string()]),
+        settings: None,
     });
 
     assert_eq!(preview.kind, "task");
@@ -388,6 +393,7 @@ fn preview_capture_preserves_imperative_task_title_prefixes() {
         timezone: "America/New_York".to_string(),
         locale: Some("en-US".to_string()),
         known_assignees: Some(vec!["Nina".to_string(), "Omar".to_string()]),
+        settings: None,
     });
 
     assert_eq!(preview.kind, "task");
@@ -409,6 +415,7 @@ fn preview_capture_routes_reminder_drafts_through_runtime() {
         timezone: "America/New_York".to_string(),
         locale: Some("en-US".to_string()),
         known_assignees: None,
+        settings: None,
     });
 
     assert_eq!(preview.kind, "reminder");
@@ -435,6 +442,7 @@ fn preview_capture_routes_calendar_drafts_through_runtime() {
         timezone: "America/New_York".to_string(),
         locale: Some("en-US".to_string()),
         known_assignees: None,
+        settings: None,
     });
 
     assert_eq!(preview.kind, "calendar-event");
@@ -460,6 +468,7 @@ fn preview_capture_keeps_low_signal_text_as_thought() {
         timezone: "America/New_York".to_string(),
         locale: Some("en-US".to_string()),
         known_assignees: None,
+        settings: None,
     });
 
     assert_eq!(preview.kind, "thought");
@@ -483,6 +492,7 @@ fn preview_capture_includes_the_resolved_schedule() {
         timezone: "America/New_York".to_string(),
         locale: Some("en-US".to_string()),
         known_assignees: None,
+        settings: None,
     });
     let start = preview
         .schedule
@@ -497,6 +507,7 @@ fn preview_capture_includes_the_resolved_schedule() {
         timezone: "America/New_York".to_string(),
         locale: Some("en-US".to_string()),
         known_assignees: None,
+        settings: None,
     });
     let recurrence = preview
         .schedule
@@ -511,6 +522,7 @@ fn preview_capture_includes_the_resolved_schedule() {
         timezone: "America/New_York".to_string(),
         locale: Some("en-US".to_string()),
         known_assignees: None,
+        settings: None,
     });
     assert!(preview.schedule.is_none());
 }
@@ -526,6 +538,7 @@ fn preview_capture_reads_schedule_spans_from_the_models() {
         timezone: "America/New_York".to_string(),
         locale: None,
         known_assignees: None,
+        settings: None,
     };
 
     let modelled = parser.preview_capture(request(
@@ -553,4 +566,34 @@ fn preview_capture_reads_schedule_spans_from_the_models() {
         chapter.task.as_ref().map(|task| task.title.as_str()),
         Some("review chapter 12")
     );
+}
+
+#[test]
+fn preview_capture_reads_times_of_day_from_the_callers_settings() {
+    let Some(parser) = parser() else {
+        return;
+    };
+    let request = |settings| CapturePreviewRequest {
+        text: "remind me to water plants tomorrow evening".to_string(),
+        now_iso: Some("2026-05-04T12:00:00.000Z".to_string()),
+        timezone: "America/New_York".to_string(),
+        locale: Some("en-US".to_string()),
+        known_assignees: None,
+        settings,
+    };
+    let evening_time = |preview: CapturePreviewResult| {
+        preview
+            .schedule
+            .and_then(|schedule| schedule.start)
+            .and_then(|start| start.time)
+    };
+
+    let default = evening_time(parser.preview_capture(request(None)));
+    let custom = evening_time(parser.preview_capture(request(Some(Settings {
+        evening: NaiveTime::from_hms_opt(18, 30, 0).expect("valid time"),
+        ..Settings::default()
+    }))));
+
+    assert_eq!(default.as_deref(), Some("19:00"));
+    assert_eq!(custom.as_deref(), Some("18:30"));
 }

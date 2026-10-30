@@ -1,6 +1,7 @@
 pub use kalandar_dates::capture::{
     PreviewMoment, PreviewRecurrence, PreviewSchedule, PreviewWeekday,
 };
+use kalandar_dates::capture::Settings;
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -10,6 +11,8 @@ pub struct CapturePreviewRequest {
     pub timezone: String,
     pub locale: Option<String>,
     pub known_assignees: Option<Vec<String>>,
+    #[serde(skip)]
+    pub settings: Option<Settings>,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize)]

@@ -11,6 +11,7 @@
   On blind set 2 the Rust pipeline gets 215/278 task, 168/238 calendar and 156/234 reminder items right, against 83, 49 and 38 for the Rust rules.
 - **Reminders resolve on the original line.** Prefix stripping ("remind me to") now applies to the title only. Lines that start with a time ("17:00 timesheet") get a trigger again, and lead times apply.
 - `preview_capture_rules` is unchanged and still matches the frozen oracle goldens.
+- **The preview takes the caller's settings.** `CapturePreviewRequest` has a `settings` field (not serialized). When set, times of day, meal times, the default notification time, week start, weekend, day start, event length and holidays come from it for every kind, reminders included; when absent the defaults apply as before.
 
 ### Security
 

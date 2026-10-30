@@ -2,12 +2,12 @@ use super::{
     js::{self, normalize_whitespace, replace_first},
     postprocess::finalize_reminder_title,
     recurrence_exceptions::{classify_recurrence_exception, to_recurrence_exceptions},
-    schedule::{context_for, ScheduleOutput},
+    schedule::{context_for, settings_for, ScheduleOutput},
     CapturePreviewReminderDraft, CapturePreviewRequest, CapturePreviewWarning, PreviewSchedule,
 };
 use crate::capture_spans::CaptureSpanSource;
 use fancy_regex::Regex;
-use kalandar_dates::capture::{capture_schedule, CaptureKind, Settings};
+use kalandar_dates::capture::{capture_schedule, CaptureKind};
 use std::sync::OnceLock;
 
 pub struct ReminderParseOutput {
@@ -22,7 +22,7 @@ pub fn parse_reminder_preview(
     spans: &dyn CaptureSpanSource,
 ) -> ReminderParseOutput {
     let original = normalize_whitespace(text);
-    let context = context_for(request).with_settings(Settings::default());
+    let context = context_for(request).with_settings(settings_for(request));
     let (found, title) = match spans.schedule_spans(CaptureKind::Reminder, &original) {
         Some(labelled) => {
             let found = ScheduleOutput::new(

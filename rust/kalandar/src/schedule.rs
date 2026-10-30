@@ -109,9 +109,13 @@ pub fn context_for(request: &CapturePreviewRequest) -> Context {
     let zone: Tz = request.timezone.parse().unwrap_or(Tz::UTC);
     let settings = Settings {
         locale: request.locale.clone(),
-        ..Settings::default()
+        ..settings_for(request)
     };
     Context::new(now, zone).with_settings(settings)
+}
+
+pub fn settings_for(request: &CapturePreviewRequest) -> Settings {
+    request.settings.clone().unwrap_or_default()
 }
 
 fn remove_schedule_spans(text: &str, spans: &[ScheduleSpan]) -> String {
