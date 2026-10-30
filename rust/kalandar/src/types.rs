@@ -1,7 +1,7 @@
+use kalandar_dates::capture::Settings;
 pub use kalandar_dates::capture::{
     PreviewMoment, PreviewRecurrence, PreviewSchedule, PreviewWeekday,
 };
-use kalandar_dates::capture::Settings;
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
